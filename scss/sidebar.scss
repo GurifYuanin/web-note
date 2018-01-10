@@ -1,0 +1,52 @@
+$imgSize: 30px;
+$sidebarWidth: 20%;
+$separation: 5%;
+
+#sidebar {
+    display: inline-block;
+
+    position: relative;
+
+    margin: 0 1% 0 0;
+    padding: 1%;
+    width: $sidebarWidth;
+
+    background-color: #5f93be;
+    // “目录”
+    h2 {
+        font-size: $imgSize;
+
+        color: #fff;
+        img {
+            margin: 0 10px 0 0;
+            width: $imgSize;
+        }
+    }
+    // 条目块
+    div {
+        margin: 2.5%;
+        padding: 2.5%;
+        width: 80%;
+
+        text-align: center;
+
+        background-color: #f2f2f2;
+        a {
+            font-size: 1em;
+            text-decoration: none;
+
+            color: #000;
+        }
+    }
+    // 目录分类
+    h3 {
+        color: #fff;
+    }
+}
+#container {
+    position: absolute;
+    top: 0;
+    left: $sidebarWidth + $separation;
+
+    width: 1 - $sidebarWidth - $separation;
+}

@@ -1,0 +1,31 @@
+#sidebar {
+  display: inline-block;
+  position: relative;
+  margin: 0 1% 0 0;
+  padding: 1%;
+  width: 20%;
+  background-color: #5f93be; }
+  #sidebar h2 {
+    font-size: 30px;
+    color: #fff; }
+    #sidebar h2 img {
+      margin: 0 10px 0 0;
+      width: 30px; }
+  #sidebar div {
+    margin: 2.5%;
+    padding: 2.5%;
+    width: 80%;
+    text-align: center;
+    background-color: #f2f2f2; }
+    #sidebar div a {
+      font-size: 1em;
+      text-decoration: none;
+      color: #000; }
+  #sidebar h3 {
+    color: #fff; }
+
+#container {
+  position: absolute;
+  top: 0;
+  left: 25%;
+  width: -24%; }
