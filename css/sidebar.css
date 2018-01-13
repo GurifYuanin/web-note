@@ -8,9 +8,6 @@
   #sidebar h2 {
     font-size: 30px;
     color: #fff; }
-    #sidebar h2 img {
-      margin: 0 10px 0 0;
-      width: 30px; }
   #sidebar div {
     margin: 2.5%;
     padding: 2.5%;
@@ -23,9 +20,50 @@
       color: #000; }
   #sidebar h3 {
     color: #fff; }
+  #sidebar #hideCatalog {
+    margin: 0 10px 0 0;
+    width: 30px;
+    cursor: pointer; }
+  #sidebar #showCatalog {
+    display: none;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 10%;
+    cursor: pointer; }
 
 #container {
   position: absolute;
   top: 0;
   left: 25%;
-  width: -24%; }
+  width: -24%;
+  font-size: 1em;
+  line-height: 1.5em; }
+  #container .title {
+    font-size: 2em;
+    text-align: center; }
+  #container .subTitle {
+    font-size: 1.5em;
+    padding: 5px; }
+  #container .cite {
+    margin: 1px;
+    border-radius: 10%;
+    font-size: .9em;
+    color: #111;
+    background-color: #eee; }
+  #container .refer {
+    font-size: 0.9em; }
+    #container .refer a {
+      text-decoration: none;
+      color: inherit; }
+  #container table {
+    border: 1px solid #222;
+    color: #222; }
+    #container table th {
+      border: none;
+      padding: 1%;
+      color: #fff;
+      background-color: #222; }
+    #container table td {
+      text-align: center;
+      padding: 1%; }

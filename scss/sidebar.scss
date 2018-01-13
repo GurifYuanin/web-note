@@ -1,7 +1,9 @@
 $imgSize: 30px;
 $sidebarWidth: 20%;
 $separation: 5%;
-
+$sidebarBGcolor: #5f93be;
+$tableDeepColor: #222;
+$tableShallow: #fff;
 #sidebar {
     display: inline-block;
 
@@ -11,16 +13,12 @@ $separation: 5%;
     padding: 1%;
     width: $sidebarWidth;
 
-    background-color: #5f93be;
+    background-color: $sidebarBGcolor;
     // “目录”
     h2 {
         font-size: $imgSize;
 
         color: #fff;
-        img {
-            margin: 0 10px 0 0;
-            width: $imgSize;
-        }
     }
     // 条目块
     div {
@@ -42,6 +40,25 @@ $separation: 5%;
     h3 {
         color: #fff;
     }
+    // 隐藏目录的图片
+    #hideCatalog {
+        margin: 0 10px 0 0;
+        width: $imgSize;
+
+        cursor: pointer;
+    }
+    // 显示目录的图片
+    #showCatalog {
+        display: none;
+
+        position: absolute;
+        top: 50%;
+        right: 0;
+
+        width: 10%;
+
+        cursor: pointer;
+    }
 }
 #container {
     position: absolute;
@@ -49,4 +66,51 @@ $separation: 5%;
     left: $sidebarWidth + $separation;
 
     width: 1 - $sidebarWidth - $separation;
+
+    font-size: 1em;
+    line-height: 1.5em;
+    // 文章标题
+    .title {
+        font-size: 2em;
+        text-align: center;
+    }
+    // 子标题
+    .subTitle {
+        font-size: 1.5em;
+        padding: 5px;
+    }
+    .cite {
+        margin: 1px;
+        border-radius: 10%;
+
+        font-size: .9em;
+
+        color: #111;
+        background-color: #eee;
+    }
+    // 参考文献链接
+    .refer {
+        font-size: 0.9em;
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+    }
+    table {
+        border: 1px solid $tableDeepColor;
+
+        color: $tableDeepColor;
+        th {
+            border: none;
+            padding: 1%;
+
+            color: $tableShallow;
+            background-color: $tableDeepColor;
+        }
+        td {
+            text-align: center;
+            padding: 1%;
+        }
+    }
 }

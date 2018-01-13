@@ -7,12 +7,14 @@ $(function() {
 		}
 	}
 	var $sidebar = $('#sidebar'); // 导航条
-	var $catalog = $('#catalog'); // “目录”
+	var $catalog = $('#catalog'); // 目录
+	var $hideCatalog = $('#hideCatalog'); // 隐藏目录图片
+	var $showCatalog = $('#showCatalog'); // 显示目录图片
 	var $container = $('#container'); // 文章内容
 	var category = ['HTML & CSS', 'SASS / SCSS', 'Javascript', 'Protocol', '优化']; // 目录分类
 	// 具体条目
 	var items = [
-					['mate标签','元素类型', '元素定位', '元素居中', '盒式模型', 'href和src', '选择器', 'canvas'],
+					['meta标签','元素类型', '元素定位', '元素居中', '盒式模型', 'href和src', '选择器', 'canvas'],
 					[],
 					['原型链', '闭包', '事件', '插件'],
 					['HTTP'],
@@ -25,25 +27,27 @@ $(function() {
 		}
 	}
 	// 折叠目录
-	$catalog.click(function(event) {
+	$hideCatalog.click(function(event) {
 		$sidebar.animate({
 			'left': '-20%'
 		},'slow');
 		$container.animate({
 			'left': '5%'
 		},'slow');
+		$showCatalog.fadeIn('fast');
 		// 阻止事件冒泡：
 		event.stopPropagation(); // 非IE
 		window.event.cancelBubble = true; // IE
 	});
 	// 展示目录
-	$sidebar.click(function(event) {
+	$showCatalog.click(function(event) {
 		$sidebar.animate({
 			'left': '0%'
 		},'slow');
 		$container.animate({
 			'left': '25%'
 		},'slow');
+		$showCatalog.fadeOut('fast');
 		// 阻止事件冒泡：
 		event.stopPropagation(); // 非IE
 		window.event.cancelBubble = true; // IE
