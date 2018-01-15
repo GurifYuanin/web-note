@@ -11,14 +11,16 @@ $(function() {
 	var $hideCatalog = $('#hideCatalog'); // 隐藏目录图片
 	var $showCatalog = $('#showCatalog'); // 显示目录图片
 	var $container = $('#container'); // 文章内容
-	var category = ['HTML & CSS', 'SASS / SCSS', 'Javascript', 'Protocol', '优化']; // 目录分类
+	var category = ['HTML', 'CSS', 'Javascript', '移动Web', '调试', '协议', '其他']; // 目录分类
 	// 具体条目
 	var items = [
-					['meta标签','元素类型', '元素定位', '元素居中', '盒式模型', 'href和src', '选择器', 'canvas'],
-					[],
+					['meta标签', 'href和src', 'HTML语义化', 'HTML5'],
+					['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', 'CSS Hack', 'CSS3'],
 					['原型链', '闭包', '事件', '插件'],
+					['响应式布局'],
+					['抓包工具'],
 					['HTTP'],
-					[]
+					['浏览器渲染']
 				];
 	for (var i = 0; i < category.length; i++) {
 		$sidebar.append(surroundedByTag(category[i], 'h3'));
