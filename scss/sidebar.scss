@@ -14,8 +14,8 @@ $tableShallow: #fff;
     width: $sidebarWidth;
 
     background-color: $sidebarBGcolor;
-    // “目录”
-    h2 {
+    // 目录栏
+    #catalog {
         font-size: $imgSize;
 
         color: #fff;
@@ -79,7 +79,7 @@ $tableShallow: #fff;
         font-size: 1.5em;
         padding: 5px;
     }
-    .cite {
+    .definition {
         margin: 1px;
         border-radius: 10%;
 
@@ -91,10 +91,8 @@ $tableShallow: #fff;
     // 参考文献链接
     .refer {
         font-size: 0.9em;
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+        text-decoration: none;
+        color: inherit;
 
     }
     table {

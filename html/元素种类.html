@@ -12,76 +12,90 @@
 	<title>元素种类</title>
 </head>
 <body>
-	<div id="sidebar">
-		<h2 id="catalog">
+	<aside id="sidebar">
+		<section id="catalog">
 			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
 			目录
-		</h2>
+		</section>
 		<img id="showCatalog" src="../images/向右.png" alt="加载失败">
-	</div>
-	<div id="container">
-		<h2 class="title">元素种类</h2>
-		<h3 class="subTitle">分类</h3>
-		<p>
-			CSS中，元素可以从两个方面进行分类。
-			一是从是否可替换区分，分为<span class="cite">可替换元素</span>与<span class="cite">不可替换元素</span>。<br>
-			二是从显示效果区分，分为<span class="cite">block</span>、<span class="cite">inline</span>、<span class="cite">inline-block</span>、<span class="cite">run-in</span>等。我们可以用display属性来进行修改，这里只解释这种分类方式。
-		</p>
-		<h3 class="subTitle">block(块级)</h3>
-		<p>
-			<b>特点</b><br>
-			1) 每个元素占整一行。<br>
-			2) 高度(height)、宽度(width)、行高(line-height)以及内外边距(padding + margin)都可设置。<br>
-			<b>常见元素</b><br>
-			1) div<br>
-			2) p<br>
-			3) h1 ~ h6<br>
-			4) hr<br>
-			5) menu<br>
-			6) form<br>
-			7) table<br>
-			8) ol<br>
-			9) ul<br>
-			10) pre<br>
-		<h3 class="subTitle">inline(行内)</h3>
-		<p>
-			<b>特点</b><br>
-			1) 只占领元素自身的大小，不同元素可以在同一行上。<br>
-			2) 高度(height)、宽度(width)及顶部和底部外边距(margin-top + margin-bottom)不可设置。<br>
-			<b>常用元素</b><br>
-			1) a<br>
-			2) b/strong<br>
-			3) em<br>
-			4) i<br>
-			5) u<br>
-			6) q<br>
-			7) s/strike<br>
-			8) span<br>
-			9) img<br>
-			10) label<br>
-			11) textarea<br>
-			12) select<br>
-			13) cite<br>
-			14) code<br>
-			15) br<br>
-		</p>
-		<h3 class="subTitle">inline-block(行内块级)</h3>
-		<p>
-			<b>特点</b><br>
-			1) 只占领元素自身的大小，不同元素可以在同一行上。<br>
-			2) 高度(height)、宽度(width)、行高(line-height)以及内外边距(padding + margin)都可设置。<br>
-		</p>
-		<h3 class="subTitle">run-in</h3>
-		<p>
-			直接翻译run-in为<span class="cite">跑进</span>，顾名思义，这种显示方式的作用就是当前元素跑进下一个元素内，成为下一个元素的行内部分。<br>
-			<b>特点</b><br>
-			1) 在下一个块级元素(兄弟元素)内部显示，如果下一个元素不是块级元素，则run-in本身成为块级元素。<br>
-			2) 从原先父元素继承属性，而不从跑进后的父元素继承属性。<br>
-		</p>
-		<h3 class="subTitle">参考文献</h3>
-		<p>
-			[1] Eric A.Meyer 《CSS权威指南》
-		</p>
-	</div>
+	</aside>
+	<article id="container">
+		<header>
+			<h2 class="title">元素种类</h2>
+		</header>
+		<section>
+			<h2 class="subTitle">分类</h2>
+			<p>
+				CSS中，元素可以从两个方面进行分类。
+				一是从是否可替换区分，分为<span class="definition">可替换元素</span>与<span class="definition">不可替换元素</span>。<br>
+				二是从显示效果区分，分为<span class="definition">block</span>、<span class="definition">inline</span>、<span class="definition">inline-block</span>、<span class="definition">run-in</span>等。我们可以用display属性来进行修改，这里只解释这种分类方式。
+			</p>
+		</section>
+		<section>
+			<h2 class="subTitle">block(块级)</h2>
+			<p>
+				<b>特点</b><br>
+				1) 每个元素占整一行。<br>
+				2) 高度(height)、宽度(width)、行高(line-height)以及内外边距(padding + margin)都可设置。<br>
+				<b>常见元素</b><br>
+				1) div<br>
+				2) p<br>
+				3) h1 ~ h6<br>
+				4) hr<br>
+				5) menu<br>
+				6) form<br>
+				7) table<br>
+				8) ol<br>
+				9) ul<br>
+				10) pre<br>
+		</section>
+		<section>
+			<h2 class="subTitle">inline(行内)</h2>
+			<p>
+				<b>特点</b><br>
+				1) 只占领元素自身的大小，不同元素可以在同一行上。<br>
+				2) 高度(height)、宽度(width)及顶部和底部外边距(margin-top + margin-bottom)不可设置。<br>
+				<b>常用元素</b><br>
+				1) a<br>
+				2) b/strong<br>
+				3) em<br>
+				4) i<br>
+				5) u<br>
+				6) q<br>
+				7) s/strike<br>
+				8) span<br>
+				9) img<br>
+				10) label<br>
+				11) textarea<br>
+				12) select<br>
+				13) definition<br>
+				14) code<br>
+				15) br<br>
+			</p>
+		</section>
+		<section>
+			<h2 class="subTitle">inline-block(行内块级)</h2>
+			<p>
+				<b>特点</b><br>
+				1) 只占领元素自身的大小，不同元素可以在同一行上。<br>
+				2) 高度(height)、宽度(width)、行高(line-height)以及内外边距(padding + margin)都可设置。<br>
+			</p>
+		</section>
+		<section>
+			<h2 class="subTitle">run-in</h2>
+			<p>
+				直接翻译run-in为<span class="definition">跑进</span>，顾名思义，这种显示方式的作用就是当前元素跑进下一个元素内，成为下一个元素的行内部分。<br>
+				<b>特点</b><br>
+				1) 在下一个块级元素(兄弟元素)内部显示，如果下一个元素不是块级元素，则run-in本身成为块级元素。<br>
+				2) 从原先父元素继承属性，而不从跑进后的父元素继承属性。<br>
+			</p>
+		</section>
+		<section>
+			<h2 class="subTitle">参考文献</h2>
+			<p>
+				[1] Eric A.Meyer 《CSS权威指南》
+			</p>
+		</section>
+	</article>
 </body>
 </html>

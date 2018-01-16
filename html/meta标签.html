@@ -12,26 +12,29 @@
 	<script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
-	<div id="sidebar">
-		<h2 id="catalog">
+	<aside id="sidebar">
+		<section id="catalog">
 			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
 			目录
-		</h2>
+		</section>
 		<img id="showCatalog" src="../images/向右.png" alt="加载失败">
-	</div>
-	<div id="container">
-		    <h2 class="title">meta标签</h2>
-		    <!-- 定义 -->
-		    <div class="subTitle">一、定义及作用</div>
-		    <p>
-		    	meta：元，这里的meta标签指的是元数据(metadata)。
-		    	<br>
-		    	metadata：Metadata is "data [information] that provides information about other data"[1]
-		    	<br>
-		    	翻译过来，元数据是一种描述数据的数据。在网页中，meta标签是用来描述网页的数据，它描述了当前网页的一些属性（但不会直接显示在网页上面），如网页的字符编码(charset)、关键字(keywords)等，这样浏览器或搜索引擎看到这些数据的时候就可以有进行相应操作。
-		    </p>
-		    <!-- 使用 -->
-		    <div class="subTitle">二、使用</div>
+	</aside>
+	<article id="container">
+		<header>
+		    <h1 class="title">meta标签</h1>
+		</header>
+		<section>
+			<h2 class="subTitle">定义及作用</h2>
+			<p>
+				meta：元，这里的meta标签指的是元数据(metadata)。
+				<br>
+				metadata：Metadata is "data [information] that provides information about other data"[1]
+				<br>
+				翻译过来，元数据是一种描述数据的数据。在网页中，meta标签是用来描述网页的数据，它描述了当前网页的一些属性（但不会直接显示在网页上面），如网页的字符编码(charset)、关键字(keywords)等，这样浏览器或搜索引擎看到这些数据的时候就可以有进行相应操作。
+			</p>
+		</section>
+		<section>
+		    <h2 class="subTitle">使用</h2>
 		    <p>
 		    	meta标签通常在&lt;head&gt;标签之间，举个例子，下面是meta_demo.html的源代码：
 				<pre><code class="html">
@@ -51,11 +54,11 @@
 					&lt;/body&gt;
 					&lt;/html&gt;
 				</code></pre>
-				中间一串元数据表示的意思该网页：关键字是<span class="cite">note</span>，作者是<span class="cite">GurifYuanin</span>，写网页编辑器是<span class="cite">Sublime Text</span>，浏览器解析时使用<span class="cite">webkit</span>内核渲染，读网页的时候<span class="cite">不使用缓存</span>，网页的编码字符集是<span class="cite">UTF-8</span>。
+				中间一串元数据表示的意思该网页：关键字是<span class="definition">note</span>，作者是<span class="definition">GurifYuanin</span>，写网页编辑器是<span class="definition">Sublime Text</span>，浏览器解析时使用<span class="definition">webkit</span>内核渲染，读网页的时候<span class="definition">不使用缓存</span>，网页的编码字符集是<span class="definition">UTF-8</span>。
 				<br>
-				可以看到，解读meta标签上的属性可以<span class="cite">键值对</span>(name/http-equiv + content)的概念来理解，就像现实生活中描述一件事物：这件东西的<span class="cite">材质</span>是<span class="cite">金属</span>，这个人的<span class="cite">名字</span>是<span class="cite">小明</span>，这个电池的<span class="cite">电量</span>是<span class="cite">10000毫安</span>等等。
+				可以看到，解读meta标签上的属性可以<span class="definition">键值对</span>(name/http-equiv + content)的概念来理解，就像现实生活中描述一件事物：这件东西的<span class="definition">材质</span>是<span class="definition">金属</span>，这个人的<span class="definition">名字</span>是<span class="definition">小明</span>，这个电池的<span class="definition">电量</span>是<span class="definition">10000毫安</span>等等。
 				<br>
-				换而言之，name或http-equiv表示<span class="cite">键</span>，也就是<span class="cite">材质</span>、<span class="cite">名字</span>、<span class="cite">电量</span>这些属性名，<span class="cite">content</span>表示<span class="cite">值</span>，也就是<span class="cite">金属</span>、<span class="cite">小明</span>、<span class="cite">10000毫安</span>这些属性值，一个meta标签上通常有一对<span class="cite">键值对</span>。
+				换而言之，name或http-equiv表示<span class="definition">键</span>，也就是<span class="definition">材质</span>、<span class="definition">名字</span>、<span class="definition">电量</span>这些属性名，<span class="definition">content</span>表示<span class="definition">值</span>，也就是<span class="definition">金属</span>、<span class="definition">小明</span>、<span class="definition">10000毫安</span>这些属性值，一个meta标签上通常有一对<span class="definition">键值对</span>。
 				<br>
 				meta标签的属性：
 		    	<table border="1" cellpadding="1" cellspacing="0">
@@ -117,9 +120,11 @@
 		    	<br>
 		    	name用来描述网页的通用属性，如网页的关键字、概括描述、浏览器渲染方式等，而http-equiv则用来定义http头部属性，如编码字符、缓存控制、cookie设置等。
 		    </p>
-		    <!-- 常用值距离 -->
-		    <div class="subTitle">三、常用值</div>
-		    <h4>1、name</h4>
+		</section>
+		<section>
+		    <h2 class="subTitle">常用值</h2>
+		    <div>
+		    <h3>1、name</h3>
 		    <p>
 		    	1) keywords：关键字
 		    	<br>
@@ -295,120 +300,124 @@
 		    		&lt;meta name="viewport" content="width=device-width, height=device-height, initial-scale=1"&gt;
 		    	</code></pre>
 		    </p>
-		    <h4>2、http-equiv</h4>
+		    </div>
+		    <div>
+		        <h3>2、http-equiv</h3>
+		        <p>
+		        	1) content-Type：内容类型
+		        	<br>
+		        	设置网页内容的编码字符集，但在HTML5中可以用更简洁的方式来写，以下两种写法是等价的。
+		        	<pre><code class="html">
+		        		&lt;!-- 传统写法 --&gt;
+		        		&lt;meta http-equiv="charset" content="utf-8"&gt;
+		        		&lt;!-- HTML5中 --&gt;
+		        		&lt;meta charset="utf-8"&gt;
+		        	</code></pre>
+		        </p>
+		        <p>
+		        	2) X-UA-Compatible：UA兼容
+		        	<br>
+		        	设置浏览器兼容模式版本，只有在IE浏览器且IE8之后可以用，其他无效。
+		        	<table border="1" cellpadding="1" cellspacing="0">
+		        	  <tr>
+		        	    <th>值</th>
+		        	    <th>描述</th>
+		        	  </tr>
+		        	  <tr>
+		        	    <td>IE=版本号</td>
+		        	    <td>指定对应版本号的IE引擎来渲染网页</td>
+		        	  </tr>
+		        	  <tr>
+		        	    <td>IE=edge</td>
+		        	    <td>指定最高版本的IE引擎来渲染网页</td>
+		        	  </tr>
+		        	  <tr>
+		        	    <td>IE=edge,chrome=1</td>
+		        	    <td>指定最高版本的IE引擎来渲染网页且开启Chrome Frame（Chrome Frame可以让旧版IE浏览器使用Chrome的WebKit渲染引擎处理网页，因此旧版IE用户可以体验到包括HTML5在内的众多现代网页技术。[6]）</td>
+		        	  </tr>
+		        	</table>
+		        	<pre><code class="html">
+		        		&lt;meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"&gt;
+		        	</code></pre>
+		        </p>
+		        <p>
+		        	3) cache-control：缓存控制
+		        	<br>
+		    		控制获取网页的时候是否允许从本地获取。
+		    		<table border="1" cellpadding="1" cellspacing="0">
+		    		  <tr>
+		    		    <th>值</th>
+		    		    <th>描述</th>
+		    		  </tr>
+		    		  <tr>
+		    		    <td>no-cache</td>
+		    		    <td>先发送请求，与服务器确认该资源是否被更改，如果未被更改，则使用缓存</td>
+		    		  </tr>
+		    		  <tr>
+		    		    <td>no-store</td>
+		    		    <td>不允许缓存，每次都要去服务器上，下载完整的响应</td>
+		    		  </tr>
+		    		  <tr>
+		    		    <td>no-siteapp</td>
+		    		    <td>禁止当前页面在移动端浏览时被自动转码。</td>
+		    		  </tr>
+		    		  <tr>
+		    		    <td>public</td>
+		    		    <td>缓存所有响应，但并非必须。因为max-age也可以做到相同效果</td>
+		    		  </tr>
+		    		  <tr>
+		    		    <td>private</td>
+		    		    <td>只为单个用户缓存，因此不允许任何中继进行缓存</td>
+		    		  </tr>
+		    		  <tr>
+		    		    <td>maxage</td>
+		    		    <td>表示当前请求开始，该响应在多久内能被缓存和重用，而不去服务器重新请求。例如：max-age=60表示响应可以再缓存和重用 60 秒</td>
+		    		  </tr>
+		    		</table>
+		    		<pre><code class="html">
+		    			&lt;meta http-equiv="cache-control" content="no-siteapp"&gt;
+		    		</code></pre>
+		        </p>
+		        <p>
+		        	4) expires：期限
+		        	<br>
+		        	本地网页缓存最长存活时间，过了这个时间再次读取的时候就必须再次访问服务器获取新网页。
+		        	<pre><code class="html">
+		        		&lt;meta http-equiv="expires" content="mon 01 Jun 2018 23:59:59 GMT"&gt;
+		        	</code></pre>
+		        </p>
+		        <p>
+		        	5) refresh：刷新
+		        	<br>
+		        	打开网页后延迟一段时间(秒)后自动跳转到的页面。
+		        	<pre><code>
+		        		&lt;meta http-equiv="refresh" content="1; URL=https://www.google.com/"&gt;
+		        	</code></pre>
+		        </p>
+		        <p>
+		        	6) Set-Cookie：设置cookie
+		        	<br>
+		        	顾名思义，就是设置cookie
+		        	<pre><code class="html">
+		        		&lt;meta http-equiv="Set-cookit" content="message=xxx; expires=Monday, 01-January-2018 23:59:59 GMT;"&gt;
+		        	</code></pre>
+		        </p>
+		    </div>
+		</section>
+		    <h2 class="subTitle">参考文献</h2>
 		    <p>
-		    	1) content-Type：内容类型
+		    	[1] 维基百科 Metadata <a class="refer" href="https://en.wikipedia.org/wiki/Metadata">https://en.wikipedia.org/wiki/Metadata</a>
 		    	<br>
-		    	设置网页内容的编码字符集，但在HTML5中可以用更简洁的方式来写，以下两种写法是等价的。
-		    	<pre><code class="html">
-		    		&lt;!-- 传统写法 --&gt;
-		    		&lt;meta http-equiv="charset" content="utf-8"&gt;
-		    		&lt;!-- HTML5中 --&gt;
-		    		&lt;meta charset="utf-8"&gt;
-		    	</code></pre>
+		    	[2] Lxxyx HTML meta标签总结与属性使用介绍 <a class="refer" href="https://segmentfault.com/a/1190000004279791">https://segmentfault.com/a/1190000004279791</a>
+		    	<br>
+		    	[3] Tink meta常用属性 <a class="refer" href="https://tink.gitbooks.io/fe-collections/content/ch02-html/s03-meta.html">https://tink.gitbooks.io/fe-collections/content/ch02-html/s03-meta.html</a>
+		    	<br>
+		    	[4] W3C HTML &lt;meta&gt; 标签 <a class="refer" href="http://www.w3school.com.cn/tags/tag_meta.asp">http://www.w3school.com.cn/tags/tag_meta.asp</a>
+		    	<br>
+		    	[5] 菜鸟教程 HTML &lt;meta&gt; 标签 <a class="refer" href="http://www.runoob.com/tags/tag-meta.html">http://www.runoob.com/tags/tag-meta.html</a>
+		    	<br>
+		    	[6] Sivan 给网站添加X-UA-Compatible标签 <a class="refer" href="http://lightcss.com/">http://lightcss.com/</a>
 		    </p>
-		    <p>
-		    	2) X-UA-Compatible：UA兼容
-		    	<br>
-		    	设置浏览器兼容模式版本，只有在IE浏览器且IE8之后可以用，其他无效。
-		    	<table border="1" cellpadding="1" cellspacing="0">
-		    	  <tr>
-		    	    <th>值</th>
-		    	    <th>描述</th>
-		    	  </tr>
-		    	  <tr>
-		    	    <td>IE=版本号</td>
-		    	    <td>指定对应版本号的IE引擎来渲染网页</td>
-		    	  </tr>
-		    	  <tr>
-		    	    <td>IE=edge</td>
-		    	    <td>指定最高版本的IE引擎来渲染网页</td>
-		    	  </tr>
-		    	  <tr>
-		    	    <td>IE=edge,chrome=1</td>
-		    	    <td>指定最高版本的IE引擎来渲染网页且开启Chrome Frame（Chrome Frame可以让旧版IE浏览器使用Chrome的WebKit渲染引擎处理网页，因此旧版IE用户可以体验到包括HTML5在内的众多现代网页技术。[6]）</td>
-		    	  </tr>
-		    	</table>
-		    	<pre><code class="html">
-		    		&lt;meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"&gt;
-		    	</code></pre>
-		    </p>
-		    <p>
-		    	3) cache-control：缓存控制
-		    	<br>
-				控制获取网页的时候是否允许从本地获取。
-				<table border="1" cellpadding="1" cellspacing="0">
-				  <tr>
-				    <th>值</th>
-				    <th>描述</th>
-				  </tr>
-				  <tr>
-				    <td>no-cache</td>
-				    <td>先发送请求，与服务器确认该资源是否被更改，如果未被更改，则使用缓存</td>
-				  </tr>
-				  <tr>
-				    <td>no-store</td>
-				    <td>不允许缓存，每次都要去服务器上，下载完整的响应</td>
-				  </tr>
-				  <tr>
-				    <td>no-siteapp</td>
-				    <td>禁止当前页面在移动端浏览时被自动转码。</td>
-				  </tr>
-				  <tr>
-				    <td>public</td>
-				    <td>缓存所有响应，但并非必须。因为max-age也可以做到相同效果</td>
-				  </tr>
-				  <tr>
-				    <td>private</td>
-				    <td>只为单个用户缓存，因此不允许任何中继进行缓存</td>
-				  </tr>
-				  <tr>
-				    <td>maxage</td>
-				    <td>表示当前请求开始，该响应在多久内能被缓存和重用，而不去服务器重新请求。例如：max-age=60表示响应可以再缓存和重用 60 秒</td>
-				  </tr>
-				</table>
-				<pre><code class="html">
-					&lt;meta http-equiv="cache-control" content="no-siteapp"&gt;
-				</code></pre>
-		    </p>
-		    <p>
-		    	4) expires：期限
-		    	<br>
-		    	本地网页缓存最长存活时间，过了这个时间再次读取的时候就必须再次访问服务器获取新网页。
-		    	<pre><code class="html">
-		    		&lt;meta http-equiv="expires" content="mon 01 Jun 2018 23:59:59 GMT"&gt;
-		    	</code></pre>
-		    </p>
-		    <p>
-		    	5) refresh：刷新
-		    	<br>
-		    	打开网页后延迟一段时间(秒)后自动跳转到的页面。
-		    	<pre><code>
-		    		&lt;meta http-equiv="refresh" content="1; URL=https://www.google.com/"&gt;
-		    	</code></pre>
-		    </p>
-		    <p>
-		    	6) Set-Cookie：设置cookie
-		    	<br>
-		    	顾名思义，就是设置cookie
-		    	<pre><code class="html">
-		    		&lt;meta http-equiv="Set-cookit" content="message=xxx; expires=Monday, 01-January-2018 23:59:59 GMT;"&gt;
-		    	</code></pre>
-		    </p>
-		    <div class="subTitle">参考文献</div>
-		    <p class="refer">
-		    	[1] 维基百科 Metadata <a href="https://en.wikipedia.org/wiki/Metadata">https://en.wikipedia.org/wiki/Metadata</a>
-		    	<br>
-		    	[2] Lxxyx HTML meta标签总结与属性使用介绍 <a href="https://segmentfault.com/a/1190000004279791">https://segmentfault.com/a/1190000004279791</a>
-		    	<br>
-		    	[3] Tink meta常用属性 <a href="https://tink.gitbooks.io/fe-collections/content/ch02-html/s03-meta.html">https://tink.gitbooks.io/fe-collections/content/ch02-html/s03-meta.html</a>
-		    	<br>
-		    	[4] W3C HTML &lt;meta&gt; 标签 <a href="http://www.w3school.com.cn/tags/tag_meta.asp">http://www.w3school.com.cn/tags/tag_meta.asp</a>
-		    	<br>
-		    	[5] 菜鸟教程 HTML &lt;meta&gt; 标签 <a href="http://www.runoob.com/tags/tag-meta.html">http://www.runoob.com/tags/tag-meta.html</a>
-		    	<br>
-		    	[6] Sivan 给网站添加X-UA-Compatible标签 <a href="http://lightcss.com/">http://lightcss.com/</a>
-		    </p>
-	</div>
+	</article>
 </body>
 </html>

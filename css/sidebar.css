@@ -5,7 +5,7 @@
   padding: 1%;
   width: 20%;
   background-color: #5f93be; }
-  #sidebar h2 {
+  #sidebar #catalog {
     font-size: 30px;
     color: #fff; }
   #sidebar div {
@@ -45,17 +45,16 @@
   #container .subTitle {
     font-size: 1.5em;
     padding: 5px; }
-  #container .cite {
+  #container .definition {
     margin: 1px;
     border-radius: 10%;
     font-size: .9em;
     color: #111;
     background-color: #eee; }
   #container .refer {
-    font-size: 0.9em; }
-    #container .refer a {
-      text-decoration: none;
-      color: inherit; }
+    font-size: 0.9em;
+    text-decoration: none;
+    color: inherit; }
   #container table {
     border: 1px solid #222;
     color: #222; }
