@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			目录
+		</section>
+		<img id="showCatalog" src="../images/向右.png" alt="加载失败">
+	</aside>
+	<article id="container">
+		<header>
+			<h1>同源策略</h1>
+		</header>
+		<section>
+			<h2>URL</h2>
+			<p>
+				学习同源策略之前需要了解URL的结构。<br>
+				URL(Uniform Resource Locator)：统一资源定位符，用于定位互联网的资源，类比现实生活中的<span class="definition">地址</span>，完整格式：<br>
+				<pre><code class="html">
+					协议类型:[//[访问资源需要的凭证信息@]服务器地址[:端口号]][/资源层级UNIX文件路径]文件名[?查询][#片段ID]<sup>[1]</sup>
+				</code></pre>
+				例如：<br>
+				<pre><code class="javascript">
+					https://www.baidu.com
+					http://localhost:8080
+				</code></pre>
+				<span class="definition">http</span>和<span class="definition">https</span>为协议，<span class="definition">www.baidu.com</span>和<span class="definition">localhost</span>为服务器地址，也就是域名，<span class="definition">8080</span>为端口号。
+			</p>
+		</section>
+		<section>
+			<h2>定义及作用</h2>
+			<p>
+				定义：一个源的网页的文档或脚本对另一个源的资源进行操作的一些限制。<br>
+				作用：保证用户信息的安全，防止恶意的网站窃取数据<sup>[2]</sup>。<br>
+				同源策略是Netscape提出的一种约定，所有浏览器遵循这种约定。由于在浏览器中向服务器发送请求时总会带上自身域和父域的cookie，如果没有同源策略，携带个人信息的cookie将传遍各个网站，别有用心的人可以利用这些信息进行各种事情。
+			</p>
+		</section>
+		<section>
+			<h2>判断同源与不同源</h2>
+			<p>
+				两个网页同时满足以下三个条件则为同源：
+				<ul>
+					<li>协议相同</li>
+					<li>域名相同</li>
+					<li>端口号相同</li>
+				</ul>
+				例如<span class="definition">http://domain:80/path</span>与
+				<table border="1" cellpadding="1" cellspacing="0">
+					<tr>
+						<th>URL</th>
+						<th>是否同源</th>
+						<th>原因</th>
+					</tr>
+					<tr>
+						<td>https://domain:80/otherpath</td>
+						<td>同源</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>ftp://domain:80/path</td>
+						<td>不同源</td>
+						<td>协议不同</td>
+					</tr>
+					<tr>
+						<td>https://otherdomain:80/path</td>
+						<td>不同源</td>
+						<td>域名不同</td>
+					</tr>
+					<tr>
+						<td>https://domain:90/path</td>
+						<td>不同源</td>
+						<td>端口不同</td>
+					</tr>
+				</table>
+				<div>
+					<h3>Internet Explorer</h3>
+					IE浏览器不完全遵循以上规则，体现在：<sup>[3]</sup>
+					<ul>
+						<li>授信范围（Trust Zones）：两个相互之间高度互信的域名，如公司域名（corporate domains），不遵守同源策略的限制。</li>
+						<li>端口：IE未将端口号加入到同源策略的组成部分之中，因此 https://domain:90/path 属于同源并且不受任何限制。</li>
+					</ul>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>不同源的限制</h2>
+			<p>
+				如果A与B不同源，那么A将无法<sup>[2]</sup>
+				<ul>
+					<li>获取 B 的 Cookie、LocalStorage 和 IndexDB</li>
+					<li>获得 B 的 DOM</li>
+					<li>向 B 发送 ajax 请求</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>规避限制</h2>
+			<p>
+				<div>
+					<h3>cookie</h3>
+					<p>
+						cookie是保存在客户端硬盘或内存的数据。客户端向服务器发送HTTP请求的时候，会发送自身域名和父级域名的cookie，同源的情况下才能共享cookie。<br>
+						如果两个域名虽然不同，但父级域名相同，则可以通过设置<span class="definition">document.domain</span>来共享cookie。<br>
+						例如<span class="definition">http://a.b.c:80</span>本来不能与<span class="definition">http://b.b.c:80</span>共享cookie，但如果两个网页的脚本都进行以下设置：
+						<pre><code class="javascript">
+							document.domain = 'b.c:80';
+						</code></pre>
+						那么两个网页将共享cookie。<br>
+						但有两点需要注意：
+						<ul>
+							<li>如果不明确端口号，任何赋值操作将会把端口号设置为null</li>
+							<li>如果设置为非父级域名的域名，将报错</li>
+						</ul>
+						<pre><code class="javascript">
+							document.domain = document.domain; // 端口号为null
+							document.domain = 'b.c'; // 端口号为null
+							document.domain = 'c.c:80'; // 报错
+						</code></pre>
+					</p>
+				</div>
+				<div>
+					<h3>DOM</h3>
+					<p>
+						两个不同源的窗口(例如iframe/window.open)，如果窗口的父级域名相同，则通过上面的方法设置后可以直接获取对方的DOM。<br>
+						如果不同，可以借助以下三种方法进行通信(传递字符串)：
+						<ul>
+							<li>URL的片段标识符</li>
+							<li>window.name</li>
+							<li>window.postMessage</li>
+						</ul>
+						<div>
+							<h4>片段标识符</h4>
+							<p>
+								片段标识符的作用是标志网页阅读位置，跳转到带有<span class="definition">name="片段标识符"</span>的<span class="definition">a</span>标签。<br>
+								例如如果你<a name="return" href="./同源策略.html#go">点击这里页面将跳到页面底部</a>。
+								<pre><code class="html">
+									&lt;a name="return" href="./同源策略.html#go"&gt;点击这里页面将跳到页面底部&lt;/a&gt;
+									&lt;a name="go" href="./同源策略.html#return"&gt;点我跳转回去&lt;/a&gt;
+								</code></pre>
+								A窗口可以给B窗口设置页面标识符，B窗口就可以通过页面标识符读取传递过来的字符串。<br>
+								反之，B窗口也可以给A窗口设置页面标识符，A窗口通过页面标识符读取传递过来的字符串。<br>
+								例如fi_parent.html与fi_child.html实现通信：
+								<pre><code class="html">
+									&lt;!-- 父窗口源代码 --&gt;
+									&lt;!DOCTYPE html&gt;
+									&lt;html lang="en"&gt;
+									&lt;head&gt;
+										&lt;meta charset="UTF-8"&gt;
+										&lt;title&gt;parent page&lt;/title&gt;
+									&lt;/head&gt;
+									&lt;body&gt;
+										&lt;iframe id="child" src="./fi_child.html" frameborder="0"&gt;&lt;/iframe&gt;
+										&lt;script&gt;
+											// 从子窗口接收数据
+											window.onhaschange = function() {
+												var message = window.location.hash;
+											};
+											// 传递数据给子窗口
+											var child = document.getElementById('child');
+											var src = child.src;
+											var message = '要传递过去的数据';
+											child.src = src + '#' + message;
+										&lt;/script&gt;
+									&lt;/body&gt;
+									&lt;/html&gt;
+
+									&lt;!-- 子窗口源代码 --&gt;
+									&lt;!DOCTYPE html&gt;
+									&lt;html lang="en"&gt;
+									&lt;head&gt;
+										&lt;meta charset="UTF-8"&gt;
+										&lt;title&gt;child page&lt;/title&gt;
+									&lt;/head&gt;
+									&lt;body&gt;
+										&lt;script&gt;
+											// 从父窗口接收数据
+											window.onhaschange = function() {
+												var message = window.location.hash;
+											};
+											// 传递数据给父窗口
+											var src = parent.location.href;
+											var message = '要传递过去的数据';
+											window.parent.location.href = src + '#' + message;
+										&lt;/script&gt;
+									&lt;/body&gt;
+									&lt;/html&gt;
+								</code></pre>
+							</p>
+						</div>
+						<div>
+							<h4>window.name</h4>
+							<p>
+								同一个窗口<span class="definition">window.name</span>属性在不同源的两个网页之间是共用的。例如a.html要读b.html传递过来的数据，有两种方式：
+								<ul>
+									<li>先打开b.html，向<span class="definition">window.name</span>写入数据，然后在本窗口跳转到a.html，此时a.html可以通过<span class="definition">window.name</span>来读取b.html之前设置的数据。</li>
+									<li>直接打开a.html，借助<span class="definition">iframe</span>读取b.html设置的<span class="definition">window.name</span>。</li>
+								</ul>
+								第一种方法容易理解，但是一般不会这样用，这里解释下第二种方法。<br>
+								假如wn_parent.html和wn_child.html是不同源的网页，但wn_parent.html和wn_tmp.html是同源的网页，可以进行以下设置，使得wn_parent.html能读取wn_child.html传递过来的数据。
+								<pre><code class="html">
+									&lt;!-- wn_parent.html --&gt;
+									&lt;!DOCTYPE html&gt;
+									&lt;html lang="en"&gt;
+									&lt;head&gt;
+										&lt;meta charset="UTF-8"&gt;
+										&lt;title&gt;parent page&lt;/title&gt;
+										&lt;script&gt;
+											var message = ''; // 接收wn.child.html传递过来的数据
+											function getData() {
+												var child = document.getElementById('child');
+												child.onload = function() { // 重写onload方法，读取window.name属性
+													message = child.contentWindow.name;
+												};
+												child.src = 'wn_tmp.html'; // 跳转到同源的网页
+											}
+										&lt;/script&gt;
+									&lt;/head&gt;
+									&lt;body&gt;
+										&lt;iframe id="child" src="wn_child.html" style="display: none;" onload="getData()"&gt;&lt;/iframe&gt;
+									&lt;/body&gt;
+									&lt;/html&gt;
+
+									&lt;!-- wn_child.html --&gt;
+									&lt;!DOCTYPE html&gt;
+									&lt;html lang="en"&gt;
+									&lt;head&gt;
+										&lt;meta charset="UTF-8"&gt;
+										&lt;title&gt;child page&lt;/title&gt;
+										&lt;script&gt;
+											var message = '要传递过去的数据';
+											window.name = message;
+										&lt;/script&gt;
+									&lt;/head&gt;
+									&lt;body&gt;
+									&lt;/body&gt;
+									&lt;/html&gt;
+								</code></pre>
+								wn_parent.html通过<span class="definition">iframe</span>载入wn_child.html，wn_child.html执行脚本给<span class="definition">window.name</span>赋值数据。(由于不同源，现在wn_parent.html还无法直接读取不同窗口的<span class="definition">window.name</span>)加载完wn_child.html后load事件触发，跳转到和wm_parent.html同源的wn_tmp.html，此时wn_parent.html就可以读取不同窗口但同源的<span class="definition">window.name</span>属性了。
+							</p>
+						</div>
+						<div>
+							<h4>window.postMessage</h4>
+							<p>
+								<span class="definition">window.postMessage</span>是HTML5为<span class="definition">window</span>新增的属性，允许不同源网页进行数据通信。<br>
+								例如pm_parent.html想给pm_child.html发送数据，则
+								<pre><code class="javascript">
+									/* pm_parent.html通过postMessage()方法发送数据给pm_child.html */
+									var url = 'pm_child.html'; // 目标网页地址
+									var message = '要发送的数据';
+									var child = window.open('pm_child.html'); // 获取目标window
+									// var child = document.getElementsByTagName('iframe')[0].contentWidnw; // 另一种方法
+									child.postMessage(message, url); // 向目标window发送数据
+
+									/* pm_child.html监听message事件读取发送过来的数据 */
+									window.onmessage = function(event) {
+										var parent = event.source; // 获取发送方的window
+										var url = event.origin; // 获取发送方的网址
+										var message = event.data; // 获取发送过来的数据
+								}
+								</code></pre>
+							</p>
+						</div>
+					</p>
+				</div>
+				<div>
+					<h3>AJAX</h3>
+					<p>
+						以下三种方法可以不同源的情况下发送AJAX请求：
+						<ul>
+							<li>JSONP</li>
+							<li>WebSocket</li>
+							<li>CORS</li>
+						</ul>
+						<div>
+							<h4>JSONP</h4>
+							<p>
+								JSONP（JSON with Padding）是数据格式JSON的一种“使用模式”，可以让网页从别的网域要数据<sup>[4]</sup>。<br>
+								简而言之，JSONP是一种对JSON数据格式的巧用，由于<span class="definition">script</span>标签的<span class="definition">src</span>属性没有对目标网站进行不同源的限制，使得可以对不同源的网站发送请求，目标网站接受到JSON数据后进行处理，返回<span class="definition">回调函数(数据)</span>这种格式的数据，script就会运行这个回调函数。<br>
+								<pre><code class="javascript">
+									function 回调函数(data) {
+										// 对返回的data进行操作
+									}
+									var url = '目标网站?callback=回调函数';
+									var script = document.createElement('script');
+									script.setAttribute('type', 'text/javascript');
+									script.src = url;
+									document.body.appendChild(script);
+								</code></pre>
+
+							</p>
+						</div>
+						<div>
+							<h4>WebSocket</h4>
+							<p>
+								WebSocket是一种在单个TCP连接上进行全双工通讯的协议<sup>[5]</sup>。使用该协议没有同源策略的限制。
+							</p>
+						</div>
+						<div>
+							<h4>CORS</h4>
+							<p>
+								
+							</p>
+						</div>
+					</p>
+				</div>
+			</p>
+		</section>
+		<a name="go" href="./同源策略.html#return">点我跳转回去</a>
+		<section>
+			<h2>参考文献</h2>
+			[1] 维基百科 统一资源定位符 <a class="refer" href="https://zh.wikipedia.org/wiki/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6">https://zh.wikipedia.org/wiki/统一资源定位符</a><br>
+			[2] 阮一峰 浏览器同源政策及其规避方法 <a class="refer" href="http://www.ruanyifeng.com/blog/2016/04/same-origin-pulicy.html">http://www.ruanyifeng.com/blog/2016/04/same-origin-pulicy.html</a><br>
+			[3] MDN 浏览器的同源策略 <a class="refer" href="https://developer.mozilla.org/zh-CN/docs/Web/Security/Same-origin_pulicy">https://developer.mozilla.org/zh-CN/docs/Web/Security/Same-origin_pulicy</a><br>
+			[4] 维基百科 JSONP <a class="refer" href="https://zh.wikipedia.org/wiki/JSONP">https://zh.wikipedia.org/wiki/JSONP</a><br>
+			[5] 维基百科 WebSocket <a class="refer" href="https://zh.wikipedia.org/wiki/WebSocket">https://zh.wikipedia.org/wiki/WebSocket</a>
+		</section>
+	</article>
+</body>
+</html>

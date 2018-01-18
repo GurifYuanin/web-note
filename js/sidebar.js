@@ -16,11 +16,11 @@ $(function() {
 	var items = [
 					['meta标签', 'href和src', 'HTML语义化', 'HTML5'],
 					['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', 'CSS Hack', 'CSS3'],
-					['原型链', '闭包', '事件', '插件'],
+					['原型链', '闭包', '事件', '插件', '同源策略', 'JSONP'],
 					['响应式布局'],
 					['抓包工具'],
 					['HTTP'],
-					['浏览器渲染']
+					['浏览器渲染', 'cookie']
 				];
 	for (var i = 0; i < category.length; i++) {
 		$sidebar.append(surroundedByTag(category[i], 'h3'));
