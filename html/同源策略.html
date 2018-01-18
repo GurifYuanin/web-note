@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>同源策略</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="../css/normalize.css">
 	<link rel="stylesheet" href="../css/styles/default.css">
@@ -310,7 +310,103 @@
 						<div>
 							<h4>CORS</h4>
 							<p>
-								
+								CORS(Cross-Origin Resource Sharing)：跨域资源共享是W3C的一个工作草案，定义了不同源资源请求的时候浏览器和服务器如何沟通。也就是说，domain1/a.html页面如果向不同源的domain2/b.html发送ajax请求，对于支持CORS的浏览器(IE10+或其他浏览器)来说不会直接报错，而是在请求中带上发起请求的网页的一些信息，服务器再根据这些信息返回是否同意跨源请求。<br>
+								CORS是浏览器与服务器之间的工作，对于开发者来说和同源情况下使用ajax基本一样，部分情况除外：
+								<ul>
+									<li>CORS默认不发送cookie，如果要让浏览器发送cookie，需要设置XHR的withCredentials为true</li>
+									<li>CORS不能通过读取状态码来判断是否成功进行请求，原因需要了解其工作过程</li>
+									<li>CORS默认只能读取Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma这六个响应头部信息</li>
+								</ul>
+								CORS将HTTP请求分为了两类：
+								<ul>
+									<li>简单请求</li>
+									<li>非简单请求</li>
+								</ul>
+								<div>
+									<h5>简单请求</h5>
+									<p>
+										若同时请求满足所有下述条件，则该请求可视为“简单请求”：<sup>[6]</sup>
+										<ul>
+											<li>使用以下方法之一
+												<ul>
+													<li>GET</li>
+													<li>POST</li>
+													<li>HEAD</li>
+												</ul>
+											</li>
+											<li>设置的首部字段在以下范围内
+												<ul>
+													<li>Accept</li>
+													<li>Accept-Language</li>
+													<li>Content-Language</li>
+													<li>Content-Type</li>
+													<li>DRP</li>
+													<li>Downlink</li>
+													<li>Save-Data</li>
+													<li>Viewport-Width</li>
+													<li>Width</li>
+												</ul>
+											</li>
+											<li>Content-Type的值为以下三者之一
+												<ul>
+													<li>text/plain</li>
+													<li>multipart/form-data</li>
+													<li>application/x-www-form-urlencoded</li>
+												</ul>
+											</li>
+										</ul>
+										发送简单请求的时候，浏览器会在请求头部添加一个新的头部字段：
+										<pre><code class="python">
+											Origin: http://domain1/a.html # 发送请求的页面的URL
+										</code></pre>
+										服务器根据这个字段判断发送请求的网页是否可以信任，如果可以信任，则返回资源，资源的头部添加一些新的头部信息：
+										<pre><code class="python">
+											Access-Control-Allow-Origin: http://domain1/a.html # 发送请求的页面的URL(必选)
+											Access-Control-Allow-Credentials: true # 是否允许浏览器发送cookie给服务器(可选)
+											Access-Control-Expose-Headers: Other-Field # 规定脚本除了Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma外，还可以从返回资源中读取的字段(可选)
+										</code></pre>
+										如果服务器觉得发送请求的网页不可信任，则返回的资源不包含以上头部信息，浏览器接收到后没有几个头部信息的资源后就会报错。<br>
+									</p>
+								</div>
+								<div>
+									<h5>非简单请求</h5>
+									<p>
+										如果是非简单请求，浏览器将会在发送ajax请求之前发送一次preflight(预检)请求：
+										<pre><code class="python">
+											OPTIONS /path HTTP/1.1 # 使用OPTION方法进行预检
+											Access-Control-Request-Method: PUT # 请求方法(必选)
+											Access-Control-Request-Headers: Field1, Field2 # 设置的请求头(可选)
+										</code></pre>
+										服务器接收到预检请求后，方法与简单请求类似，可信则添加一些头部信息，不可信则不添加。如果可信，浏览器接收到带有头部信息的资源后，浏览器和服务器就可以像简单请求一样开始正常的CORS通信。
+									</p>
+								</div>
+								<div>
+									<h5>XDR</h5>
+									XDR是IE8中引入的新类型，使用方法与XHR类似，但有以下限制：
+									<ul>
+										<li>既不会发送cookie，也不会返回cookie</li>
+										<li>请求头部信息只能设置Content-Type</li>
+										<li>不能读取响应头部信息</li>
+										<li>只能使用GET或POST方法</li>
+									</ul>
+									<pre><code class="javascript">
+										var url = 'http://domain/path';
+										var message = 'hello world';
+										var xdr = new XDomainRequest(); // 创建一个XDR对象
+										xdr.onload = function() {
+											alert(xdr.responseText); // 只能读取响应文本
+										}
+										xdr.onerror = function() {
+											alert('error'); // 不会返回错误消息
+										}
+										xdr.timeout = 1000; // 设置超时时间(ms)
+										xdr.ontimeout = function() {
+											alert('timeout');
+										}
+										xdr.open(url, message); // 只能异步执行，所以没有第三个参数
+										xdr.send();
+									</code></pre>
+								</div>
 							</p>
 						</div>
 					</p>
@@ -324,7 +420,9 @@
 			[2] 阮一峰 浏览器同源政策及其规避方法 <a class="refer" href="http://www.ruanyifeng.com/blog/2016/04/same-origin-pulicy.html">http://www.ruanyifeng.com/blog/2016/04/same-origin-pulicy.html</a><br>
 			[3] MDN 浏览器的同源策略 <a class="refer" href="https://developer.mozilla.org/zh-CN/docs/Web/Security/Same-origin_pulicy">https://developer.mozilla.org/zh-CN/docs/Web/Security/Same-origin_pulicy</a><br>
 			[4] 维基百科 JSONP <a class="refer" href="https://zh.wikipedia.org/wiki/JSONP">https://zh.wikipedia.org/wiki/JSONP</a><br>
-			[5] 维基百科 WebSocket <a class="refer" href="https://zh.wikipedia.org/wiki/WebSocket">https://zh.wikipedia.org/wiki/WebSocket</a>
+			[5] 维基百科 WebSocket <a class="refer" href="https://zh.wikipedia.org/wiki/WebSocket">https://zh.wikipedia.org/wiki/WebSocket</a><br>
+			[6] MDN HTTP访问控制（CORS）<a class="refer" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS</a><br>
+			[7] Nicholas C.Zakas Javascript高级程序设计
 		</section>
 	</article>
 </body>
