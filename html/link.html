@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>link</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			目录
+		</section>
+		<img id="showCatalog" src="../images/向右.png" alt="加载失败">
+	</aside>
+	<article id="container">
+		<hgroup>
+			<h1>link</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				link用于链接外部文档，最常使用于链接样式表。
+				<ul>
+					<li>link 元素是空元素，它仅包含属性。</li>
+					<li>此元素只能存在于 head 部分，不过它可出现任何次数。</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>属性</h2>
+			<p>
+				<div>
+					<h3>rel</h3>
+					<p>
+						rel(Relationship)：规定当前文档与被链接文档之间的关系。<br>
+						<figure>
+							<img src="../images/rel.jpg" alt="加载失败">
+							<figcaption class="description">截图自W3C</figcaption>
+						</figure>
+					</p>
+				</div>
+				<div>
+					<h3>href</h3>
+					<p>
+						href(Hypertext Reference)：规定被链接文档的位置。<br>
+						对href的理解参见<a href="./href和src.html">此处</a>。
+					</p>
+				</div>
+				<div>
+					<h3>hreflang</h3>
+					<p>
+						hreflang(Hypertext Reference Language)：规定被链接文档的语言。<br>
+						语言表参见<a href="http://www.w3school.com.cn/tags/html_ref_language_codes.asp">此处</a>。
+					</p>
+				</div>
+				<div>
+					<h3>media</h3>
+					<p>
+						media：规定被链接文档将被显示在什么设备上。<br>
+						<li>
+							链接样式表时，如果有多个样式表，浏览器将会对所有样式表进行加载，然后根据media属性决定调用哪个样式表进行渲染。<br>
+						</li>
+						<li>media属性的值为一个判断条件，判断结果为真，则应用样式，判断结果为假，则不应用样式。</li>
+						<pre><code class="html">
+			&lt;!-- 该样式表会应用在“屏幕大小不超过800px的计算机屏幕” --&gt;
+			&lt;link rel="stylesheet" href="style.css" media="screen and (max-device-width:800px)"&gt;
+						</code></pre>
+						<figure>
+							<figcaption class="figTitle">查询设备</figcaption>
+							<img src="../images/media.jpg" alt="加载失败">
+							<figcaption class="description">截图依旧来自W3C</figcaption>
+						</figure>
+						<figure>
+							<figcaption class="figTitle">其他查询条件</figcaption>
+							<table border="1" cellpadding="1" cellspacing="0" style="margin: auto;">
+								<tr>
+									<th>值</th>
+									<th>可用值</th>
+									<th>描述</th>
+								</tr>
+								<tr>
+									<td>[min-|max-]width|height</td>
+									<td>数字 + 单位</td>
+									<td>显示区域的宽度/高度</td>
+								</tr>
+								<tr>
+									<td>[min-|max-]device-width|height</td>
+									<td>数字 + 单位</td>
+									<td>显示器的宽度/高度</td>
+								</tr>
+								<tr>
+									<td>orientation</td>
+									<td>
+										portrait<br>
+										landscape
+									</td>
+									<td>显示器的方向</td>
+								</tr>
+								<tr>
+									<td>[min-|max-]aspect-ratio</td>
+									<td>数字</td>
+									<td>显示区域宽高比</td>
+								</tr>
+								<tr>
+									<td>[min-|max-]device-aspect-ratio</td>
+									<td>数字</td>
+									<td>显示器宽高比</td>
+								</tr>
+								<tr>
+									<td>[min-|max-]color</td>
+									<td>数字</td>
+									<td>显示器bits/color(位深度)</td>
+								</tr>
+								<tr>
+									<td>[min-|max-]color-index</td>
+									<td>数字</td>
+									<td>显示器可以处理的颜色数</td>
+								</tr>
+								<tr>
+									<td>[min-|max-]monochrome</td>
+									<td>数字</td>
+									<td>单色缓冲中bits/piexl</td>
+								</tr>
+								<tr>
+									<td>resolution</td>
+									<td>数字 + 单位</td>
+									<td>显示器像素密度</td>
+								</tr>
+								<tr>
+									<td>scan</td>
+									<td>
+										progressive<br>
+										interlace<br>
+									</td>
+									<td>显示器扫描方式</td>
+								</tr>
+								<tr>
+									<td>grid</td>
+									<td>
+										1(网格)<br>
+										0(位图)<br>
+									</td>
+									<td>设备是网格还是位图</td>
+								</tr>
+							</table>
+						</figure>
+						<figure>
+							<figcaption class="figTitle">可用运算符</figcaption>
+							<table border="1" cellpadding="1" cellspacing="0" style="margin: auto;">
+								<tr>
+									<th>值</th>
+									<th>描述</th>
+								</tr>
+								<tr>
+									<td>and</td>
+									<td>与运算</td>
+								</tr>
+								<tr>
+									<td>not</td>
+									<td>非运算</td>
+								</tr>
+								<tr>
+									<td>,</td>
+									<td>或运算</td>
+								</tr>
+							</table>
+						</figure>
+					</p>
+				</div>
+				<div>
+					<h3>type</h3>
+					<p>
+						type：规定被链接文档的 MIME 类型。<br>
+					</p>
+				</div>
+				<div>
+					<h3>sizes</h3>
+					<p>
+						size：规定被链接资源的尺寸。
+						<li>只有当被链接资源是图标时 (rel="icon")，才能使用该属性。</li>
+						<figure>
+							<img src="../images/type.jpg" alt="加载失败">
+							<figcaption class="description">截图还是来自W3C</figcaption>
+						</figure>
+					</p>
+				</div>
+				<div>
+					<h3>其他属性</h3>
+					<p>
+						以下属性在 HTML5 中已经不支持
+						<ul>
+							<li>charset</li>
+							<li>rev</li>
+							<li>target</li>
+						</ul>
+					</p>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>参考文献</h2>
+			<p>
+				[1] W3C School HTML &lt;link&gt; 标签 <a class="refer" href="http://www.w3school.com.cn/tags/tag_link.asp">http://www.w3school.com.cn/tags/tag_link.asp</a><br>
+				[2] techbrood HTML &lt;link&gt; media 属性 <a class="refer" href="http://techbrood.com/tagsref?p=att-link-media">http://techbrood.com/tagsref?p=att-link-media</a><br>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

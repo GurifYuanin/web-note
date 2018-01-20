@@ -61,7 +61,7 @@
 					<h3>外边距和内边距有什么区别？</h3>
 					<p>
 						如果只是想让元素留白，从效果上看两者没有区别。<br>
-						如果设置了background-color、box-shadow、border-radius、border等属性，其显示效果会受padding影响而不受margin影响。
+						如果设置了background-color、box-shadow、border-radius、border等属性，其特效的生效范围会受padding影响(但不受margin影响)。
 						<pre><code class="html">
 		&lt;div style="
 			background-color: #888;
@@ -72,7 +72,7 @@
 			margin: 50px;
 			box-shadow: 10px 10px 10px #000;
 			border-radius: 10%;
-			border: 10px solid #000;
+			border: 10px solid #000;"
 		&gt;
 			这里是内容。
 		&lt;/div&gt;
@@ -81,7 +81,7 @@
 					</p>
 				</div>
 				<div>
-					<h3>行内元素width/height无法设置</h3>
+					<h3>行内元素的width/height</h3>
 					<p>
 						行内元素width/height由内部内容决定，无法直接通过width/height设置
 					</p>

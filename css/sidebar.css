@@ -55,6 +55,11 @@
     font-size: 0.9em;
     text-decoration: none;
     color: inherit; }
+  #container .description {
+    text-align: center;
+    color: #888; }
+  #container .figTitle {
+    text-align: center; }
   #container table {
     border: 1px solid #222;
     color: #222; }

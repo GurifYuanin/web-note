@@ -27,7 +27,9 @@
 			<h2>URL</h2>
 			<p>
 				学习同源策略之前需要了解URL的结构。<br>
-				URL(Uniform Resource Locator)：统一资源定位符，用于定位互联网的资源，类比现实生活中的<span class="definition">地址</span>，完整格式：<br>
+				URL(Uniform Resource Locator)：统一资源定位符，用于定位互联网的资源。<br>
+				类比现实生活中的<span class="definition">地址</span>。一个地址用来标志唯一的一户人家，一个URL用来标志网络上唯一的一个资源。<br>
+				URL完整格式：
 				<pre><code class="html">
 					协议类型:[//[访问资源需要的凭证信息@]服务器地址[:端口号]][/资源层级UNIX文件路径]文件名[?查询][#片段ID]<sup>[1]</sup>
 				</code></pre>
@@ -143,11 +145,11 @@
 						<div>
 							<h4>片段标识符</h4>
 							<p>
-								片段标识符的作用是标志网页阅读位置，跳转到带有<span class="definition">name="片段标识符"</span>的<span class="definition">a</span>标签。<br>
-								例如如果你<a name="return" href="./同源策略.html#go">点击这里页面将跳到页面底部</a>。
+								片段标识符的作用是标志网页阅读位置，跳转到带有<span class="definition">name="片段标识符"</span>的<span class="definition">a</span>标签<br>的位置。
+								例如如果你<a name="return" href="#go">点击这里</a>页面将跳到页面底部。
 								<pre><code class="html">
-									&lt;a name="return" href="./同源策略.html#go"&gt;点击这里页面将跳到页面底部&lt;/a&gt;
-									&lt;a name="go" href="./同源策略.html#return"&gt;点我跳转回去&lt;/a&gt;
+									&lt;a name="return" href="#go"&gt;点击这里&lt;/a&gt;
+									&lt;a name="go" href="#return"&gt;点我跳转回去&lt;/a&gt;
 								</code></pre>
 								A窗口可以给B窗口设置页面标识符，B窗口就可以通过页面标识符读取传递过来的字符串。<br>
 								反之，B窗口也可以给A窗口设置页面标识符，A窗口通过页面标识符读取传递过来的字符串。<br>
@@ -202,7 +204,7 @@
 						<div>
 							<h4>window.name</h4>
 							<p>
-								同一个窗口<span class="definition">window.name</span>属性在不同源的两个网页之间是共用的。例如a.html要读b.html传递过来的数据，有两种方式：
+								同一个窗口<span class="definition">window.name</span>属性在两个网页(即使是不同源)之间是共用的。例如a.html要读b.html传递过来的数据，有两种方式：
 								<ul>
 									<li>先打开b.html，向<span class="definition">window.name</span>写入数据，然后在本窗口跳转到a.html，此时a.html可以通过<span class="definition">window.name</span>来读取b.html之前设置的数据。</li>
 									<li>直接打开a.html，借助<span class="definition">iframe</span>读取b.html设置的<span class="definition">window.name</span>。</li>
@@ -247,7 +249,8 @@
 									&lt;/body&gt;
 									&lt;/html&gt;
 								</code></pre>
-								wn_parent.html通过<span class="definition">iframe</span>载入wn_child.html，wn_child.html执行脚本给<span class="definition">window.name</span>赋值数据。(由于不同源，现在wn_parent.html还无法直接读取不同窗口的<span class="definition">window.name</span>)加载完wn_child.html后load事件触发，跳转到和wm_parent.html同源的wn_tmp.html，此时wn_parent.html就可以读取不同窗口但同源的<span class="definition">window.name</span>属性了。
+								执行过程：wn_parent.html通过<span class="definition">iframe</span>载入wn_child.html，wn_child.html执行脚本给<span class="definition">window.name</span>赋值数据。(由于不同源，现在wn_parent.html还无法直接读取不同窗口的<span class="definition">window.name</span>)<br>
+								加载完wn_child.html后load事件触发，跳转到和wm_parent.html同源的wn_tmp.html，此时wn_parent.html就可以读取不同窗口但同源的<span class="definition">window.name</span>属性了。
 							</p>
 						</div>
 						<div>
@@ -413,7 +416,7 @@
 				</div>
 			</p>
 		</section>
-		<a name="go" href="./同源策略.html#return">点我跳转回去</a>
+		<a name="go" href="#return">点我跳转回去</a>
 		<section>
 			<h2>参考文献</h2>
 			[1] 维基百科 统一资源定位符 <a class="refer" href="https://zh.wikipedia.org/wiki/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6">https://zh.wikipedia.org/wiki/统一资源定位符</a><br>

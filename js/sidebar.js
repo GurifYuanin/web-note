@@ -14,13 +14,13 @@ $(function() {
 	var category = ['HTML', 'CSS', 'Javascript', '移动Web', '调试', '协议', '其他']; // 目录分类
 	// 具体条目
 	var items = [
-					['meta标签', 'href和src', 'HTML语义化', 'HTML5'],
-					['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', 'CSS Hack', 'CSS3'],
+					['meta标签', 'href和src', 'link', 'HTML语义化', 'HTML5'],
+					['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', 'CSS Hack', 'CSS3', '颜色和长度'],
 					['原型链', '闭包', '事件', '插件', '同源策略', 'JSONP'],
 					['响应式布局'],
 					['抓包工具'],
 					['HTTP'],
-					['浏览器渲染', 'cookie']
+					['浏览器渲染', '设计策略', 'cookie']
 				];
 	for (var i = 0; i < category.length; i++) {
 		$sidebar.append(surroundedByTag(category[i], 'h3'));
