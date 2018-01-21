@@ -127,14 +127,14 @@
 		<section>
 			<h2>CSS href</h2>
 			<p>
-				前面解释href只是一个链接，不会把加载资源，但有一个例外，使用link会加载样式表：
+				前面解释href只是一个链接，不会把加载资源，但有一个例外，使用 link 加载样式表时：
 				<pre><code class="html">
 					&lt;link rel="stylesheet" href="style.css"&gt;
 				</code></pre>
-				由于历史原因，这里link标签的属性是href而不是src，浏览器将
+				由于历史原因，这里 link 标签的属性是 href 而不是 src ，浏览器将
 				<ul>
-					<li>异步加载样式表，因此不像src加载资源的时候阻塞HTML解析，样式表在加载过程中HTML解析不会停止</li>
-					<li>阻塞渲染样式表，由于需要构建DOM和CSSOM，再将两者合并，CSSOM未构建完成之前无法渲染文档</li>
+					<li>异步加载样式表，因此不像 src 加载资源的时候阻塞 HTML 解析，样式表在加载过程中 HTML 解析不会停止</li>
+					<li>阻塞渲染样式表，由于需要构建 DOM 和 CSSOM ，再将两者合并，CSSOM 未构建完成之前无法渲染文档</li>
 				</ul>
 			</p>
 		</section>

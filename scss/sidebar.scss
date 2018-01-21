@@ -14,13 +14,13 @@ $tableShallow: #fff;
     width: $sidebarWidth;
 
     background-color: $sidebarBGcolor;
-    // 目录栏
+    /* 目录栏*/
     #catalog {
         font-size: $imgSize;
 
         color: #fff;
     }
-    // 条目块
+    /* 条目块*/
     div {
         margin: 2.5%;
         padding: 2.5%;
@@ -36,18 +36,18 @@ $tableShallow: #fff;
             color: #000;
         }
     }
-    // 目录分类
+    /* 目录分类*/
     h3 {
         color: #fff;
     }
-    // 隐藏目录的图片
+    /* 隐藏目录的图片*/
     #hideCatalog {
         margin: 0 10px 0 0;
         width: $imgSize;
 
         cursor: pointer;
     }
-    // 显示目录的图片
+    /* 显示目录的图片*/
     #showCatalog {
         display: none;
 
@@ -69,12 +69,12 @@ $tableShallow: #fff;
 
     font-size: 1em;
     line-height: 1.5em;
-    // 文章标题
+    /* 文章标题*/
     .title {
         font-size: 2em;
         text-align: center;
     }
-    // 子标题
+    /* 子标题*/
     .subTitle {
         font-size: 1.5em;
         padding: 5px;
@@ -88,7 +88,7 @@ $tableShallow: #fff;
         color: #111;
         background-color: #eee;
     }
-    // 参考文献链接
+    /* 参考文献链接*/
     .refer {
         font-size: 0.9em;
         text-decoration: none;

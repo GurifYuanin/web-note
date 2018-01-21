@@ -406,8 +406,8 @@
 										xdr.ontimeout = function() {
 											alert('timeout');
 										}
-										xdr.open(url, message); // 只能异步执行，所以没有第三个参数
-										xdr.send();
+										xdr.open('GET', url); // 只能异步执行，所以没有第三个参数
+										xdr.send(message);
 									</code></pre>
 								</div>
 							</p>

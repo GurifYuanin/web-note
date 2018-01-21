@@ -183,7 +183,7 @@
 				<div>
 					<h3>sizes</h3>
 					<p>
-						size：规定被链接资源的尺寸。
+						sizes：规定被链接资源的尺寸。
 						<li>只有当被链接资源是图标时 (rel="icon")，才能使用该属性。</li>
 						<figure>
 							<img src="../images/type.jpg" alt="加载失败">
@@ -202,6 +202,24 @@
 						</ul>
 					</p>
 				</div>
+			</p>
+		</section>
+		<section>
+			<h2>link vs @import</h2>
+			<p>
+				<ul>
+					<li>link 是 XHTML 开始就存在的特性，除了能用于引入样式表，还能引入其他文档</li>
+					<li>@import 是 CSS2.1 的新特性，只能用于引入样式表</li>
+				</ul>
+				同样用于引入样式表时，两者的下载时间不同：
+				<pre><code class="html">
+					&lt;link rel="stylesheet" href="style.css"&gt;
+					&lt;style&gt;
+						@import url(style.css);
+					&lt;/style&gt;
+				</code></pre>
+				link 的加载和渲染参见<a href="./href和src.html">此处</a><br>
+				@import 则会等待页面加载完毕后再加载，因此可能会出现 FOUC(Flash Of Unstyled Content/无样式内容闪烁) 现象：打开网页后先看到无样式的文档，过一段时间后样式才被加载进来，页面才呈现为正常内容(无样式的页面 -> 有样式的页面)。
 			</p>
 		</section>
 		<section>
