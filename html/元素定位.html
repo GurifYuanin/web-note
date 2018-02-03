@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>元素定位</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			目录
+		</section>
+		<img id="showCatalog" src="../images/向右.png" alt="加载失败">
+	</aside>
+	<article id="container">
+		<hgroup>
+			<h1>元素定位</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				定位，即确定元素的位置。<br>
+				CSS 中使用<span class="definition"> position </span>属性来进行定位方式的设置。<br>
+				<ul>
+					<li>static(默认)</li>
+					<li>relative</li>
+					<li>absoulte</li>
+					<li>fixed</li>
+					<li>inherit</li>
+				</ul>
+				除<span class="definition"> static </span>外，<span class="definition"> relative, absoulte, fixed </span>都可以使用<span class="definition"> top, right, bottom, left </span>属性进行位置偏移。
+			</p>
+		</section>
+		<section>
+			<h2>static</h2>
+			<p>
+				<span class="definition"> static </span>是元素<span class="definition"> position </span>属性的默认值，元素位于文档流(normal flow)中，按照自上到下、从左到右的顺序排放。<br>
+			</p>
+		</section>
+		<section>
+			<h2>relative</h2>
+			<p>
+				<span class="definition"> relative </span>从视觉上看，元素相对原先位置进行偏移，但元素依旧占据着原来的位置，元素位于文档流(normal flow)中。<br>
+				<pre><code class="html">
+					&lt;div style="
+						height: 100px;
+						width: 100px;
+						background-color: #ddd;
+					"&gt;
+						&lt;div style="
+							height: 50px;
+							width: 50px;
+							background-color: #000;
+							opacity: .5;
+							position: relative;
+							top: 50px;
+						"&gt;&lt;/div&gt;
+						123456789
+					&lt;/div&gt;
+				</code></pre>
+				<div style="
+					height: 100px;
+					width: 100px;
+					background-color: #ddd;
+				">
+					<div style="
+						height: 50px;
+						width: 50px;
+						background-color: #000;
+						opacity: .5;
+						position: relative;
+						top: 50px;
+					"></div>
+					123456789
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>absolute</h2>
+			<p>
+				<span class="definition"> absolute </span>使元素相对非<span class="definition"> static </span>定位的最近的祖先元素偏移，元素脱离文档流，即元素不再占据位置。
+				<pre><code class="html">
+					&lt;div style="
+						height: 100px;
+						width: 100px;
+						background-color: #ddd;
+						position: relative;
+					"&gt;
+						&lt;div style="
+							height: 50px;
+							width: 50px;
+							background-color: #000;
+							opacity: .5;
+							position: absolute;
+							top: 50px;
+						"&gt;&lt;/div&gt;
+						123456789
+					&lt;/div&gt;
+				</code></pre>
+				<div style="
+					height: 100px;
+					width: 100px;
+					background-color: #ddd;
+					position: relative;
+				">
+					<div style="
+						height: 50px;
+						width: 50px;
+						background-color: #000;
+						opacity: .5;
+						position: absolute;
+						top: 50px;
+					"></div>
+					123456789
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>fixed</h2>
+			<p>
+				<span class="definition"> fixed </span>使元素相对视窗偏移，元素脱离文档流，即元素不再占据位置。<br>
+				<div>
+					<input id="show-fixed" type="button" value="显示fixed框">
+					<div id="fixed-info"></div>
+				</div>
+				<div id="fixed-block" style="
+					display: none;
+					background-color: #ddd;
+					height: 100px;
+					width: 100px;
+					text-align: center;
+					font-size: 20px;
+					line-height: 100px;
+					position: fixed;
+					bottom: 0;
+					right: 0;
+				">
+					fixed
+				</div>
+				<script>
+					var showFixed = document.getElementById('show-fixed');
+					var fixedBlock = document.getElementById('fixed-block');
+					var fixedInfo = document.getElementById('fixed-info');
+					showFixed.onclick = function() {
+						fixedBlock.style.display = 'block';
+						fixedInfo.innerHTML = '请试一试上下滚动。';
+					};
+				</script>
+				<pre><code class="html">
+					&lt;div id="fixed-block" style="
+						display: none;
+						background-color: #ddd;
+						height: 100px;
+						width: 100px;
+						text-align: center;
+						font-size: 20px;
+						line-height: 100px;
+						position: fixed;
+						bottom: 0;
+						right: 0;
+					"&gt;
+						fixed
+					&lt;/div&gt;
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>参考文献</h2>
+			<p>
+				[1] Eric A. Meyer 《CSS权威指南》
+			</p>
+		</section>
+	</article>
+</body>
+</html>
