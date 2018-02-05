@@ -68,10 +68,6 @@
 							链接样式表时，如果有多个样式表，浏览器将会对所有样式表进行加载，然后根据media属性决定调用哪个样式表进行渲染。<br>
 						</li>
 						<li>media属性的值为一个判断条件，判断结果为真，则应用样式，判断结果为假，则不应用样式。</li>
-						<pre><code class="html">
-			&lt;!-- 该样式表会应用在“屏幕大小不超过800px的计算机屏幕” --&gt;
-			&lt;link rel="stylesheet" href="style.css" media="screen and (max-device-width:800px)"&gt;
-						</code></pre>
 						<figure>
 							<figcaption class="figTitle">查询设备</figcaption>
 							<img src="../images/media.jpg" alt="加载失败">
@@ -172,6 +168,10 @@
 								</tr>
 							</table>
 						</figure>
+						<pre><code class="html">
+						&lt;!-- 该样式表会应用在“屏幕大小不超过800px的计算机屏幕” --&gt;
+						&lt;link rel="stylesheet" href="style.css" media="screen and (max-device-width:800px)"&gt;
+						</code></pre>
 					</p>
 				</div>
 				<div>
