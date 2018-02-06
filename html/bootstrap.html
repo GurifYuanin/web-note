@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>bootstrap</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			目录
+		</section>
+		<img id="showCatalog" src="../images/向右.png" alt="加载失败">
+	</aside>
+	<article id="container">
+		<hgroup>
+			<h1>bootstrap</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				Bootstrap 是一组用于网站和网络应用程序开发的开源前端框架（HTML、CSS、Javascript）。旨在使动态网页和Web应用的开发更加容易<sup>[1]</sup>。<br>
+				Bootstrap 可应用于响应式布局开发、移动设备优先的 Web 项目。<br>
+				<figure>
+					<img style="margin: 5% 10%; width: 80%;" src="../images/bootstrap_further.jpg" alt="加载失败">
+					<figcaption class="description">From：<a class="description" href="http://v3.bootcss.com/">http://v3.bootcss.com/</a></figcaption>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>下载与引入</h2>
+			<p>
+				<ul>
+					<li>下载（任选一种）</li>
+					<ul>
+						<li>Bootstrap 官网：<a href="https://getbootstrap.com/">https://getbootstrap.com/</a></li>
+						<li>国内 CDN：<a href="https://www.staticfile.org/">https://www.staticfile.org/</a></li>
+						<li>npm：npm install bootstrap</li>
+						<li>gem：gem 'bootstrap', '~> 4.0.0'</li>
+					</ul>
+					<li>引入（jquery.js 需在 bootstrap.js 前面）</li>
+					<ol>
+						<li>核心 CSS 文件：&lt;link rel="stylesheet" href="bootstrap.min.css"&gt;</li>
+						<li>jquery 文件：&lt;script src="jquery.min.js"&gt;&lt;/script&gt;</li>
+						<li>弹窗、提示、下拉菜单组件：&lt;script src="popper.min.js"&gt;&lt;/script&gt;</li>
+						<li>核心 javascript 文件：&lt;script src="bootstrap.min.js"&gt;&lt;/script&gt;</li>
+					</ol>
+				</ul>
+				如果下载的 bootstrap.js 是 compiled ，则需要引用 jquery 和 popper （即步骤 2 和 3），反之则不需要。
+			</p>
+		</section>
+		<section>
+			<h2>容器</h2>
+			<p>
+				bootstrap 提供了两个容器类：
+				<ul>
+					<li>container</li>
+					<li>container-fluid</li>
+				</ul>
+				container 使元素固定宽度（默认100%）并支持响应式布局。<br>
+				container-fluid 使元素宽度始终等于浏览器视窗（viewport）宽度。<br>
+				<pre><code class="html">
+					&lt;body&gt;
+						&lt;div class="container" style="
+							background-color: #bbb;
+							height: 100px;
+						"&gt;container&lt;/div&gt;
+						&lt;div class="container-fluid" style="
+							background-color: #eee;
+							height: 100px;
+						"&gt;container-fluid&lt;/div&gt;
+					&lt;/body&gt;
+				</code></pre>
+				<img style="width 80%;" src="../images/container_demo.jpg" alt="加载失败"><br>
+				bootstrap.css 部分源码：
+				<pre><code class="CSS">
+					.container {
+					  width: 100%;
+					  padding-right: 15px;
+					  padding-left: 15px;
+					  margin-right: auto;
+					  margin-left: auto;
+					}
+					.container-fluid {
+					  width: 100%;
+					  padding-right: 15px;
+					  padding-left: 15px;
+					  margin-right: auto;
+					  margin-left: auto;
+					}
+				</code></pre>
+				从 bootstrap.css 源码看到， bootstrap 为容器设置了 15px 的左右内边距。
+			</p>
+		</section>
+		<section>
+			<h2>网格布局</h2>
+			<p>
+				bootstrap 的网格布局将一行划分为十二列，一个元素可以根据要求占据多个列（每个元素左右外边距各为 15px ），同一列无法全部容纳时候，多余元素自动归入下一列。<br>
+				bootstrap 提供了两种方式的网格布局方式：
+				<pre><code class="html">
+					&lt;!-- 自适应方式 --&gt;
+					&lt;div class="row"&gt;
+						&lt;div class="col"&gt;第一列&lt;/div&gt;
+						&lt;div class="col"&gt;第二列&lt;/div&gt;
+						...
+						&lt;div class="col"&gt;第n列&lt;/div&gt;
+					&lt;/div&gt;
+					&lt;!-- 分设备显示 --&gt;
+					&lt;div class="row"&gt;
+						&lt;div class="col-设备-所占列数"&gt;&lt;/div&gt;
+						...
+						&lt;div class="col-设备-所占列数"&gt;&lt;/div&gt;
+					&lt;/div&gt;
+				</code></pre>
+				<ul>
+					<li>自适应方式，使子元素在减去每个元素的外边距后，等分父元素宽度。</li>
+					<li>分设备显示方式，先判断父元素宽度是否大于指定设备宽度，如果大于则正常显示，反之则跨行显示，之后再根据所站列数摆放子元素。</li>
+				</ul>
+				<figure style="text-align: center;">
+					<table style="margin: auto;">
+						<tr>
+							<th>类名</th>
+							<th>描述</th>
+						</tr>
+						<tr>
+							<td>col-所占列数</td>
+							<td>适用任何设备</td>
+						</tr>
+						<tr>
+							<td>col-sm-所占列数</td>
+							<td>平板（父元素宽度 >= 576px）</td>
+						</tr>
+						<tr>
+							<td>col-md-所占列数</td>
+							<td>桌面显示器（父元素宽度 >= 768px）</td>
+						</tr>
+						<tr>
+							<td>col-lg-所占列数</td>
+							<td>大桌面显示器（父元素宽度 >= 992px）</td>
+						</tr>
+						<tr>
+							<td>col-xl-所占列数</td>
+							<td>超大桌面显示器（父元素宽度 >= 1200px）</td>
+						</tr>
+					</table>
+					<br>
+					<img src="../images/bootstrap_grid.jpg" alt="加载失败">
+				</figure>
+
+			</p>
+		</section>
+		<section>
+			<h2>参考文献</h2>
+			<p>
+				[1] 维基百科 bootstrap <a class="refer" target="_blank" href="https://zh.wikipedia.org/wiki/Bootstrap">https://zh.wikipedia.org/wiki/Bootstrap</a><br>
+				[2] 菜鸟教程 Bootstrap4 教程 <a class="refer" target="_blank" href="http://www.runoob.com/bootstrap4/bootstrap4-tutorial.html">http://www.runoob.com/bootstrap4/bootstrap4-tutorial.html</a><br>
+			</p>
+		</section>
+	</article>
+</body>
+</html>
