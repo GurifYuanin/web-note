@@ -112,17 +112,18 @@
 						...
 						&lt;div class="col"&gt;第n列&lt;/div&gt;
 					&lt;/div&gt;
-					&lt;!-- 分设备显示 --&gt;
+					&lt;!-- 按权重方式 --&gt;
 					&lt;div class="row"&gt;
 						&lt;div class="col-设备-所占列数"&gt;&lt;/div&gt;
 						...
 						&lt;div class="col-设备-所占列数"&gt;&lt;/div&gt;
 					&lt;/div&gt;
 				</code></pre>
-				<ul>
-					<li>自适应方式，使子元素在减去每个元素的外边距后，等分父元素宽度。</li>
-					<li>分设备显示方式，先判断父元素宽度是否大于指定设备宽度，如果大于则正常显示，反之则跨行显示，之后再根据所站列数摆放子元素。</li>
-				</ul>
+				<li>自适应方式，使子元素在减去每个元素的外边距后，每个子元素自动等分父元素宽度。</li>
+				<figure style="text-align: center;">
+					<img style="width: 80%; border: 1px solid #000" src="../images/bootstrap_adapt.jpg" alt="加载失败">
+				</figure>
+				<li>按权重方式，先判断父元素宽度是否大于指定设备宽度，如果大于则同行布局，反之则跨行布局，之后再根据"所站列数"按权重设置子元素宽度（列数总和为 12 ）。</li>
 				<figure style="text-align: center;">
 					<table style="margin: auto;">
 						<tr>
@@ -154,6 +155,179 @@
 					<img src="../images/bootstrap_grid.jpg" alt="加载失败">
 				</figure>
 
+			</p>
+		</section>
+		<section>
+			<h2>文字</h2>
+			<p>
+				bootstrap 对常用标签的样式进行了预设。
+				<ul>
+					<li>
+						body
+						<ul>
+							<li>外边距为 0 </li>
+							<li>颜色 #212529</li>
+							<li>字体：-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"</li>
+						</ul>
+					</li>
+					<li>
+						p
+						<ul>
+							<li>上外边距为 0 </li>
+							<li>下外边距为 1 rem</li>
+						</ul>
+					</li>
+					<li>
+						h1 ~ h6
+						<ul>
+							<li>上外边距为 0 </li>
+							<li>下外边距为 0.5 rem</li>
+							<li>字体大小分别为 2.5 rem, 2 rem, 1.75 rem, 1.5 rem, 1.25 rem, 1 rem</li>
+						</ul>
+					</li>
+					<li>
+						为有 title 属性的 abbr 标签
+						<ul>
+							<li>点状下划线</li>
+							<li>悬浮时鼠标形状为 help </li>
+						</ul>
+					</li>
+					<li>
+						code
+						<ul>
+							<li>内边距为 0.2 rem 0.4 rem</li>
+							<li>字体大小为 90% </li>
+							<li>颜色为 #bd4147</li>
+							<li>背景颜色为 #f8f9fa</li>
+							<li>边缘圆角为 0.25 rem</li>
+						</ul>
+					</li>
+					<li>
+						kbd
+						<ul>
+							<li>内边距为 0.2 rem 0.4 rem</li>
+							<li>字体大小为 87.5% </li>
+							<li>颜色为 #fff(纯白)</li>
+							<li>背景颜色为 #212529</li>
+							<li>边缘圆角为 0.2 rem</li>
+						</ul>
+					</li>
+				</ul>
+				<figure>
+					<p style="margin-top: 0; margin-bottom: 1rem;">p</p>
+					<h1 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 2.5rem;">h1</h1>
+					<h2 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 2rem;">h2</h2>
+					<h3 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.75rem;">h3</h3>
+					<h4 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.5rem;">h4</h4>
+					<h5 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1.25rem;">h5</h5>
+					<h6 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 1rem;">h6</h6>
+					<abbr style="text-decoration: underline dotted; cursor: help; border-bottom: 0;" title="abbr">abbr</abbr><br>
+					<code style="padding: 0.2rem 0.4rem; font-size: 90%; color: #bd4147; background-color: #f8f9fa; border-radius: 0.25rem;">code</code><br>
+					<kbd style="padding: 0.2rem 0.4rem; font-size: 87.5%; color: #fff;
+	  background-color: #212529; border-radius: 0.2rem;">kbd</kbd>
+				</figure>
+
+			</p>
+		</section>
+		<section>
+			<h2>颜色</h2>
+			<p>
+				bootstrap 预设了一组前景色和背景色的类。
+				<ul>
+					<li>
+						前景色（该类只预设了前景色，背景色需自行设置）
+						<ul>
+							<li style="color: #868e96">text-muted/text-secondary #868e96 柔和文本/二级标题</li>
+							<li style="color: #007bff">text-primary #007bff 重要文本</li>
+							<li style="color: #28a745">text-success #28a745 执行成功</li>
+							<li style="color: #17a2b8">text-info #17a2b8 信息提示文本</li>
+							<li style="color: #ffc107">text-warning #ffc107 警告文本</li>
+							<li style="color: #dc3545">text-danger #dc3545 危险操作文本</li>
+							<li style="color: #fff; background-color: #000; width: 20em;">text-white #fff 纯白色文本</li>
+							<li style="color: #f8f9fa; background-color: #000; width: 20em;">text-light #f8f9fa 浅灰色文本</li>
+							<li style="color: #343a40">text-dark #343a40 深色文本</li>
+						</ul>
+					</li>
+					<li>
+						背景色（该类只预设了背景色，前景色需自行设置）
+						<ul>
+							<li style="width: 20em; color: #fff;background-color: #868e96">bg-secondary #868e96 二级标题背景</li>
+							<li style="width: 20em; color: #fff;background-color: #007bff">bg-primary #007bff 重要信息背景</li>
+							<li style="width: 20em; color: #fff;background-color: #28a745">bg-success #28a745 执行成功背景</li>
+							<li style="width: 20em; color: #fff;background-color: #17a2b8">bg-info #17a2b8 信息提示背景</li>
+							<li style="width: 20em; color: #fff;background-color: #ffc107">bg-warning #ffc107 警告背景</li>
+							<li style="width: 20em; color: #fff;background-color: #dc3545">bg-danger #dc3545 危险操作背景</li>
+							<li style="width: 20em; color: #000;background-color: #fff;">bg-white #fff 纯白色背景</li>
+							<li style="width: 20em; color: #000;background-color: #f8f9fa;">bg-light #f8f9fa 浅灰色背景</li>
+							<li style="width: 20em; color: #fff;background-color: #343a40">bg-dark #343a40 深色背景</li>
+						</ul>
+					</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>表格</h2>
+			<p>
+				bootstrap 提供了一组表格样式的类。
+				<ul>
+					<li>
+						整体（可叠加使用，添加在 table 标签上）
+						<ul>
+							<li>
+								table（基本表格）<br>
+								<img style="width: 150px;" src="../images/bootstrap_table.jpg" alt="加载失败">
+							</li>
+							<li>
+								table-striped（条纹表格）<br>
+								<img style="width: 150px;" src="../images/bootstrap_table-striped.jpg" alt="加载失败">
+							</li>
+							<li>
+								table-bordered（带边框表格）<br>
+								<img style="width: 150px;" src="../images/bootstrap_table-bordered.jpg" alt="加载失败">
+							</li>
+							<li>
+								table-dark（暗色表格）<br>
+								<img style="width: 150px;" src="../images/bootstrap_table-dark.jpg" alt="加载失败">
+							</li>
+						</ul>
+					</li>
+					<li>
+						悬浮特效（添加在 table 标签上）
+						<ul>
+							<li>table-hover</li>
+						</ul>
+					</li>
+					<li>
+						表头颜色（添加在 th 标签上）
+						<ul>
+							<li>table-dark（深色）</li>
+							<li>table-light（浅色）</li>
+						</ul>
+					</li>
+					<li>
+						带颜色的行（添加在 tr 标签上）
+						<ul>
+							<li>table-primary</li>
+							<li>table-success</li>
+							<li>table-danger</li>
+							<li>table-info</li>
+							<li>table-warning</li>
+							<li>table-active</li>
+							<li>table-secondary</li>
+							<li>table-light</li>
+							<li>table-dark</li>
+						</ul>
+					</li>
+					<li>
+						响应式表格：屏幕过小时底部自动增加一个滚动条（添加在父级标签上）
+						<ul>
+							<li>table-responsive-sm（< 576 px）</li>
+							<li>table-responsive-md（< 768 px）</li>
+							<li>table-responsive-lg（< 992 px）</li>
+							<li>table-responsive-xl（< 1200px）</li>
+						</ul>
+					</li>
+				</ul>
 			</p>
 		</section>
 		<section>
