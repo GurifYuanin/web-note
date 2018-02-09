@@ -268,13 +268,15 @@
 		<section>
 			<h2>消息提示框</h2>
 			<p>
-				bootstrap 提供了一组预设消息提示框的类，完整用法如下：
+				bootstrap 提供了一组预设消息提示框的类，完整用法如下（提示框颜色与背景色种类相同）：
 				<pre><code class="html">
 					&lt;div class="alert alert-success alert-dismissable fade show"&gt;
 						关我之前请读这条&lt;a class="alert-link" href="#"&gt;信息&lt;/a&gt;
 						&lt;button type="button" class="close" data-dismiss="alert"&gt;x&lt;/button&gt;
 					&lt;/div&gt;
 				</code></pre>
+				<img style="width: 80%;" src="../images/bootstrap_alert.jpg" alt="加载失败"><br>
+				<img src="../images/bootstrap_demo.gif" alt="加载失败">
 			</p>
 		</section>
 		<section>
@@ -306,7 +308,10 @@
 					<li>
 						悬浮特效（添加在 table 标签上）
 						<ul>
-							<li>table-hover</li>
+							<li>
+								table-hover<br>
+								<img style="width: 50%;" src="../images/bootstrap_table-hover.gif" alt="加载失败">
+							</li>
 						</ul>
 					</li>
 					<li>
@@ -342,7 +347,123 @@
 				</ul>
 			</p>
 		</section>
+		<section>
+			<h2>按钮</h2>
+			<p>
+				bootstrap 提供了一组按钮类。
+				<ul>
+					<li>
+						设置为按钮：<br>
+						btn（基本按钮）+
+						<ul>
+							<li>
+								设置为纯色按钮：
+								<ul>
+									<li>btn-primary</li>
+									<li>btn-secondary</li>
+									<li>btn-success</li>
+									<li>btn-info</li>
+									<li>btn-warning</li>
+									<li>btn-danger</li>
+									<li>btn-dark</li>
+									<li>btn-light</li>
+									<li>btn-link</li>
+								</ul>
+							</li>
+							<li>
+								设置为边框按钮：
+								<ul>
+									<li>btn-outline-primary</li>
+									<li>btn-outline-secondary</li>
+									<li>btn-outline-success</li>
+									<li>btn-outline-info</li>
+									<li>btn-outline-warning</li>
+									<li>btn-outline-danger</li>
+									<li>btn-outline-dark</li>
+									<li>btn-outline-light</li>
+									<li>btn-outline-link</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li>
+						设置按钮大小：
+						<ul>
+							<li>btn-lg（大按钮）</li>
+							<li>不添加（默认）</li>
+							<li>btn-sm（小按钮）</li>
+						</ul>
+					</li>
+					<li>
+						设置为块级按钮：btn-block
+					</li>
+					<li>
+						设置按钮状态：
+						<ul>
+							<li>active（激活）</li>
+							<li>disabled（禁用）</li>
+						</ul>
+					</li>
+					<li>
+						设置为按钮组（添加在父元素上）：btn-group
+						<ul>
+							<li>
+								设置按钮组大小：
+								<ul>
+									<li>btn-group-sm</li>
+									<li>btn-group-lg</li>
+									<li>btn-group-xs</li>
+								</ul>
+							</li>
+							<li>
+								设置按钮组方向：
+								<ul>
+									<li>不添加（默认水平）</li>
+									<li>btn-group-vertical（垂直）</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>进度条</h2>
+			<p>
+				bootstrap 提供了一组设置进度条的类。
+				<pre><code class="html">
+					&lt;!-- 使用模版 --&gt;
+					&lt;父标签 class="progress"&gt;
+						&lt;进度条标签 class="progress-bar" style="width: 进度%"&gt;进度条内部标签&lt;/进度条标签&gt;
+					&lt;/父标签&gt;
 
+					&lt;!-- 使用实例 --&gt;
+					&lt;div class="progress"&gt;
+						&lt;div class="progress-bar" style="width: 50%"&gt;50%&lt;/div&gt;
+					&lt;/div&gt;
+				</code></pre>
+				<img src="../images/bootstrap_progress.jpg" alt="加载失败">
+				<ul>
+					<li>
+						设置进度条颜色（添加在进度条标签上）：
+						<ul>
+							<li>bg-success</li>
+							<li>bg-info</li>
+							<li>bg-warning</li>
+							<li>bg-danger</li>
+						</ul>
+					</li>
+					<li>
+						设置进度条样式（添加在进度条标签上）：
+						<ul>
+							<li>progress-bar-striped<（静止条纹）</li>
+							<li>progress-bar-striped progress-bar-animated（滚动条纹）</li>
+						</ul>
+
+					</li>
+				</ul>
+			</p>
+		</section>
 		<section>
 			<h2>参考文献</h2>
 			<p>
