@@ -432,12 +432,12 @@
 			<p>
 				bootstrap 提供了一组设置进度条的类。
 				<pre><code class="html">
-					&lt;!-- 使用模版 --&gt;
+					&lt;!-- 模版 --&gt;
 					&lt;父标签 class="progress"&gt;
 						&lt;进度条标签 class="progress-bar" style="width: 进度%"&gt;进度条内部标签&lt;/进度条标签&gt;
 					&lt;/父标签&gt;
 
-					&lt;!-- 使用实例 --&gt;
+					&lt;!-- 实例 --&gt;
 					&lt;div class="progress"&gt;
 						&lt;div class="progress-bar" style="width: 50%"&gt;50%&lt;/div&gt;
 					&lt;/div&gt;
@@ -462,6 +462,64 @@
 
 					</li>
 				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>下拉列表</h2>
+			<p>
+				bootstrap 提供了一组设置下拉列表的类。（点击按钮后显示下拉列表）
+				<pre><code class="html">
+			&lt;div class="dropdown"&gt;
+				&lt;button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"&gt;按钮文字&lt;/button&gt;
+				&lt;div class="dropdown-menu"&gt;
+					&lt;div class="dropdown-divider"&gt;&lt;/div&gt;
+					&lt;div class="dropdown-header"&gt;标题&lt;/div&gt;
+					&lt;a class="dropdown-item" href="#"&gt;开启项&lt;/a&gt;
+					&lt;a class="dropdown-item disabled" href="#"&gt;禁止项&lt;/a&gt;
+				&lt;/div&gt;
+			&lt;/div&gt;
+				</code></pre>
+				<img src="../images/bootstrap_dropdown_code.jpg" alt="加载失败"><br>
+				<img src="../images/bootstrap_dropdown.jpg" alt="加载失败"><br>
+			</p>
+		</section>
+		<section>
+			<h2>折叠</h2>
+			<p>
+				bootstrap 提供了一组设置折叠的类。
+				<pre><code class="html">
+					&lt;button data-toggle="collapse" data-target="#被折叠部分ID">折叠按钮&lt;/button&gt;
+					&lt;div id="被折叠部分ID" class="collapse show"&gt;
+					被折叠部分
+					&lt;/div&gt;
+				</code></pre>
+				<img src="../images/bootstrap_collapse_code.jpg" alt="加载失败"><br>
+				<img src="../images/bootstrap_collapse.gif" alt="加载失败"><br>
+			</p>
+		</section>
+		<section>
+			<h2></h2>
+			<p>
+				bootstrap 提供了一组设置导航条的类。
+				<pre><code class="html">
+				&lt;nav class="navbar navbar-expand-sm fixed-top bg-dark navbar-dark"&gt;
+					&lt;a class="navbar-brand" href="#"&gt;logo&lt;/a&gt;
+					&lt;ul class="navbar-nav"&gt;
+					  	&lt;li class="nav-item"&gt;
+							&lt;a class="nav-link" href="#"&gt;链接&lt;/a&gt;
+						&lt;/li&gt;
+					 &lt;/ul&gt;
+					 &lt;form class="form-inline"&gt;
+					 	&lt;input class="form-control" type="text"&gt;
+					 	&lt;button class="btn btn-success" type="submit"&gt;按钮&lt;/button&gt;
+					 &lt;/form&gt;
+					&lt;span class="navbar-text"&gt;
+					非链接文本
+					&lt;/span&gt;
+				&lt;/nav&gt;
+				</code></pre>
+				<img src="../images/bootstrap_nav_code.jpg" alt="加载失败"><br>
+				<img src="../images/bootstrap_nav.jpg" alt="加载失败"><br>
 			</p>
 		</section>
 		<section>
