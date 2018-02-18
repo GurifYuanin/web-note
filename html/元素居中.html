@@ -52,14 +52,14 @@
 				<div>
 					<h3>float</h3>
 					<p>
-						实现方法：添加一个父级元素并设置相对对位，左偏移为50%，设置子元素浮动，相对定位，右偏移为50%。
+						实现方法：添加一个父级元素并设置相对对位，左浮动，左偏移为50%，设置子元素相对定位，左浮动，右偏移为50%。
 						<pre><code class="html">
-	&lt;div style="position: relative; left: 50%;"&gt;
+	&lt;div style="position: relative; float: left; left: 50%;"&gt;
 		&lt;div style="position: relative; float: left; right: 50%;"&gt;float&lt;/div&gt;
 	&lt;/div&gt;
 						</code></pre>
 						<ul>
-							<li>子元素设置浮动是为了左浮并填充满父元素，因此不需要为子元素设置宽度</li>
+							<li>块级元素设置浮动后，其宽度由内部内容撑开，因此不需要为父子元素设置宽度。</li>
 							<li>可以设置多个子元素</li>
 						</ul>
 					</p>

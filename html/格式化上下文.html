@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>格式化上下文</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			目录
+		</section>
+		<img id="showCatalog" src="../images/向右.png" alt="加载失败">
+	</aside>
+	<article id="container">
+		<hgroup>
+			<h1>格式化上下文</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				我们知道， HTML 中每个元素都是个<a href="./盒式模型.html" target="_blank">盒子</a>，而这个盒子可以属于一个格式化上下文（FC，Formatting Context）：
+				<ul>
+					<li>Block Formatting Context（BFC）：块级格式化上下文</li>
+					<li>Inline Formatting Context（IFC）：行内格式化上下文</li>
+				</ul>
+				块级元素（ display 为 block / list-item / table ）属于块级格式上下文。<br>
+				行内元素（ display 为 inline / inline-table / inline-block ）属于行内格式上下文。<br>
+			</p>
+		</section>
+		<section>
+			<h2>块级格式化上下文</h2>
+			<p>
+				<div>
+					<h3>定义</h3>
+					<p>
+						<span class="definition">BFC</span>：块级元素的格式化上下文，可以理解为块级元素所处环境。<br>
+						默认情况下，块级元素不属于<span class="definition"> BFC </span>，只有满足一定条件后，块级元素才属于<span class="definition"> BFC </span> 。<br>
+						在<span class="definition"> BFC </span>中，块级元素在独立的环境中，之后会拥有一些新特性。<br>
+					</p>
+				</div>
+				<div>
+					<h3>触发 BFC </h3>
+					<p>
+						满足以下任一条件则属于 BFC ：
+						<ul>
+							<li>float 为 left / right （浮动元素）</li>
+							<li>position 为 absoulte / fixed（绝对定位元素）</li>
+							<li>display 为 inline-block / table-cell / table-caption（非块级盒子的块级容器）</li>
+							<li>overflow 为 hidden / scroll / auto（除 visible ）</li>
+						</ul>
+					</p>
+				</div>
+				<div>
+					<h3>新特性</h3>
+					<p>
+						属于 BFC 的元素拥有以下新特性：
+						<ul>
+							<li>包含浮动元素</li>
+							<li>清除浮动元素</li>
+							<li>内部元素外边距折叠</li>
+						</ul>
+					</p>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>参考文献</h2>
+			<p>
+				[1] W3C Visual formatting model <a class="refer" target="_blank" href="https://www.w3.org/TR/CSS21/visuren.html">https://www.w3.org/TR/CSS21/visuren.html</a><br>
+				[2] Kayo 详说 Block Formatting Contexts <a class="refer" target="_blank" href="http://kayosite.com/block-formatting-contexts-in-detail.html">http://kayosite.com/block-formatting-contexts-in-detail.html</a><br>
+				[3] tink 前端知识手册 <a class="refer" target="_blank" href="https://tink.gitbooks.io/fe-collections/content/ch03-css/formatting-context.html">https://tink.gitbooks.io/fe-collections/content/ch03-css/formatting-context.html</a><br>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

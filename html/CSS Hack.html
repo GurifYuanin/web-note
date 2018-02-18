@@ -117,6 +117,14 @@
 					</table>
 					<figcaption class="description">针对浏览器内核</figcaption>
 				</figure>
+				<pre><code class="css">
+					div {
+						-color: #fff; /* 只有 IE 6 生效 */
+						-web-border-radius: 50%;
+						-moz-border-radius: 50%;
+						border-radius: 50%;
+					}
+				</code></pre>
 			</p>
 		</section>
 		<section>
@@ -160,6 +168,16 @@
 					</table>
 					<figcaption class="description">常见选择器前缀</figcaption>
 				</figure>
+				<pre><code class="css">
+					*div {
+						width: 100px; /* 只有 IE 6 生效 */
+					}
+					@media screen and (-ms-high-contrast: active). (-ms-high-contrast: none) {
+						div {
+							width: 200px; /* 只有 IE 10 生效  */
+						}
+					}
+				</code></pre>
 			</p>
 		</section>
 		<section>
