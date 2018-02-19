@@ -85,7 +85,7 @@
 		<section>
 			<h2>absolute</h2>
 			<p>
-				<span class="definition"> absolute </span>使元素相对非<span class="definition"> static </span>定位的最近的祖先元素偏移，元素脱离文档流，即元素不再占据位置。
+				<span class="definition"> absolute </span>使元素相对非<span class="definition"> static </span>定位的最近的祖先元素偏移，元素脱离文档流和文本流，即元素不再占据位置，对其他非绝对定位的元素和文本进行覆盖。
 				<pre><code class="html">
 					&lt;div style="
 						height: 100px;
@@ -125,7 +125,7 @@
 		<section>
 			<h2>fixed</h2>
 			<p>
-				<span class="definition"> fixed </span>使元素相对视窗偏移，元素脱离文档流，即元素不再占据位置。<br>
+				<span class="definition"> fixed </span>使元素相对视窗偏移，元素脱离文档流和文本流。<br>
 				<div>
 					<input id="show-fixed" type="button" value="显示fixed框">
 					<div id="fixed-info"></div>
