@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>作用域链</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			目录
+		</section>
+		<img id="showCatalog" src="../images/向右.png" alt="加载失败">
+	</aside>
+	<article id="container">
+		<hgroup>
+			<h1>作用域链</h1>
+		</hgroup>
+		<section>
+			<h2>变量对象</h2>
+			<p>
+				变量对象（Variable Object）是保存执行环境（Execution Context）中所有定义了的变量和函数的一个对象（无法通过代码直接访问），它包含了：
+				<ul>
+					<li> arguments 对象</li>
+					<li>执行环境所有的变量声明（同名则跳过）</li>
+					<li>执行环境所有的函数声明（同名则覆盖）</li>
+				</ul>
+				<pre><code class="javascrpt">
+			function sum(number1, number2) {
+				var sum = number1 + number2;
+				(function print() {
+					console.log(sum);
+				})();
+			}
+				</code></pre>
+				对于函数 sum 来说，在 sum 函数被创建时，其变量对象相当于：
+				<pre><code class="javascrpt">
+			VariableObject = {
+				arguments: {
+					number1: undefined,
+					number2: undefined
+				},
+				sum: undefined,
+				print: 函数地址
+			}
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>作用域</h2>
+			<p>
+				作用域（Scope），即变量或函数在某个代码区域内可以被使用。<br>
+				在 javascrpt 中，存在以下两种作用域：
+				<ul>
+					<li>全局作用域，声明后在任何地方都可以被使用</li>
+					<li>局部作用域，声明后在函数内可以被使用</li>
+				</ul>
+				<pre><code class="javascrpt">
+			var a = 'global'; // 创建全局变量
+			console.log(a); // 使用全局变量
+			(function() {
+				var b = 'local'; // 创建局部变量
+				console.log(b); // 使用局部变量
+			})();
+			console.log(b); // 报错，函数外找不到局部变量
+				</code></pre>
+				<div>
+					<h3>声明提前</h3>
+					<p>
+						在 javascrpt 中，通过 var 进行的变量声明，全局变量的声明会被自动提前到代码开头，局部变量的声明会被自动提前到函数开头。
+						<pre><code class="javascrpt">
+			console.log(a); // 输出 undefined
+			var a = 'global';
+			(function() {
+				console.log(b); // 输出 undefined
+				var b = 'local';
+			})();
+
+			/* 相当于 */
+
+			var a;
+			console.log(a); // 输出 undefined
+			a = 'global';
+			(function() {
+				var b;
+				console.log(b); // 输出 undefined
+				b = 'local';
+			})();
+						</code></pre>
+					</p>
+				</div>
+				<div>
+					<h3>作用域链</h3>
+					<p>
+						函数内部有其自身的作用域，函数外也有其作用域，查找变量时则按照一定顺序，从自身作用域一步步向外检索其他作用域，即从作用域链（Scope Chain）前端往作用域链后端的方向查找。<br>
+						可以这么认为，作用域链是一系列变量对象指针的数组。
+						<pre><code class="javascrpt">
+			var a = 'global';
+			function outer () {
+				var b = 'outer';
+				function inner () {
+					var c = 'inner';
+				}
+			}
+						</code></pre>
+						对于 inner 函数来说，其作用域链为：<br>
+						<img src="../images/scope_chain.jpg" alt="加载失败">
+					</p>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>执行环境</h2>
+			<p>
+				执行环境（Execution Context）定义了变量或函数可以访问到的数据<sup>[1]</sup>，即当前执行中的代码所在的环境。当一个执行环境内的代码全部执行后，该执行环境将被销毁（出栈）。<br>
+				执行环境分为两种：
+				<ul>
+					<li>全局执行环境</li>
+					<li>函数执行环境</li>
+				</ul>
+				<div>
+					<h3>全局执行环境</h3>
+					<p>
+						全局执行环境被认为是<span class="definition"> window </span>对象，是代码执行的默认环境，关闭网页后被销毁。
+					</p>
+				</div>
+				<div>
+					<h3>函数执行环境</h3>
+					<p>
+						<ol>
+							<li>函数在定义（创建）时，该函数对象存在一个<span class="definition"> [[scope]] </span>属性（该属性无法通过代码直接访问），指向一个不包含自身变量对象的作用域链。</li>
+							<li>
+								函数在被调用时，会创建自身的变量对象，再将该变量对象推入原先<span class="definition"> [[scope]] </span>属性保存的作用域链的最前端，作为执行环境的作用域链。<br>
+							函数的执行环境包含了：
+								<ul>
+									<li>变量对象</li>
+									<li>将自身变量对象推入最前端的作用域链</li>
+									<li> this 指针</li>
+								</ul>
+							</li>
+							<li>函数在调用结束后，作用域链将被销毁，若不存在外部引用，变量对象也会被销毁。</li>
+						</ol>
+					</p>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>参考文献</h2>
+			<p>
+				[1] Nicholas C.Zakas Javascript高级程序设计<br>
+				[2] 我的老婆是校花 JS进阶之---执行上下文，变量对象，变量提升 <a class="refer" target="_blank" href="https://www.cnblogs.com/lishuxue/p/6558788.html">https://www.cnblogs.com/lishuxue/p/6558788.html</a><br>
+				[3] bruce_zhou 理解JS的执行环境 <a class="refer" target="_blank" href="https://www.jianshu.com/p/76ed896bbf91">https://www.jianshu.com/p/76ed896bbf91</a><br>
+			</p>
+		</section>
+	</article>
+</body>
+</html>
