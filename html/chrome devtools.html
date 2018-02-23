@@ -45,10 +45,10 @@
 						<ul>
 							<li>Elements（DOM元素）</li>
 							<li>Console（控制台）</li>
-							<li>Sources（源）</li>
-							<li>Network（网络）</li>
-							<li>Performance</li>
-							<li>Memory</li>
+							<li>Sources（资源）</li>
+							<li>Network（网络/时间线）</li>
+							<li>Performance（行为）</li>
+							<li>Memory（存储）</li>
 							<li>Application（应用程序）</li>
 							<li>Security（安全）</li>
 							<li>Audits（审计）</li>
@@ -113,9 +113,13 @@
 								<li>console.warn(string)：警告消息输出</li>
 								<li>console.error(string)：错误消息输出</li>
 								<li>console.assert(boolean, string)：若前一个判断条件为 false ，则输出后面字符串为错误消息，若为 true ，则不做任何输出</li>
+								<li>console.dir(element)：以对象的形式打印输出一个 DOM 元素</li>
 							</ul>
 							<figure>
 								<img src="../images/chrome_devtools_console_output.jpg" alt="加载失败">
+							</figure>
+							<figure>
+								<img src="../images/chrome_devtools_console_dir.jpg" alt="加载失败">
 							</figure>
 						</p>
 						<p>
@@ -132,16 +136,86 @@
 						</p>
 						<p>
 							<h4>计时</h4>
-							
+							使用 console.time(stringId) 开始计时，传入的字符串作为计时器的 ID 。<br>
+							使用 console.timeEnd(stringId) 停止计时，传入的字符串作为计时器的 ID 。<br>
+							停止计时时显示一共所花时间。
+							<figure>
+								<img src="../images/chrome_devtools_console_time.jpg" alt="加载失败">
+							</figure>
+						</p>
+						<p>
+							<h4>选择元素</h4>
+							<ul>
+								<li>$(selector)：选出符合选择器规则的第一个元素，相当于 querySelector() </li>
+								<li>$$(selector)：选出符合选择器规则的所有元素，相当于 querySelectorAll() </li>
+								<li>$x(XPath)：选出符合XPath规则的所有元素</li>
+							</ul>
+							<figure>
+								<img src="../images/chrome_devtools_console_$.jpg" alt="加载失败">
+							</figure>
+						</p>
+						<p>
+							<h4>事件</h4>
+							<ul>
+								<li>monitorEvents(element, eventType)：为元素添加指定类型事件，触发后在控制台显示事件信息</li>
+								<li>unmonitorEvents(element, eventType)：移除事件</li>
+							</ul>
+							<figure>
+								<img src="../images/chrome_devtools_console_monitor.jpg" alt="加载失败">
+							</figure>
+						</p>
+						<p>
+							<h4>清屏</h4>
+							可以使用 clear() 对控制台的所有消息进行清空。
 						</p>
 					</p>
 				</div>
 			</p>
 		</section>
 		<section>
+			<h2>Sources</h2>
+			<p>
+				Sources 面板查看页面所有资源，同时允许对 CSS 和 javascript 文件进行编辑，修改后，页面即时渲染。
+				<figure>
+					<img style="width: 100%;" src="../images/chrome_devtools_console_sources.gif" alt="加载失败">
+				</figure>
+				同时，snippet 功能可以对反复使用的代码进行保存，第二次使用时可以直接运行脚本（Ctrl + S 保存 snippet， Ctrl + Enter 运行 snippet）。
+				<figure>
+					<img style="width: 100%;" src="../images/chrome_devtools_console_snippet.gif" alt="加载失败">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>Network</h2>
+			<p>
+				Network 面板用于记录页面资源的加载情况，按照时间线（Timeline）的形式呈现出来。<br>
+				打开 Network 面板后，按 F5 刷新页面后，开始捕捉页面资源加载情况。
+				<figure>
+					<img src="../images/chrome_devtools_console_network.jpg" alt="加载失败">
+				</figure>
+				<li>选择不同快照时，将会显示该快照当时的资源加载情况</li>
+				<li>悬停 waterfall 下的方框可查看详细的加载情况</li>
+			</p>
+		</section>
+		<section>
+			<h2>Performance</h2>
+			<p>
+				Performance 面板可用于诊断页面运行过程中的行为（事件/响应/动画）。<br>
+				打开 Performance 面板后，按<span class="definition"> Ctrl + E </span>开始记录，对页面进行一些操作，点击<span class="definition"> stop </span>按钮停止记录。
+				<figure>
+					<img src="../images/chrome_devtools_console_performance.jpg" alt="加载失败">
+				</figure>
+				<ul>
+					<li>FPS（Fram per second） 记录栏表示帧每秒，绿色部分越高帧率越多，用户体验也越好。顶端出现红色则表示帧率过低</li>
+					<li>CPU 记录栏用于记录 CPU 的占用率，可下面的 Aggregated Time 查看对 CPU 的占用分布</li>
+					<li>事件记录调度栏，x 轴表示事件，y 轴表示事件栈，即顶层事件调用底层事件。</li>
+				</ul>
+			</p>
+		</section>
+		<section>
 			<h2>参考文献</h2>
 			<p>
-				[1] Chrome 开发者工具 <a class="refer" target="_blank" href="https://developers.google.com/web/tools/chrome-devtools/?hl=zh-cn">https://developers.google.com/web/tools/chrome-devtools/?hl=zh-cn</a><br>
+				[1] Kayce Basques Chrome 开发者工具 <a class="refer" target="_blank" href="https://developers.google.com/web/tools/chrome-devtools/?hl=zh-cn">https://developers.google.com/web/tools/chrome-devtools/?hl=zh-cn</a><br>
 				[2] Chrome devtools 中文手册 <a class="refer" target="_blank" href="https://leeon.gitbooks.io/devtools/content/learn_basic/overview.html">https://leeon.gitbooks.io/devtools/content/learn_basic/overview.html</a><br>
 			</p>
 		</section>
