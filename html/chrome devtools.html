@@ -48,7 +48,7 @@
 							<li>Sources（资源）</li>
 							<li>Network（网络/时间线）</li>
 							<li>Performance（行为）</li>
-							<li>Memory（存储）</li>
+							<li>Memory（内存）</li>
 							<li>Application（应用程序）</li>
 							<li>Security（安全）</li>
 							<li>Audits（审计）</li>
@@ -179,10 +179,15 @@
 				<figure>
 					<img style="width: 100%;" src="../images/chrome_devtools_console_sources.gif" alt="加载失败">
 				</figure>
+				利用断点功能，可以更高效地进行调试（debug）。
+				<figure>
+					<img src="../images/chrome_devtools_source_debug.jpg" alt="加载失败">
+				</figure>
 				同时，snippet 功能可以对反复使用的代码进行保存，第二次使用时可以直接运行脚本（Ctrl + S 保存 snippet， Ctrl + Enter 运行 snippet）。
 				<figure>
 					<img style="width: 100%;" src="../images/chrome_devtools_console_snippet.gif" alt="加载失败">
 				</figure>
+
 			</p>
 		</section>
 		<section>
@@ -210,6 +215,38 @@
 					<li>CPU 记录栏用于记录 CPU 的占用率，可下面的 Aggregated Time 查看对 CPU 的占用分布</li>
 					<li>事件记录调度栏，x 轴表示事件，y 轴表示事件栈，即顶层事件调用底层事件。</li>
 				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>Application</h2>
+			<p>
+				Application 面板可以对本地存储（缓存/数据库）进行管理。
+				<figure>
+					<img src="../images/chrome_devtools_application.jpg" alt="加载失败">
+				</figure>
+				<figure>
+					<img src="../images/chrome_devtools_application_demo.jpg" alt="加载失败">
+					<br>
+					<a class="refer" style="margin-left: 20%;" target="_blank" href="../demo/chrome_devtools_application.html"> localStroage 样例</a>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>Memory</h2>
+			<p>
+				Memory 面板可以审查 javascript 运行过程中的内存问题。
+				<figure>
+					<img src="../images/chrome_devtools_memory.jpg" alt="加载失败">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>其他</h2>
+			<p>
+				<li>chrome devtools 可以更改显示设备为移动设备</li>
+				<figure>
+					<img style="max-width: 100%;" src="../images/chrome_devtools_device.gif" alt="加载失败">
+				</figure>
 			</p>
 		</section>
 		<section>
