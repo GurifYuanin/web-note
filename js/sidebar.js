@@ -11,7 +11,7 @@ $(function() {
 	var $hideCatalog = $('#hideCatalog'); // 隐藏目录图片
 	var $showCatalog = $('#showCatalog'); // 显示目录图片
 	var $container = $('#container'); // 文章内容
-	var category = ['HTML', 'CSS', 'Javascript', '移动Web', '调试', '协议', '其他']; // 目录分类
+	var category = ['HTML', 'CSS', 'Javascript', '移动Web', '调试', '协议', '安全', '其他']; // 目录分类
 	// 具体条目
 	var items = [
 					['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5'],
@@ -20,6 +20,7 @@ $(function() {
 					['响应式布局', 'bootstrap'],
 					['抓包工具', 'chrome devtools'],
 					['HTTP'],
+					['XSS'],
 					['浏览器渲染', '设计策略', 'cookie']
 				];
 	for (var i = 0; i < category.length; i++) {

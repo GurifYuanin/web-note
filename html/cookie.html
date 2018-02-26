@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>cookie</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			目录
+		</section>
+		<img id="showCatalog" src="../images/向右.png" alt="加载失败">
+	</aside>
+	<article id="container">
+		<hgroup>
+			<h1>cookie</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				Cookie：小饼干，指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据<sup>[1]</sup>。客户端首次访问服务器端后，服务器端通过设置 Response Header 的 Set-Cookie ，以此在客户端设置 cookie ，此后客户端每次进行 HTTP 请求时，都会将本地的 Cookie 以明文的方式发送给服务器端。<br>
+				Cookie 分为两种：
+				<ol>
+					<li>内存 Cookie ：暂存在内存内，不设置生存时间，浏览器关闭后销毁</li>
+					<li>硬盘 Cookie ：保存在客户端的硬盘内，有一个生存时间（Expires / Max-age），过了这个时间后销毁</li>
+				</ol>
+			</p>
+		</section>
+		<section>
+			<h2>作用</h2>
+			<p>
+				由于 HTTP 是无连接的协议，即每次请求都是一次全新的请求，服务器端无法知道之前的请求客户端进行了什么操作，比如在以下情况：
+				<ol>
+					<li>用户打开某购物网站并进行登录，此后每一次打开该网址依旧需要输入账号密码</li>
+					<li>用户进行一些偏好设置（如设置网站主题颜色）后，此后的每一次访问都要重新设置一遍</li>
+					<li>用户将一些商品添加进购物车里，然后继续浏览其他网页，最后进行结算的时候发现购物车里没有记录</li>
+				</ol>
+				此时就需要一些额外的手段来记录之前的操作，cookie 就是这些手段之一。
+			</p>
+		</section>
+		<section>
+			<h2>PHP</h2>
+			<p>
+				通过 PHP 语言，在服务器端读取 cookies 和给客户端设置 cookies 。
+				<div>
+					<p>
+						<h3>读取 cookies</h3>
+						通过 $_COOKIE 数组（PHP4, 5, 7）来读取 cookies ，按键名来读取键值。
+						<pre><code class="php">
+			&lt;?php
+				$value = $_COOKIE['key'];
+			?&gt;
+						</code></pre>
+					</p>
+					<p>
+						<h3>设置 cookies</h3>
+						通过 setcookie() 函数给客户端发送 cookies 。
+						<pre><code class="php">
+			&lt;?php
+				// 设置 cookie
+				setcookie('key', 'value', $time, 'path', 'domain', $secure, $httponly);
+				setcookie('key', 'value', time() + $second);
+				setcookie('key', 'value', mktime($hour, $minute, $second, $month, $day, $year));
+				setcookie('key', 'value', strtotime('+$umber  单位'));
+				// 删除 cookie（设置为一个过去的时间）
+				setcookie('key', 'value', 1);
+			?&gt;
+						</code></pre>
+						<ul>
+							<li>key：键名，当设置的 cookie 的键名带有<span class="definition"> . </span>（点）或<span class="definition">空格</span>时，点和空格会被自动替换成<span class="definition"> _ </span>（下划线）。</li>
+							<li>value：键值，发送时自动 urlencode （保证不带有分号、逗号和空格等字符），接收时自动解码</li>
+							<li>$time： Unix 时间戳，即从 1970 年 1 月 1 日 00 : 00 开始计算，该 cookie 将存活的秒数。设置后 PHP 内部自动将秒数转化为<span class="definition"> Wdy, DD-Mon-YYYY HH:MM:SS GMT </span>的格式</li>
+							<li>path：该路径及其子路径下 cookie 生效，默认当前文档所在路径</li>
+							<li>domain：该域名及其子域名 cookie 生效，默认为当前文档所在域名</li>
+							<li>$secure：是否仅仅通过安全的 HTTPS 连接传给客户端</li>
+							<li>$httponly：是否仅可通过 HTTP 协议访问（脚本无法访问）</li>
+						</ul>
+					</p>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>Javascript</h2>
+			<p>
+				通过 Javascript 在客户端读取和设置 cookies 。
+				<div>
+					<p>
+						<h3>读取 cookies </h3>
+						通过 document.cookie 读取所有可以访问的 cookie 的键值对（字符串），中间用<span class="definition"> ; </span>（分号）隔开。
+						<pre><code class="javascript">
+			var allCookie = document.cookie;
+						</code></pre>
+					</p>
+					<p>
+						<h3>设置 cookies</h3>
+						通过给 document.cookie 赋值来设置新的 cookie 。（单次只能设置一个 cookie ）
+						<pre><code class="javascript">
+			document.cookie = 'key=value; path=path; domain=domain; max-age=second; expires=Wdy, DD-Mon-YYYY HH:MM:SS GMT; secure';
+						</code></pre>
+						<ul>
+							<li>key：键名</li>
+							<li>value：键值，设置时应使用<span class="definition"> encodeURIComponent() </span>函数来保证其不带有分号、逗号和空格</li>
+							<li>path：该路径及其子路径下 cookie 生效，默认当前文档所在路径</li>
+							<li>domain：该域名及其子域名 cookie 生效，默认为当前文档所在域名 </li>
+							<li>max-age：从此刻开始，该 cookie 将存活的秒数</li>
+							<li>expires：该 cookie 的过期时间，设置时应使用<span class="definition"> Date.toUTCString()  </span>对日期进行格式化</li>
+							<li>secure：是否仅仅通过安全的 HTTPS 连接传给客户端</li>
+						</ul>
+					</p>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>缺点</h2>
+			<p>
+				
+			</p>
+		</section>
+		<section>
+			<h2>参考文献</h2>
+			<p>
+				[1] 维基百科 Cookie <a class="refer" target="_blank" href="https://zh.wikipedia.org/wiki/Cookie">https://zh.wikipedia.org/wiki/Cookie</a><br>
+				[2] MDN cookies <a class="refer" target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies">https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies</a><br>
+				[3] php手册 setcookie <a class="refer" target="_blank" href="http://php.net/manual/zh/function.setcookie.php">http://php.net/manual/zh/function.setcookie.php</a><br>
+				[4] MDN documen.cookie <a class="refer" target="_blank" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Document/cookie">https://developer.mozilla.org/zh-CN/docs/Web/API/Document/cookie</a><br>
+			</p>
+		</section>
+	</article>
+</body>
+</html>
