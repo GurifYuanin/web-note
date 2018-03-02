@@ -1,32 +1,56 @@
-var gulp = require('gulp');
-var sass = require('gulp-sass');
-var browserSync = require('browser-sync').create();
+var gulp = require('gulp'),
+       sass = require('gulp-sass'), // sass 预编译
+       autoprefixer = require('gulp-autoprefixer'), // css 前缀自动补全
+       minifyhtml = require('gulp-html-minify'), // htm 压缩
+       minifycss = require('gulp-minify-css'), // css 压缩
+       minifyimg = require('gulp-imagemin'), // 图片压缩
+       minifyjs = require('gulp-uglify'); // js 压缩
 
-// 启动服务器
-gulp.task('initServer', function() {
-    browserSync.init({
-        server: {
-            baseDir: './'
-        },
-        port: 8080
-    });
+gulp.task('minifyhtml', function() {
+    gulp.src(['./html/*.html'])
+             .pipe(minifyhtml())
+             .pipe(gulp.dest('./dist/html'));
 });
-
-// 编译scss任务
+gulp.task('copydemo', function() {
+    gulp.src('./demo/*.html')
+             .pipe(gulp.dest('./dist/demo'));
+});
 gulp.task('sass', function () {
     gulp.src('./scss/*.scss')
-        .pipe(sass())
-        .pipe(gulp.dest('./css'));
+        .pipe(sass({
+            outputStyle: 'compressed'
+        }))
+        .pipe(minifycss())
+        .pipe(autoprefixer({
+            add: true, // 是否添加前缀
+            remove: true, // 是否删除过时前缀
+            flexbox: false // 是否为 flexbox 添加前缀
+        }))
+        .pipe(gulp.dest('./dist/css'));
+});
+gulp.task('minifyimg', function() {
+    gulp.src('./images/*')
+             .pipe(minifyimg())
+             .pipe(gulp.dest('./dist/images'));
+});
+gulp.task('minifyjs', function() {
+    gulp.src('./js/*.js')
+             .pipe(minifyjs({
+                mangle: true, // 是否修改变量名
+                compress: true // 是否完全压缩
+        }))
+             .pipe(gulp.dest('./dist/js'));
 });
 
-// 监听事件
-gulp.task('watchCompileScss', function() {
-    gulp.watch('scss/*.scss', ['sass']);
-});
-gulp.task('watchChange', function() {
-    gulp.watch(['css/*.css', 'js/*.js', 'login.html'], function(){
-        browserSync.reload('login.html');
-    });
+// 监听常用文件夹
+gulp.task('default', function() {
+    gulp.watch('./html/*.html',  ['minifyhtml']);
+    gulp.watch('./demo/*.html', ['copydemo']);
+    gulp.watch('./scss/*.scss', ['sass']);
+    gulp.watch('./images/*', ['minifyimg']);
+    gulp.watch('./js/*.js', ['minifyjs']);
 });
 
-gulp.task('default', ['initServer', 'watchCompileScss', 'watchChange']);
+
+// 直接执行
+gulp.task('exec', ['minifyhtml', 'copydemo',  'sass', 'minifyimg', 'minifyjs']);

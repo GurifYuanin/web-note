@@ -111,7 +111,7 @@
 							<li>path：该路径及其子路径下 cookie 生效，默认当前文档所在路径</li>
 							<li>domain：该域名及其子域名 cookie 生效，默认为当前文档所在域名 </li>
 							<li>max-age：从此刻开始，该 cookie 将存活的秒数</li>
-							<li>expires：该 cookie 的过期时间，设置时应使用<span class="definition"> Date.toUTCString()  </span>对日期进行格式化</li>
+							<li>expires：该 cookie 的过期时间，设置时应使用<span class="definition"> (new Date(year, month, day, hour, minutes, seconds, milliseconds)).toUTCString()  </span>方法对日期进行格式化</li>
 							<li>secure：是否仅仅通过安全的 HTTPS 连接传给客户端</li>
 						</ul>
 					</p>
@@ -121,16 +121,16 @@
 		<section>
 			<h2>缺点</h2>
 			<p>
-				
+				由于 cookie 是以明文的方式进行传输，其中涉及了一些个人信息或浏览记录，一些网络攻击者可能利用这些隐私信息进行一些恶意行为（修改 cookie 、盗用账户等）。
 			</p>
 		</section>
-		<section>
+		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
-				[1] 维基百科 Cookie <a class="refer" target="_blank" href="https://zh.wikipedia.org/wiki/Cookie">https://zh.wikipedia.org/wiki/Cookie</a><br>
-				[2] MDN cookies <a class="refer" target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies">https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies</a><br>
-				[3] php手册 setcookie <a class="refer" target="_blank" href="http://php.net/manual/zh/function.setcookie.php">http://php.net/manual/zh/function.setcookie.php</a><br>
-				[4] MDN documen.cookie <a class="refer" target="_blank" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Document/cookie">https://developer.mozilla.org/zh-CN/docs/Web/API/Document/cookie</a><br>
+				<div>[1] 维基百科 Cookie <a href="https://zh.wikipedia.org/wiki/Cookie">https://zh.wikipedia.org/wiki/Cookie</a></div>
+				<div>[2] MDN cookies <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies">https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies</a></div>
+				<div>[3] php手册 setcookie <a href="http://php.net/manual/zh/function.setcookie.php">http://php.net/manual/zh/function.setcookie.php</a></div>
+				<div>[4] MDN documen.cookie <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Document/cookie">https://developer.mozilla.org/zh-CN/docs/Web/API/Document/cookie</a></div>
 			</p>
 		</section>
 	</article>

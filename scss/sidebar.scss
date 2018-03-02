@@ -1,9 +1,11 @@
 $imgSize: 30px;
 $sidebarWidth: 20%;
 $separation: 5%;
-$sidebarBGcolor: #5f93be;
-$tableDeepColor: #222;
-$tableShallow: #fff;
+$sidebarBackgroundColor: #5f93be; // 侧栏背景色
+$tableDeepColor: #222; // 图表深色
+$tableShallow: #fff; // 图表浅色
+
+/* 侧栏 */
 #sidebar {
     display: inline-block;
 
@@ -13,7 +15,7 @@ $tableShallow: #fff;
     padding: 1%;
     width: $sidebarWidth;
 
-    background-color: $sidebarBGcolor;
+    background-color: $sidebarBackgroundColor;
     /* 目录栏*/
     #catalog {
         font-size: $imgSize;
@@ -60,25 +62,57 @@ $tableShallow: #fff;
         cursor: pointer;
     }
 }
+
+/* 正文  */
 #container {
     position: absolute;
     top: 0;
     left: $sidebarWidth + $separation;
 
     width: 1 - $sidebarWidth - $separation;
-
+    max-width: 1024px;
     font-size: 1em;
     line-height: 1.5em;
-    /* 文章标题*/
-    .title {
-        font-size: 2em;
+
+    /* 标题 */
+    h1 {
         text-align: center;
     }
-    /* 子标题*/
-    .subTitle {
-        font-size: 1.5em;
-        padding: 5px;
+
+    /* 每一节 */
+    section {
+        border-bottom: solid 1px #888;
+        h2:before {
+            content: ' - ';
+        }
+        h3:before {
+            content: ' - - ';
+        }
+        h4:before {
+            content: ' - - - ';
+        }
+        h5:before {
+            content: ' - - - - ';
+        }
+        h6:before {
+            content: ' - - - - - ';
+        }
     }
+
+    /* 正文链接样式 */
+    a {
+        margin: 1px;
+
+        text-decoration: none;
+        &:hover {
+            border-radius: 5%;
+
+            color: #fff;
+            background-color: $sidebarBackgroundColor;
+        }
+    }
+
+    /* 术语 */
     .definition {
         margin: 1px;
         border-radius: 10%;
@@ -88,20 +122,28 @@ $tableShallow: #fff;
         color: #111;
         background-color: #eee;
     }
+
     /* 参考文献链接*/
     .refer {
-        font-size: 0.9em;
-        text-decoration: none;
-        color: inherit;
+        a {
+            font-size: .9em;
+            text-decoration: none;
 
+            color: inherit;
+            &:hover {
+                color: #000;
+                background-color: #fff;
+            }
+        }
     }
+
+    /* 图片描述  */
     .description {
         text-align: center;
+
         color: #888;
     }
-    .figTitle {
-        text-align: center;
-    }
+
     table {
         border: 1px solid $tableDeepColor;
 
@@ -114,8 +156,9 @@ $tableShallow: #fff;
             background-color: $tableDeepColor;
         }
         td {
-            text-align: center;
             padding: 1%;
+
+            text-align: center;
         }
     }
 }

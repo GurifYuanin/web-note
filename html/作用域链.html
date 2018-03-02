@@ -144,6 +144,18 @@
 									<li>将自身变量对象推入最前端的作用域链</li>
 									<li> this 指针</li>
 								</ul>
+								用 javascript 语言来表示，相当于
+								<pre><code class="javascript">
+			scope = {
+				variableObject = {
+						arguments: {},
+						变量: 变量值,
+						函数: 函数地址
+					},
+				scopeChain: [],
+				this: 外部对象
+			}
+								</code></pre>
 							</li>
 							<li>函数在调用结束后，作用域链将被销毁，若不存在外部引用，变量对象也会被销毁。</li>
 						</ol>
@@ -151,12 +163,12 @@
 				</div>
 			</p>
 		</section>
-		<section>
+		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
-				[1] Nicholas C.Zakas Javascript高级程序设计<br>
-				[2] 我的老婆是校花 JS进阶之---执行上下文，变量对象，变量提升 <a class="refer" target="_blank" href="https://www.cnblogs.com/lishuxue/p/6558788.html">https://www.cnblogs.com/lishuxue/p/6558788.html</a><br>
-				[3] bruce_zhou 理解JS的执行环境 <a class="refer" target="_blank" href="https://www.jianshu.com/p/76ed896bbf91">https://www.jianshu.com/p/76ed896bbf91</a><br>
+				<div>[1] Nicholas C.Zakas Javascript高级程序设计</div>
+				<div>[2] 我的老婆是校花 JS进阶之---执行上下文，变量对象，变量提升 <a href="https://www.cnblogs.com/lishuxue/p/6558788.html">https://www.cnblogs.com/lishuxue/p/6558788.html</a></div>
+				<div>[3] bruce_zhou 理解JS的执行环境 <a href="https://www.jianshu.com/p/76ed896bbf91">https://www.jianshu.com/p/76ed896bbf91</a></div>
 			</p>
 		</section>
 	</article>

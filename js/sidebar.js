@@ -62,4 +62,5 @@ $(function() {
 	$itemDiv.mouseout(function() {
 		this.style.backgroundColor = '#f2f2f2';
 	});
+	$('a').attr('target', '_blank'); // 所有链接默认新标签打开
 });
