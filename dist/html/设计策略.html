@@ -1,1 +1,100 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>设计策略</title><link rel="stylesheet" href="../css/normalize.css"><link rel="stylesheet" href="../css/styles/default.css"><link rel="stylesheet" href="../css/sidebar.css"><script src="../js/jquery-3.2.1-compressed.js"></script><script src="../js/highlight.pack.js"></script><script src="../js/sidebar.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body><aside id="sidebar"><section id="catalog"><img id="hideCatalog" src="../images/目录.png" alt="加载失败">目录</section><img id="showCatalog" src="../images/向右.png" alt="加载失败"></aside><article id="container"><hgroup><h1>设计策略</h1></hgroup><section><h2>定义</h2><p><ul><li>渐进增强(Progressive enhancement)：一开始就针对低版本浏览器进行构建页面，完成基本的功能，然后再针对高级浏览器进行效果、交互、追加功能达到更好的体验。<sup>[1]</sup></li><li>优雅降级（Graceful Degradation）：一开始就构建站点的完整功能，然后针对浏览器测试和修复。比如一开始使用 CSS3 的特性构建了一个应用，然后逐步针对各大浏览器进行 hack 使其可以在低版本浏览器上正常浏览。<sup>[1]</sup></li></ul>简而言之（开发步骤与侧重点不同）<ul><li>渐进增强优先完成基本的页面与功能，然后再去增加高级功能与特效</li><li>优雅降级直接构建完整功能的页面，然后再去考虑兼容旧版本</li></ul></p></section><section><h2>CSS前缀顺序</h2><p>为了兼容旧版本的浏览器，我们常用前缀 + CSS属性来解决这个问题。<table border="1" cellpadding="1" cellspacing="0"><tr><th>内核</th><th>浏览器</th><th>前缀</th></tr><tr><td>Trident</td><td>Internet Explorer</td><td>-ms-</td></tr><tr><td>Gecko</td><td>Firefox</td><td>-moz-</td></tr><tr><td>Presto</td><td>Opera</td><td>-o-</td></tr><tr><td>Webkit</td><td>Chrome、Safari</td><td>-webkit-</td></tr></table><pre><code class="css">-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-ms-transform:rotate(180deg);-o-transform:rotate(180deg);transform:rotate(180deg);transform:rotate(180deg);-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-ms-transform:rotate(180deg);-o-transform:rotate(180deg);</code></pre>对于既支持前缀也支持不增加前缀的浏览器，写在后面的属性会覆盖掉写在前面的属性。<br>理论上以上两种方式呈现的效果是完全一样的，但实际上浏览器对有加前缀的属性和没加前缀的属性，其实现效果并不总是完全一致。<br>一般来讲，在两种情况都支持的情况下，我们更希望无前缀的实现效果。<br>因此在 CSS3 通过前缀进行兼容的方法，应该使用渐进增强的观念。<br></p></section><section class="refer"><h2>参考文献</h2><p><div>[1] 康斌 渐进增强 VS 优雅降级 <a href="https://www.jianshu.com/p/d313f1108862">https://www.jianshu.com/p/d313f1108862</a></div></p></section></article></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>设计策略</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			目录
+		</section>
+		<img id="showCatalog" src="../images/向右.png" alt="加载失败">
+	</aside>
+	<article id="container">
+		<hgroup>
+			<h1>设计策略</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				<ul>
+					<li>渐进增强(Progressive enhancement)：一开始就针对低版本浏览器进行构建页面，完成基本的功能，然后再针对高级浏览器进行效果、交互、追加功能达到更好的体验。<sup>[1]</sup></li>
+					<li>优雅降级（Graceful Degradation）：一开始就构建站点的完整功能，然后针对浏览器测试和修复。比如一开始使用 CSS3 的特性构建了一个应用，然后逐步针对各大浏览器进行 hack 使其可以在低版本浏览器上正常浏览。<sup>[1]</sup></li>
+				</ul>
+				简而言之（开发步骤与侧重点不同）
+				<ul>
+					<li>渐进增强优先完成基本的页面与功能，然后再去增加高级功能与特效</li>
+					<li>优雅降级直接构建完整功能的页面，然后再去考虑兼容旧版本</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>CSS前缀顺序</h2>
+			<p>
+				为了兼容旧版本的浏览器，我们常用前缀 + CSS属性来解决这个问题。
+				<table border="1" cellpadding="1" cellspacing="0">
+					<tr>
+						<th>内核</th>
+						<th>浏览器</th>
+						<th>前缀</th>
+					</tr>
+					<tr>
+						<td>Trident</td>
+						<td>Internet Explorer</td>
+						<td>-ms-</td>
+					</tr>
+					<tr>
+						<td>Gecko</td>
+						<td>Firefox</td>
+						<td>-moz-</td>
+					</tr>
+					<tr>
+						<td>Presto</td>
+						<td>Opera</td>
+						<td>-o-</td>
+					</tr>
+					<tr>
+						<td>Webkit</td>
+						<td>Chrome、Safari</td>
+						<td>-webkit-</td>
+					</tr>
+				</table>
+				<pre><code class="css">
+					/* 渐进增强 */
+					-webkit-transform:rotate(180deg); /* Safari */
+					-moz-transform:rotate(180deg); /* Firefox */
+					-ms-transform:rotate(180deg); /* IE */
+					-o-transform:rotate(180deg); /* Opera */
+					transform:rotate(180deg);
+
+					/* 优雅降级 */
+					transform:rotate(180deg);
+					-webkit-transform:rotate(180deg); /* Safari */
+					-moz-transform:rotate(180deg); /* Firefox */
+					-ms-transform:rotate(180deg); /* IE */
+					-o-transform:rotate(180deg); /* Opera */
+				</code></pre>
+				对于既支持前缀也支持不增加前缀的浏览器，写在后面的属性会覆盖掉写在前面的属性。<br>
+				理论上以上两种方式呈现的效果是完全一样的，但实际上浏览器对有加前缀的属性和没加前缀的属性，其实现效果并不总是完全一致。<br>
+				一般来讲，在两种情况都支持的情况下，我们更希望无前缀的实现效果。<br>
+				因此在 CSS3 通过前缀进行兼容的方法，应该使用渐进增强的观念。<br>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 康斌 渐进增强 VS 优雅降级 <a href="https://www.jianshu.com/p/d313f1108862">https://www.jianshu.com/p/d313f1108862</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

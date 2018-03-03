@@ -1,1 +1,203 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>响应式布局</title><link rel="stylesheet" href="../css/normalize.css"><link rel="stylesheet" href="../css/styles/default.css"><link rel="stylesheet" href="../css/sidebar.css"><script src="../js/jquery-3.2.1-compressed.js"></script><script src="../js/highlight.pack.js"></script><script src="../js/sidebar.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body><aside id="sidebar"><section id="catalog"><img id="hideCatalog" src="../images/目录.png" alt="加载失败">目录</section><img id="showCatalog" src="../images/向右.png" alt="加载失败"></aside><article id="container"><header><h1>响应式布局</h1></header><section><h2>问题</h2><p>由于越来越多不同分辨率的设备加入互联网，原先单一样式的网页无法完全满足需求，不同设备下查看某个网页时出现屏幕过小或过大的问题，解决这个问题有两种方法：<ol><li>针对不同设备（PC、手机等）各自设计一套网页<ul><li>开发与维护成本较大</li><li>针对不同入口需要设计适应的架构</li></ul></li><li>使用响应式网页设计</li></ol></p></section><section><h2>响应式网页设计</h2><p>响应式网页设计（Responsive web design，通常缩写为RWD），或称自适应网页设计、回应式网页设计、对应式网页设计。 是一种网页设计的技术做法，该设计可使网站在不同的设备（从桌面电脑显示器到移动电话或其他移动产品设备）上浏览时对应不同分辨率皆有适合的呈现，减少用户进行缩放、平移和滚动等操作行为。<sup>[1]</sup><br>即使用一套网页设计方案，但根据设备大小进行响应式显示。<br><div style="text-align: center;"><img style="width: 50%;" src="../images/响应式布局.jpg" alt="加载失败"></div></p></section><section><h2>实现</h2><p><div><h3>viewport</h3><p>使用<span class=" definition"> meta </span>标签的<span class="definition"> viewport </span> 属性，对网页宽高、缩放进行控制。<br>参见<a href="../meta标签.html"> meta标签 </a>。<pre><code class="html">&lt;!-- 网页宽度为设备宽度、高度为设备高度、初始缩放为1、最小缩放为0、最大缩放为10、允许缩放 --&gt;&lt;meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,minimum-scale=0,maximum-scale=10,user-scalable=yes"&gt;&lt;!-- IE9 以下不支持该属性，需要引入插件 --&gt;&lt;!--[if lt IE 9]&gt;&lt;script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"&gt;&lt;/script&gt;&lt;![endif]--&gt;</code></pre></p></div><div><h3>相对长度单位</h3><p>由于不同设备可能有不同分辨率，使用 px 作为单位时效果一般，此时可以使用 em 或 rem 单位进行代替。<br>参见<a href="../颜色与单位.html"> 颜色与单位 </a>。</p></div><div><h3>百分比</h3><p>百分比是相对于其包含块进行计算得到的长度，当包含块数值发生改变时，百分比能对其进行响应变化。<pre><code class="html">&lt;div style="width: 100px;height: 100px;"&gt;&lt;div style="width: 50%;height: 50%;"&gt;&lt;/div&gt;&lt;/div&gt;</code></pre></div></p></div><div><h3>流动布局</h3><p>将每一个元素都设置为浮动元素，当在父元素内，同一行无法容纳多个元素时，多出的元素自动移动到下一行显示。<pre><code class="html">&lt;div style="width: 175px;height: 100px;background-color: #ccc;">&lt;div style="width: 50px;height: 50px;float: left;background-color: #00f;">&lt;/div>&lt;div style="width: 50px;height: 50px;float: left;background-color: #0f0;">&lt;/div>&lt;div style="width: 50px;height: 50px;float: left;background-color: #f00;">&lt;/div>&lt;div style="width: 50px;height: 50px;float: left;background-color: #ff0;">&lt;/div>&lt;/div></code></pre><div style="width: 175px;height: 100px;background-color: #ccc;"><div style="width: 50px;height: 50px;float: left;background-color: #00f;"></div><div style="width: 50px;height: 50px;float: left;background-color: #0f0;"></div><div style="width: 50px;height: 50px;float: left;background-color: #f00;"></div><div style="width: 50px;height: 50px;float: left;background-color: #ff0;"></div></div></p></div><div style="clear: left;"><h3>Media Query</h3><p>Media Query 是 CSS3 新增的模块。<br><ul><li>在 link 标签中使用 media 属性，选择性调用 CSS 样式表</li><li>在 CSS 样式表中使用 @media ，选择性使用 CSS 属性</li></ul><pre><code class="html">&lt;link rel="stylesheet" href="style.css" media="表达式"&gt;&lt;style&gt;@media 表达式 {选择器 {CSS 属性}}&lt;/style&gt;</code></pre>表达式最终返回一个布尔值，若真，则应用该样式，若假，则不应用。<br>参见<a href="./link.html"> link </a>。<br></p></div></p></section><section class="refer"><h2>参考文献</h2><p><div>[1] 维基百科 响应式网页设计 <a href="https://zh.wikipedia.org/wiki/%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BD%91%E9%A1%B5%E8%AE%BE%E8%AE%A1">https://zh.wikipedia.org/wiki/%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BD%91%E9%A1%B5%E8%AE%BE%E8%AE%A1</a></div><div>[2] 刘学炜 响应式和自适应的区别<a href="https://my.oschina.net/liu-xuewei/blog/345580">https://my.oschina.net/liu-xuewei/blog/345580</a></div></p></section></article></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>响应式布局</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			目录
+		</section>
+		<img id="showCatalog" src="../images/向右.png" alt="加载失败">
+	</aside>
+	<article id="container">
+		<header>
+			<h1>响应式布局</h1>
+		</header>
+		<section>
+			<h2>问题</h2>
+			<p>
+				由于越来越多不同分辨率的设备加入互联网，原先单一样式的网页无法完全满足需求，不同设备下查看某个网页时出现屏幕过小或过大的问题，解决这个问题有两种方法：
+				<ol>
+					<li>针对不同设备（PC、手机等）各自设计一套网页
+						<ul>
+							<li>开发与维护成本较大</li>
+							<li>针对不同入口需要设计适应的架构</li>
+						</ul>
+					</li>
+					<li>使用响应式网页设计</li>
+				</ol>
+			</p>
+		</section>
+		<section>
+			<h2>响应式网页设计</h2>
+			<p>
+				响应式网页设计（Responsive web design，通常缩写为RWD），或称自适应网页设计、回应式网页设计、对应式网页设计。 是一种网页设计的技术做法，该设计可使网站在不同的设备（从桌面电脑显示器到移动电话或其他移动产品设备）上浏览时对应不同分辨率皆有适合的呈现，减少用户进行缩放、平移和滚动等操作行为。<sup>[1]</sup><br>
+				即使用一套网页设计方案，但根据设备大小进行响应式显示。<br>
+				<div style="text-align: center;">
+					<img style="width: 50%;" src="../images/响应式布局.jpg" alt="加载失败">
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>实现</h2>
+			<p>
+				<div>
+					<h3>viewport</h3>
+					<p>
+						使用<span class=" definition"> meta </span>标签的<span class="definition"> viewport </span> 属性，对网页宽高、缩放进行控制。<br>
+						参见<a href="../meta标签.html"> meta标签 </a>。
+						<pre><code class="html">
+					&lt;!-- 网页宽度为设备宽度、高度为设备高度、初始缩放为1、最小缩放为0、最大缩放为10、允许缩放 --&gt;
+					&lt;meta name="viewport" content="
+						width=device-width,
+						height=device-height,
+						initial-scale=1,
+						minimum-scale=0,
+						maximum-scale=10,
+						user-scalable=yes
+					"&gt;
+					&lt;!-- IE9 以下不支持该属性，需要引入插件 --&gt;
+					&lt;!--[if lt IE 9]&gt;
+					　　　　&lt;script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"&gt;&lt;/script&gt;
+					&lt;![endif]--&gt;
+						</code></pre>
+					</p>
+				</div>
+				<div>
+					<h3>相对长度单位</h3>
+					<p>
+						由于不同设备可能有不同分辨率，使用 px 作为单位时效果一般，此时可以使用 em 或 rem 单位进行代替。<br>
+						参见<a href="../颜色与单位.html"> 颜色与单位 </a>。
+					</p>
+				</div>
+				<div>
+					<h3>百分比</h3>
+					<p>
+						百分比是相对于其包含块进行计算得到的长度，当包含块数值发生改变时，百分比能对其进行响应变化。
+						<pre><code class="html">
+					&lt;div style="
+						width: 100px;
+						height: 100px;
+					"&gt;
+						&lt;div style="
+							width: 50%;
+							height: 50%;
+						"&gt;&lt;/div&gt;
+					&lt;/div&gt;
+						</code></pre>
+						</div>
+					</p>
+				</div>
+				<div>
+					<h3>流动布局</h3>
+					<p>
+						将每一个元素都设置为浮动元素，当在父元素内，同一行无法容纳多个元素时，多出的元素自动移动到下一行显示。
+						<pre><code class="html">
+					&lt;div style="
+						width: 175px;
+						height: 100px;
+						background-color: #ccc;
+					">
+						&lt;div style="
+							width: 50px;
+							height: 50px;
+							float: left;
+							background-color: #00f;
+						">&lt;/div>
+						&lt;div style="
+							width: 50px;
+							height: 50px;
+							float: left;
+							background-color: #0f0;
+						">&lt;/div>
+						&lt;div style="
+							width: 50px;
+							height: 50px;
+							float: left;
+							background-color: #f00;
+						">&lt;/div>
+						&lt;div style="
+							width: 50px;
+							height: 50px;
+							float: left;
+							background-color: #ff0;
+						">&lt;/div>
+					&lt;/div>
+						</code></pre>
+						<div style="
+							width: 175px;
+							height: 100px;
+							background-color: #ccc;
+						">
+							<div style="
+								width: 50px;
+								height: 50px;
+								float: left;
+								background-color: #00f;
+							"></div>
+							<div style="
+								width: 50px;
+								height: 50px;
+								float: left;
+								background-color: #0f0;
+							"></div>
+							<div style="
+								width: 50px;
+								height: 50px;
+								float: left;
+								background-color: #f00;
+							"></div>
+							<div style="
+								width: 50px;
+								height: 50px;
+								float: left;
+								background-color: #ff0;
+							"></div>
+						</div>
+					</p>
+				</div>
+				<div style="clear: left;">
+					<h3>Media Query</h3>
+					<p>
+						Media Query 是 CSS3 新增的模块。<br>
+						<ul>
+							<li>在 link 标签中使用 media 属性，选择性调用 CSS 样式表</li>
+							<li>在 CSS 样式表中使用 @media ，选择性使用 CSS 属性</li>
+						</ul>
+						<pre><code class="html">
+							&lt;link rel="stylesheet" href="style.css" media="表达式"&gt;
+							&lt;style&gt;
+								@media 表达式 {
+									选择器 {
+										CSS 属性
+									}
+								}
+							&lt;/style&gt;
+						</code></pre>
+						表达式最终返回一个布尔值，若真，则应用该样式，若假，则不应用。<br>
+						参见<a href="./link.html"> link </a>。<br>
+
+					</p>
+				</div>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 维基百科 响应式网页设计 <a href="https://zh.wikipedia.org/wiki/%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BD%91%E9%A1%B5%E8%AE%BE%E8%AE%A1">https://zh.wikipedia.org/wiki/%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BD%91%E9%A1%B5%E8%AE%BE%E8%AE%A1</a></div>
+				<div>[2] 刘学炜 响应式和自适应的区别<a href="https://my.oschina.net/liu-xuewei/blog/345580">https://my.oschina.net/liu-xuewei/blog/345580</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

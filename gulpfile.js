@@ -1,14 +1,12 @@
 var gulp = require('gulp'),
        sass = require('gulp-sass'), // sass 预编译
        autoprefixer = require('gulp-autoprefixer'), // css 前缀自动补全
-       minifyhtml = require('gulp-html-minify'), // htm 压缩
        minifycss = require('gulp-minify-css'), // css 压缩
        minifyimg = require('gulp-imagemin'), // 图片压缩
        minifyjs = require('gulp-uglify'); // js 压缩
 
-gulp.task('minifyhtml', function() {
+gulp.task('copyhtml', function() {
     gulp.src(['./html/*.html'])
-             .pipe(minifyhtml())
              .pipe(gulp.dest('./dist/html'));
 });
 gulp.task('copydemo', function() {
@@ -44,7 +42,7 @@ gulp.task('minifyjs', function() {
 
 // 监听常用文件夹
 gulp.task('default', function() {
-    gulp.watch('./html/*.html',  ['minifyhtml']);
+    gulp.watch('./html/*.html',  ['copyhtml']);
     gulp.watch('./demo/*.html', ['copydemo']);
     gulp.watch('./scss/*.scss', ['sass']);
     gulp.watch('./images/*', ['minifyimg']);
@@ -53,4 +51,4 @@ gulp.task('default', function() {
 
 
 // 直接执行
-gulp.task('exec', ['minifyhtml', 'copydemo',  'sass', 'minifyimg', 'minifyjs']);
+gulp.task('exec', ['copyhtml', 'copydemo',  'sass', 'minifyimg', 'minifyjs']);
