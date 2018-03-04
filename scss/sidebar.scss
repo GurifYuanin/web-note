@@ -1,21 +1,23 @@
-$imgSize: 30px;
-$sidebarWidth: 20%;
-$separation: 5%;
+$imgSize: 2rem;
 $sidebarBackgroundColor: #5f93be; // 侧栏背景色
 $tableDeepColor: #222; // 图表深色
 $tableShallow: #fff; // 图表浅色
 
 /* 侧栏 */
 #sidebar {
-    display: inline-block;
+    float: left;
+    // 屏幕小于 400px 时的样式
 
-    position: relative;
-
-    margin: 0 1% 0 0;
-    padding: 1%;
-    width: $sidebarWidth;
+    margin: 0;
+    padding: 0;
+    width: 100%;
 
     background-color: $sidebarBackgroundColor;
+    // 屏幕大于 400px 时的样式
+    @media (min-device-width:400px) {
+        padding: 1%;
+        width: 25%;
+    }
     /* 目录栏*/
     #catalog {
         font-size: $imgSize;
@@ -24,7 +26,7 @@ $tableShallow: #fff; // 图表浅色
     }
     /* 条目块*/
     div {
-        margin: 2.5%;
+        margin: 2.5% auto;
         padding: 2.5%;
         width: 80%;
 
@@ -32,7 +34,7 @@ $tableShallow: #fff; // 图表浅色
 
         background-color: #f2f2f2;
         a {
-            font-size: 1em;
+            font-size: 1rem;
             text-decoration: none;
 
             color: #000;
@@ -49,30 +51,22 @@ $tableShallow: #fff; // 图表浅色
 
         cursor: pointer;
     }
-    /* 显示目录的图片*/
-    #showCatalog {
-        display: none;
-
-        position: absolute;
-        top: 50%;
-        right: 0;
-
-        width: 10%;
-
-        cursor: pointer;
-    }
 }
 
 /* 正文  */
 #container {
-    position: absolute;
-    top: 0;
-    left: $sidebarWidth + $separation;
+    float: right;
 
-    width: 1 - $sidebarWidth - $separation;
-    max-width: 1024px;
-    font-size: 1em;
-    line-height: 1.5em;
+    margin: 0 4%;
+    max-width: 1600px;
+
+    font-size: 1rem;
+    line-height: 1.5rem;
+
+    // 屏幕大于 400px 时的样式
+    @media (min-device-width:400px) {
+        width: 65%;
+    }
 
     /* 标题 */
     h1 {
@@ -83,19 +77,19 @@ $tableShallow: #fff; // 图表浅色
     section {
         border-bottom: solid 1px #888;
         h2:before {
-            content: ' - ';
+            content: " - ";
         }
         h3:before {
-            content: ' - - ';
+            content: " - - ";
         }
         h4:before {
-            content: ' - - - ';
+            content: " - - - ";
         }
         h5:before {
-            content: ' - - - - ';
+            content: " - - - - ";
         }
         h6:before {
-            content: ' - - - - - ';
+            content: " - - - - - ";
         }
     }
 
@@ -117,7 +111,7 @@ $tableShallow: #fff; // 图表浅色
         margin: 1px;
         border-radius: 10%;
 
-        font-size: .9em;
+        font-size: .9rem;
 
         color: #111;
         background-color: #eee;
@@ -126,7 +120,7 @@ $tableShallow: #fff; // 图表浅色
     /* 参考文献链接*/
     .refer {
         a {
-            font-size: .9em;
+            font-size: .9rem;
             text-decoration: none;
 
             color: inherit;

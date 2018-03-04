@@ -24,6 +24,7 @@ gulp.task('sass', function () {
             remove: true, // 是否删除过时前缀
             flexbox: false // 是否为 flexbox 添加前缀
         }))
+        .pipe(gulp.dest('css'))
         .pipe(gulp.dest('./dist/css'));
 });
 gulp.task('minifyimg', function() {

@@ -29,28 +29,29 @@ $(function() {
 			$sidebar.append(surroundedByTag(surroundedByTag(items[i][j], 'a'), 'div'));
 		}
 	}
+	var $itemLink = $('#sidebar>div>a');
 	// 折叠目录
 	$hideCatalog.click(function(event) {
-		$sidebar.animate({
-			'left': '-20%'
+		$sidebar.animate({ // 侧栏隐藏
+			'width': '0',
+			'padding': '0',
+			'margin': '0'
 		},'slow');
-		$container.animate({
-			'left': '5%'
-		},'slow');
-		$showCatalog.fadeIn('fast');
-		// 阻止事件冒泡：
-		event.stopPropagation(); // 非IE
-		window.event.cancelBubble = true; // IE
-	});
-	// 展示目录
-	$showCatalog.click(function(event) {
-		$sidebar.animate({
-			'left': '0%'
-		},'slow');
-		$container.animate({
-			'left': '25%'
-		},'slow');
-		$showCatalog.fadeOut('fast');
+		$itemLink.animate({
+			'font-size': '0'
+		}, 'slow');
+		for (var i = 0, delay = 0; i <= 25; i += 0.3, delay += 10) { // 正文栏目占据 90%
+			(function() {
+				var percentage = (65 + i) + '%';
+				var margin = '0 ' + (4 + i / 25) + '%';
+				setTimeout(function() {
+					$container.css({
+						'width': percentage,
+						'margin': margin
+					});
+				}, delay);
+			})();
+		}
 		// 阻止事件冒泡：
 		event.stopPropagation(); // 非IE
 		window.event.cancelBubble = true; // IE
@@ -63,4 +64,19 @@ $(function() {
 		this.style.backgroundColor = '#f2f2f2';
 	});
 	$('a').attr('target', '_blank'); // 所有链接默认新标签打开
+	// 按照视窗大小定义 html 字体大小
+	function getRootFontSize() {
+		var width = window.innnerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		if (width > 1200) {
+			return 16;
+		}
+		if (width > 800) {
+			return 14;
+		}
+		if (width > 400) {
+			return 12;
+		}
+		return 10;
+	}
+	$('html').eq(0).css('font-size', getRootFontSize());
 });
