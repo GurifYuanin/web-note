@@ -115,7 +115,7 @@
 								<li>三字节的字符：1110xxxx 10xxxxxx 10xxxxxx</li>
 								<li>四字节的字符：11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</li>
 							</ul>
-							Unicode 转 UTF-8 的方法是在 Unicode 表里找到对应字符的 0/1 编码，填充到上面的 x 里面，多余的 x 用 0 进行补全。例如中文的<span class="definition"> 中 </span>在 Unicode 中是<span class="definition"> 4e2d / 100111000101101</span>，共有 15 bit，也就是占用三字节。
+							Unicode 转 UTF-8 的方法是在 Unicode 表里找到对应字符的 0/1 编码，填充到上面的 x 里面，多余的 x 用 0 进行补全。例如中文的<span class="definition"> 中 </span>在 Unicode 中是<span class="definition"> 4e2d / 100111000101101</span>，共有 15 bit，也就是至少占用三字节。Unicode 转化为 UTF-8：
 							<pre><code class="java">
 				100111000101101 => 100 111000 101101		（Unicode）
 								+
@@ -128,13 +128,13 @@
 						</p>
 						<p>
 							<h4>UTF-16</h4>
-							UTF-16 统一使用两个字节来表示，不兼容 ASCII ，对于英文和数字也得占用两个字节。比起 UTF-8 更占用资源，但可以表示 Unicode 中码位大于 1FFFFF（21 个 1，UTF-8 装不下） 的字符。在 Unicode 中不同码位的字符和 UTF-16 之间有不同转化方式：
+							UTF-16 统一使用两个字节来表示字符，不兼容 ASCII ，对于英文和数字也得占用两个字节。比起 UTF-8 更占用资源，但可以表示 Unicode 中码位大于 1FFFFF的字符（转化为二进制是 21 个 1，UTF-8 只能表示 Unicode 中码位为 0 ~ 1FFFFF 的字符） 。在 Unicode 中不同码位的字符和 UTF-16 之间有不同转化方式：
 							<ul>
 								<li>U+0000~U+D7FF 和 U+E000~U+FFFF：Unicode 等价于 UTF-16</li>
 								<li>U+10000~U+10FFFF：码位 - 0x10000 = 20 个 0/1，前 10 个 0/1 | 0xD800 = UTF-16 的高字节，后 10 个 0/1 | 0xDC00 =UTF-16 的低字节</li>
 								<li>U+D800~U+DFFF：在 Unicode 中不对应于任何字符</li>
 							</ul>
-							值得注意的是，UTF-16 存在 大尾序和小尾序的概念。UTF-16 的大尾序和小尾序存储形式都在用。两个字节的 UTF-16 字符用大尾序方式先读高位再度低位，小尾序先读低位再读高为。例如对于 D0A8801C
+							值得注意的是，UTF-16 存在 大尾序和小尾序的概念。UTF-16 的大尾序和小尾序存储形式都在使用。两个字节的 UTF-16 字符用大尾序方式先读高位再度低位，小尾序先读低位再读高为。例如读取 D0A8801C
 							<pre><code class="java">
 				D0 A8 80 1C // 大尾序
 				A8 D0 1C 80 // 小尾序

@@ -20,7 +20,7 @@ $(function() {
 					['响应式布局', 'bootstrap'],
 					['抓包工具', 'chrome devtools'],
 					['HTTP'],
-					['XSS'],
+					['CSRF', 'XSS', 'DoS'],
 					['浏览器渲染', '设计策略', 'cookie']
 				];
 	for (var i = 0; i < category.length; i++) {
