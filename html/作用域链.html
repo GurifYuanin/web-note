@@ -25,7 +25,7 @@
 		<section>
 			<h2>变量对象</h2>
 			<p>
-				变量对象（Variable Object）是保存执行环境（Execution Context）中所有定义了的变量和函数的一个对象（无法通过代码直接访问），它包含了：
+				变量对象（Variable Object）是保存执行环境（Execution Context）中所有定义了的变量和函数的一个对象（无法通过代码直接访问，提供给 javascript 解析器执行代码时解析），它包含了：
 				<ul>
 					<li> arguments 对象</li>
 					<li>执行环境所有的变量声明（同名则跳过）</li>
@@ -118,7 +118,7 @@
 		<section>
 			<h2>执行环境</h2>
 			<p>
-				执行环境（Execution Context）定义了变量或函数可以访问到的数据<sup>[1]</sup>，即当前执行中的代码所在的环境。当一个执行环境内的代码全部执行后，该执行环境将被销毁（出栈）。<br>
+				执行环境（Execution Context）可以看作是一个对象，它定义了变量或函数可以访问到的数据<sup>[1]</sup>，即当前执行中的代码所在的环境。当一个执行环境内的代码全部执行后，该执行环境将被销毁（出栈）。<br>
 				执行环境分为两种：
 				<ul>
 					<li>全局执行环境</li>
@@ -134,13 +134,19 @@
 					<h3>函数执行环境</h3>
 					<p>
 						<ol>
-							<li>函数在定义（创建）时，该函数对象存在一个<span class="definition"> [[scope]] </span>属性（该属性无法通过代码直接访问），指向一个不包含自身变量对象的作用域链。</li>
+							<li>函数在定义（创建）时，该函数对象存在一个<span class="definition"> [[scope]] </span>属性（该属性无法通过代码直接访问，但在 Firefox 中可以使用<span class="definition"> 函数名.__parent__ </span>来访问），指向一个（不包含自身变量对象的）作用域链。</li>
+							<pre><code class="javascript">
+			function sum (number1, number2) {
+				return number1 + number2;
+			}
+			console.dir(sum.__parent__); // => 作用域链
+							</code></pre>
 							<li>
-								函数在被调用时，会创建自身的变量对象，再将该变量对象推入原先<span class="definition"> [[scope]] </span>属性保存的作用域链的最前端，作为执行环境的作用域链。<br>
-							函数的执行环境包含了：
+								函数在被调用时，会创建自身的变量对象，再将该变量对象推入原先<span class="definition"> [[scope]] </span>保存的作用域链的最前端，作为执行环境的作用域链。<br>
+							函数的执行环境总共包含了：
 								<ul>
 									<li>变量对象</li>
-									<li>将自身变量对象推入最前端的作用域链</li>
+									<li>作用域链</li>
 									<li> this 指针</li>
 								</ul>
 								用 javascript 语言来表示，相当于

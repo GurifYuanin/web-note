@@ -67,7 +67,7 @@
 		<section>
 			<h2>GB系列</h2>
 			<p>
-				EASCII 已经把剩下的 128 个位置使用完，常用汉字也有 6000 多个需要表示，一个字节（8 bit）无法表示全部的汉字，于是出现用两个字节（2<sup>8</sup> * 2<sup>8</sup> = 65536）来表示一个汉字的方法，第一个字节称为高字节，第二个字节成为低字节。
+				EASCII 已经把剩下的 128 个位置使用完，常用汉字也有 6000 多个需要表示，一个字节（8 bit，2<sup>8</sup> = 128）无法表示全部的汉字，于是出现用两个字节（8 bit + 8 bit，2<sup>8</sup> * 2<sup>8</sup> = 65536）来表示一个汉字的方法，第一个字节称为高字节，第二个字节成为低字节。
 				常见的有：
 				<ul>
 					<li>GB2312-80（信息交换用汉字编码字符集基本集）：A1A1~FEFE</li>
@@ -92,7 +92,7 @@
 		<section>
 			<h2>Unicode</h2>
 			<p>
-				由 Xerox、Apple 等软件制造商于 1988 年组成 Unicode 联盟（The Unicode Consortium），也推出了自己的字符编码标准，称为 Unicode 。1991年前后，两个项目的参与者( Unicode 联盟和 ISO 组织）都认识到，世界不需要两个不兼容的字符集。于是，它们开始合并双方的工作成果，并为创立一个单一编码表而协同工作<sup>[6]</sup>。之后的时间就是不断给 Unicode 编码表添加新的字符进去。
+				由 Xerox、Apple 等软件制造商于 1988 年组成 Unicode 联盟（The Unicode Consortium），也推出了自己的字符编码标准，称为 Unicode 。1991年前后，两个项目的参与者( Unicode 联盟和 ISO 组织）都认识到，世界不需要两个不兼容的字符集（UCS 和 Unicode）。于是，它们开始合并双方的工作成果，并为创立一个单一编码表而协同工作<sup>[6]</sup>。之后的时间就是不断给 Unicode 编码表添加新的字符进去。
 				<figure style="text-align: center;">
 					<img src="../images/unicode.png" alt="加载失败">
 					<figcaption class="description">部分 Unicode 编码</figcaption>
