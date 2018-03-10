@@ -29,15 +29,15 @@
 				在<a href="./作用域链.html"> 作用域链 </a>的文末，我们知道，当一个函数执行结束后，其作用域链会被销毁，如果不存在外部引用，其变量对象也会被销毁。而闭包，就是存在外部引用的情况下，其变量对象不会被销毁。
 				<pre><code class="javascrip">
 					function foo () {
-						var say = 'hello world';
+						var temp = 'hello world';
 						return function() {
-							console.log(say);
+							console.log(temp);
 						};
 					}
 					var instance = foo();
 					instance(); // => hello world
 				</code></pre>
-				调用函数 foo ，当执行完返回语句返回一个匿名函数后， foo 函数已经全部执行完毕，正常情况是会把变量对象销毁
+				调用函数 foo ，当执行完返回语句返回一个匿名函数后， foo 函数已经全部执行完毕，正常情况是会把 foo 的变量对象销毁
 				<pre><code class="javascrip">
 					VariableObject = {
 						arguments: {},
@@ -66,7 +66,7 @@
 				<figure style="text-align: center;">
 					<img src="../images/bibao_error.jpg" alt="加载失败">
 				</figure>
-				这是因为 arr[i] 的每个匿名函数创建时的<span class="definition"> [[scope]] </span>指向的作用域链里的 i 是同一个 i ，执行完循环后 i 的值为 4 ，调用匿名函数时访问的都是同一个变量对象里的 i 。解决方法是创建一个立即执行的匿名函数，将 i 赋值给匿名函数里的其他变量（例如 j ），每个匿名函数里的 j 都是相互独立的，就不会出现引用同一个 i 的情况。
+				这是因为 arr[i] 的每个匿名函数创建时的<span class="definition"> [[scope]] </span>指向的作用域链里的 i 是同一个 i ，执行完循环后 i 的值为 5 ，调用匿名函数时访问的都是同一个变量对象里的 i 。解决方法是创建一个立即执行的匿名函数，将 i 赋值给匿名函数里的其他变量（例如 j ），每个匿名函数里的 j 都是相互独立的，就不会出现引用同一个 i 的情况。
 				<pre><code class="javascript">
 					var arr = new Array(5);
 					for (var i = 0; i < 5; i++) {

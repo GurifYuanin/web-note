@@ -23,15 +23,237 @@
 			<h1>事件</h1>
 		</hgroup>
 		<section>
-			<h2></h2>
+			<h2>定义</h2>
 			<p>
-				
+				事件是指在 HTML 元素上触发某一条件后执行的某种动作。作在 Javascript 中，事件可以分为：
+				<ul>
+					<li>UI 事件</li>
+					<li>焦点事件</li>
+					<li>表单事件</li>
+					<li>鼠标事件</li>
+					<li>键盘事件</li>
+				</ul>
+				相关概念：
+				<ul>
+					<li>事件名：事件的名字，如 click （鼠标单击）、 input（键盘输入）、focus（焦点）等</li>
+					<li>事件处理程序：触发事件后执行的一段脚本代码（通常是一个函数）</li>
+					<li>事件流：事件发生顺序</li>
+				</ul>
 			</p>
 		</section>
+		<section>
+			<h2>事件流</h2>
+			<p>
+				由于 HTML 中元素可以相互包含，用户在触发某个事件的时候（如进行点击）就需要判断是在哪个元素上触发。例如
+				<pre><code class="html">
+				&lt;div&gt;
+					&lt;p&gt;点击我&lt;/p&gt;
+				&lt;/div&gt;
+				</code></pre>
+				当用户点击 p 元素时，是该先触发 p 上的事件，还是先触发 div 上的事件？<br>
+				事件流是描述事件的发生顺序<sup>[1]</sup>。“DOM2级事件”规定事件流包括三个阶段：
+				<ol>
+					<li>事件捕获阶段（网景提出的事件流）</li>
+					<li>处于目标阶段</li>
+					<li>事件冒泡阶段（ IE 的事件流）</li>
+				</ol>
+				<div class="tip">
+					在 javascript 中，通过<span class="definition"> target.addEventListener(eventName, function, useCapture) </span>来为 HTML 元素添加事件，第三个参数表示是否使用事件捕获机制，true 则为事件捕获，false（默认）为事件冒泡。
+				</div>
+				<div>
+					<p>
+						<h3>事件捕获</h3>
+						事件捕获是网景提出的一种事件流，其思想是最底（外）层的元素（即 document）应该先接收到事件，再逐级传递给最顶（内）层的元素（被点击的元素）。
+						<pre><code class="html">
+				&lt;style&gt;
+					#outer{
+						background-color: #ff0;
+						height: 100px;
+						width: 100px;
+					}
+					 #inner {
+						background-color: #f0f;
+						height: 50px;
+						width: 50px;
+					}
+				&lt;/style&gt;
+				&lt;div id="outer"&gt;
+					&lt;div id="inner"&gt;点击我&lt;/div&gt;
+				&lt;/div&gt;
+				&lt;script&gt;
+					var outer = document.getElementById('outer');
+					var inner = document.getElementById('inner');
+					document.addEventListener('click', function() {
+						console.log('document');
+					}, true);
+					outer.addEventListener('click', function() {
+						console.log('outer');
+					}, true);
+					inner.addEventListener('click', function() {
+						console.log('inner');
+					}, true);
+				&lt;/script&gt;
+						</code></pre>
+						<style>
+							#outer{
+								background-color: #ccc;
+								height: 100px;
+							}
+							 #inner {
+								background-color: #888;
+								height: 50px;
+							}
+						</style>
+						<div id="outer">
+							<div id="inner">点击我</div>
+						</div>
+						<script>
+							var outer = document.getElementById('outer');
+							var inner = document.getElementById('inner');
+							function logDoc() {
+								console.log('document');
+							}
+							document.addEventListener('click', logDoc, true);
+							outer.addEventListener('click', function() {
+								console.log('outer');
+							}, true);
+							inner.addEventListener('click', function() {
+								inner.innerHTML = '按 F12 打开控制台查看消息';
+								console.log('inner');
+							}, true);
+						</script>
+						document 会先接收到事件输出<span class="definition"> document </span>，之后 id 为 outer 的 div 元素也接收到事件输出<span class="definition"> outer </span>，最后 id 为 inner 的 div 元素才输出<span class="definition"> inner </span>。
+						<figure style="text-align: center;">
+							<img src="../images/event_capture.jpg">
+							<figcaption class="description"> 事件捕获顺序（上先下后） </figcaption>
+						</figure>
+					</p>
+					<p>
+						<h3>事件冒泡</h3>
+						事件冒泡与事件捕获相反，是先由当前元素（最顶层）开始接收事件，然后逐步传递到根元素（document），也是大多数浏览器默认支持的事件触发顺序。
+						<style type="text/css">
+							#out {
+								height: 100px;
+								background-color: #ccc;
+							}
+							#in {
+								height: 50px;
+								background-color: #888;
+							}
+						</style>
+						<div id="out">
+							<div id="in">再次点击我</div>
+						</div>
+						<script type="text/javascript">
+							var outEl = document.getElementById('out');
+							var inEl = document.getElementById('in');
+							outEl.addEventListener('click', function(){
+								console.log('outer');
+							}, false);
+							inEl.addEventListener('click', function(){
+								console.clear();
+								console.log('inner');
+								inEl.innerHTML = '按 F12 查看控制台消息';
+							}, false);
+						</script>
+						<figure style="text-align: center;">
+							<img src="../images/event_bubble.jpg">
+							<figcaption class="description"> 事件冒泡顺序（为了与前文避免冲突， document 没有注册冒泡事件） </figcaption>
+						</figure>
+					</p>
+					<p>
+						<h3>DOM2级事件流</h3>
+						DOM2级事件流把事件触发顺序分成了三个阶段，先触发事件捕获（从 document 到目标元素），处于目标阶段（在目标元素上执行相应代码），事件冒泡（从目标元素到 document ）。
+						<pre><code class="html">
+				&lt;style type="text/css"&gt;
+					#d1 {
+						height: 100px;
+						background-color: #ccc;
+					}
+					#d2 {
+						height: 50px;
+						background-color: #888;
+					}
+				&lt;/style&gt;
+				&lt;div id="d1"&gt;
+					&lt;div id="d2"&gt;点我&lt;/div&gt;
+				&lt;/div&gt;
+				&lt;script type="text/javascript"&gt;
+					var d1 = document.getElementById('d1');
+					var d2 = document.getElementById('d2');
+					d1.addEventListener('click', function(){
+						console.log('d1 捕获');
+					}, true);
+					d1.addEventListener('click', function(){
+						console.log('d1 冒泡');
+					}, false);
+					d2.addEventListener('click', function(){
+						console.log('d2 捕获');
+					}, true);
+					d2.addEventListener('click', function(){
+						console.log('d2 冒泡');
+					}, false);
+				&lt;/script&gt;
+						</code></pre>
+						<style type="text/css">
+							#d1 {
+								height: 100px;
+								background-color: #ccc;
+							}
+							#d2 {
+								height: 50px;
+								background-color: #888;
+							}
+						</style>
+						<div id="d1">
+							<div id="d2">点我</div>
+						</div>
+						<script type="text/javascript">
+							var d1 = document.getElementById('d1');
+							var d2 = document.getElementById('d2');
+							d1.addEventListener('click', function(){
+								console.clear();
+								console.log('d1 捕获');
+								d2.innerHTML = '按 F12 ...';
+							}, true);
+							d1.addEventListener('click', function(){
+								console.log('d1 冒泡');
+							}, false);
+							d2.addEventListener('click', function(){
+								console.log('d2 捕获');
+							}, true);
+							d2.addEventListener('click', function(){
+								console.log('d2 冒泡');
+							}, false);
+						</script>
+						<figure  style="text-align: center;">
+							<img src="../images/event_dom2.jpg">
+							<figcaption class="description"> 完整的事件流（省略 document ） </figcaption>
+						</figure>
+					</p>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>UI 事件</h2>
+			<p>
+				常用的 UI 事件包括：
+				<ul>
+					<li>load：window、iframe、img 或其他嵌入内容加载完毕后触发</li>
+					<li>unload：window、iframe或嵌入内容卸载完毕后触发</li>
+					<li>absort：嵌入元素停止下载时在 object 元素上触发</li>
+					<li>error</li>
+					<li>select</li>
+					<li>resize</li>
+					<li>scroll</li>
+				</ul>
+			</p>
+		</section>
+		
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
-				<div></div>
+				<div>[1] Javascript高级程序教程</div>
 			</p>
 		</section>
 	</article>
