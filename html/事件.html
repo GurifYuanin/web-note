@@ -29,9 +29,9 @@
 				<ul>
 					<li>UI 事件</li>
 					<li>焦点事件</li>
-					<li>表单事件</li>
 					<li>鼠标事件</li>
 					<li>键盘事件</li>
+					<li>表单事件</li>
 				</ul>
 				相关概念：
 				<ul>
@@ -235,21 +235,158 @@
 			</p>
 		</section>
 		<section>
+			<h2>事件对象</h2>
+			<p>
+				事件处理程序为一个函数，自动传入一个 event 对象，该对象在不同事件中有不同属性，其通用属性有：
+				<ul>
+					<li>type</li>
+				</ul>
+			</p>
+		</section>
+		<section>
 			<h2>UI 事件</h2>
 			<p>
 				常用的 UI 事件包括：
 				<ul>
-					<li>load：window、iframe、img 或其他嵌入内容加载完毕后触发</li>
+					<li>load：window、iframe、img 或嵌入内容加载完毕后触发</li>
+					<li>DOMContentLoaded：DOM 树构建后触发，可添加在 window 或 document 上（HTML5 事件）</li>
 					<li>unload：window、iframe或嵌入内容卸载完毕后触发</li>
+					<li>beforeunload：页面被卸载前触发，询问消息设置给 event.returnValue 并返回（HTML5 事件）</li>
 					<li>absort：嵌入元素停止下载时在 object 元素上触发</li>
-					<li>error</li>
-					<li>select</li>
-					<li>resize</li>
-					<li>scroll</li>
+					<li>error：iframe、img 或嵌入内容加载失败后触发，javascript 错误时在 window 触发</li>
+					<li>resize：窗口大小改变时触发</li>
+					<li>scroll：滚动带滑轮的元素时在元素上触发</li>
+					<li>hashchange：网页 URL 改变时触发（HTML5 事件）</li>
 				</ul>
 			</p>
 		</section>
-		
+		<section>
+			<h2>焦点事件</h2>
+			<p>
+				常用的焦点事件包括：
+				<ul>
+					<li>blur：当元素失去焦点时触发（不会冒泡）</li>
+					<li>focus：当元素获得焦点时触发（不会冒泡）</li>
+					<li>focusout：当元素失去焦点时触发（会冒泡）</li>
+					<li>focusin：当元素获得焦点时触发（会冒泡）</li>
+				</ul>
+				<input type="text"  id="focus" placeholder="点击后按 F12 ">
+				<script type="text/javascript">
+					var focus = document.getElementById('focus');
+					focus.onblur = function() {
+						console.log('blur');
+					};
+					focus.onfocus = function() {
+						console.log('focus');
+					};
+					focus.onfocusout = function() {
+						console.log('focusout');
+					};
+					focus.onfocusin = function() {
+						console.log('focusin');
+					};
+				</script>
+			</p>
+		</section>
+		<section>
+			<h2>鼠标事件</h2>
+			<p>
+				常用的鼠标事件包括：
+				<ul>
+					<li>click：当元素被点击（左键）或回车时触发</li>
+					<li>dblclick：当元素被双击（左键）时触发</li>
+					<li>mousedown：当元素被点下（任意鼠标键）时触发</li>
+					<li>mouseup：当鼠标按键被释放时触发</li>
+					<li>mouseenter：当光标进入元素内触发（不冒泡），元素区域上方都算作内部</li>
+					<li>mouseover：当光标进入元素内触发，不被子元素覆盖的区域上方才算内部</li>
+					<li>mouseleave：当光标离开元素时触发（不冒泡），元素区域上方都算作内部</li>
+					<li>mouseout：当光标离开元素时触发，不被子元素覆盖的区域上方才算内部</li>
+					<li>mousemove：当光标在元素内移动时不断触发</li>
+				</ul>
+				<div id="mouse" style="height: 2em; background-color: #eee; text-align: center;">在此区域做尝试</div>
+				<script type="text/javascript">
+					var mouse = document.getElementById('mouse');
+					mouse.onclick = function() { console.log('click') };
+					mouse.ondblclick = function() { console.log('dblclick') };
+					mouse.onmousedown = function() { console.log('mousedown') };
+					mouse.onmouseup = function() { console.log('mouseup') };
+					mouse.onmouseenter = function() { console.log('mouseenter') };
+					mouse.onmouseover = function() { console.log('mouseover') };
+					mouse.onmouseleave = function() { console.log('mouseleave') };
+					mouse.onmouseout = function() { console.log('mouseout') };
+					mouse.onmousemove = function() { console.log('mousemove') };
+				</script>
+				鼠标事件对象特有几个属性可以查看点击位置坐标：
+				<ul>
+					<li>clientX、clientY：相对于浏览器视窗</li>
+					<li>pageX、pageY：相对于文档</li>
+					<li>screenX、screenY：相对于显示器屏幕</li>
+				</ul>
+				<input id="xy" type="button" name="tryXY" value="开启显示坐标">
+				<script type="text/javascript">
+					document.getElementById('xy').onclick = function() {
+						this.value="按 F12 查看"
+						document.onclick = function(event) {
+							console.log("clientX = " + event.clientX);
+							console.log("clientY = " + event.clientY);
+							console.log("pageX = " + event.pageX);
+							console.log("pageY = " + event.pageY);
+							console.log("screenX= " + event.screenX);
+							console.log("screenY = " + event.screenY);
+						}
+					}
+				</script>
+				<figure style="overflow: scroll;">
+					<img id="eventXY" style="max-width: 100%;" src="../images/event_xy.jpg">
+					<figcaption id="imgInfo" class="description">点击图片放大</figcaption>
+				</figure>
+				<script type="text/javascript">
+					var flag = true;
+					var imgInfo = document.getElementById('imgInfo');
+					document.getElementById('eventXY').onclick = function() {
+						if (flag) {
+							this.style = '';
+							imgInfo.innerHTML = '点击图片缩小';
+							flag = !flag;
+						} else {
+							this.style.maxWidth = '100%';
+							imgInfo.innerHTML = '点击图片放大';
+							flag = !flag;
+						}
+					}
+				</script>
+			</p>
+		</section>
+		<section>
+			<h2>键盘事件</h2>
+			<p>
+				常用的键盘事件包括：
+				<ul>
+					<li>keydown：当按下任意键盘按键时触发，按紧后重复触发</li>
+					<li>keypress：当按下字符键或 Esc 键时触发，按紧后重复触发</li>
+					<li>keyup：当释放键盘按键时触发</li>
+				</ul>
+				<input id="key" type="text" placeholder="按键盘键后按 F12">
+				<script type="text/javascript">
+					var key = document.getElementById('key');
+					key.onkeydown = function() {
+						console.log('keydown');
+					};
+					key.onpress = function() {
+						console.log('keypress');
+					};
+					key.onkeyup = function() {
+						console.log('keyup');
+					};
+				</script>
+			</p>
+		</section>
+		<section>
+			<h2>表单事件</h2>
+			<p>
+				
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
