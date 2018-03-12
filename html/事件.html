@@ -31,7 +31,6 @@
 					<li>焦点事件</li>
 					<li>鼠标事件</li>
 					<li>键盘事件</li>
-					<li>表单事件</li>
 				</ul>
 				相关概念：
 				<ul>
@@ -237,10 +236,24 @@
 		<section>
 			<h2>事件对象</h2>
 			<p>
-				事件处理程序为一个函数，自动传入一个 event 对象，该对象在不同事件中有不同属性，其通用属性有：
+				事件处理程序为一个函数，函数的形参会自动传入一个 event 对象，该对象在不同事件中有不同属性，其通用属性有：
 				<ul>
-					<li>type</li>
+					<li>detail：事件相关细节信息</li>
+					<li>eventPhase：事件流所在阶段</li>
+					<li>type：事件的类型</li>
+					<li>target：触发事件的 HTML 元素</li>
+					<li>srcElement：触发事件的 HTML 元素（IE）</li>
+					<li>currentTarget：执行事件处理程序的 HTML 元素</li>
+					<li>bubbles：事件是否冒泡</li>
+					<li>stopProgagation()：取消事件进一步捕获或冒泡</li>
+					<li>cancelBubble：设置为 true 时取消事件冒泡（IE）</li>
+					<li>stopImmediatePropagation()：取消事件进一步捕获或冒泡、阻止事件处理程序被调用</li>
+					<li>cancelable：是否允许取消事件默认行为</li>
+					<li>preventDefault()：取消事件默认行为</li>
+					<li>returnValue：设置为 false 时取消事件默认行为（IE）</li>
+					<li>defaultPrevented：是否已经取消事件默认行为</li>
 				</ul>
+				其中只有<span class="definition"> cancelBubble </span>和<span class="definition"> returnValue </span>为读写，其余都是只读属性。
 			</p>
 		</section>
 		<section>
@@ -321,6 +334,30 @@
 					<li>clientX、clientY：相对于浏览器视窗</li>
 					<li>pageX、pageY：相对于文档</li>
 					<li>screenX、screenY：相对于显示器屏幕</li>
+					<li>ctrlKey、shiftKey、altKey、metaKey：true 时表示触发事件时对应键盘键被按下</li>
+					<li>button：按下鼠标哪个键（以下左键为主按钮，右键为次按钮）
+						<ul>
+							<li>IE8 及以前：
+								<ul>
+									<li>0：没有按下按钮</li>
+									<li>1：按下左键</li>
+									<li>2：按下右键</li>
+									<li>3：按下左右键</li>
+									<li>4：按下滑轮键</li>
+									<li>5：按下左键和滑轮键</li>
+									<li>6：按下右键和滑轮键</li>
+									<li>7：按下左右和滑轮键</li>
+								</ul>
+							</li>
+							<li>DOM
+								<ul>
+									<li>0：按下左键</li>
+									<li>1：按下滑轮键</li>
+									<li>2：按下右键</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
 				</ul>
 				<input id="xy" type="button" name="tryXY" value="开启显示坐标">
 				<script type="text/javascript">
@@ -340,6 +377,11 @@
 					<img id="eventXY" style="max-width: 100%;" src="../images/event_xy.jpg">
 					<figcaption id="imgInfo" class="description">点击图片放大</figcaption>
 				</figure>
+				<style type="text/css">
+					#eventXY {
+						pointer: cursor;
+					}
+				</style>
 				<script type="text/javascript">
 					var flag = true;
 					var imgInfo = document.getElementById('imgInfo');
@@ -366,31 +408,51 @@
 					<li>keypress：当按下字符键或 Esc 键时触发，按紧后重复触发</li>
 					<li>keyup：当释放键盘按键时触发</li>
 				</ul>
-				<input id="key" type="text" placeholder="按键盘键后按 F12">
+				当用户按下一个按键后，其触发顺序为：keydown -> keypress -> 文本框字符出现 -> keyup
+				<div>
+					<input id="key" type="text" placeholder="按键盘键后按 F12">
+				</div>
 				<script type="text/javascript">
 					var key = document.getElementById('key');
 					key.onkeydown = function() {
 						console.log('keydown');
 					};
-					key.onpress = function() {
+					key.onkeypress = function() {
 						console.log('keypress');
 					};
 					key.onkeyup = function() {
 						console.log('keyup');
 					};
 				</script>
-			</p>
-		</section>
-		<section>
-			<h2>表单事件</h2>
-			<p>
-				
+				<ul>
+					<li>
+						对于 keydown 和 keyup 事件，在 IE 或 Chrome 中通过 event.keyCode ，在其他浏览器中通过 event.which ，在最新 DOM （IE9+）中通过 key 来获取按下哪个键盘键位。keyCode 和 which属性值为键盘键位字符编码，常用如下
+						<ul>
+							<li>48 ~ 57：数字 0 ~ 9</li>
+							<li>65 ~ 90：字母 a（A） ~ z（Z）</li>
+							<li>112 ~ 135：F1 ~ F24</li>
+							<li>8：退格</li>
+							<li>9：Tab</li>
+							<li>13：回车</li>
+							<li>20：大小写切换键</li>
+							<li>32：空格</li>
+							<li>37：左箭头</li>
+							<li>38：上箭头</li>
+							<li>39：右箭头</li>
+							<li>40：下箭头</li>
+						</ul>
+						key 的值为对于键的名字。
+					</li>
+					<li>对于 keypress 事件，在 IE9+、Chrome、Firefox 中通过 evnet.charCode ，在 Safari 5 和 Chrome 中使用 keyIdentifier ，在最新 DOM 中使用 char  获取按下的键盘键位的 ASCII 值。</li>
+				</ul>
+
 			</p>
 		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
 				<div>[1] Javascript高级程序教程</div>
+				<div>[2] calledT event.target 和event.currentTarget 的区别<a href="http://www.calledt.com/target-and-currenttarget/">http://www.calledt.com/target-and-currenttarget/</a></div>
 			</p>
 		</section>
 	</article>
