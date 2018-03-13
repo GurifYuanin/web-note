@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>JSONP</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<article id="container">
+		<hgroup>
+			<h1>JSONP</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				JSON（JavaScript Object Notation，JavaScript 对象表示法）是一种数据交换语言，也是  Javascript 的一个子集，可以理解为保存键值对的对象。
+				<pre><code class="javascript">
+					var json = {
+						name: 'json',
+						say: 'hello world'
+					}
+				</code></pre>
+				JSONP（JSON with Padding，填充式 JSON）是一种规避<a href="./同源策略.html"> 同源策略 </a>的方法，由于 HTML 中 script 标签没有同源策略的限制，可以通过该标签来获取不同源网站的数据。
+			</p>
+		</section>
+		<section>
+			<h2>原理</h2>
+			<p>
+				通过 script 标签进行脚本引用，实际上做的操作是将 src 资源加载到 HTML 页面中，例如有一个 say.js 文件：
+				<pre><code class="javascript">
+					console.log('hello world');
+				</code></pre>
+				被引用到 demo.html 中：
+				<pre><code class="html">
+					&lt;!DOCTYPE html&gt;
+					&lt;html lang="en"&gt;
+					&lt;head&gt;
+						&lt;meta charset="UTF-8"&gt;
+						&lt;title&gt;Document&lt;/title&gt;
+					&lt;/head&gt;
+					&lt;body&gt;
+						&lt;script src="say.js"&gt;&lt;/script&gt;
+					&lt;/body&gt;
+					&lt;/html&gt;
+				</code></pre>
+				实际上 demo.html 变成了：
+				<pre><code class="html">
+					&lt;!DOCTYPE html&gt;
+					&lt;html lang="en"&gt;
+					&lt;head&gt;
+						&lt;meta charset="UTF-8"&gt;
+						&lt;title&gt;Document&lt;/title&gt;
+					&lt;/head&gt;
+					&lt;body&gt;
+						&lt;script&gt;
+							console.log('hello world');
+						&lt;/script&gt;
+					&lt;/body&gt;
+					&lt;/html&gt;
+				</code></pre>
+				如果 say.js 变成了 say.php：
+				<pre><code class="php">
+					&lt;?php
+						echo 'console.log("hello world");';
+					?&gt;
+				</code></pre>
+				向 say.php 发送请求后，say.php 执行后返回<span class="definition"> console.log("hello world"); </span>，跟直接引用 say.js 结果完全一样。所不同的是，引用 javascript 文件直接返回其内容，引用服务器语言的文件需要先执行代码，再返回其执行结果。
+			</p>
+		</section>
+		<section>
+			<h2>实现</h2>
+			<p>
+				知道其原理，我们可以通过 script 标签直接向不同源的网站获取数据，但这种方法只能死板地获取单一的数据，每次请求都是同样的结果。为了解决这个不足，可以在 src 的 url 上添加查询片段，被请求的网站再通过查询片段返回相应的结果。<br>
+				发起请求的网站，demo.html：
+				<pre><code class="html">
+					&lt;!DOCTYPE html&gt;
+					&lt;html lang="en"&gt;
+					&lt;head&gt;
+						&lt;meta charset="UTF-8"&gt;
+						&lt;title&gt;Document&lt;/title&gt;
+						&lt;script&gt;
+							function foo(data) {
+								console.log(data);
+							}
+						&lt;/script&gt;
+						&lt;script src="say.php?callback=foo&index=1"&gt;&lt;/script&gt;
+					&lt;/head&gt;
+					&lt;body&gt;
+					&lt;/body&gt;
+					&lt;/html&gt;
+				</code></pre>
+				<span class="definition"> ?callback=foo&index=1 </span>是查询片段，表示回调函数是 foo ， index 是 1 。<br>
+				接受请求的网站，say.php
+				<pre><code class="php">
+					&lt;?php
+						$arr = array('hello 1', 'hello 2', 'hello 3'); // 服务器端的数据
+						// 读取查询片段
+						$callback = $_GET('callback');
+						$index =(int)$_GET('index');
+						$data = $arr[$index]; // 请求的数据
+						echo $callback . '($data)'; // 最终返回的数据
+					?&gt;
+				</code></pre>
+				php 文件读取查询片段得知要获取 index 为 1 的数据，于是将在服务器保存的数组 $arr 取出索引为 1 的数据（字符串 hello 2 ），因此最终返回的结果是<span class="definition"> foo('hello 2') </span>。demo.html 收到该结果后执行 foo 函数，控制台输出 hello 2 。
+				<div class="tip">
+					因为整个过程是在客户端设置一个回调函数，通常其返回数据中回调函数的参数为一个 JSON 对象，就像是预先准备了个容器来装 JSON 对象，因此称之为填充式 JSON 。（个人瞎编的）
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>缺点</h2>
+			<p>
+				粗略的 JSONP 部署很容易受到<a href="./CSRF.html"> 跨站请求伪造 </a>（CSRF/XSRF）的攻击<sup>[1]</sup>。
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 维基百科 JSONP <a href="https://zh.wikipedia.org/wiki/JSONP">https://zh.wikipedia.org/wiki/JSONP</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

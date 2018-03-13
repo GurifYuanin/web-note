@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>this</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<article id="container">
+		<hgroup>
+			<h1>this</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				在 javscript 中，this 是一个指针，指向的对象根不同情况而有所不同，其影响因素包括：
+				<ul>
+					<li>所在执行环境</li>
+					<li>是否在严格模式下</li>
+					<li>所在函数调用方式</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>全局执行环境</h2>
+			<p>
+				无论是否在严格模式下，在全局执行上下文中（在任何函数体外部）this 都指代全局对象。<sup>[1]</sup>
+				<pre><code class="javscript">
+					console.log(this === window);
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>函数执行环境</h2>
+			<p>
+				<li>无论是否在严格模式下，函数在被调用时，若是显式地被某个对象作为方法调用，this 指向这个调用对象。</li>
+				<pre><code class="javscript">
+					var instance = {
+						foo: function() {
+							console.log(this === instance);
+						}
+					}
+					instance.foo(); // true
+				</code></pre>
+				<li>若是没有被某个对象而是直接调用：</li>
+				<div>
+					<h3>严格模式</h3>
+					<p>
+						在严格模式下，若对函数进行直接调用，由于没有“调用者”， this 的值为 undefined 。
+						<pre><code class="javscript">
+					'use strict';
+					function foo() {
+						console.log(this);
+					}
+					foo(); // undefined
+						</code></pre>
+					</p>
+				</div>
+				<div>
+					<h3>非严格模式</h3>
+					<p>
+						在非严格模式下，this 的值总是 window。
+						<pre><code class="javscript">
+					function outer() {
+						function inner( ) {
+							console.log(this === window);
+						}
+						inner();
+					}
+					outer(); // true
+						</code></pre>
+					</p>
+				</div>
+				<li>若作为构造函数通过 new 执行时， this 指向创建出来的实例对象</li>
+				<pre><code class="javscript">
+					function Foo(message) {
+						this.say = message;
+					}
+					var instance = new Foo('hello world');
+					console.log(instance.say); // hello world
+				</code></pre>
+				<li>若调用函数后再调用 call 或者 apply 方法，this 指向 call 或 apply 里的第一个参数对象</li>
+				<pre><code class="javscript">
+					var instance1 = {
+						name: 'instance1',
+						say: function() {
+							console.log(this.name);
+						}
+					};
+					var instance2 = {
+						name: 'instance2'
+					}
+					instance1.say.call(instance2); // instance2
+				</code></pre>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] MDN this <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/this">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/this</a></div>
+				<div>[2 ] 王群锋 <a href="https://www.ibm.com/developerworks/cn/web/1207_wangqf_jsthis/index.html">https://www.ibm.com/developerworks/cn/web/1207_wangqf_jsthis/index.html </a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CSRF</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<article id="container">
+		<hgroup>
+			<h1>CSRF</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				CSRF（Cross-site request forgery，跨站请求伪造）是利用 img 等标签不受<a href="./同源策略.html"> 同源策略 </a>限制的特点，通过诱导用户点击恶意网站，进行跨域访问时由于携带用户 cookies 而冒充用户，进而进行一些敏感请求（例如转账）的方法。
+			</p>
+		</section>
+		<section>
+			<h2>原理</h2>
+			<p>
+				如果用户 user 已经登录了某信任网站 A，其 cookies 未过期，这个时候用户再访问了某个恶意网站 B （恶意攻击者写的），该恶意网站就可以通过 img 、 script 、form 等不受同源策略限制的标签来进行跨域请求，请求时由于带上了 user 的 cookies ，服务器以为是 user 本人的操作，恶意攻击者就可以进行任何操作。
+			</p>
+		</section>
+		<section>
+			<h2>实例</h2>
+			<p>
+				以维基百科上的为例子，用户登录过某银行的页面，因此浏览器保留着登录银行时产生的 cookies 。
+				服务器端（银行）的<span class="definition"> www.bank.com/transaction.php </span>代码
+				<pre><code class="php">
+			&lt;?php
+				if (isset($_COOKIE['userId'])) { // 判断是否设置 cookies
+					$uid = $_COOKIE['userId']; // 读取 cookies
+					if ($_GET['intent'] == 'transfer') { // 判断是否进行转账操作
+						$aim = $_GET['aim']; // 读取目标账户
+						$amount = (int)$_GET['amount']; // 读取转账金额
+						transfer($aim, $amount); // 进行转账操作
+					}
+				}
+			?&gt;
+				</code></pre>
+				用户登录了一次银行的官方网站后，在 cookies 未过期的情况下，误入了一个恶意网站<span class="definition"> iamnotdangerous.com </span>
+				<pre><code class="html">
+			&lt;!DOCTYPE html&gt;
+			&lt;html&gt;
+			&lt;head&gt;
+				&lt;title&gt;我不是恶意网站&lt;/title&gt;
+			&lt;/head&gt;
+			&lt;body&gt;
+				&lt;img src="http://www.bank.com/transaction.php?intent=transfer&aim=1&amount=100"&gt;
+			&lt;/body&gt;
+			&lt;/html&gt;
+				</code></pre>
+				该网站通过 img 向银行官网发送跨域请求，其结果是，用户在不知情的情况下给目标为 1 的用户转账了 100 块。
+			</p>
+		</section>
+		<section>
+			<h2>防御措施</h2>
+			<p>
+				CSRF 是服务器对浏览器过于信任，只凭借 cookies 来判断是哪个用户，却不对来源进行检查，也不管是否用户本人的意志。常用的防御措施有：
+				<ul>
+					<li>检查 Referer 字段</li>
+					<li>添加校验 token </li>
+				</ul>
+				<div>
+					<p>
+						<h3>检查 Referer 字段</h3>
+						HTTP头中有一个Referer字段，这个字段用以标明请求来源于哪个地址。在处理敏感数据请求时，通常来说，Referer字段应和请求的地址位于同一域名下。<sup>[1]</sup>
+						<pre><code class="php">
+			&lt;?php
+				$from = $_SERVER['HTTP_REFERER']; // 读取发起请求的 URL
+				if (preg_match('/^http[s]://www.bank.com.*$/', $from)) { // 进行正则匹配
+					// 是同一个域名下的网站，允许操作
+				} else {
+					// 不是同一个域名下的网站，拒绝操作
+				}
+			?&gt;
+						</code></pre>
+						其局限性是因其完全依赖浏览器发送正确的 Referer 字段。虽然 http 协议对此字段的内容有明确的规定，但并无法保证来访的浏览器的具体实现，亦无法保证浏览器没有安全漏洞影响到此字段。并且也存在攻击者攻击某些浏览器，篡改其 Referer 字段的可能。
+					</p>
+					<p>
+						<h3>添加校验 token </h3>
+						单凭借 cookies 无法保证是用户本人进行请求操作，此时就需要添加其他不保存在 cookies 中的验证条件，通常是一组伪随机数。常规情况下若用户进行转账操作，进入服务器端返回的转账页面时服务器端为其设置了一个伪随机数并添加到表单项中，用户进行提交请求后该伪随机数发送到服务器端，服务器端就可以验证该伪随机数是否正确来阻止 CSRF 。<br>
+						银行的转账页面：
+						<pre><code class="html">
+			&lt;?php
+				session_start(); // 开启会话
+				$token = rand(1, 100); // 设置一个伪随机数作为 token
+				$_SESSION['token'] = $token; // 将伪随机数保存
+			?&gt;
+			&lt;form action="http://www.bank.com/transfer.php?action=transfer"&gt;
+				&lt;input type="text" name="aim"&gt;
+				&lt;input type="text" name="amount"&gt;
+				&lt;input type="submit" value="提交"&gt;
+				&lt;input type="hidden" name="token" value=&lt;?php echo '"'.'$token'.'"';?&gt;&gt;
+			&lt;/form&gt;
+						</code></pre>
+						执行转账操作的页面：
+						<pre><code class="php">
+			&lt;?php
+				if (isset($_GET['token']) { // 是否带有 token
+					$token = $_GET['token']; // 读取 token
+					if ($token == $_SESSION['token']) { // token 是否正确
+						// token 正确，验证成功，允许操作
+					} else {
+						// token 错误，验证失败，拒绝操作
+					}
+				} else {
+					// 没有 token ，验证失败，拒绝操作
+				}
+			?&gt;
+						</code></pre>
+					</p>
+				</div>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 维基百科 CSRF <a href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0#cite_ref-Ristic_1-0">https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0#cite_ref-Ristic_1-0</a></div>
+				<div>[2] 陈曦明 浅谈CSRF攻击方式 <a href="https://www.cnblogs.com/hyddd/archive/2009/04/09/1432744.html">https://www.cnblogs.com/hyddd/archive/2009/04/09/1432744.html</a></div>
+			</p>
+		</section>
+	</article>
+</body>
