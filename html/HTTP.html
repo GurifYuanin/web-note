@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>HTTP</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<article id="container">
+		<hgroup>
+			<h1>HTTP</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				HTTP（HyperText Transfer Protocol，超文本传输协议）是一种用于分布式、协作式和超媒体信息系统的应用层协议<sup>[1]</sup>
+			</p>
+		</section>
+		<section>
+			<h2>报文</h2>
+			<p>
+				当在浏览器敲入 URL 后回车，浏览器通过查询 DNS 得知该域名的 IP，然后创建<span class="definition"> 请求报文 </span>并发送给服务器（IP 地址）。<span class="definition"> 请求报文 </span>的格式为：
+				<pre><code class="http">
+					方法 URI HTTP/版本
+					请求首部字段
+					通用首部字段
+					实体首部字段
+
+					报文主体
+				</code></pre>
+				服务器端接受到该请求后，根据情况返回<span class="definition"> 响应报文 </span>，格式为：
+				<pre><code class="http">
+					HTTP/版本 状态码 状态短语
+					响应首部字段
+					通用首部字段
+					实体首部字段
+
+					报文主体
+				</code></pre>
+				可以看到，报文主体和首部字段隔着一个空行（CR+LF）。浏览器通过这种方式来获取 Web 资源。<br>
+				比如在我的网站上有这么一个页面<a href="http://isempty.site/other/web-note/demo/http_demo.html"> http://isempty.site/other/web-note/demo/http_demo.html </a>，该页面的 HTML 代码很简单，body 内只有一个<span class="definition">hello ! </span>的文本节点。
+				<pre><code class="html">
+					&lt;!DOCTYPE html&gt;
+					&lt;html lang="en"&gt;
+					&lt;head&gt;
+						&lt;meta charset="UTF-8"&gt;
+						&lt;title&gt;demo&lt;/title&gt;
+					&lt;/head&gt;
+					&lt;body&gt;
+						hello !
+					&lt;/body&gt;
+					&lt;/html&gt;
+				</code></pre>
+				在 IE 中敲入该 URL 后进行访问，实际上发送的请求报文为：
+				<pre><code class="http">
+					GET http://isempty.site/other/web-note/demo/http_demo.html HTTP/1.1
+					Accept: text/html, application/xhtml+xml, */*
+					Accept-Language: zh-CN
+					User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+					Accept-Encoding: gzip, deflate
+					Connection: Keep-Alive
+					Host: isempty.site
+					Pragma: no-cache
+				</code></pre>
+				得到的响应报文为：
+				<pre><code class="http">
+					HTTP/1.1 200 OK
+					Date: Wed, 14 Mar 2018 14:19:01 GMT
+					Server: Apache
+					Last-Modified: Wed, 14 Mar 2018 14:17:03 GMT
+					ETag: "78051c-85-567600778a156"
+					Accept-Ranges: bytes
+					Vary: Accept-Encoding,User-Agent
+					Content-Length: 133
+					Keep-Alive: timeout=15, max=300
+					Connection: Keep-Alive
+					Content-Type: text/html
+
+					&lt;!DOCTYPE html&gt;
+					&lt;html lang="en"&gt;
+					&lt;head&gt;
+						&lt;meta charset="UTF-8"&gt;
+						&lt;title&gt;demo&lt;/title&gt;
+					&lt;/head&gt;
+					&lt;body&gt;
+						hello !
+					&lt;/body&gt;
+					&lt;/html&gt;
+				</code></pre>
+				html 标签前面的一堆东西就是首部字段，HTML 元素标签就是响应报文主体。
+			</p>
+		</section>
+		<section>
+			<h2>请求方法</h2>
+			<p>
+				<ul>
+					<li>GET：从指定的资源请求数据。</li>
+					<li>POST：向指定的资源提交要被处理的数据</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>状态码</h2>
+			<p>
+				状态码用于判断请求资源的结果。状态码分为以下几类：
+				<ul>
+					<li>1XX（信息状态码）：接受的请求正在处理</li>
+					<li>2XX（成功状态码）：请求正常处理完毕</li>
+					<li>3XX（重定向状态码）：需要进行附加操作以完成请求</li>
+					<li>4XX（客户端错误状态码）：服务器无法完成请求</li>
+					<li>5XX（服务器端错误状态码）：服务器处理请求出错</li>
+				</ul>
+				以下只列举常见的状态码。
+				<div>
+					<p>
+						<h3>200</h3>
+						200 表示服务器对客户端的请求进行正常处理。
+					</p>
+					<p>
+						<h3>204</h3>
+						204 表示请求同样正常处理，但响应主体部分。
+					</p>
+					<p>
+						<h3>304</h3>
+						304 并不是资源重定向，而是客户端的缓存未清除，服务器端觉得客户端可以直接使用缓存，于是返回主体为空的响应报文。
+					</p>
+					<p>
+						<h3>400</h3>
+						400 表示客户端进行请求时语法错误，需要修改后重新发送请求。
+					</p>
+					<p>
+						<h3>403</h3>
+						403 表示客户端进行的请求由于某种原因（权限、未授权等）被服务器端拒绝了。
+					</p>
+					<p>
+						<h3>404</h3>
+						404 表示服务器端找不到该资源。
+					</p>
+					<p>
+						<h3>500</h3>
+						500 表示服务器端执行时发生了错误。
+					</p>
+					<p>
+						<h3>503</h3>
+						503 表示服务器端正在处于超负荷或者停机维护中。
+					</p>
+				</div>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Fielding, Roy T.; Gettys, James; Mogul, Jeffrey C.; Nielsen, Henrik Frystyk; Masinter, Larry; Leach, Paul J.; Berners-Lee, Tim. Hypertext Transfer Protocol – HTTP/1.1. IETF. June 1999. RFC 2616. </div>
+				<div>[2] W3C School HTTP 方法：GET 对比 POST <a href="http://www.w3school.com.cn/tags/html_ref_httpmethods.asp">http://www.w3school.com.cn/tags/html_ref_httpmethods.asp</a></div>
+				<div>[3] 上野宣 图解HTTP </div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

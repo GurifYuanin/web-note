@@ -51,7 +51,7 @@
 		<section>
 			<h2>构造函数</h2>
 			<p>
-				构造函数本质依旧是函数，使用了 new 运算符创建新对象，该对象被赋予构造函数的作用域，然后执行一边构造函数里的代码，最终自动返回该新对象。
+				构造函数本质依旧是函数，使用了 new 运算符创建新对象，该对象被赋予构造函数的作用域，然后执行一遍构造函数里的代码，最终自动返回该新对象。
 				<pre><code class="javascript">
 			function Obj () {
 				this.property = value;
@@ -84,10 +84,10 @@
 					<li>每个对象都有一个<span class="definition"> [[prototype]] </span>属性（指针）</li>
 				</ul>
 				<div class="tip">
-					<span class="definition"> prototype </span>指向一个对象，该对象初始时只拥有一个属性<span class="definition"> constructor </span>，<span class="definition"> constructor </span>属性指回了<span class="definition"> prototype </span>所在的函数。
+					<span class="definition"> prototype </span>指向一个对象（称之为原型对象），该对象初始时只拥有一个属性<span class="definition"> constructor </span>，<span class="definition"> constructor </span>属性指回了<span class="definition"> prototype </span>所在的函数。
 				</div>
 				<div class="tip">
-					<span class="definition"> [[prototype]] </span>指向和创建该对象的函数的<span class="definition"> prototype </span>一样的对象。该属性无法直接访问（但在 Firefox、Safari 和 chrome 中，可以使用<span class="definition"> __proto__ </span>来进行访问）。
+					<span class="definition"> [[prototype]] </span>指向和创建该对象的函数的<span class="definition"> prototype </span>属性指向的原型对象。该属性无法直接访问（但在 Firefox、Safari 和 chrome 中，可以使用<span class="definition"> __proto__ </span>来进行访问）。
 				</div>
 				<figure>
 					<img style="width: 100%;" src="../images/prototype_chain.jpg" alt="加载失败">
@@ -110,7 +110,7 @@
 		<section>
 			<h2>原型链</h2>
 			<p>
-				从前面的图可以看到，由于每个对象都有一个<span class="definition"> [[prototype]] </span>属性（Object.prototype 除外），因此原型对象本身也有<span class="definition"> [[prototype]] </span>属性，指向了 Object 函数的原型对象，Object.prototype 是一切对象的根原型（这也是为什么自定义的对象能使用 toString 等方法）。当实例调用属性的时候，会先从自身所在属性开始查找，如果找不到，就到<span class="definition"> [[prototype]] </span>指向的对象（即原型对象）里找，如果还是找不到，就到原型对象的<span class="definition"> [[prototype]] </span>所指的下一个原型对象里找，以此类推。这也就是原型链。
+				从前面的图可以看到，由于每个对象都有一个<span class="definition"> [[prototype]] </span>属性（Object.prototype 除外），因此自定义构造函数的原型对象（自定义构造函数.prototype）本身也有<span class="definition"> [[prototype]] </span>属性，指向了 Object 函数的原型对象，Object.prototype 是一切对象（除 null 和 undefined）的根原型（这也是为什么自定义的对象能使用 toString 等方法）。当实例调用属性的时候，会先从自身对象内部开始查找，如果找不到，就到原型对象里查找，如果还是找不到，就到原型对象的<span class="definition"> [[prototype]] </span>（原型对象的原型对象）所指的下一个原型对象里找，以此类推。这也就是原型链。
 				<pre><code class="javascript">
 			function Fruit () {
 				this.feature = '可以吃';

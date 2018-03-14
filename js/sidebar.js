@@ -14,15 +14,15 @@ $(function() {
 	var category = ['HTML', 'CSS', 'Javascript', '移动Web', '调试', '协议', '安全', '其他']; // 目录分类
 	// 具体条目
 	var items = [
-					['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5'],
-					['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度'],
-					['作用域链', '原型链', '闭包', '事件', '插件', '同源策略', '字符编码', 'JSONP', 'this'],
-					['响应式布局', 'bootstrap'],
-					['抓包工具', 'chrome devtools'],
-					['HTTP'],
-					['CSRF', 'XSS', 'DoS'],
-					['浏览器渲染', '设计策略', 'cookie']
-				];
+			['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5'],
+			['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度'],
+			['作用域链', '原型链', '闭包', '事件', '同源策略', '字符编码', 'JSONP', 'this'],
+			['响应式布局', 'bootstrap'],
+			['抓包工具', 'chrome devtools'],
+			['HTTP'],
+			['CSRF', 'XSS'],
+			['浏览器渲染', '设计策略', 'cookie']
+		];
 	for (var i = 0; i < category.length; i++) {
 		$sidebar.append(surroundedByTag(category[i], 'h3'));
 		for (var j = 0; j < items[i].length; j++) {

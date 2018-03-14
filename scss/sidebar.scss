@@ -137,7 +137,10 @@ $tableShallow: #fff; // 图表浅色
 
         color: #888;
     }
-
+    /* 图片居中 */
+    figure {
+        text-aligin: center;
+    }
     table {
         border: 1px solid $tableDeepColor;
 

