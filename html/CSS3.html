@@ -14,13 +14,16 @@
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
-			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
 			目录
 		</section>
 	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
 	<article id="container">
 		<hgroup>
-			<h1>伪类伪元素</h1>
+			<h1 id="title">伪类伪元素</h1>
 		</hgroup>
 		<section>
 			<h2>定义</h2>
@@ -65,7 +68,7 @@
 						<div class="show" style="
 							background-position: left top;
 							background-repeat: no-repeat;
-							background-image: url(../images/岩石.jpg);
+							background-image: url(../images/rock.jpg);
 							background-size: 100px 100px;
 							background-origin: content-box;
 							background-clip: content-box;
@@ -73,7 +76,7 @@
 						<pre><code class="css">
 							background-position: left top;
 							background-repeat: no-repeat;
-							background-image: url(../images/岩石.jpg);/* 背景图片(可同时设置多个) */
+							background-image: url(../images/rock.jpg);/* 背景图片(可同时设置多个) */
 							background-size: 100px 100px; /* 背景图片宽高 */
 							background-origin: content-box; /* 背景图片绘制起点 */
 							background-clip: content-box; /* 背景图片画布 */

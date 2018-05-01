@@ -1,28 +1,75 @@
 $imgSize: 2rem;
-$sidebarBackgroundColor: #5f93be; // 侧栏背景色
+
+$sidebarBackgroundColor: #efefef; // 侧栏背景色
+$itemBackgroundColor: #ddd; // 条目块背景色
+$itemHoverBackgroundColor: #eee; // 条目悬浮背景颜色
+$borderColor: #888; // 边框颜色
+$catalogColor: #444; // 类别前景色
+
+$contentColor: #444; // 正文字体颜色
+$titleColor: #222; // 子标题颜色
+
+$linkColor: #822;
+$linkHover: #eee;
+
 $tableDeepColor: #222; // 图表深色
 $tableShallow: #fff; // 图表浅色
 
+body {
+    background-color: #fefefe;
+}
+
+@mixin getFixedPosition($flag: 'block') {
+    @if $flag == 'block' {
+        // 如果是侧栏块
+        display: none;
+        opacity: 0;
+        top: 0;
+    } @else {
+        // 如果是侧栏的箭头图片
+        top: 50%;
+    }
+    position: fixed;
+    left: 0;
+    width: 3%;
+}
+/* 展开侧栏的块 */
+#showCatalog {
+    // display: none;
+    @include getFixedPosition('block');
+    height: 100%;
+    background-color: #fff;
+    transition: opacity .5s;
+    &:hover {
+        cursor: pointer;
+        opacity: .5;
+    }
+    // 箭头
+    img {
+        @include getFixedPosition('arrow');
+    }
+}
 /* 侧栏 */
 #sidebar {
-    float: left;
-    // 屏幕小于 400px 时的样式
+    // float: left;
+    display: inline-block;
+    background-color: $sidebarBackgroundColor;
 
-    margin: 0;
+    // 屏幕小于 400px 时的样式
     padding: 0;
     width: 100%;
 
-    background-color: $sidebarBackgroundColor;
     // 屏幕大于 400px 时的样式
     @media (min-device-width:400px) {
         padding: 1%;
         width: 25%;
+        box-shadow: 0 0 0.5rem #444;
     }
     /* 目录栏*/
     #catalog {
         font-size: $imgSize;
 
-        color: #fff;
+        color: $catalogColor;
     }
     /* 条目块*/
     div {
@@ -32,17 +79,27 @@ $tableShallow: #fff; // 图表浅色
 
         text-align: center;
 
-        background-color: #f2f2f2;
+        background-color: $itemBackgroundColor;
+        border-radius: 5% 0 0 0;
+
+        &:hover {
+            background-color: $itemHoverBackgroundColor;
+            border: solid 1px $borderColor;
+        }
         a {
             font-size: 1rem;
             text-decoration: none;
 
-            color: #000;
+            color: #444;
+            &:hover {
+                font-weight: bold;
+                color: #111;
+            }
         }
     }
     /* 目录分类*/
     h3 {
-        color: #fff;
+        color: $catalogColor;
     }
     /* 隐藏目录的图片*/
     #hideCatalog {
@@ -69,13 +126,27 @@ $tableShallow: #fff; // 图表浅色
     }
 
     /* 标题 */
-    h1 {
+    #title {
         text-align: center;
+        line-height: 3rem;
+        font-size: 3rem;
+        height: 3rem;
+
+        &:hover {
+            cursor: pointer;
+        }
     }
 
     /* 每一节 */
     section {
-        border-bottom: solid 1px #888;
+        color: $contentColor;
+        border-bottom: solid 1px $borderColor;
+        h2, h3, h4, h5, h6 {
+            a {
+                color: $titleColor;
+                text-decoration: none;
+            }
+        }
         h2:before {
             content: " - ";
         }
@@ -94,18 +165,23 @@ $tableShallow: #fff; // 图表浅色
     }
 
     /* 正文链接样式 */
-    a {
+    p a {
         margin: 1px;
-
+        padding: 0 1%;
+        color: $linkColor;
         text-decoration: none;
         &:hover {
             border-radius: 5%;
 
-            color: #fff;
-            background-color: $sidebarBackgroundColor;
+            background-color: $linkHover;
         }
     }
-
+    /* 代码块 */
+    pre{
+        code {
+            border-radius: 5px;
+        }
+    }
     /* 术语 */
     .definition {
         margin: 1px;

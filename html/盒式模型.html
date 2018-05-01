@@ -14,13 +14,16 @@
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
-			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
 			目录
 		</section>
 	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
 	<article id="container">
 		<hgroup>
-			<h1>盒式模型</h1>
+			<h1 id="title">盒式模型</h1>
 		</hgroup>
 		<section>
 			<h2>定义</h2>
@@ -40,14 +43,14 @@
 					<h3>标准模式</h3>
 					<p>
 						标准模式下：元素总宽度/高度 = margin + border + padding + width/height<br>
-						<img src="../images/标准模式.jpg" alt="加载失败">
+						<img src="../images/standary_mode.jpg" alt="加载失败">
 					</p>
 				</div>
 				<div>
 					<h3>怪异模式</h3>
 					<p>
 						怪异模式下：元素总宽度/高度 = margin + width/height<br>
-						<img src="../images/怪异模式.jpg" alt="加载失败"><br>
+						<img src="../images/weird_mode.jpg" alt="加载失败"><br>
 						也就是说，怪异模式下width/height = 标准模式下width/height + border + padding
 					</p>
 				</div>
@@ -76,7 +79,7 @@
 			这里是内容。
 		&lt;/div&gt;
 						</code></pre>
-						<img src="../images/内外边距展示.jpg" alt="加载失败">
+						<img src="../images/padding_demo.jpg" alt="加载失败">
 					</p>
 				</div>
 				<div>

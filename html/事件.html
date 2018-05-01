@@ -14,13 +14,16 @@
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
-			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
 			目录
 		</section>
 	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
 	<article id="container">
 		<hgroup>
-			<h1>事件</h1>
+			<h1 id="title">事件</h1>
 		</hgroup>
 		<section>
 			<h2>定义</h2>
@@ -445,7 +448,6 @@
 					</li>
 					<li>对于 keypress 事件，在 IE9+、Chrome、Firefox 中通过 evnet.charCode ，在 Safari 5 和 Chrome 中使用 keyIdentifier ，在最新 DOM 中使用 char  获取按下的键盘键位的 ASCII 值。</li>
 				</ul>
-
 			</p>
 		</section>
 		<section class="refer">
