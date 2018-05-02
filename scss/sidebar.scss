@@ -141,12 +141,6 @@ body {
     section {
         color: $contentColor;
         border-bottom: solid 1px $borderColor;
-        h2, h3, h4, h5, h6 {
-            a {
-                color: $titleColor;
-                text-decoration: none;
-            }
-        }
         h2:before {
             content: " - ";
         }
@@ -165,7 +159,7 @@ body {
     }
 
     /* 正文链接样式 */
-    p a {
+    p a, li a, div a {
         margin: 1px;
         padding: 0 1%;
         color: $linkColor;

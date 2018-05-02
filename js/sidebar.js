@@ -24,7 +24,7 @@ $(function() {
     var $showCatalog = $('#showCatalog'); // 显示目录图片
     var $title = $('#title'); // 文章标题
     var $container = $('#container'); // 文章内容
-    var category = ['HTML', 'CSS', 'Javascript', '移动Web', '调试', '协议', '安全', '其他']; // 目录分类
+    var category = ['HTML', 'CSS', 'Javascript', '移动Web', '调试', '协议', '安全', '后端', '其他']; // 目录分类
     var items = [
         ['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度'],
@@ -33,6 +33,7 @@ $(function() {
         ['抓包工具', 'chrome devtools'],
         ['HTTP'],
         ['CSRF', 'XSS'],
+        ['Thinkphp5.1'],
         ['浏览器渲染', '设计策略', 'cookie']
     ];
     for (var i = 0; i < category.length; i++) {
@@ -158,9 +159,14 @@ $(function() {
     var $subTitle = $('#container>section>h2'); // 一级子标题
     // 点击后子标题置顶到窗口
     $subTitle.each(function() {
-    	var name = this.innerHTML;
-    	$(this).html('<a height="50%" name="' + name + '" href="#' + name + '">' + name + '</a>');
-    	// $(this).wrap('<a height="50%" name="' + name + '" href="#' + name + '"></a>');
+        var name = this.innerHTML.replace(/[\s@#]/g, '');
+    	// $(this).html('<a height="50%" id="' + name + '" href="#' + name + '">' + name + '</a>');
+        // 子标题包裹为超链接
+        $(this).wrap('<a style="text-decoration: none; color: #000;" height="50%" id="' + name + '" href="#' + name + '"></a>');
+        // 点击后滑动窗口
+        $(this).click(function(event) {
+            $('html, body').animate({scrollTop: $('#' + name).offset().top}, 500);
+        });
     });
     // 按照视窗大小定义 html 字体大小
     function getRootFontSize() {

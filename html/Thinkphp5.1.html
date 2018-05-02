@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TP5.1</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">Thinkphp5.1</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				ThinkPHP 是一个免费开源的，快速、简单的面向对象的轻量级 PHP 开发框架<sup>[1]</sup><br>
+				Thinkphp5.1 官方开发手册：<a href="https://www.kancloud.cn/manual/thinkphp5_1#/catalog">https://www.kancloud.cn/manual/thinkphp5_1#/catalog</a>
+			</p>
+		</section>
+		<section>
+			<h2>安装（Git 方式）</h2>
+			<p>
+				<pre><code class="python">
+					# 下载项目仓库
+					git clone https://github.com/top-think/think 项目名
+					# 进入项目
+					cd 项目名
+					# 下载框架仓库
+					git clone https://github.com/top-think/framework thinkphp
+				</code></pre>
+				环境要求（不满足要求则无法使用框架）：
+				<ol>
+					<li>PHP 版本 >= 5.6.0</li>
+					<li>PHP 开启 PDO 和 MBstring 拓展</li>
+				</ol>
+				检查方法：
+				<ol>
+					<li>
+						打开 cmd ，进入 PHP 安装目录，执行<span class="definition"> php -v </span>查看 PHP 版本<br>
+						<figure>
+							<img src="../images/php_version.jpg">
+						</figure>
+					</li>
+					<li>
+						创建 PHP 文件，写入 <span class="definition"> &lt;?php phpinfo() ?&gt; </span>，保存后执行
+						<figure>
+							<img width="100%" src="../images/pdo.jpg">
+							<img width="100%" src="../images/mbstring.jpg">
+						</figure>
+					</li>
+				</ol>
+			</p>
+		</section>
+		<section id="catalogFrame">
+			<style>
+				#catalogFrame img {
+					height: 1.5rem;
+				}
+				#catalogFrame img:hover {
+					cursor: pointer;
+				}
+				#catalogFrame > div {
+					margin-left: 2.5%;
+				}
+				#catalogFrame > div > div {
+					margin-left: 5%;
+				}
+				#catalogFrame > div > div > div {
+					margin-left: 7.5%;
+				}
+				#catalogFrame > div > div > div > div {
+					margin-left: 10%;
+				}
+			</style>
+			<script>
+				window.onload = function() {
+					var dir = $('#catalogFrame img');
+					dir.click(function(event) {
+						var brother = $(this).next().next();
+						console.dir(brother);
+						if (typeof brother !== 'undefined' && brother.prop('tagName') === 'DIV') {
+							brother.toggle(500);
+						}
+					});
+				};
+			</script>
+			<h2>目录结构</h2>
+			<p>
+				<div>
+					<img src="../images/dir.png">application：应用程序目录<br>
+					<div>
+						<img src="../images/dir.png">common：公共模块目录<br>
+						<img src="../images/dir.png">模块名<br>
+						<div>
+							<img src="../images/php.png">common.php：该模块下的公共函数（只有该模块可以使用）<br>
+							<img src="../images/dir.png">controller<br>
+							<div>
+								<img src="../images/php.png">控制器名.php
+							</div>
+							<img src="../images/dir.png">model<br>
+							<div>
+								<img src="../images/php.png">模型名.php
+							</div>
+							<img src="../images/dir.png">view<br>
+							<div>
+								<img src="../images/php.png">视图名.php
+							</div>
+						</div>
+						<img src="../images/php.png">common.php：所有模块的公共函数（所有模块都可以使用）<br>
+						<img src="../images/php.png">command.php<br>
+						<img src="../images/php.png">tags.php<br>
+					</div>
+					<img src="../images/dir.png">config<br>
+					<div>
+						<img src="../images/dir.png">模块名：配置后只作用于该模块<br>
+						<img src="../images/php.png">app.php：应用程序配置<br>
+						<img src="../images/php.png">cache.php：缓存配置<br>
+						<img src="../images/php.png">cookie.php：cookie 配置<br>
+						<img src="../images/php.png">database.php：数据库配置<br>
+						<img src="../images/php.png">log.php：日志配置<br>
+						<img src="../images/php.png">session.php：会话配置<br>
+						<img src="../images/php.png">template.php：模版配置<br>
+						<img src="../images/php.png">trace.php<br>
+					</div>
+					<img src="../images/dir.png">route：路由规则目录<br>
+					<div>
+						<img src="../images/php.png">route.php<br>
+					</div>
+					<img src="../images/dir.png">public：网站根目录<br>
+					<div>
+						<img src="../images/php.png">index.php：网站入口文件<br>
+						<img src="../images/php.png">router.php<br>
+						<img src="../images/apache.png">.htaccess：apache 重写文件<br>
+					</div>
+					<img src="../images/dir.png">thinkphp：框架系统目录<br>
+					<img src="../images/dir.png">extend<br>
+					<img src="../images/dir.png">runtime：程序运行时产生的文件<br>
+					<img src="../images/dir.png">vendor<br>
+					<img src="../images/php.png">build.php<br>
+					<img src="../images/json.png">composer.json<br>
+					<img src="../images/txt.png">LICENSE.txt<br>
+					<img src="../images/read.png">README.md<br>
+					<img src="../images/php.png">think<br>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>路由</h2>
+			<p>
+				<h3>开启路由后的工作流程：</h3>
+				<ol>
+					<li>用户在浏览器输入源 URL ，发送请求</li>
+					<li>服务器接收到该请求，检查该 URL 是否符合事先注册好的路由规则</li>
+					<li>如果符合，则进行相应操作，得到新的 URL</li>
+					<li>返回新的 URL 对应的资源（但不会将新 URL 显示在浏览器的地址栏）</li>
+				</ol>
+				<div class="tip">注册路由后，如果用户试图直接输入新 URL 来访问目标资源，则会报错</div>
+				<h3>开启路由方法：</h3>
+				<ul>
+					<li>Thinkphp5.1 默认开启了路由：不符合路由规则的请求就不进行路由，正常响应</li>
+					<li>配置 config/app.php 的 'url_route_must' 项为 true 来开启强制路由模式：不符合路由规则的请求会直接报错</li>
+				</ul>
+				<h3>注册路由规则：</h3>
+				<ol>
+					<li>
+						全局配置：到 route 目录下对 route.php 文件（也可以自定义）进行设置
+						<pre><code class="php">
+				&lt;?php
+				return [
+					// 将 index.php/main/1 路由到 index.php/index/Index/people/id/1
+					'main/:id' => 'index/Index/people'
+				];
+				?&gt;
+						</code></pre>
+					</li>
+					<li>
+						使用静态方法
+						<pre><code class="php">
+				&lt;?php
+					class 控制器名 extends \think\facade\Route {
+						public function 方法名() {
+							Route::rule('路由表达式','路由地址','请求类型');
+						}
+					}
+				?&gt;
+						</code></pre>
+					</li>
+				</ol>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] ThinkPHP5.1完全开发手册 <a href="https://www.kancloud.cn/manual/thinkphp5_1">https://www.kancloud.cn/manual/thinkphp5_1</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>
