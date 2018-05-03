@@ -1,5 +1,7 @@
 {
   "devDependencies": {
+    "commitizen": "^2.9.6",
+    "cz-conventional-changelog": "^2.1.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^5.0.0",
     "gulp-html-minify": "^0.0.14",
@@ -8,5 +10,13 @@
     "gulp-sass": "^4.0.1",
     "gulp-uglify": "^3.0.0",
     "orchestrator": "^0.3.8"
+  },
+  "script": {
+      "commit": "git-cz"
+  },
+  "config": {
+     "commitizen": {
+       "path": "node_modules/cz-conventional-changelog"
+     }
   }
 }
