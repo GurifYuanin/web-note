@@ -176,14 +176,23 @@ body {
             border-radius: 5px;
         }
     }
+
+    /* 提示块 */
+    .tip {
+        border-left: solid 2px #222;
+        background-color: #eee;
+        padding: .5rem;
+
+    }
     /* 术语 */
     .definition {
         margin: 1px;
-        border-radius: 10%;
+        padding: 1px;
+        border-radius: 5%;
 
         font-size: .9rem;
 
-        color: #111;
+        color: #222;
         background-color: #eee;
     }
 

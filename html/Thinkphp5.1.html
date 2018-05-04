@@ -243,14 +243,20 @@
 			<p>
 				<h3>约定</h3>
 				<p>
-					数据库表使用下划线命名法，模型名使用帕斯卡命名法。一个模型对应一个表。
+					数据库表、字段使用下划线命名法，模型名、方法使用帕斯卡命名法。一个模型对应一个表。
 					<pre><code class="php">
-						// 数据库表
-						my_database_table
+						// 数据库表：my_database_table
+						CREATE TABLE my_database_table (
+							user_id char(10) PRIMARY KEY
+						)
 
 						// 模型：MyDatabaseTable.php
 						&lt;?php
-							class MyDatabaseTable {}
+							class MyDatabaseTable {
+								public function getUserId($value) {
+									return $value;
+								}
+							}
 						?&gt;
 					</code></pre>
 				</p>
@@ -263,10 +269,12 @@
 					</ol>
 					<pre><code class="php">
 		&lt;?php
-			namespace application\控制器名\model;
+			namespace application\模块名\model;
 			use think\Model;
 			use traits\model\SoftDelete;
 			class 模型名 extends Model {
+				protected $pk = '主码字段名'; // 设置主码名，不设置时默认为 id
+				protected $pk = ['主码1', '主码2', ...]; // 多字段作为主码时使用数组
 
 				use SoftDelete; // 使用软删除，删除数据时自动设置字段 delete_time 从 NULL 变为当前时间戳
 				protected $deleteTime = '删除数据时刻字段'; // 不使用 delete_time 而使用该字段
@@ -294,25 +302,158 @@
 
 					<pre><code class="php">
 		&lt;?php
+			namespance application\模块名\View;
 			use think\Controller;
 			use app\模块名\model\模型名;
 			class 控制器名 extends Controller {
-				// 查询并获取第一条记录
-				模型名 -> get(value); // SELECT * FROM 模型名 WHERE 主码 = value
-				模型名 -> get([key => value]); // SELECT * FROM 表名 WHERE key = value
-				// 查询并获取所有记录
-				模型名 -> all([key => value]); // SELECT * FROM 表名 WHERE key = value
-				// 插入数据
-				模型名 -> create([key => value]); // INSERT 表名 (key) VALUES (value)
-				// 更新数据
-				模型名 -> update([last => next], [key => value]); // UPDATE 表名 SET last = next WHERE key = value
-				// 删除数据
-				模型名 -> destroy(value); // DELETE 表名 WHERE 主码 = value
-				模型名 -> destroy([key => value]); // DELETE 表名 WHERE key = value
+				/* 静态方法 */
+				// 查询并获取第一条记录，返回模型对象（一维）
+				模型名 :: get(value); // SELECT * FROM 模型名 WHERE 主码 = value
+				模型名 :: get([key => value]); // SELECT * FROM 表名 WHERE key = value
+				模型名 :: where([key => value]) -> find();
+				// 查询并获取所有记录，返回模型对象（二维）
+				模型名 :: all([key => value]); // SELECT * FROM 表名 WHERE key = value
+				模型名 :: where([key => value]) -> select();
+				// 查询并获取某个字段的值
+				模型名 :: get(value) -> value('name'); // SELECT name FROM 表名 WHERE 主码 = value
+				// 查询并获得某列所有值的一维数组
+				模型名 :: all([key => value]) -> column('name'); // SELECT name FROM 表名 WHERE key = value
+				// 聚合查询
+				模型名 :: 聚合函数(); SELECT 聚合函数(*) FROM 表名
+				// 插入一条数据，返回插入的模型对象（一维）
+				模型名 :: create([key => value]); // INSERT 表名 (key) VALUES (value)
+				// 更新数据，返回更新的数组
+				模型名 :: update([last => next], [key => value]); // UPDATE 表名 SET last = next WHERE key = value
+				// 删除数据，返回受影响条数
+				模型名 :: destroy(value); // DELETE 表名 WHERE 主码 = value
+				模型名 :: destroy([key => value]); // DELETE 表名 WHERE key = value
+
+				/* 实例化对象方法 */
+				$instance = new 模型名;
+				// 插入一条记录，返回模型对象（一维）
+				$instance -> save([key => value]); // INSERT 表名 (key) VALUES (value)
+				// 插入多条记录，返回模型对象（二维）
+				$instance -> saveAll([
+					[key1 => value1],
+					[key2 => value2]
+				]);
+				// 更新：先查找，再更新
+				$instance = 模型名 :: get([key => value]);
+				$instance -> 列名 = 值;
+				$instance -> save(); // UPDATE 表名 SET 列名 = 值 WHERE key = value
+				// 删除：先查询，再删除，返回受影响行数
+				$instance = 模型名 :: get([key => value]);
+				$instance -> delete(); // DELETE 表名 WHERE key = value
 			}
 		?&gt;
 					</code></pre>
 				</p>
+			</p>
+		</section>
+		<section>
+			<h2>视图（View）</h2>
+			<p>
+				<h3>创建视图模版</h3>
+				<p>
+					在<span class="definition"> application/模块名/view </span>下创建<span class="definition"> 模版.html </span>，用户进行请求时 TP5 会先将模版进行编译，编译后的文件放在<span class="definition"> runtime/temp </span>下。
+					<div class="tip">编译即指对<span class="definition"> {} </span>内的内容进行解析，可在<span class="definition"> config/template.php </span>修改模版配置</div>
+					<pre><code class="html">
+			&lt;!DOCTYPE html&gt;
+			&lt;html lang="en"&gt;
+			&lt;head&gt;
+				&lt;meta charset="UTF-8"&gt;
+				&lt;title&gt;Document&lt;/title&gt;
+			&lt;/head&gt;
+			&lt;body&gt;
+				&lt;!-- 使用变量：echo isset($变量名) ? $变量名 : 'value' --&gt;
+				{$变量名|default="value"}
+				&lt;!-- 使用函数，### 为占位符：echo 函数名($变量名, 其他形参) --&gt;
+				{$变量名|函数名=###,其他形参}
+
+				&lt;!-- 导入模版 --&gt;
+				{include file="路径/模版名"}
+				&lt;!-- 继承模版 --&gt;
+				{extend name="路径/模版名"}
+				&lt;!-- 挖坑 --&gt;
+				{block name="坑id"}默认值{/block}
+				&lt;!-- 使用坑 --&gt;
+				{block name="坑id"}往坑里填入的数据{/block}
+				&lt;!-- 使用坑，并引用使用默认值 --&gt;
+				{block name="坑id"}{__block__}{/block}
+
+				&lt;!-- 循环渲染 --&gt;
+				&lt;!-- 方法1 --&gt;
+				{volist name="数组名" id="元素名" offset=开始偏移 length=遍历长度 empty="$变量名" key="索引名"}
+					{$索引名}{$元素名} &lt;!-- 用 $索引名 来获取 index --&gt;
+				{/volist}
+				&lt;!-- 方法2 --&gt;
+				{foreach $数组名 as $元素名 key="键名"}
+					{$键名}{$元素名} &lt;!-- 用 $键名 来获取数组的键名，$元素名 来获取键值 --&gt;
+				{/foreach}
+				{for start="startIndex" end="endIndex" step="步长" name="索引名"}
+					{$索引名}
+				{/for}
+				&lt;!-- 方法3 --&gt;
+				{switch name="$变量"}
+					{case value="选项1|选项2..."}{/case}	&lt;!-- 自动加了 break --&gt;
+					{default/}
+				{/switch}
+
+				&lt;!-- 选择渲染 --&gt;
+				&lt;!-- 运算：eq、neq、gt、ngt、lt、nlt、range、in、notin、between --&gt;
+				{运算 name="变量|值1" value="$变量|值2, ..."}{else/}{/运算}
+				{defined name="变量"}{else/}{defined}
+				{if condition="(判断1) AND|OR (判断2)..."}{else/}{/if}
+			&lt;/body&gt;
+			&lt;/html&gt;
+					</code></pre>
+					可以在<span class="definition"> config/template.php </span>设置渲染替换
+					<pre><code class="php">
+			&lt;?php
+			return [
+				tpl_replace_string => [ srcStr => desStr ]
+			];
+			?&gt;
+					</code></pre>
+			在模版中使用 srcStr ，最终编译时会将其替换为 desStr。
+				</p>
+				<h3>调用模版</h3>
+				<p>
+					<pre><code class="php">
+			&lt;?php
+				namespace application\模块名\controller;
+				use think\Controller;
+				class 控制器名 extends Controller {
+					// 向模版传递变量 $key = value
+					$this->assign(key, value);
+					// 调用模版
+					return $this->fetch('模块名/模版名');
+				}
+			?&gt;
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>控制器（Controller）</h2>
+			<p>
+				Thinkphp 是单入口文件的模式，在 pathinfo 模式下，进行如下 URL 的访问：
+				<pre><code class="html">
+			协议://域名:端口/index.php/模块名/控制器名/方法名/形参名/形参值?key=value
+				</code></pre>
+				实际上最终访问<span class="definition"> application/模块名/controller/控制器名.php </span>，将形参值传入并执行方法
+				<pre><code class="php">
+			&lt;?php
+				namespace application\模块名\controller;
+				use think\Controller;
+				class 控制器名 extends Controller {
+					public function 方法名 ($形参名) {
+						echo $形参名; // 读取形参值
+						echo input('key'); // 读取 value
+					}
+				}
+			?&gt;
+				</code></pre>
 			</p>
 		</section>
 		<section>
@@ -325,8 +466,8 @@
 					<li>如果符合，则进行相应操作，得到新的 URL</li>
 					<li>返回新的 URL 对应的资源（但不会将新 URL 显示在浏览器的地址栏）</li>
 				</ol>
-				<div class="tip">注册路由后，如果用户试图直接输入新 URL 来访问目标资源，则会报错</div>
-				<h3>开启路由方法：</h3>
+				<div class="tip">注册路由后，如果用户试图直接输入新 URL 来访问目标资源，将直接报错</div>
+				<h3>开启路由：</h3>
 				<ul>
 					<li>Thinkphp5.1 默认开启了路由：不符合路由规则的请求就不进行路由，正常响应</li>
 					<li>配置 config/app.php 的 'url_route_must' 项为 true 来开启强制路由模式：不符合路由规则的请求会直接报错</li>
@@ -345,7 +486,7 @@
 						</code></pre>
 					</li>
 					<li>
-						使用静态方法
+						动态配置
 						<pre><code class="php">
 				&lt;?php
 					class 控制器名 extends \think\facade\Route {
