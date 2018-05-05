@@ -157,9 +157,8 @@ body {
             content: " - - - - - ";
         }
     }
-
     /* 正文链接样式 */
-    p a, li a, div a {
+    a {
         margin: 1px;
         padding: 0 1%;
         color: $linkColor;
@@ -182,6 +181,7 @@ body {
         border-left: solid 2px #222;
         background-color: #eee;
         padding: .5rem;
+        border-radius: 0 5px 5px 0;
 
     }
     /* 术语 */

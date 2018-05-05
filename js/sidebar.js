@@ -33,7 +33,7 @@ $(function() {
         ['抓包工具', 'chrome devtools'],
         ['HTTP'],
         ['CSRF', 'XSS'],
-        ['Thinkphp5.1'],
+        ['Thinkphp5.1', 'htaccess'],
         ['浏览器渲染', '设计策略', 'cookie']
     ];
     for (var i = 0; i < category.length; i++) {
@@ -162,7 +162,7 @@ $(function() {
         var name = this.innerHTML.replace(/[\s@#]/g, '');
     	// $(this).html('<a height="50%" id="' + name + '" href="#' + name + '">' + name + '</a>');
         // 子标题包裹为超链接
-        $(this).wrap('<a style="text-decoration: none; color: #000;" height="50%" id="' + name + '" href="#' + name + '"></a>');
+        $(this).wrap('<a style="height: 50%; margin: 0; padding: 0; text-decoration: none; color: #000;" id="' + name + '" href="#' + name + '"></a>');
         // 点击后滑动窗口
         $(this).click(function(event) {
             $('html, body').animate({scrollTop: $('#' + name).offset().top}, 500);

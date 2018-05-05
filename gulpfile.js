@@ -53,7 +53,7 @@ gulp.task('minifyimg', function() {
 });
 // 压缩 js 文件
 gulp.task('minifyjs', function() {
-    gulp.src('./js/**')
+    gulp.src('./js/*.js')
              .pipe(minifyjs({
                 mangle: true, // 是否修改变量名
                 compress: true // 是否完全压缩
