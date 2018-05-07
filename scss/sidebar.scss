@@ -1,9 +1,10 @@
 $imgSize: 2rem;
-
 $sidebarBackgroundColor: #efefef; // 侧栏背景色
-$itemBackgroundColor: #ddd; // 条目块背景色
-$itemHoverBackgroundColor: #eee; // 条目悬浮背景颜色
-$borderColor: #888; // 边框颜色
+$itemBackgroundColor: #eee; // 条目块背景色
+$itemHoverBackgroundColor: #f4f4f4; // 条目悬浮背景颜色
+$itemBorderColor: #888;
+$itemHoverBorderColor: #000; // 边框颜色
+$borderColor: #444;
 $catalogColor: #444; // 类别前景色
 
 $contentColor: #444; // 正文字体颜色
@@ -11,7 +12,6 @@ $titleColor: #222; // 子标题颜色
 
 $linkColor: #822;
 $linkHover: #eee;
-
 $tableDeepColor: #222; // 图表深色
 $tableShallow: #fff; // 图表浅色
 
@@ -19,51 +19,60 @@ body {
     background-color: #fefefe;
 }
 
-@mixin getFixedPosition($flag: 'block') {
-    @if $flag == 'block' {
+@mixin getFixedPosition($flag: "block") {
+    position: fixed;
+    left: 0;
+
+    width: 3%;
+    @if $flag == "block" {
         // 如果是侧栏块
         display: none;
-        opacity: 0;
+
         top: 0;
+
+        opacity: 0;
     } @else {
         // 如果是侧栏的箭头图片
         top: 50%;
     }
-    position: fixed;
-    left: 0;
-    width: 3%;
 }
 /* 展开侧栏的块 */
 #showCatalog {
-    // display: none;
-    @include getFixedPosition('block');
     height: 100%;
+
     background-color: #fff;
+
     transition: opacity .5s;
+    // display: none;
+
+    @include getFixedPosition("block");
     &:hover {
-        cursor: pointer;
         opacity: .5;
+
+        cursor: pointer;
     }
     // 箭头
     img {
-        @include getFixedPosition('arrow');
+        @include getFixedPosition("arrow");
     }
 }
 /* 侧栏 */
 #sidebar {
     // float: left;
     display: inline-block;
-    background-color: $sidebarBackgroundColor;
-
     // 屏幕小于 400px 时的样式
+
     padding: 0;
     width: 100%;
+
+    background-color: $sidebarBackgroundColor;
 
     // 屏幕大于 400px 时的样式
     @media (min-device-width:400px) {
         padding: 1%;
         width: 25%;
-        box-shadow: 0 0 0.5rem #444;
+
+        box-shadow: 0 0 .5rem #444;
     }
     /* 目录栏*/
     #catalog {
@@ -71,20 +80,39 @@ body {
 
         color: $catalogColor;
     }
+    /* 类别 */
+    h3 {
+        font-size: 1.5rem;
+        font-weight: normal;
+
+        color: #222;
+        img {
+            margin: 0 5%;
+            height: 1.5rem;
+        }
+        &:hover {
+            font-weight: bold;
+
+            color: #000;
+
+            cursor: pointer;
+        }
+    }
     /* 条目块*/
     div {
         margin: 2.5% auto;
+        border: solid 1px $itemBorderColor;
+        border-radius: 5px;
         padding: 2.5%;
         width: 80%;
 
         text-align: center;
 
         background-color: $itemBackgroundColor;
-        border-radius: 5% 0 0 0;
-
         &:hover {
+            border: solid 1px $itemHoverBorderColor;
+
             background-color: $itemHoverBackgroundColor;
-            border: solid 1px $borderColor;
         }
         a {
             font-size: 1rem;
@@ -93,6 +121,7 @@ body {
             color: #444;
             &:hover {
                 font-weight: bold;
+
                 color: #111;
             }
         }
@@ -124,13 +153,34 @@ body {
     @media (min-device-width:400px) {
         width: 65%;
     }
-
+    /* 目录结构部分 */
+    #catalogFrame {
+        img {
+            height: 1.5rem;
+            &:hover{
+                cursor: pointer;
+            }
+        }
+        > div {
+            margin-left: 2.5%;
+            > div {
+                margin-left: 5%;
+                > div {
+                    margin-left: 7.5%;
+                    > div {
+                        margin-left: 10%;
+                    }
+                }
+            }
+        }
+    }
     /* 标题 */
     #title {
-        text-align: center;
-        line-height: 3rem;
-        font-size: 3rem;
         height: 3rem;
+
+        font-size: 3rem;
+        line-height: 3rem;
+        text-align: center;
 
         &:hover {
             cursor: pointer;
@@ -139,8 +189,9 @@ body {
 
     /* 每一节 */
     section {
-        color: $contentColor;
         border-bottom: solid 1px $borderColor;
+
+        color: $contentColor;
         h2:before {
             content: " - ";
         }
@@ -161,8 +212,10 @@ body {
     a {
         margin: 1px;
         padding: 0 1%;
-        color: $linkColor;
+
         text-decoration: none;
+
+        color: $linkColor;
         &:hover {
             border-radius: 5%;
 
@@ -170,7 +223,7 @@ body {
         }
     }
     /* 代码块 */
-    pre{
+    pre {
         code {
             border-radius: 5px;
         }
@@ -179,16 +232,16 @@ body {
     /* 提示块 */
     .tip {
         border-left: solid 2px #222;
-        background-color: #eee;
-        padding: .5rem;
         border-radius: 0 5px 5px 0;
+        padding: .5rem;
 
+        background-color: #eee;
     }
     /* 术语 */
     .definition {
         margin: 1px;
-        padding: 1px;
         border-radius: 5%;
+        padding: 1px;
 
         font-size: .9rem;
 
@@ -210,15 +263,19 @@ body {
         }
     }
 
-    /* 图片描述  */
-    .description {
-        text-align: center;
 
-        color: #888;
-    }
     /* 图片居中 */
     figure {
         text-aligin: center;
+        img {
+            max-width: 100%;
+        }
+        // 图片描述
+        figcaption {
+            text-align: center;
+
+            color: #888;
+        }
     }
     table {
         border: 1px solid $tableDeepColor;
@@ -235,6 +292,24 @@ body {
             padding: 1%;
 
             text-align: center;
+        }
+    }
+    /* 页脚上下页 */
+    #footer {
+        margin: 1% 0;
+        .prePage {
+            float: left;
+
+            width: 50%;
+
+            text-align: left;
+        }
+        .nextPage {
+            float: right;
+
+            width: 50%;
+
+            text-align: right;
         }
     }
 }

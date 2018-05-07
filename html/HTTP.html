@@ -53,7 +53,7 @@
 					报文主体
 				</code></pre>
 				可以看到，报文主体和首部字段隔着一个空行（CR+LF）。浏览器通过这种方式来获取 Web 资源。<br>
-				比如在我的网站上有这么一个页面<a href="http://isempty.site/other/web-note/demo/http_demo.html"> http://isempty.site/other/web-note/demo/http_demo.html </a>，该页面的 HTML 代码很简单，body 内只有一个<span class="definition">hello ! </span>的文本节点。
+				比如在我的网站上有这么一个页面<a href="../demo/http_demo.html"> http://isempty.site/other/web-note/demo/http_demo.html </a>，该页面的 HTML 代码很简单，body 内只有一个<span class="definition">hello ! </span>的文本节点。
 				<pre><code class="html">
 					&lt;!DOCTYPE html&gt;
 					&lt;html lang="en"&gt;
@@ -66,9 +66,9 @@
 					&lt;/body&gt;
 					&lt;/html&gt;
 				</code></pre>
-				在 IE 中敲入该 URL 后进行访问，实际上发送的请求报文为：
+				在 IE 中敲入该 URL 后进行访问，实际上浏览器帮我们整理了需要的信息，发送了以下请求报文：
 				<pre><code class="http">
-					GET http://isempty.site/other/web-note/demo/http_demo.html HTTP/1.1
+					GET http://isempty.site/web-note/demo/http_demo.html HTTP/1.1
 					Accept: text/html, application/xhtml+xml, */*
 					Accept-Language: zh-CN
 					User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko

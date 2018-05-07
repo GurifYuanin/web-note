@@ -66,42 +66,10 @@
 				</ol>
 			</p>
 		</section>
-		<section id="catalogFrame">
-			<style>
-				#catalogFrame img {
-					height: 1.5rem;
-				}
-				#catalogFrame img:hover {
-					cursor: pointer;
-				}
-				#catalogFrame > div {
-					margin-left: 2.5%;
-				}
-				#catalogFrame > div > div {
-					margin-left: 5%;
-				}
-				#catalogFrame > div > div > div {
-					margin-left: 7.5%;
-				}
-				#catalogFrame > div > div > div > div {
-					margin-left: 10%;
-				}
-			</style>
-			<script>
-				window.onload = function() {
-					var dir = $('#catalogFrame img');
-					dir.click(function(event) {
-						var brother = $(this).next().next();
-						console.dir(brother);
-						if (typeof brother !== 'undefined' && brother.prop('tagName') === 'DIV') {
-							brother.toggle(500);
-						}
-					});
-				};
-			</script>
+		<section>
 			<h2>目录结构</h2>
 			<p>
-				<div>
+				<div id="catalogFrame">
 					<img src="../images/dir.png">application：应用程序目录<br>
 					<div>
 						<img src="../images/dir.png">common：公共模块目录<br>

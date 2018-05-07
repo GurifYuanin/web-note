@@ -10,4 +10,4 @@
 
 + 笔记中部分内容可能借用网络与书籍的代码，如有版权的问题，请联系我删除。
 
-[入口请点我](http://isempty.site/other/web-note/html/index.html)
+[入口请点我](http://isempty.site/web-note/html/index.html)

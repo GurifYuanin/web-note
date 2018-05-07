@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue 实例</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">实例</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				每个 Vue 应用都是通过用 Vue 函数创建一个新的 Vue 实例开始的<sup>[1]</sup>。
+					<pre><code class="javascript">
+				var 实例名 = new Vue(选项对象);
+					</code></pre>
+					选项对象可以为 vue 实例绑定以下选项属性：
+					<ol>
+						<li>el：元素</li>
+						<li>data：数据属性</li>
+						<li>computed：计算属性</li>
+						<li>method：方法</li>
+						<li>watch：侦听属性</li>
+						<li>template：模版</li>
+						<li>钩子</li>
+						<li>mixins</li>
+					</ol>
+					<pre><code class="javascript">
+			var vm = new Vue({
+			  el: '选择器',
+			  data: {
+			    数据属性名: 数据值
+			  },
+			  computed: {
+			    计算属性名: function() {
+			      实例名|this.数据属性名...
+			  }
+			},
+			  watch: {
+			    数据属性名: function(){ // 数据发生时触发 }
+			},
+			  methods: {
+			    方法名: function(形参){
+			      this.$emit('自定义事件名'); // 触发自定义事件
+			  }
+			},
+			  template: '模版内容',
+			  [before + ]
+			  created: function(){ },
+			  mounted: function(){ },
+			  updated: function() { },
+			  destroyed: function() { },
+			  components: { // 局部注册组件
+			    '组件名': { // 组件选项 }
+			},
+			  mixins: [ mixins对象 ]
+			});
+			// 可以通过 实例名.$选项名 来引用选项属性
+			vm.$el === $('选择器'); // => true
+					</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>元素</h2>
+			<p>
+				元素决定了 vue 实例绑定的 HTML 元素，被绑定的元素可以在 HTML 标签内使用双花括号<span class="definition"> {{}} </span>来对数据、方法进行访问。<br>
+				元素的选择方式与 jquery 的<span class="definition"> $() </span>方法一样。
+				<pre><code class="html">
+			&lt;div id="app"&gt;{{message}}&lt;/div&gt;
+			&lt;script&gt;
+				new Vue({
+					el: '#app',
+					data: {
+						message: 'hello world'
+					}
+				});
+			&lt;/script&gt;
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>数据</h2>
+			<p>
+				<pre><code class="javascript">
+		var 实例名 = new Vue({
+			data: {
+				数据属性名: 数据值
+			}
+		});
+				</code></pre>
+				<h3>使用数据</h3>
+				在 javascript 中通过 实例名.数据属性名 来引用数据值
+				<pre><code class="javascript">
+					实例名.数据属性名
+					console.log(vm.message);
+				</code></pre>
+				在 html 中通过双花括号包裹（“Mustache”语法 ）数据属性名来引用数据值，该过程称为<span class="definition"> 插值 </span>。
+				<pre><code class="html">
+					&lt;标签&gt;{{数据属性名}}&lt;/标签&gt;
+					&lt;div&gt;{{message}}&lt;/div&gt;
+				</code></pre>
+				<h3>转义</h3>
+				其插入的值是转义后的，不会被当做 html 标签被浏览器进行渲染。
+				<figure>
+					<img src="../images/vue_data.jpg">
+					<figcaption>当 message 是 &lt;h1&gt;hello&lt;/h1&gt; 时</figcaption>
+				</figure>
+				如果想取消这种转义，则不要在标签内部使用数据，而是使用<span class="definition"> v-html </span>指令
+				<pre><code class="html">
+					&lt;div v-html="message"&gt;&lt;/div&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_raw_data.jpg">
+					<figcaption> 取消转义使用原生的 html 文本 </figcaption>
+				</figure>
+				<h3>响应式</h3>
+				绑定的数据是响应式的，修改数据时视图也会进行更新。
+				<pre><code class="javascript">
+					var vm = new Vue({
+					  el: '#demo',
+					  data: {
+					    message: 'hello world'
+					  }
+					});
+					// 设置定时器，2s 后修改 message 的值
+					setTimeout(function(){
+					  vm.message = 'hi !!!';
+					}, 2000);
+				</code></pre>
+				<figure>
+					<img src="../images/vue_data_response.gif">
+				</figure>
+				如果想取消自动更新，可在标签上添加指令<span class="definition"> v-once</span>
+				<pre><code class="html">
+					&lt;标签 v-once&gt;{{数据属性名}}&lt;/标签&gt;
+					&lt;div v-once&gt;{{message}}&lt;/div&gt;
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>计算属性</h2>
+			<p>
+				计算属性实际是调用一个带有返回值的函数，利用计算属性可以完成一些复杂的运算。
+				<pre><code class="html">
+					&lt;标签&gt;{{计算属性名}}&lt;/标签&gt;
+					&lt;script&gt;
+						var 实例名 = new Vue({
+							computed: {
+								计算属性名: function() {
+									return ...
+								}
+							}
+						});
+					&lt;/script&gt;
+				</code></pre>
+				计算属性同样是响应式的，只有当计算属性内的相关依赖改变时才会重新执行一遍函数。
+				<pre><code class="html">
+					&lt;div&gt;{{getMessage}}&lt;/div&gt;
+					&lt;script&gt;
+						var vm = new Vue({
+						  el: '#demo',
+						  data: {
+						    message: 'hello world'
+						  },
+						  computed: {
+						    getMessage: function() {
+						      return this.message;
+						    }
+						  }
+						});
+					&lt;/script&gt;
+				</code></pre>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Vue.js <a href="https://cn.vuejs.org/v2/guide/">https://cn.vuejs.org/v2/guide/</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

@@ -19,16 +19,16 @@ $(function() {
         };
     }
     var $sidebar = $('#sidebar'); // 导航条
-    var $catalog = $('#catalog'); // 目录
     var $hideCatalog = $('#hideCatalog'); // 隐藏目录图片
     var $showCatalog = $('#showCatalog'); // 显示目录图片
     var $title = $('#title'); // 文章标题
     var $container = $('#container'); // 文章内容
-    var category = ['HTML', 'CSS', 'Javascript', '移动Web', '调试', '协议', '安全', '后端', '其他']; // 目录分类
+    var category = ['HTML', 'CSS', 'Javascript', 'Vue', '移动Web', '调试', '协议', '安全', '后端', '其他']; // 目录分类
     var items = [
-        ['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5'],
+        ['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'svg'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度'],
-        ['作用域链', '原型链', '闭包', '事件', '同源策略', '字符编码', 'JSONP', 'this'],
+        ['作用域链', '原型链', '闭包', '事件', '同源策略', '字符编码', 'JSONP', 'this',],
+        ['安装', '实例'],
         ['响应式布局', 'bootstrap'],
         ['抓包工具', 'chrome devtools'],
         ['HTTP'],
@@ -37,24 +37,51 @@ $(function() {
         ['浏览器渲染', '设计策略', 'cookie']
     ];
     for (var i = 0; i < category.length; i++) {
-        $sidebar.append(surroundedByTag(category[i], 'h3'));
+        $sidebar.append(
+            surroundedByTag(
+                '<img src="../images/slide_down.png">' + category[i],
+                'h3')
+            );
+        var tmp = '';
         for (var j = 0; j < items[i].length; j++) {
-            $sidebar.append(surroundedByTag(surroundedByTag(items[i][j], 'a'), 'div'));
+            tmp += surroundedByTag(surroundedByTag(items[i][j], 'a'), 'div');
+            // $sidebar.append(surroundedByTag(surroundedByTag(items[i][j], 'a'), 'div'));
         }
+        $sidebar.append(surroundedByTag(tmp, 'section'));
     }
-    // 具体条目
-    var $itemLink = $('#sidebar>div>a');
     /*
     侧栏结构：
     <aside id="sidebar">
     	<section id="catalog">
-    		<img id="hideCatalog">
-    		目录
-    		<h3>类别</h3>
-    		<div><a>条目</a></div>
-    	</section>
+            <img id="hideCatalog">
+		      目录
+        </section>
+		<h3>
+            <img src="../images/slide_down.png">
+            类别
+        </h3>
+        <section>
+            <div>
+                <a>
+                    条目
+                    </a>
+                </div>
+        </section>
     </aside>
     */
+    // 点击类别开关子项
+    $('#sidebar h3').each(function(){
+        var that = $(this),
+            img = that.children();
+        that.click(function() {
+            if (img.attr('src') === '../images/slide_down.png') {
+                img.attr('src', '../images/slide_up.png');
+            } else {
+                img.attr('src', '../images/slide_down.png');
+            }
+            that.next().slideToggle('slow');
+        });
+    });
     // 绘制直线
     var lineLength = getViewport().width / 3;
     $title.after('<svg style="display: block; margin: auto; width:' + lineLength + 'px" xmlns="http://www.w3.org/2000/svg" version="1.1" height="1px"><path id="line" d="M 0 0 L ' + lineLength + ' 0" style="stroke: #000; stroke-width: 1; stroke-dasharray: ' + lineLength + '; stroke-dashoffset: ' + lineLength + '; fill: none;"/></svg>');
@@ -154,12 +181,12 @@ $(function() {
             'slow');
 		widthAndMargin(90, 65, 20, 0.5);
     });
-
     $('a').attr('target', '_blank'); // 所有链接默认新标签打开
+
     var $subTitle = $('#container>section>h2'); // 一级子标题
     // 点击后子标题置顶到窗口
     $subTitle.each(function() {
-        var name = this.innerHTML.replace(/[\s@#]/g, '');
+        var name = this.innerHTML.replace(/[\s@#&;]/g, '');
     	// $(this).html('<a height="50%" id="' + name + '" href="#' + name + '">' + name + '</a>');
         // 子标题包裹为超链接
         $(this).wrap('<a style="height: 50%; margin: 0; padding: 0; text-decoration: none; color: #000;" id="' + name + '" href="#' + name + '"></a>');
@@ -182,5 +209,70 @@ $(function() {
         }
         return 10;
     }
-    $('html').eq(0).css('font-size', getRootFontSize());
+    // 追加上一篇和下一篇操作
+    function wrapByA(href) {
+        if (href === '没有了') {
+            return '<a href="javascript:void(0)">' + href + '</a>';
+        } else {
+            return '<a href="./' + href + '.html">' + href + '</a>';
+        }
+    }
+    var url = window.location.href;
+    var currentTitle = decodeURI(url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')));
+    var preTitle, nextTitle, indexX, indexY;
+    var flag = false;
+    var row = items.length;
+    for (var i = 0; i < row; i++) {
+        for (var j = 0; j < items[i].length; j++) {
+            if (currentTitle === items[i][j]) {
+                indexY = j;
+                flag = true;
+                break;
+            }
+        }
+        if (flag) {
+            indexX = i;
+            break;
+        }
+    }
+    if (indexX === 0){
+        if (indexY === 0) {
+            preTitle = '没有了';
+        } else {
+            preTitle = items[indexX][indexY - 1];
+        }
+    } else {
+        if (indexY === 0) {
+            preTitle = items[indexX - 1][items[indexX - 1].length - 1];
+        } else {
+            preTitle = items[indexX][indexY - 1];
+        }
+    }
+    if (indexX === row - 1){
+        if (indexY === items[indexX].length - 1) {
+            nextTitle = '没有了';
+        } else {
+            nextTitle = items[indexX][indexY + 1];
+        }
+    } else {
+        if (indexY === items[indexX].length - 1) {
+            nextTitle = items[indexX + 1][0];
+        } else {
+            nextTitle = items[indexX][indexY + 1];
+        }
+    }
+    preTitle = wrapByA(preTitle);
+    nextTitle = wrapByA(nextTitle);
+    $('.refer').after('<div id="footer" ><div class="prePage">上一篇：' + preTitle + '</div><div class="nextPage">下一篇：' + nextTitle + '</div></div>');
+    $('html').eq(0).css('font-size', getRootFontSize()); // 设置 html（根） 字体大小
+
+    // 目录结构部分
+    var dir = $('#catalogFrame img');
+    dir.click(function(event) {
+        var brother = $(this).next().next();
+        console.dir(brother);
+        if (typeof brother !== 'undefined' && brother.prop('tagName') === 'DIV') {
+            brother.toggle(500);
+        }
+    });
 });
