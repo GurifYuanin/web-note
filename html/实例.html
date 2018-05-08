@@ -37,7 +37,7 @@
 						<li>el：元素</li>
 						<li>data：数据属性</li>
 						<li>computed：计算属性</li>
-						<li>method：方法</li>
+						<li>methods：方法</li>
 						<li>watch：侦听属性</li>
 						<li>template：模版</li>
 						<li>钩子</li>
@@ -55,7 +55,7 @@
 			  }
 			},
 			  watch: {
-			    数据属性名: function(){ // 数据发生时触发 }
+			    数据属性名: function(){ // 数据发生改变时触发 }
 			},
 			  methods: {
 			    方法名: function(形参){
@@ -158,22 +158,35 @@
 		<section>
 			<h2>计算属性</h2>
 			<p>
-				计算属性实际是调用一个带有返回值的函数，利用计算属性可以完成一些复杂的运算。
+				计算属性可以是一个带有返回值的函数，此时计算属性只有 getter ，访问后获得返回值。
 				<pre><code class="html">
-					&lt;标签&gt;{{计算属性名}}&lt;/标签&gt;
-					&lt;script&gt;
-						var 实例名 = new Vue({
-							computed: {
-								计算属性名: function() {
-									return ...
+					new Vue({
+						computed: {
+							计算属性名: function() {
+								return ...
+							}
+						}
+					});
+				</code></pre>
+				计算属性也可以是一个对象，为其设置 getter 和 setter ，访问时获得 getter 的返回值，修改时调用 setter ，传入的形参为修改后的值。
+				<pre><code class="javascript">
+					new Vue({
+						computed: {
+							计算属性名: {
+								getter: function() {
+									return ...;
+								},
+								setter: function(val) {
+									...
 								}
 							}
-						});
-					&lt;/script&gt;
+						}
+					});
 				</code></pre>
-				计算属性同样是响应式的，只有当计算属性内的相关依赖改变时才会重新执行一遍函数。
+				<h3>缓存</h3>
+				计算属性同样是响应式的，只有当计算属性内的相关依赖改变时才会重新执行一遍函数：<a href="../demo/vue_computed.html"> demo </a>
 				<pre><code class="html">
-					&lt;div&gt;{{getMessage}}&lt;/div&gt;
+					&lt;div id="demo"&gt;{{getMessage}}&lt;/div&gt;
 					&lt;script&gt;
 						var vm = new Vue({
 						  el: '#demo',
@@ -188,6 +201,91 @@
 						});
 					&lt;/script&gt;
 				</code></pre>
+				<figure>
+					<img src="../images/vue_computed.gif">
+				</figure>
+				<h3>不是函数</h3>
+				计算属性的性质类似于数据属性，不是一个函数，如果在 html 中把它当做方法来调用则会报错。
+				<figure>
+					<img src="../images/vue_computed_error.jpg">
+					<figcaption> {{getMessage()}} </figcaption>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>方法</h2>
+			<p>
+				<pre><code class="html">
+					&lt;标签&gt;{{方法名(参数)}}&lt;/标签&gt;
+					&lt;script&gt;
+						new Vue({
+							methods: {
+								方法名: function(形参) {
+									...
+								}
+							}
+						});
+					&lt;/script&gt;
+				</code></pre>
+				方法的调用与函数调用无差异：<a href="../demo/vue_methods.html"> 输出当前时间 </a>
+				<pre><code class="html">
+					&lt;div id="demo"&gt;{{getDate()}}&lt;/div&gt;
+					&lt;script&gt;
+						var vm = new Vue({
+							el: '#demo',
+							methods: {
+								getDate: function() {
+									return new Date();
+								}
+							}
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_methods_normal.jpg">
+					<figcaption>正常调用时</figcaption>
+				</figure>
+				<figure>
+					<img src="../images/vue_methods_abnormal.jpg">
+					<figcaption>省略 () 时，即 &lt;div id="demo"&gt;{{getDate}}&lt;/div&gt;</figcaption>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>侦听属性</h2>
+			<p>
+				侦查属性是对数据属性的侦听，侦查属性与数据属性同名，当数据属性改变时触发，传入改变后的值作为形参。
+				<pre><code class="javascript">
+					new Vue({
+						data: {
+							数据属性名: 值
+						},
+						watch: {
+							数据属性名: function(val) {
+								...
+							}
+						}
+					});
+				</code></pre>
+				<pre><code class="html">
+					&lt;div id="demo"&gt;{{message}}&lt;/div&gt;
+					&lt;script&gt;
+						var vm = new Vue({
+							el: '#demo',
+							data: {
+								message: 'hello world'
+							},
+							watch: {
+								message: function(val) {
+									console.warn('你把 message 改为' + val);
+								}
+							}
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_watch.gif">
+				</figure>
 			</p>
 		</section>
 		<section class="refer">
