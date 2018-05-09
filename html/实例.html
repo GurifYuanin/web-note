@@ -40,8 +40,8 @@
 						<li>methods：方法</li>
 						<li>watch：侦听属性</li>
 						<li>template：模版</li>
-						<li>钩子</li>
-						<li>mixins</li>
+						<li>生命周期钩子</li>
+						<li>mixins：混合</li>
 					</ol>
 					<pre><code class="javascript">
 			var vm = new Vue({
@@ -74,7 +74,7 @@
 			  mixins: [ mixins对象 ]
 			});
 			// 可以通过 实例名.$选项名 来引用选项属性
-			vm.$el === $('选择器'); // => true
+			vm.$el === $('选择器')[0]; // => true
 					</code></pre>
 			</p>
 		</section>
@@ -82,7 +82,7 @@
 			<h2>元素</h2>
 			<p>
 				元素决定了 vue 实例绑定的 HTML 元素，被绑定的元素可以在 HTML 标签内使用双花括号<span class="definition"> {{}} </span>来对数据、方法进行访问。<br>
-				元素的选择方式与 jquery 的<span class="definition"> $() </span>方法一样。
+				元素的选择方式与 jquery 的<span class="definition"> $() </span>方法一样，但只会选出第一个被选中的元素。
 				<pre><code class="html">
 			&lt;div id="app"&gt;{{message}}&lt;/div&gt;
 			&lt;script&gt;
@@ -286,6 +286,53 @@
 				<figure>
 					<img src="../images/vue_watch.gif">
 				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>模版</h2>
+			<p>
+				<pre><code class="javascript">
+					new Vue({
+					 template: '模版值'
+					});
+				</code></pre>
+				<h3>替换</h3>
+				写在模版属性里的字符串，将替换进标签内部。
+				<pre><code class="html">
+					&lt;div id="demo"&gt;&lt;h1&gt;welcome&lt;/h1&gt;&lt;/div&gt;
+					&lt;script&gt;
+						var vm = new Vue({
+							el: '#demo',
+							template: '&lt;h2&gt;hello world&lt;/h2&gt;'
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_template_normal.jpg">
+					<figcaption>template: '&lt;h2&gt;hello world&lt;/h2&gt;'</figcaption>
+				</figure>
+				<h3>根标签</h3>
+				模版值不能是纯文本节点，必须带有一个根标签，否则会报错
+				<figure>
+					<img src="../images/vue_template_error.jpg">
+					<figcaption>template: 'hello world'</figcaption>
+				</figure>
+				更多可参见<a href="模版.html">模版</a>部分。
+			</p>
+		</section>
+		<section>
+			<h2>生命周期钩子</h2>
+			<p>
+				每个 Vue 实例在被创建时都要经过一系列的初始化过程<sup>[1]</sup>，该阶段将运行一些生命周期的钩子，此后在不同的生命周期也会有不同的钩子被调用。
+				<figure>
+					<img src="../images/vue_hook.png">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>mixins</h2>
+			<p>
+				mixins 是对 vue 实例选项的一种预设，详见<a href="mixins.html"> mixins </a>。
 			</p>
 		</section>
 		<section class="refer">

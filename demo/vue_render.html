@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>渲染</title>
+	<script src="../js/vue.js"></script>
+</head>
+<body>
+	<div id="demo">
+		<ul>
+			<li v-for="value in obj">{{value}}</li>
+		</ul>
+	</div>
+	<script>
+		var vm = new Vue({
+			el: '#demo',
+			data: {
+				items: [1, 2, 3],
+				obj: {
+					key1: 1,
+					key2: 2,
+					key3: 3
+				}
+			}
+		});
+	</script>
+</body>
+</html>

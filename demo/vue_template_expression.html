@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>模版表达式</title>
+	<script src="../js/vue.js"></script>
+</head>
+<body>
+	<div id="demo">{{'number + 1 + 2 = ' + (number + 1 + 2)}}</div>
+	<script>
+		var vm = new Vue({
+			el: '#demo',
+			data: {
+				number: 1
+			}
+		});
+	</script>
+</body>
+</html>

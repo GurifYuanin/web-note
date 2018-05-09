@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>事件</title>
+	<script src="../js/vue.js"></script>
+</head>
+<body>
+	<input type="text" v-on:keyup.ctrl.67="greet()" id="demo"></input>
+	<script>
+		var vm = new Vue({
+			el: '#demo',
+			methods: {
+				greet: function() {
+					alert('hello');
+				}
+			}
+		});
+	</script>
+</body>
+</html>
