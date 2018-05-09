@@ -70,7 +70,7 @@
 					<img src="../images/vue_template_expression.jpg">
 				</figure>
 				<div class="tip">
-					可以看出，v-bind 所绑定的内容被认为是 javascript 代码，例如执行<span class="definition"> v-bind:class="error" </span>时，会被认为是变量因而 vue 实例寻找名为 error 的数据、计算属性、方法。如果想直接使用原字符串，则不要使用 v-bind 指令，或在 error 外加一层单引号：<span class="definition"> v-bind:'error' </span>
+					可以看出，v-bind 所绑定的内容被认为是 javascript 代码，例如执行<span class="definition"> v-bind:class="error" </span>时，error 会被认为是变量因而 vue 实例寻找名为 error 的数据、计算属性、方法。如果想直接使用原字符串，则不要使用 v-bind 指令，或在 error 外加一层单引号：<span class="definition"> v-bind:'error' </span>
 				</div>
 			</p>
 		</section>
@@ -104,7 +104,7 @@
 		<section>
 			<h2>事件</h2>
 			<p>
-				使用<span class="definition"> v-on </span>指令为 html 元素添加绑定事件，使用时<span class="definition"> v-on: </span>可以省略为<span class="definition"> @ </span>
+				使用<span class="definition"> v-on </span>指令为 html 元素添加绑定事件，使用<span class="definition"> v-on: </span>指令可以省略为<span class="definition"> @ </span>指令。
 				<pre><code class="html">
 					&lt;!-- 传入的 $event 为原生的 event 对象 --&gt;
 					&lt;标签 v-on:|@事件名[.修饰符]="单条表达式|计算属性名|方法名(形参[, $event])"&gt;&lt;/标签&gt;
