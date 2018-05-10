@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">组件</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				组件实质上是带有预设选项的 Vue 实例。按照之前的流程，我们通常会在 javascript 中创建 Vue 实例并传入选项参数，而使用组件，可以直接创建已经预设好的参数的 Vue 实例。
+				<pre><code class="html">
+					&lt;script&gt;
+						// 注册组件
+						Vue.component('组件名', { 选项参数 });
+						// 创建实例
+						new Vue({
+							el: '#demo'
+						});
+					&lt;/script&gt;
+					&lt;!-- 使用组件 --&gt;
+					&lt;组件名 id="demo"&gt;&lt;/组件名&gt;
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>选项</h2>
+			<p>
+				因为组件是可复用的 Vue 实例，所以它们与 new Vue 接收相同的选项<sup>[1]</sup>，个别选项除外。
+				<ul>
+					<li>data：数据属性</li>
+					<li>computed：计算属性</li>
+					<li>methods：方法</li>
+					<li>watch：侦听属性</li>
+					<li>template：模版</li>
+					<li>生命周期钩子</li>
+					<li>mixins：混合</li>
+					<li>props：</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>data</h2>
+			<p>
+				数据属性，必须是个函数，使用组件的调用该函数获得数据属性的对象，以保证每个组件相互独立。
+				<pre><code class="javascript">
+					Vue.component('demo', {
+						data: function() { // ✔
+							return { ... };
+						},
+						data: { ... } // ✖
+					});
+				</code></pre>
+				<figure>
+					<img src="../images/vue_component_data_error.jpg">
+					<figcaption>data: { ... } 时报错</figcaption>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>computed & method & watch & 钩子 & mixins</h2>
+			<p>
+				与<span class="definition"> new Vue() </span>相同，详见<a href="实例.html"> Vue 实例 </a>。
+			</p>
+		</section>
+		<section>
+			<h2>template</h2>
+			<p>
+				template 里的内容才是组件的本体，使用组件时，该标签将被 template 值替换。
+				<pre><code class="html">
+					&lt;div id="demo"&gt;
+						&lt;my-message&gt;啊啊啊我不甘心&lt;/my-message&gt;
+					&lt;/div&gt;
+					&lt;script&gt;
+						Vue.component('my-message', {
+							template: '&lt;div&gt;娃哈哈你又要被我替换掉了&lt;/div&gt;'
+						});
+						new Vue({
+							el: '#demo'
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_component_template.jpg">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>props</h2>
+			<p>
+				组件内部作用域是独立的，无法直接访问<span class="definition"> new Vue() </span>的选项对象的参数。
+				<pre><code class="html">
+					&lt;div id="demo2"&gt;
+						&lt;my-demo&gt;&lt;/my-demo&gt;
+					&lt;/div&gt;
+					&lt;script&gt;
+						Vue.component('my-demo', {
+							template: '&lt;div&gt;{{greet}}&lt;/div&gt;'
+						});
+						new Vue({
+							el: '#demo2',
+							data: {
+								greet: 'hello world'
+							}
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_component_props_error.jpg">
+				</figure>
+				此时就需要借助<span class="definition"> props </span>属性，在组件声明该选项，然后在使用组件时为其添加对应属性。
+				<pre><code class="html">
+					&lt;div id="demo2"&gt;
+						&lt;!-- 绑定到 vue 实例的数据属性 --&gt;
+						&lt;my-demo <span class="strong">v-bind:greet="greet"</span>&gt;&lt;/my-demo&gt;
+						&lt;!-- 直接赋值字符串 --&gt;
+						&lt;my-demo <span class="strong">greet="world hello"</span>&gt;&lt;/my-demo&gt;
+					&lt;/div&gt;
+					&lt;script&gt;
+						Vue.component('my-demo', {
+							<span class="strong">props: ['greet'],</span>
+							template: '&lt;div&gt;{{greet}}&lt;/div&gt;'
+						});
+						new Vue({
+							el: '#demo2',
+							data: {
+								greet: 'hello world'
+							}
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_component_props.jpg">
+				</figure>
+				在组件的模版中，可以通过<span class="definition"> props </span>来读取实例（new Vue()）的参数，但如果想在组件中直接修改这些参数，则会提示错误。此时修改的参数已经是组件间相互独立的，而不是来自于同一个实例的公共的数据属性。
+				<pre><code class="html">
+					&lt;div id="demo"&gt;
+						&lt;my-button v-bind:time="time"&gt;&lt;/my-button&gt;
+						&lt;my-button v-bind:time="time"&gt;&lt;/my-button&gt;
+					&lt;/div&gt;
+					&lt;script&gt;
+						Vue.component('my-button', {
+							template: '&lt;input type="button" v-model="time" v-on:click="time++"/&gt;',
+							props: ['time']
+						});
+						new Vue({
+							el: '#demo',
+							data: {
+								time: 0
+							}
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_component_props_error.gif">
+					<figcaption>&lt;input type="button" v-model="time" v-on:click="time++"/&gt;</figcaption>
+				</figure>
+				正确的做法应该是在使用组件时添加自定义事件，然后让组件的模版使用<span class="definition"> $emit('事件名') </span>触发这个自定义事件。
+				<pre><code class="html">
+					&lt;div id="demo"&gt;
+						&lt;my-button v-bind:time="time" <span class="strong">v-on:inc="time++"</span>&gt;&lt;/my-button&gt;
+						&lt;my-button v-bind:time="time" <span class="strong">v-on:inc="time++"</span>&gt;&lt;/my-button&gt;
+					&lt;/div&gt;
+					&lt;script&gt;
+						Vue.component('my-button', {
+							template: '&lt;input type="button" v-model="time" <span class="strong">v-on:click="$emit(\'inc\')"</span>/&gt;',
+							props: ['time']
+						});
+						new Vue({
+							el: '#demo',
+							data: {
+								time: 0
+							}
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_component_props_normal.gif">
+				</figure>
+				<div class="tip">
+					<span class="definition"> $emit() </span>用于触发自定义事件，传入的第一个参数为自定义事件名，其后可以传入其他形参。
+					<li>自定义事件如果是单条 javascript 语句，可以通过<span class="definition"> $evnet </span>来获取其后的第一个参数</li>
+					<li>自定义事件如果调用了一个方法（methods 属性），可以直接定义形参后使用</li>
+				</div>
+			</p>
+			<style>
+				pre code .strong {
+					color: black !important;
+					border-radius: 5px;
+					border: dotted 1px #000;
+					background-color: #fff;
+					padding: 5px;
+					margin: 5px;
+				}
+			</style>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Vue.js 组件基础 <a href="https://cn.vuejs.org/v2/guide/components.html">https://cn.vuejs.org/v2/guide/components.html</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

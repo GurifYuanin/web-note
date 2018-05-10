@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Vue 实例</title>
+	<title>实例</title>
 	<link rel="stylesheet" href="../css/normalize.css">
 	<link rel="stylesheet" href="../css/styles/default.css">
 	<link rel="stylesheet" href="../css/sidebar.css">
@@ -291,25 +291,24 @@
 		<section>
 			<h2>模版</h2>
 			<p>
+				<h3>替换</h3>
+				模版值将替换掉挂载元素内的所有内容。
 				<pre><code class="javascript">
 					new Vue({
-					 template: '模版值'
+						template: '模版值'
 					});
 				</code></pre>
-				<h3>替换</h3>
-				写在模版属性里的字符串，将替换进标签内部。
 				<pre><code class="html">
-					&lt;div id="demo"&gt;&lt;h1&gt;welcome&lt;/h1&gt;&lt;/div&gt;
+					&lt;div id="demo">啊啊啊我不甘心！！！&lt;/div&gt;
 					&lt;script&gt;
-						var vm = new Vue({
+						new Vue({
 							el: '#demo',
-							template: '&lt;h2&gt;hello world&lt;/h2&gt;'
+							template: '&lt;div&gt;任你写什么都会被我替换掉娃哈哈&lt;/div&gt;'
 						});
 					&lt;/script&gt;
 				</code></pre>
 				<figure>
-					<img src="../images/vue_template_normal.jpg">
-					<figcaption>template: '&lt;h2&gt;hello world&lt;/h2&gt;'</figcaption>
+					<img src="../images/vue_template.jpg">
 				</figure>
 				<h3>根标签</h3>
 				模版值不能是纯文本节点，必须带有一个根标签，否则会报错

@@ -36,9 +36,9 @@
 			<h2>创建模版</h2>
 			<p>
 				<h3>Vue 实例</h3>
-				在 Vue 实例中通过传入<span class="definition"> template </span>来创建模版。
+				在 Vue 实例中通过传入<span class="definition"> template </span>来创建模版。详见<a href="实例.html">Vue 实例</a>。
 				<h3>组件</h3>
-
+				在组件中同样通过传入<span class="definition"> template </span>来创建模版。详见<a href="组件.html">Vue 组件</a>
 			</p>
 		</section>
 		<section>
@@ -50,7 +50,7 @@
 				&lt;标签&gt;{{数据属性名|计算属性名|方法名(形参)}}&lt;/标签&gt;
 				</code></pre>
 				<h3>属性插值</h3>
-				对于 html 标签的属性，则需使用<span class="definition"> v-bind: </span>指令来进行绑定，使用时<span class="definition"> v-bind: </span>可以省略为<span class="definition"> : </span>。
+				对于 html 标签的属性，则需使用<span class="definition"> v-bind: </span>指令来进行绑定（单向绑定，当变量值更新时，视图也跟着更新），使用时<span class="definition"> v-bind: </span>可以省略为<span class="definition"> : </span>。
 				<pre><code class="html">
 				&lt;标签 [v-bind]:属性名="数据属性名|计算属性名|方法名(形参)"&gt;&lt;/标签&gt;
 				</code></pre>
