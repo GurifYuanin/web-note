@@ -41,6 +41,15 @@
 					&lt;!-- 使用组件 --&gt;
 					&lt;组件名 id="demo"&gt;&lt;/组件名&gt;
 				</code></pre>
+				<div class="tip">
+					顺序应该是先注册组件，再实例化 Vue 对象，否则会找不到组件而报错。
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>注册</h2>
+			<p>
+				
 			</p>
 		</section>
 		<section>
@@ -108,6 +117,7 @@
 		<section>
 			<h2>props</h2>
 			<p>
+				<h3>读取</h3>
 				组件内部作用域是独立的，无法直接访问<span class="definition"> new Vue() </span>的选项对象的参数。
 				<pre><code class="html">
 					&lt;div id="demo2"&gt;
@@ -152,6 +162,21 @@
 				<figure>
 					<img src="../images/vue_component_props.jpg">
 				</figure>
+				<div class="tip">详细的 props 属性应该是一个对象，对象的属性值一个用于描述该属性的对象</div>
+				<pre><code class="javascript">
+					Vue.component('my-demo', {
+						props: {
+							greet: {
+								type: String, // 类型
+								require: true, // 是否必须
+								validator: function(value) {
+									return ...
+								}
+							}
+						}
+					});
+				</code></pre>
+				<h3>修改</h3>
 				在组件的模版中，可以通过<span class="definition"> props </span>来读取实例（new Vue()）的参数，但如果想在组件中直接修改这些参数，则会提示错误。此时修改的参数已经是组件间相互独立的，而不是来自于同一个实例的公共的数据属性。
 				<pre><code class="html">
 					&lt;div id="demo"&gt;
@@ -202,17 +227,143 @@
 					<li>自定义事件如果是单条 javascript 语句，可以通过<span class="definition"> $evnet </span>来获取其后的第一个参数</li>
 					<li>自定义事件如果调用了一个方法（methods 属性），可以直接定义形参后使用</li>
 				</div>
+				<h3>v-model</h3>
+				有时我们想在组件上使用 v-model 。
+				<li>方法一，直接在组件标签上写<span class="definition"> v-model="" </span></li>
+				<pre><code class="html">
+					&lt;div id="demo"&gt;
+						&lt;my-input v-model="content"&gt;&lt;/my-input&gt;
+						&lt;div&gt;{{content}}&lt;/div&gt;
+					&lt;/div&gt;
+					&lt;script&gt;
+						Vue.component('my-input', {
+							template: '&lt;input type="text"&gt;'
+						});
+						var vm = new Vue({
+							el: '#demo',
+							data: {
+								content: '我是默认信息'
+							}
+						});
+					&lt;/script&gt;
+				</code></pre>
+				实际上编译成为了：
+				<pre><code class="html">
+					&lt;div id="demo"&gt;
+						&lt;my-input <span class="strong">v-bind:value="content" v-on:input="content = $event"</span>&gt;&lt;/my-input&gt;
+						&lt;div&gt;{{content}}&lt;/div&gt;
+					&lt;/div&gt;
+					&lt;script&gt;
+						Vue.component('my-input', {
+							template: '&lt;input type="text"&gt;'
+						});
+						var vm = new Vue({
+							el: '#demo',
+							data: {
+								content: '我是默认信息'
+							}
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_component_v_model_1.gif">
+					<figcaption>没有出现双向绑定的情况</figcaption>
+				</figure>
+				<li>方法二，通过 props 传入数据后，在组件的 template 内写 v-model 进行绑定</li>
+				<pre><code class="html">
+					&lt;div id="demo"&gt;
+						&lt;my-input v-bind:content="content"&gt;&lt;/my-input&gt;
+						&lt;div&gt;{{content}}&lt;/div&gt;
+					&lt;/div&gt;
+					&lt;script&gt;
+						Vue.component('my-input', {
+							props: ['content'],
+							template: '&lt;input type="text" v-model="content"&gt;'
+						});
+						var vm = new Vue({
+							el: '#demo',
+							data: {
+								content: '我是默认信息'
+							}
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_component_v_model_2.gif">
+					<figcaption>单向绑定，修改时会报错</figcaption>
+				</figure>
+				<li>解决方法，还是按照方法一的写法，但在写组件的 template 时候需要一些修改</li>
+				<pre><code class="html">
+					&lt;div id="demo"&gt;
+						&lt;my-input v-model="content"&gt;&lt;/my-input&gt;
+						&lt;div&gt;{{content}}&lt;/div&gt;
+					&lt;/div&gt;
+					&lt;script&gt;
+						Vue.component('my-input', {
+							<span class="strong">props: ['value'],</span>
+							template: '&lt;input type="text" <span class="strong">v-bind:value="value" v-on:input="$emit(\'input\', $event.target.value)"</span>&gt;'
+						});
+						var vm = new Vue({
+							el: '#demo',
+							data: {
+								content: '我是默认信息'
+							}
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_component_v_model_3.gif">
+				</figure>
 			</p>
-			<style>
-				pre code .strong {
-					color: black !important;
-					border-radius: 5px;
-					border: dotted 1px #000;
-					background-color: #fff;
-					padding: 5px;
-					margin: 5px;
-				}
-			</style>
+		</section>
+		<section>
+			<h2>is</h2>
+			<p>
+				按照之前的做法，我们可以用组件名来使用组件。
+				<pre><code class="html">
+					&lt;组件名&gt;&lt;/组件名&gt;
+				</code></pre>
+				同样也可以在任意标签上（HTML 标签、组件标签、 component）使用<span class="definition"> is </span>属性来使用组件，其效果是相同的。
+				<pre><code class="html">
+					&lt;标签 is="组件名"&gt;&lt;/标签&gt;
+				</code></pre>
+				<h3>解析问题</h3>
+				有些 HTML 元素，诸如 &lt;ul&gt;、&lt;ol&gt;、&lt;table&gt; 和 &lt;select&gt;，对于哪些元素可以出现在其内部是有严格限制的。而有些元素，诸如 &lt;li&gt;、&lt;tr&gt; 和 &lt;option&gt;，只能出现在其它某些特定的元素内部。<sup>[1]</sup>
+				<pre><code class="html">
+					&lt;table id="demo"&gt;
+					  	&lt;my-row&gt;&lt;/my-row&gt;
+					&lt;/table&gt;
+					&lt;script&gt;
+						Vue.component('my-row', {
+							template: '&lt;tr&gt;&lt;td&gt;hello&lt;/td&gt;&lt;td&gt;world&lt;/td&gt;&lt;/tr&gt;'
+						})
+						new Vue({
+							el: '#demo'
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_component_is_error.jpg">
+					<figcaption>&lt;my-row&gt;&lt;/my-row&gt; 被移动到外面导致无法渲染</figcaption>
+				</figure>
+				此时借助<span class="definition"> is </span>来解决问题。
+				<pre><code class="html">
+					&lt;table id="demo"&gt;
+						<span class="strong">&lt;tr is="my-row"&gt;&lt;/tr&gt;</span>
+					&lt;/table&gt;
+					&lt;script&gt;
+						Vue.component('my-row', {
+							template: '&lt;tr&gt;&lt;td&gt;hello&lt;/td&gt;&lt;td&gt;world&lt;/td&gt;&lt;/tr&gt;'
+						});
+						new Vue({
+							el: '#demo'
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_component_is_normal.jpg">
+				</figure>
+			</p>
 		</section>
 		<section class="refer">
 			<h2>参考文献</h2>

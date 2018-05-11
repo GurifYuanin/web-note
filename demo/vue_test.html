@@ -25,11 +25,37 @@
 		<div>{{content}}</div>
 	</div>
 	<div id="demo5">
-		<my-greet>hello world</my-greet>
+		<!-- <my-greet>{{fromComponent}}</my-greet> -->
+		<my-greet>{{fromInstance}}</my-greet>
+	</div>
+	<table id="demo6">
+		<tr is="blog-post-row"></tr>
+	  	<!-- <blog-post-row></blog-post-row> -->
+	</table>
+	<div id="demo7">
+		<!-- <my-greet is="my-text"></my-greet> -->
+		<my-greet is="my-text"></my-greet>
 	</div>
 	<script>
+		Vue.component('blog-post-row', {
+			template: '<tr><td>hello</td><td>world</td></tr>'
+		});
+		new Vue({
+			el: '#demo6'
+		});
 		Vue.component('my-greet', {
-			template: '<div><slot></slot></div>'
+			template: '<div><slot></slot></div>',
+			data: function(){
+				return {
+					fromComponent: '我是组件下的数据'
+				}
+			}
+		});
+		var vm5 = new Vue({
+			el: '#demo5',
+			data: {
+				fromInstance: '我是实例下的数据'
+			}
 		});
 		Vue.component('my-text', {
 			template: '<input type="text" />'
@@ -91,6 +117,9 @@
 			data: {
 				content: ''
 			}
+		});
+		new Vue({
+			el: '#demo7'
 		});
 	</script>
 </body>

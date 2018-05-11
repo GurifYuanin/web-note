@@ -70,7 +70,7 @@
 					<img src="../images/vue_template_expression.jpg">
 				</figure>
 				<div class="tip">
-					可以看出，v-bind 所绑定的内容被认为是 javascript 代码，例如执行<span class="definition"> v-bind:class="error" </span>时，error 会被认为是变量因而 vue 实例寻找名为 error 的数据、计算属性、方法。如果想直接使用原字符串，则不要使用 v-bind 指令，或在 error 外加一层单引号：<span class="definition"> v-bind:'error' </span>
+					可以看出，v-bind 所绑定的内容被认为是 javascript 代码，例如执行<span class="definition"> v-bind:class="error" </span>时，error 会被认为是变量因而 vue 实例寻找名为 error 的数据、计算属性、方法。如果想直接使用原字符串，则不要使用 v-bind 指令，或在 error 外加一层单引号：<span class="definition"> v-bind:"'error'" </span>
 				</div>
 			</p>
 		</section>
@@ -231,7 +231,7 @@
 				</style>
 				表单值的绑定使用<span class="definition"> v-model </span>命令来进行<span class="definition"> 双向绑定 </span>。
 				<h3>文本框</h3>
-				<span class="definition"> v-model </span>直接取代了<span class="definition"> value </span>属性。
+				<span class="definition"> v-model </span>直接取代了<span class="definition"> value </span>属性（设置了<span class="definition"> value </span>属性也会被无视）。
 				<div id="text" class="showArea">
 					<input type="text" v-model="content" placeholder="请在此处输入内容">
 					<div>你输入了：{{content}}</div>
@@ -245,14 +245,14 @@
 					});
 				</script>
 				<h3>单选框</h3>
-				当被选中时，<span class="definition"> v-model </span>的值等于<span class="definition"> value </span>的值。
+				当被选中时，<span class="definition"> v-model </span>的值等于<span class="definition"> value </span>（选项）的值。
 				<div id="radioBox" class="showArea">
 					<input id="radio" type="radio" value="option" v-model="content">
 					<label for="radio">option</label>
 					<div>{{content}}</div>
 				</div>
 				<script>
-					new Vue({
+					var vm = new Vue({
 						el: '#radioBox',
 						data: {
 							content: ''
@@ -260,9 +260,9 @@
 					});
 				</script>
 				<h3>复选框</h3>
-				<li>单个复选框时，当被选中时，<span class="definition"> v-model </span>的值为 true ，未选中时则为 false 。</li>
+				<li>单个复选框时，当被选中时，<span class="definition"> v-model </span>的值为 true ，未选中时则为 false 。<span class="definition"> value </span>值不受影响</li>
 				<div id="singleCheckBoxA" class="showArea">
-					<input type="checkbox" v-model="content">
+					<input id="checkBoxA" type="checkbox" value="option" v-model="content">
 					<div>{{content}}</div>
 				</div>
 				<script>
@@ -327,6 +327,77 @@
 					<li>number：转化为数值类型</li>
 					<li>trim：修剪前后空格</li>
 				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>插槽</h2>
+			<p>
+				使用组件的模版时，template 值将替换掉整个<span class="definition"> &lt;组件名&gt;&lt;/组件名&gt; </span>，包括该标签内的所有内容，插槽则允许在标签内写入内容，插入到 template 挖好的槽（&lt;slot&gt;&lt;/slot&gt;）。
+				<pre><code class="html">
+					&lt;div id="demo"&gt;
+						&lt;my-component&gt;写入要插入的值&lt;/my-component&gt;
+					&lt;/div&gt;
+					&lt;script&gt;
+						Vue.component('my-component', {
+							template: '&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;'
+						});
+						new Vue({
+							el: '#demo'
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<h3>具名插槽</h3>
+				具名插槽可以控制当有多个要插入内容时，插入的位置是哪里。在 template 的<span class="definition"> slot </span>标签添加<span class="definition"> name </span>属性来给插槽赋名，在使用槽时在标签上添加<span class="definition"> slot </span>属性来指定插入哪个槽。（在<span> slot </span>内添加内容，当不使用插槽时使用该默认值）
+				<pre><code class="html">
+					&lt;div id="demo"&gt;
+						&lt;my-component&gt;
+							&lt;template <span class="strong">slot="title"</span>&gt;我是标题&lt;/template&gt;
+							&lt;div <span class="strong">slot="content"</span>&gt;我是内容&lt;/div&gt;
+							&lt;template <span class="strong">slot="footer"</span>&gt;我是页脚&lt;/template&gt;
+						&lt;/my-component&gt;
+					&lt;/div&gt;
+					&lt;script&gt;
+						Vue.component('my-component', {
+							template: `&lt;div&gt;
+									&lt;h1&gt;
+										&lt;slot <span class="strong">name="title"</span>&gt;默认标题&lt;/slot&gt;
+									&lt;/h1&gt;
+									&lt;slot <span class="strong">name="content"</span>&gt;默认内容&lt;/slot&gt;
+							   		&lt;footer&gt;
+							   			&lt;slot <span class="strong">name="footer"</span>&gt;默认页脚&lt;/slot&gt;
+							   		&lt;/footer&gt;
+							  	 &lt;/div&gt;`
+						});
+						new Vue({
+							el: '#demo'
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<h3>作用域</h3>
+				写在 template 内的内容可以访问组件的选项参数，但无法直接访问 vue 实例的选项参数。插槽内的内容则相反，可以访问 vue 实例的选项参数，但无法访问组件的选项参数。
+				<pre><code class="html">
+					&lt;div id="demo"&gt;
+						&lt;my-greet&gt;{{fromComponent}}&lt;/my-greet&gt;
+						&lt;my-greet&gt;{{fromInstance}}&lt;/my-greet&gt;
+					&lt;/div&gt;
+					&lt;script&gt;
+						Vue.component('my-greet', {
+							template: '&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;',
+							data: {
+								fromComponent: '我是组件下的数据'
+							}
+						});
+						new Vue({
+							el: '#demo',
+							data: {
+								fromInstance: '我是实例下的数据'
+							}
+						});
+					&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_slot.jpg">
+				</figure>
 			</p>
 		</section>
 		<section class="refer">

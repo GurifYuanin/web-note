@@ -226,6 +226,14 @@ body {
     pre {
         code {
             border-radius: 5px;
+            .strong {
+                color: black !important;
+                border-radius: 5px;
+                border: dotted 1px #000;
+                background-color: #fff;
+                padding: 5px;
+                margin: 5px;
+            }
         }
     }
 

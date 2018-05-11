@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件 v-model</title>
+	<script src="../js/vue.js"></script>
+</head>
+<body>
+	<!-- 组件上使用 v-model -->
+	<div id="demo">
+		<my-input v-model="content"></my-input>
+		<div>{{content}}</div>
+	</div>
+	<script>
+		Vue.component('my-input', {
+			props: ['value'],
+			template: '<input type="text" v-bind:value="value" v-on:input="$emit(\'input\', $event.target.value)">'
+		});
+		var vm = new Vue({
+			el: '#demo',
+			data: {
+				content: '我是默认信息'
+			}
+		});
+	</script>
+</body>
+</html>

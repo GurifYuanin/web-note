@@ -34,7 +34,7 @@ $(function() {
         ['HTTP'],
         ['CSRF', 'XSS'],
         ['Thinkphp5.1', 'htaccess'],
-        ['浏览器渲染', '设计策略', 'cookie']
+        ['浏览器渲染', '设计策略', 'cookie', '命名规范']
     ];
     for (var i = 0; i < category.length; i++) {
         $sidebar.append(
