@@ -23,11 +23,12 @@ $(function() {
     var $showCatalog = $('#showCatalog'); // 显示目录图片
     var $title = $('#title'); // 文章标题
     var $container = $('#container'); // 文章内容
-    var category = ['HTML', 'CSS', 'Javascript', 'Vue', '移动Web', '调试', '协议', '安全', '后端', '其他']; // 目录分类
+    var category = ['HTML', 'CSS', 'Javascript', 'NodeJS', 'Vue', '移动Web', '调试', '协议', '安全', '后端', '其他']; // 目录分类
     var items = [
         ['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'svg'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度'],
-        ['作用域链', '原型链', '闭包', '事件', '同源策略', '字符编码', 'JSONP', 'this',],
+        ['作用域链', '原型链', '闭包', '事件', '同源策略', '字符编码', 'JSONP', 'this'],
+        ['commonJS', 'package.json'],
         ['安装', '实例', '模版', '组件'],
         ['响应式布局', 'bootstrap'],
         ['抓包工具', 'chrome devtools'],
@@ -36,6 +37,7 @@ $(function() {
         ['Thinkphp5.1', 'htaccess'],
         ['浏览器渲染', '设计策略', 'cookie', '命名规范']
     ];
+    var $body = $('html, body');
     for (var i = 0; i < category.length; i++) {
         $sidebar.append(
             surroundedByTag(
@@ -183,17 +185,137 @@ $(function() {
     });
     $('a').attr('target', '_blank'); // 所有链接默认新标签打开
 
+    // 滚动到指定子标题
+    function scrollToSubTitle(name) {
+        if (name === '返回顶部') {
+            $body.animate({scrollTop: 0}, 500);
+        } else {
+            $body.animate({scrollTop: $('#' + name).offset().top}, 500);
+        }
+    }
+    // 去除多余的字符
+    function getName (str) {
+        return str.replace(/[\s@#&;()]/g, '');
+    }
     var $subTitle = $('#container>section>h2'); // 一级子标题
+    var subTitleNav = ''; // 子标题导航 html 字符串
+    var subTitleToggleString = ''; // 子标题导航开关
+    var subTitleBlockNumber = 4;
+    for (var i = 1; i <= subTitleBlockNumber; i++) {
+        subTitleToggleString += '<div class="block' + i + '"></div>';
+    }
+    subTitleToggleString = '<div id="subTitleToggle">' + subTitleToggleString + '</div>';
+
     // 点击后子标题置顶到窗口
     $subTitle.each(function() {
-        var name = this.innerHTML.replace(/[\s@#&;]/g, '');
+        var name = getName(this.innerHTML);
     	// $(this).html('<a height="50%" id="' + name + '" href="#' + name + '">' + name + '</a>');
         // 子标题包裹为超链接
         $(this).wrap('<a style="height: 50%; margin: 0; padding: 0; text-decoration: none; color: #000;" id="' + name + '" href="#' + name + '"></a>');
         // 点击后滑动窗口
         $(this).click(function(event) {
-            $('html, body').animate({scrollTop: $('#' + name).offset().top}, 500);
+            scrollToSubTitle(name);
         });
+        subTitleNav += '<div class="subTitleItem">' + this.innerHTML + '</div>';
+    });
+    subTitleNav = '<div id="subTitleNav">' + subTitleNav + '<div class="subTitleItem">返回顶部</div></div>';
+
+    // 右下角子标题导航
+    // 添加 html 元素
+    $('body').append(subTitleNav + subTitleToggleString);
+    // 设置跳转事件
+    var $subTitleItem = $('.subTitleItem');
+    var $subTitleNav = $('#subTitleNav');
+    var $subTitleToggle = $('#subTitleToggle');
+    var $subTitleBlock = $('#subTitleToggle div');
+    $subTitleItem.each(function(){
+        var name = getName(this.innerHTML);
+        var that = $(this);
+        that.click(function(event) {
+             scrollToSubTitle(name);
+        });
+        that.mousedown(function() {
+            that.css({
+                'backgroundColor': '#888',
+                'color': '#fff'
+            });
+        });
+        that.mouseup(function() {
+            that.css({
+                'backgroundColor': '#fff',
+                'color': '#000'
+            });
+        });
+    });
+    var isLeave = false; // 判断光标是否已经离开导航面板
+    var itemInterval = 50; // 导航项动画间隔
+    var blockInterval = 100; // 块动画间隔
+    $subTitleToggle.mouseenter(function(event) {
+        var time = 0;
+        // 块消失
+        for (i = $subTitleBlock.length; i >= 0; i--, time += blockInterval) {
+            (function() {
+                var delay = time;
+                var j = i;
+                setTimeout(function() {
+                    $subTitleBlock.eq(j).hide('fast');
+                }, delay);
+            })();
+        }
+        // 导航项出现
+        for (i = $subTitleItem.length - 1; i >= 0 ; i--, time += itemInterval) {
+            (function() {
+                var delay = time;
+                var j = i;
+                setTimeout(function() {
+                    if (!isLeave) {
+                        $subTitleItem.eq(j).fadeIn(100);
+                    }
+                }, delay);
+            })();
+        }
+    });
+    $subTitleNav.mouseleave(function() {
+        isLeave = true; // 加锁，不让导航项出现
+        // 导航项消失
+        for (var time = 0, i = 0; i < $subTitleItem.length ; i++, time += itemInterval) {
+            (function() {
+                var delay = time;
+                var j = i;
+                setTimeout(function() {
+                    $subTitleItem.eq(j).fadeOut(100);
+                }, delay);
+            })();
+        }
+        // 块出现
+        for (i = 0; i < $subTitleBlock.length; i++, time += blockInterval) {
+            (function() {
+                var delay = time;
+                var j = i;
+                setTimeout(function() {
+                    $subTitleBlock.eq(j).show('fast');
+                }, delay);
+            })();
+        }
+        setTimeout(function() {
+            isLeave = false; // 开锁，允许导航项出现
+        }, $subTitleItem.length * itemInterval + $subTitleBlock.length * blockInterval);
+    });
+    // 滚动条到底时隐藏导航项
+    var showable = true;
+    $(window).scroll(function(){
+        var scrollTop = $(this).scrollTop();
+        var scrollHeight = $(document).height();
+        var windowHeight = $(this).height();
+        if (scrollTop + windowHeight === scrollHeight) {
+            $subTitleToggle.stop().hide('slow');
+            showable = true;
+        } else {
+            if (showable) {
+                $subTitleToggle.stop().show('slow');
+                showable = false;
+            }
+        }
     });
     // 按照视窗大小定义 html 字体大小
     function getRootFontSize() {
@@ -264,7 +386,7 @@ $(function() {
     preTitle = wrapByA(preTitle);
     nextTitle = wrapByA(nextTitle);
     $('.refer').after('<div id="footer" ><div class="prePage">上一篇：' + preTitle + '</div><div class="nextPage">下一篇：' + nextTitle + '</div></div>');
-    $('html').eq(0).css('font-size', getRootFontSize()); // 设置 html（根） 字体大小
+    // $('html').eq(0).css('font-size', getRootFontSize()); // 设置 html（根） 字体大小
 
     // 目录结构部分
     var dir = $('#catalogFrame img');

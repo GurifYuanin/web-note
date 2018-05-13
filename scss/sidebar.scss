@@ -14,10 +14,10 @@ $linkColor: #822;
 $linkHover: #eee;
 $tableDeepColor: #222; // 图表深色
 $tableShallow: #fff; // 图表浅色
-
-body {
-    background-color: #fefefe;
-}
+$subTitleToggleSize: 4rem;
+// $blockColor: #00f #0f0 #f00 #ff0 #0ff;
+$blockColor: #eee #ccc #bbb #aaa;
+$blockLength: length($blockColor);
 
 @mixin getFixedPosition($flag: "block") {
     position: fixed;
@@ -36,6 +36,91 @@ body {
         top: 50%;
     }
 }
+
+// 子标题导航固定在右下角
+@mixin subTitleNav() {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+}
+
+html {
+    // 默认大小
+    font-size: 16px;
+    font-family: 'Geneva', 'Helvetica';
+    // 设置根标签字体大小
+    @media (max-device-width:1600px) {
+        // <= 1600px
+        font-size: 16px;
+    }
+    @media (max-device-width:1200px) {
+        // < 1200px
+        font-size: 22px;
+    }
+    @media (max-device-width:800px) {
+        // < 800px
+        font-size: 28px;
+    }
+    @media (max-device-width:400px) {
+        // < 400px
+        font-size: 34px;
+    }
+}
+body {
+    background-color: #fefefe;
+    #subTitleNav {
+        width: 20%;
+        z-index: 9999;
+        @include subTitleNav();
+        .subTitleItem {
+            $itemHeight: 1.2rem;
+            display: none;
+            overflow: hidden;
+
+            margin: 5px 0;
+            border: solid 1px #000;
+            border-radius: 5px;
+            padding: 5px;
+            height: $itemHeight;
+
+            font-size: $itemHeight;
+            text-align: center;
+            text-overflow: ellipsis;
+
+            color: #000;
+            background-color: #fff;
+            opacity: 1;
+
+            &:hover {
+                font-weight: bold;
+
+                cursor: pointer;
+            }
+        }
+    }
+    #subTitleToggle {
+        width: $subTitleToggleSize;
+        height: $subTitleToggleSize;
+
+        @include subTitleNav();
+         > div {
+            float: left;
+
+            border-radius: 5px;
+            width: $subTitleToggleSize / 2;
+            height: $subTitleToggleSize / 2;
+        }
+        @for $i from 1 through $blockLength {
+            .block#{$i} {
+                background-color: nth($blockColor, $i);
+            }
+        }
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+
 /* 展开侧栏的块 */
 #showCatalog {
     height: 100%;
@@ -67,8 +152,8 @@ body {
 
     background-color: $sidebarBackgroundColor;
 
-    // 屏幕大于 400px 时的样式
-    @media (min-device-width:400px) {
+    // 屏幕大于对于 600px 时的样式
+    @media (min-device-width:601px) {
         padding: 1%;
         width: 25%;
 
@@ -100,7 +185,7 @@ body {
     }
     /* 条目块*/
     div {
-        margin: 2.5% auto;
+        margin: 5% auto;
         border: solid 1px $itemBorderColor;
         border-radius: 5px;
         padding: 2.5%;
@@ -145,29 +230,31 @@ body {
 
     margin: 0 4%;
     max-width: 1600px;
+    // 屏幕大小小于 400px 时的样式
+    width: 92%;
 
     font-size: 1rem;
     line-height: 1.5rem;
 
-    // 屏幕大于 400px 时的样式
-    @media (min-device-width:400px) {
+    // 屏幕大于等于 600px 时的样式
+    @media (min-device-width:601px) {
         width: 65%;
     }
     /* 目录结构部分 */
     #catalogFrame {
         img {
             height: 1.5rem;
-            &:hover{
+            &:hover {
                 cursor: pointer;
             }
         }
-        > div {
+         > div {
             margin-left: 2.5%;
-            > div {
+             > div {
                 margin-left: 5%;
-                > div {
+                 > div {
                     margin-left: 7.5%;
-                    > div {
+                     > div {
                         margin-left: 10%;
                     }
                 }
@@ -227,12 +314,13 @@ body {
         code {
             border-radius: 5px;
             .strong {
-                color: black !important;
-                border-radius: 5px;
-                border: dotted 1px #000;
-                background-color: #fff;
-                padding: 5px;
                 margin: 5px;
+                border: dotted 1px #000;
+                border-radius: 5px;
+                padding: 5px;
+
+                color: black !important;
+                background-color: #fff;
             }
         }
     }

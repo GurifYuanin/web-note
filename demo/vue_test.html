@@ -7,119 +7,30 @@
 </head>
 <body>
 	<div id="demo">
-		<my-button v-bind:time="time" v-on:inc="getMessage"></my-button>
-		<my-button v-bind:time="time" v-on:inc="time += $event"></my-button>
-	</div>
-	</div>
-	<div id="demo2">
-		<!-- <my-demo v-bind:greet="greet"></my-demo> -->
-		<my-demo v-bind:greet="greet"></my-demo>
-		<my-demo greet="world hello"></my-demo>
-	</div>
-	<div id="demo3">
-		<input type="text" v-bind:value="content">
-		<div>{{content}}</div>
-	</div>
-	<div id="demo4">
-		<my-text v-model="content"></my-text>
-		<div>{{content}}</div>
-	</div>
-	<div id="demo5">
-		<!-- <my-greet>{{fromComponent}}</my-greet> -->
-		<my-greet>{{fromInstance}}</my-greet>
-	</div>
-	<table id="demo6">
-		<tr is="blog-post-row"></tr>
-	  	<!-- <blog-post-row></blog-post-row> -->
-	</table>
-	<div id="demo7">
-		<!-- <my-greet is="my-text"></my-greet> -->
-		<my-greet is="my-text"></my-greet>
+		<my-out></my-out>
 	</div>
 	<script>
-		Vue.component('blog-post-row', {
-			template: '<tr><td>hello</td><td>world</td></tr>'
+		Vue.component('my-in', {
+			inject: ['message'],
+			template: '<div>I am inner {{message}}</div>'
+		});
+		Vue.component('my-out', {
+			inject: ['message'],
+			template: `<div>
+			<my-in></my-in>
+			<div>I am outer {{message}}</div>
+			</div>`
 		});
 		new Vue({
-			el: '#demo6'
-		});
-		Vue.component('my-greet', {
-			template: '<div><slot></slot></div>',
-			data: function(){
-				return {
-					fromComponent: '我是组件下的数据'
-				}
-			}
-		});
-		var vm5 = new Vue({
-			el: '#demo5',
-			data: {
-				fromInstance: '我是实例下的数据'
-			}
-		});
-		Vue.component('my-text', {
-			template: '<input type="text" />'
-		});
-		Vue.component('my-demo', {
-			props: ['greet'],
-			template: '<div>{{greet}}</div>'
-		});
-		var vm1 = new Vue({
-			el: '#demo2',
-			data: {
-				greet: 'hello world'
-			}
-		});
-		Vue.component('my-button', {
-			template: '<input type="button" v-model="time" v-on:click="$emit(\'inc\', 0.1, 0.2)"/>',
-			props: ['title', 'time'],
-			data: function () {
-				return {
-					message: 'hello world'
-				};
-			},
-			methods: {
-				getMessage () {
-					console.log(this.message);
-				}
-			},
-			computed: {
-				getTime () {
-					return '你点击了' + this.time + '次';
-				}
-			},
-			watch: {
-				time: function() {
-					console.log('你点击了按钮');
-				}
-			}
-		});
-		var vm2 = new Vue({
 			el: '#demo',
 			data: {
-				title: 'hello vm',
-				time: 0
+				message: 'hello world'
 			},
-			methods: {
-				getMessage: function(message, message2) {
-					console.log(message2);
+			provide: function() {
+				return {
+					message: this.message
 				}
 			}
-		});
-		var vm3 = new Vue({
-			el: '#demo3',
-			data: {
-				content: ''
-			}
-		});
-		var vm4 = new Vue({
-			el: '#demo4',
-			data: {
-				content: ''
-			}
-		});
-		new Vue({
-			el: '#demo7'
 		});
 	</script>
 </body>

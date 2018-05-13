@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>package.json</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">package.json</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				package.json 用于描述项目的基本信息（项目名、版本等）和项目依赖，其内容为一个 JSON 对象。
+			</p>
+		</section>
+		<section>
+			<h2>创建</h2>
+			<p>
+				在命令行使用<span class="definition"> npm init </span>，填入基本项信息来创建一个 package.json 文件。
+				<pre><code class="shell">
+					$ npm init
+				</code></pre>
+				<figure>
+					<img src="../images/package_json_init.jpg">
+				</figure>
+				也可以使用<span class="definition"> npm init -y </span>来快速创建一个 package.json 文件。
+				<pre><code class="shell">
+					$ npm init -y
+				</code></pre>
+				<figure>
+					<img src="../images/package_json_init_y.jpg">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>配置项</h2>
+			<p>
+				<h3>name</h3>
+				项目名。如果要发布该包，名字和版本将作为唯一的标识符，项目名和版本就是必填项。<br>
+				项目名应遵循：
+				<ul>
+					<li><= 214 个字符</li>
+					<li>不能以点或下划线开头，也不能包含任何非 URL 安全字符</li>
+					<li>全部小写</li>
+				</ul>
+				<pre><code class="json">
+					"name": "my-project"
+				</code></pre>
+				其他人使用该字段来指定使用的项目：
+				<pre><code class="javascript">
+					require('my-project');
+				</code></pre>
+				<h3>version</h3>
+				版本号，即<span class="definition"> x.x.x </span>。
+				<pre><code class="json">
+					"version": "1.0.0"
+				</code></pre>
+				<h3>description</h3>
+				项目的描述，帮助他人理解你的项目。
+				<pre><code class="json">
+					"description": "greetings to this world"
+				</code></pre>
+				<h3>keywords</h3>
+				项目的关键字，同样是帮助他人理解你的项目。
+				<pre><code class="json">
+					"keywords": ["greet", "world"]
+				</code></pre>
+				<h3>homepage</h3>
+				项目主页 URL 。
+				<pre><code class="json">
+					"homepage": "https://github.com/GurifYuanin"
+				</code></pre>
+				<h3>bugs</h3>
+				项目出问题时，该在哪里寻求帮助。
+				<pre><code class="json">
+					"bugs": {
+						url: "https://www.google.com",
+						email: "12315@163.com"
+					}
+				</code></pre>
+				<h3>license</h3>
+				其他人使用该包时需要遵守的协议。
+				<pre><code class="json">
+					"license": "MIT"
+				</code></pre>
+				<h3>author</h3>
+				该项目的贡献者，当是团体时使用数组。
+				<pre><code class="json">
+					"author": {
+						"name" : "GurifYuanin",
+						"email" : "silent.oridin@gmail.com",
+						"url" : "https://github.com/GurifYuanin"
+					}
+				</code></pre>
+				<h3>files</h3>
+				以数组的方式写下匹配规则（规则包括文件、目录、glob 模式），发布项目时就会打包这些文件。
+				<pre><code class="json">
+					"files": [
+						"lib/",
+						"dist/",
+						"scripts/",
+						"index.js"
+					]
+				</code></pre>
+				可以创建<span class="definition"> .npmignore </span>（类似 .gitignore ），写入规则，符合该规则文件将不会被打包。
+				<h3>main</h3>
+				应用程序的入口文件。
+				<pre><code class="json">
+					"name": "demo"
+					"main": "index.js"
+				</code></pre>
+				当其他用户使用：
+				<pre><code class="javascript">
+					require('demo');
+				</code></pre>
+				实际上是返回 index.js 的<span class="definition"> module.exports </span>对象。
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] npm package.json <a href="https://docs.npmjs.com/files/package.json">https://docs.npmjs.com/files/package.json</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>
