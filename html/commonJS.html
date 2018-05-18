@@ -41,9 +41,13 @@
 			<h2>原理</h2>
 			<p>
 				<div class="tip">Node.js 是 commonJS 的实现，以下试验需要在已安装 Node.js 下进行。</div><br>
-				Node.js 环境下，每个 javascript 文件本身是一个 module 对象，该对象是通过对 Node.js 提供的 Module 构造函数进行实例化得到。 Node 环境下运行 <a href="../demo/commonjs_demo.js">D:/Git/web-note/demo/commonjs_demo.js</a>。
+				Node.js 环境下，每个 javascript 文件本身是一个 module 对象，该对象是通过对 Node.js 提供的 Module 构造函数进行实例化得到。 Node 环境下编写 <a href="../demo/commonjs_demo.js">D:/Git/web-note/demo/commonjs_demo.js</a>。
 				<pre><code class="javascript">
 					console.log(module);
+				</code></pre>
+				然后在命令行执行 commonjs_demo.js
+				<pre><code class="shell">
+					$ node commonjs_demo.js
 				</code></pre>
 				得到结果：
 				<pre><code class="javascript">

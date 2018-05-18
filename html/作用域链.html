@@ -37,9 +37,9 @@
 				<pre><code class="javascrpt">
 			function sum(number1, number2) {
 				var sum = number1 + number2;
-				(function print() {
+				function print() {
 					console.log(sum);
-				})();
+				}
 			}
 				</code></pre>
 				对于函数 sum 来说，在 sum 函数被创建时，其变量对象相当于：
@@ -112,8 +112,22 @@
 				}
 			}
 						</code></pre>
-						对于 inner 函数来说，其作用域链为：<br>
-						<img src="../images/scope_chain.jpg" alt="加载失败">
+						对于 inner 函数来说，其作用域链为：
+						<figure>
+							<img src="../images/scope_chain.jpg" alt="加载失败">
+						</figure>
+						也就是说，在 inner 函数内，甚至可以自己调用自己，因为在原型链上能找到 inner 函数的函数地址，执行以下代码：
+						<pre><code class="javascrpt">
+			function hello () {
+				console.log('hello');
+				hello();
+			}
+			hello();
+						</code></pre>
+						<figure>
+							<img src="../images/scope_chain_deadloop.jpg">
+							<figcaption>切勿模仿</figcaption>
+						</figure>
 					</p>
 				</div>
 			</p>
