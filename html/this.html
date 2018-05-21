@@ -41,7 +41,7 @@
 			<p>
 				无论是否在严格模式下，在全局执行上下文中（在任何函数体外部）this 都指代全局对象。<sup>[1]</sup>
 				<pre><code class="javscript">
-					console.log(this === window); // => true
+console.log(this === window); // => true
 				</code></pre>
 			</p>
 		</section>
@@ -50,12 +50,12 @@
 			<p>
 				<li>无论是否在严格模式下，函数在被调用时，若是显式地被某个对象作为方法调用，this 指向这个调用对象。</li>
 				<pre><code class="javscript">
-					var instance = {
-						foo: function() {
-							console.log(this === instance);
-						}
-					}
-					instance.foo(); // true
+var instance = {
+	foo: function() {
+		console.log(this === instance);
+	}
+}
+instance.foo(); // true
 				</code></pre>
 				<li>若是没有被某个对象而是直接调用：</li>
 				<div>
@@ -63,11 +63,11 @@
 					<p>
 						在严格模式下，若对函数进行直接调用，由于没有“调用者”， this 的值为 undefined 。
 						<pre><code class="javscript">
-					'use strict';
-					function foo() {
-						console.log(this);
-					}
-					foo(); // undefined
+'use strict';
+function foo() {
+	console.log(this);
+}
+foo(); // undefined
 						</code></pre>
 					</p>
 				</div>
@@ -76,36 +76,59 @@
 					<p>
 						在非严格模式下，this 的值总是 window。
 						<pre><code class="javscript">
-					function outer() {
-						function inner( ) {
-							console.log(this === window);
-						}
-						inner();
-					}
-					outer(); // true
+function outer() {
+	function inner( ) {
+		console.log(this === window);
+	}
+	inner();
+}
+outer(); // true
 						</code></pre>
 					</p>
 				</div>
-				<li>若作为构造函数通过 new 执行时， this 指向创建出来的实例对象</li>
+			</p>
+		</section>
+		<section>
+			<h2>其他情况</h2>
+			<p>
+				<h3>new</h3>
+				若作为构造函数通过 new 执行时， this 指向创建出来的实例对象
 				<pre><code class="javscript">
-					function Foo(message) {
-						this.say = message;
-					}
-					var instance = new Foo('hello world');
-					console.log(instance.say); // hello world
+function Foo(message) {
+	this.say = message;
+}
+var instance = new Foo('hello world');
+console.log(instance.say); // hello world
 				</code></pre>
-				<li>若调用函数后再调用 call 或者 apply 方法，this 指向 call 或 apply 里的第一个参数对象</li>
+				<h3>call/apply/bind</h3>
+				若调用函数后再调用 call 或者 apply 或者 bind 方法，this 指向 call 或 apply 或 bind 里的第一个参数对象
 				<pre><code class="javscript">
-					var instance1 = {
-						name: 'instance1',
-						say: function() {
-							console.log(this.name);
-						}
-					};
-					var instance2 = {
-						name: 'instance2'
-					}
-					instance1.say.call(instance2); // instance2
+var instance1 = {
+	name: 'instance1',
+	say: function(str1, str2) {
+		console.log(str1 + str2 + this.name);
+	}
+};
+var instance2 = {
+	name: 'instance2'
+};
+instance1.say.call(instance2, 'Hi, ', 'I am '); // Hi, I am instance2
+instance1.say.call(instance2, ['Hi, ', 'I am ']); // Hi, I am instance2
+instance1.say.bind(instance2, 'Hi, ', 'I am ')(); // Hi, I am instance2
+				</code></pre>
+				<h3>箭头函数</h3>
+				箭头函数的 this 指向定义函数时的作用域。
+				<pre><code class="javscript">
+function foo() {
+	this.name = 'foo';
+	setTimeout(() => {
+		console.log(this.name);
+	}, 100);
+}
+
+window.name = 'window';
+
+foo(); // foo
 				</code></pre>
 			</p>
 		</section>
@@ -114,6 +137,7 @@
 			<p>
 				<div>[1] MDN this <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/this">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/this</a></div>
 				<div>[2 ] 王群锋 <a href="https://www.ibm.com/developerworks/cn/web/1207_wangqf_jsthis/index.html">https://www.ibm.com/developerworks/cn/web/1207_wangqf_jsthis/index.html </a></div>
+				<div>[3] MDN bind <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind</a></div>
 			</p>
 		</section>
 	</article>

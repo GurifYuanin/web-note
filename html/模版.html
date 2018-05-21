@@ -47,24 +47,24 @@
 				<h3>文本节点插值</h3>
 				在标签内部，使用双花括号<span class="definition"> {{}} </span>进行插值。
 				<pre><code class="html">
-				&lt;标签&gt;{{数据属性名|计算属性名|方法名(形参)}}&lt;/标签&gt;
+&lt;标签&gt;{{数据属性名|计算属性名|方法名(形参)}}&lt;/标签&gt;
 				</code></pre>
 				<h3>属性插值</h3>
 				对于 html 标签的属性，则需使用<span class="definition"> v-bind: </span>指令来进行绑定（单向绑定，当变量值更新时，视图也跟着更新），使用时<span class="definition"> v-bind: </span>可以省略为<span class="definition"> : </span>。
 				<pre><code class="html">
-				&lt;标签 [v-bind]:属性名="数据属性名|计算属性名|方法名(形参)"&gt;&lt;/标签&gt;
+&lt;标签 [v-bind]:属性名="数据属性名|计算属性名|方法名(形参)"&gt;&lt;/标签&gt;
 				</code></pre>
 				插值支持单条 Javascript 语句，写入简单的表达式后会先执行再渲染。
 				<pre><code class="html">
-					&lt;div id="demo"&gt;{{'number + 1 + 2 = ' + (number + 1 + 2)}}&lt;/div&gt;
-					&lt;script&gt;
-						var vm = new Vue({
-							el: '#demo',
-							data: {
-								number: 1
-							}
-						});
-					&lt;/script&gt;
+&lt;div id="demo"&gt;{{'number + 1 + 2 = ' + (number + 1 + 2)}}&lt;/div&gt;
+&lt;script&gt;
+	var vm = new Vue({
+		el: '#demo',
+		data: {
+			number: 1
+		}
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_template_expression.jpg">
@@ -81,11 +81,11 @@
 				<h3>class</h3>
 				绑定对象时，类名后的布尔值判断是否进行添加该类；绑定数组时，可以同时添加多个类。
 				<pre><code class="html">
-					&lt;标签 v-bind:class="{类名: 布尔值}"&gt;&lt;/标签&gt;
-					&lt;div v-bind:class="{'error': isError}"&gt;&lt;/div&gt;
+&lt;标签 v-bind:class="{类名: 布尔值}"&gt;&lt;/标签&gt;
+&lt;div v-bind:class="{'error': isError}"&gt;&lt;/div&gt;
 
-					&lt;标签 v-bind:class="[类名]"&gt;&lt;/标签&gt;
-					&lt;div v-bind:class="['error']"&gt;&lt;/div&gt;
+&lt;标签 v-bind:class="[类名]"&gt;&lt;/标签&gt;
+&lt;div v-bind:class="['error']"&gt;&lt;/div&gt;
 				</code></pre>
 				<div class="tip">
 					当布尔值为 falsy 时类不会被添加到标签上，即值为 false 、 null、 undefined 、 <= 0 时表示为 falsy 。
@@ -93,11 +93,11 @@
 				<h3>style</h3>
 				绑定样式对象时，样式属性名遵照驼峰式的命名规则，不需要加单引号（直接认为是样式属性名而不是变量）；绑定数组时，数组的元素为样式对象。
 				<pre><code class="html">
-					&lt;标签 v-bind:style="{属性名: 属性值}"&gt;&lt;/标签&gt;
-					&lt;div v-bind:style="{fontSize: '10px'}"&gt;&lt;/div&gt;
+&lt;标签 v-bind:style="{属性名: 属性值}"&gt;&lt;/标签&gt;
+&lt;div v-bind:style="{fontSize: '10px'}"&gt;&lt;/div&gt;
 
-					&lt;标签 v-bind:style="[样式对象]"&gt;&lt;/标签&gt;
-					&lt;div v-bind:style="[font]"&gt;&lt;/div&gt;
+&lt;标签 v-bind:style="[样式对象]"&gt;&lt;/标签&gt;
+&lt;div v-bind:style="[font]"&gt;&lt;/div&gt;
 				</code></pre>
 			</p>
 		</section>
@@ -106,10 +106,10 @@
 			<p>
 				使用<span class="definition"> v-on </span>指令为 html 元素添加绑定事件，使用<span class="definition"> v-on: </span>指令可以省略为<span class="definition"> @ </span>指令。
 				<pre><code class="html">
-					&lt;!-- 传入的 $event 为原生的 event 对象 --&gt;
-					&lt;标签 v-on:|@事件名[.修饰符]="单条表达式|计算属性名|方法名(形参[, $event])"&gt;&lt;/标签&gt;
-					&lt;div v-on:click.stop="greet('hello world', $event)"&gt;&lt;/div&gt;
-					&lt;div @click.ctrl.67="copy($event)"&gt;&lt;/div&gt;
+&lt;!-- 传入的 $event 为原生的 event 对象 --&gt;
+&lt;标签 v-on:|@事件名[.修饰符]="单条表达式|计算属性名|方法名(形参[, $event])"&gt;&lt;/标签&gt;
+&lt;div v-on:click.stop="greet('hello world', $event)"&gt;&lt;/div&gt;
+&lt;div @click.ctrl.67="copy($event)"&gt;&lt;/div&gt;
 				</code></pre>
 				修饰符包括：
 				<ul>
@@ -143,15 +143,15 @@
 				<h3>判断</h3>
 				当指令后的值为 falsy 时，指令所在的标签不会被渲染出来。
 				<pre><code class="html">
-					&lt;!-- 选择性渲染 --&gt;
-					&lt;标签 v-if="布尔值"&gt;&lt;/标签&gt;
-					&lt;标签 v-else&gt;&lt;/标签&gt;
+&lt;!-- 选择性渲染 --&gt;
+&lt;标签 v-if="布尔值"&gt;&lt;/标签&gt;
+&lt;标签 v-else&gt;&lt;/标签&gt;
 
-					&lt;标签 v-if="布尔值"&gt;&lt;/标签&gt;
-					&lt;标签 v-else-if="布尔值"&gt;&lt;/标签&gt;
+&lt;标签 v-if="布尔值"&gt;&lt;/标签&gt;
+&lt;标签 v-else-if="布尔值"&gt;&lt;/标签&gt;
 
-					&lt;!-- 实质上是修改 display 属性 --&gt;
-					&lt;标签 v-show="布尔值"&gt;&lt;/标签&gt;
+&lt;!-- 实质上是修改 display 属性 --&gt;
+&lt;标签 v-show="布尔值"&gt;&lt;/标签&gt;
 				</code></pre>
 				<div class="tip">
 					条件渲染默认会尽量复用前后判断区域的元素，如果想取消这种复用，可以给需要的元素添加 key 属性（eg：key="item.id"）
@@ -159,12 +159,12 @@
 				<h3>循环</h3>
 				循环渲染可以从数组取出元素，item 为数组中元素的别名， index 为元素的下标；也可以从对象中取出属性，value 为对象键值的别名，key 为键名， index 为键值对索引。
 				<pre><code class="html">
-					&lt;标签 v-for="item in|of items"&gt;&lt;/标签&gt;
-					&lt;标签 v-for="(item, index) in|of items"&gt;&lt;/标签&gt;
-					&lt;标签 v-for="value in|of object"&gt;&lt;/标签&gt;
-					&lt;标签 v-for="(value, key, index) in|of object"&gt;&lt;/标签&gt;
-					&lt;!-- 循环渲染 n 次 --&gt;
-					&lt;标签 v-for="index in|of n"&gt;&lt;/标签&gt;
+&lt;标签 v-for="item in|of items"&gt;&lt;/标签&gt;
+&lt;标签 v-for="(item, index) in|of items"&gt;&lt;/标签&gt;
+&lt;标签 v-for="value in|of object"&gt;&lt;/标签&gt;
+&lt;标签 v-for="(value, key, index) in|of object"&gt;&lt;/标签&gt;
+&lt;!-- 循环渲染 n 次 --&gt;
+&lt;标签 v-for="index in|of n"&gt;&lt;/标签&gt;
 				</code></pre>
 				<div class="tip">
 					循环渲染同样会尽量复用元素，如果想取消这种复用，可以给需要的元素绑定 key 属性（eg：v-bind:key="item.id"）
@@ -181,19 +181,19 @@
 					<li>reverse()</li>
 				</ul>
 				<pre><code class="html">
-					&lt;div id="demo"&gt;
-						&lt;ul&gt;
-							&lt;li v-for="(item, index) in items" :key="item.id"&gt;{{item}}&lt;/li&gt;
-						&lt;/ul&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						var vm = new Vue({
-							el: '#demo',
-							data: {
-								items: [1, 2, 3]
-							}
-						});
-					&lt;/script&gt;
+&lt;div id="demo"&gt;
+	&lt;ul&gt;
+		&lt;li v-for="(item, index) in items" :key="item.id"&gt;{{item}}&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	var vm = new Vue({
+		el: '#demo',
+		data: {
+			items: [1, 2, 3]
+		}
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_for.gif">
@@ -201,21 +201,21 @@
 				<h3>限制</h3>
 				<li>当使用<span class="definition"> 数组[index] = 新值 </span>这种方法来修改数组时不会触发视图更新，应该使用<span class="definition"> 实例名.$set(实例名.数组名, index, 新值) </span>（或全局方法 Vue.set()）来触发更新。</li>
 				<pre><code class="javascript">
-					items[0] = 'wahaha'; // => ✖
-					vm.$set(vm.items, 0, 'wahaha'); // => ✔
+items[0] = 'wahaha'; // => ✖
+vm.$set(vm.items, 0, 'wahaha'); // => ✔
 				</code></pre>
 				<figure>
 					<img src="../images/vue_set.gif">
 				</figure>
 				<li>当使用<span class="definition"> 对象名.属性名 = 值 </span>的方法来为对象添加属性时不会触发视图更新，解决方法同理。</li>
 				<pre><code class="javascript">
-					object.attr = 'wahaha'; // => ✖
-					vm.$set(vm.object, attr, 'wahaha'); // => ✔
-					// 同时添加多个属性
-					vm.object = Object.assign({}, vm.object, {
-						attr1: 'wahaha1',
-						attr2: 'wahaha2'
-					});
+object.attr = 'wahaha'; // => ✖
+vm.$set(vm.object, attr, 'wahaha'); // => ✔
+// 同时添加多个属性
+vm.object = Object.assign({}, vm.object, {
+	attr1: 'wahaha1',
+	attr2: 'wahaha2'
+});
 				</code></pre>
 			</p>
 		</section>
@@ -334,66 +334,66 @@
 			<p>
 				使用组件的模版时，template 值将替换掉整个<span class="definition"> &lt;组件名&gt;&lt;/组件名&gt; </span>，包括该标签内的所有内容，插槽则允许在标签内写入内容，插入到 template 挖好的槽（&lt;slot&gt;&lt;/slot&gt;）。
 				<pre><code class="html">
-					&lt;div id="demo"&gt;
-						&lt;my-component&gt;写入要插入的值&lt;/my-component&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						Vue.component('my-component', {
-							template: '&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;'
-						});
-						new Vue({
-							el: '#demo'
-						});
-					&lt;/script&gt;
+&lt;div id="demo"&gt;
+	&lt;my-component&gt;写入要插入的值&lt;/my-component&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	Vue.component('my-component', {
+		template: '&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;'
+	});
+	new Vue({
+		el: '#demo'
+	});
+&lt;/script&gt;
 				</code></pre>
 				<h3>具名插槽</h3>
 				具名插槽可以控制当有多个要插入内容时，插入的位置是哪里。在 template 的<span class="definition"> slot </span>标签添加<span class="definition"> name </span>属性来给插槽赋名，在使用槽时在标签上添加<span class="definition"> slot </span>属性来指定插入哪个槽。（在<span> slot </span>内添加内容，当不使用插槽时使用该默认值）
 				<pre><code class="html">
-					&lt;div id="demo"&gt;
-						&lt;my-component&gt;
-							&lt;template <span class="strong">slot="title"</span>&gt;我是标题&lt;/template&gt;
-							&lt;div <span class="strong">slot="content"</span>&gt;我是内容&lt;/div&gt;
-							&lt;template <span class="strong">slot="footer"</span>&gt;我是页脚&lt;/template&gt;
-						&lt;/my-component&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						Vue.component('my-component', {
-							template: `&lt;div&gt;
-									&lt;h1&gt;
-										&lt;slot <span class="strong">name="title"</span>&gt;默认标题&lt;/slot&gt;
-									&lt;/h1&gt;
-									&lt;slot <span class="strong">name="content"</span>&gt;默认内容&lt;/slot&gt;
-							   		&lt;footer&gt;
-							   			&lt;slot <span class="strong">name="footer"</span>&gt;默认页脚&lt;/slot&gt;
-							   		&lt;/footer&gt;
-							  	 &lt;/div&gt;`
-						});
-						new Vue({
-							el: '#demo'
-						});
-					&lt;/script&gt;
+&lt;div id="demo"&gt;
+	&lt;my-component&gt;
+		&lt;template <span class="strong">slot="title"</span>&gt;我是标题&lt;/template&gt;
+		&lt;div <span class="strong">slot="content"</span>&gt;我是内容&lt;/div&gt;
+		&lt;template <span class="strong">slot="footer"</span>&gt;我是页脚&lt;/template&gt;
+	&lt;/my-component&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	Vue.component('my-component', {
+		template: `&lt;div&gt;
+				&lt;h1&gt;
+					&lt;slot <span class="strong">name="title"</span>&gt;默认标题&lt;/slot&gt;
+				&lt;/h1&gt;
+				&lt;slot <span class="strong">name="content"</span>&gt;默认内容&lt;/slot&gt;
+		   		&lt;footer&gt;
+		   			&lt;slot <span class="strong">name="footer"</span>&gt;默认页脚&lt;/slot&gt;
+		   		&lt;/footer&gt;
+		  	 &lt;/div&gt;`
+	});
+	new Vue({
+		el: '#demo'
+	});
+&lt;/script&gt;
 				</code></pre>
 				<h3>作用域</h3>
 				写在 template 内的内容可以访问组件的选项参数，但无法直接访问 vue 实例的选项参数。插槽内的内容则相反，可以访问 vue 实例的选项参数，但无法访问组件的选项参数。
 				<pre><code class="html">
-					&lt;div id="demo"&gt;
-						&lt;my-greet&gt;{{fromComponent}}&lt;/my-greet&gt;
-						&lt;my-greet&gt;{{fromInstance}}&lt;/my-greet&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						Vue.component('my-greet', {
-							template: '&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;',
-							data: {
-								fromComponent: '我是组件下的数据'
-							}
-						});
-						new Vue({
-							el: '#demo',
-							data: {
-								fromInstance: '我是实例下的数据'
-							}
-						});
-					&lt;/script&gt;
+&lt;div id="demo"&gt;
+	&lt;my-greet&gt;{{fromComponent}}&lt;/my-greet&gt;
+	&lt;my-greet&gt;{{fromInstance}}&lt;/my-greet&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	Vue.component('my-greet', {
+		template: '&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;',
+		data: {
+			fromComponent: '我是组件下的数据'
+		}
+	});
+	new Vue({
+		el: '#demo',
+		data: {
+			fromInstance: '我是实例下的数据'
+		}
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_slot.jpg">

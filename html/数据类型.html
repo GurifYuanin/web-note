@@ -45,24 +45,24 @@
 			<p>
 				JavaScript 采用“IEEE 754 标准定义的双精度64位格式”（"double-precision 64-bit format IEEE 754 values"）表示数字。
 				<pre><code class="javascript">
-					Number.MAX_VALUE // 最大数字 => 1.7976931348623157e+308
-					Number.MIN_VALUE // 最小数字 => 5e-324
-					Number.MAX_SAFE_INTEGER // 最大整数（ES6）=> 9007199254740991
-					Number.MIN_SAFE_INTEGER // 最小整数（ES6）=> -9007199254740991
+Number.MAX_VALUE // 最大数字 => 1.7976931348623157e+308
+Number.MIN_VALUE // 最小数字 => 5e-324
+Number.MAX_SAFE_INTEGER // 最大整数（ES6）=> 9007199254740991
+Number.MIN_SAFE_INTEGER // 最小整数（ES6）=> -9007199254740991
 				</code></pre>
 				当计算的结果上溢出时为 Infinity ，下溢出时为 -Infinity。
 				<pre><code class="javascript">
-					Number.POSITIVE_INFINITY // Infinity
-					Number.NEGATIVE_INFINITY // -Infinity
+Number.POSITIVE_INFINITY // Infinity
+Number.NEGATIVE_INFINITY // -Infinity
 				</code></pre>
 				当计算结果不是数字时为 NaN（Not a number）
 				<pre><code class="javascript">
-					// 以下全是 NaN
-					NaN
-					Number.NaN
-					0/0
-					Infinity/Infinity
-					-Infinity/Infinity
+// 以下全是 NaN
+NaN
+Number.NaN
+0/0
+Infinity/Infinity
+-Infinity/Infinity
 				</code></pre>
 				<h3>字符串转数字</h3>
 				字符串转数字有以下方法：
@@ -73,10 +73,10 @@
 					<li> - ""：直接转化为数字</li>
 				</ul>
 				<pre><code class="javascript">
-					parseInt('123a'); // => 123
-					parseFloat('123.4a'); // => 123.4
-					Number('123.4'); // => 123.4
-					'123.4' - ""; // => 123.4
+parseInt('123a'); // => 123
+parseFloat('123.4a'); // => 123.4
+Number('123.4'); // => 123.4
+'123.4' - ""; // => 123.4
 				</code></pre>
 				<h3>特殊</h3>
 				<ul>
@@ -84,19 +84,19 @@
 					<li>0 等于 -0</li>
 				</ul>
 				<pre><code class="javascript">
-					var number = NaN;
-					// 判断 number 是不是 NaN
-					if (number != number) {
-						// number 是 NaN
-					} else {
-						// number 不是 NaN
-					}
-					// ES6 新增
-					if (Number.isNaN(number)) {
-						// number 是 NaN
-					} else {
-						// number 不是 NaN
-					}
+var number = NaN;
+// 判断 number 是不是 NaN
+if (number != number) {
+	// number 是 NaN
+} else {
+	// number 不是 NaN
+}
+// ES6 新增
+if (Number.isNaN(number)) {
+	// number 是 NaN
+} else {
+	// number 不是 NaN
+}
 				</code></pre>
 			</p>
 		</section>
@@ -108,12 +108,12 @@
 					<li>true：其他</li>
 				</ul>
 				<pre><code class="javascript">
-					// 以下全为 false
-					0 == true
-					"" == true
-					NaN == true
-					null == true
-					undefined == true
+// 以下全为 false
+0 == true
+"" == true
+NaN == true
+null == true
+undefined == true
 				</code></pre>
 			</p>
 		</section>
@@ -122,7 +122,7 @@
 			<p>
 				使用 typeof 进行类型检测，返回一个字符串
 				<pre><code class="javascript">
-					typeof 数据
+typeof 数据
 				</code></pre>
 				<ul>
 					<li>Number：number</li>
@@ -134,12 +134,12 @@
 					<li>函数：function</li>
 				</ul>
 				<pre><code class="javascript">
-					typeof 1 // => number
-					typeof true // => boolean
-					typeof '' // => string
-					typeof null // => object
-					typeof undefined // => undefined
-					typeof function(){} // => function
+typeof 1 // => number
+typeof true // => boolean
+typeof '' // => string
+typeof null // => object
+typeof undefined // => undefined
+typeof function(){} // => function
 				</code></pre>
 			</p>
 		</section>
@@ -148,16 +148,16 @@
 			<p>
 				由上可知，当判断一个对象时，总是返回 object ，因此无法使用 typeof 来判断数组等，而应用 instanceof 运算符
 				<pre><code class="javascript">
-					实例对象 instanceof 构造函数
+实例对象 instanceof 构造函数
 				</code></pre>
 				<pre><code class="javascript">
-					[] instanceof Array // => true
+[] instanceof Array // => true
 
-					function Person () {
-						this.name = 'ergouzi';
-					}
-					var ergouzi = new Person();
-					ergouzi instanceof Person; // => true
+function Person () {
+	this.name = 'ergouzi';
+}
+var ergouzi = new Person();
+ergouzi instanceof Person; // => true
 				</code></pre>
 			</p>
 		</section>

@@ -39,7 +39,7 @@
 					<p>
 						实现方法：设置块级元素左右外边距为auto。
 						<pre><code class="html">
-	&lt;div style="margin-left: auto; margin-right: auto;"&gt;margin:auto&lt;/div&gt;
+&lt;div style="margin-left: auto; margin-right: auto;"&gt;margin:auto&lt;/div&gt;
 						</code></pre>
 						<div class="tip">
 							<ul>
@@ -54,9 +54,9 @@
 					<p>
 						实现方法：添加一个父级元素并设置文字居中对齐，设置子元素为inline-block
 						<pre><code class="html">
-	&lt;div style="text-align: center"&gt;
-		&lt;div style="display: inline-block;"&gt;inline-block&lt;/div&gt;
-	&lt;/div&gt;
+&lt;div style="text-align: center"&gt;
+	&lt;div style="display: inline-block;"&gt;inline-block&lt;/div&gt;
+&lt;/div&gt;
 						</code></pre>
 						<div class="tip">
 							<ul>
@@ -70,9 +70,9 @@
 					<p>
 						实现方法：添加一个父级元素并设置相对对位，左浮动，左偏移为50%，设置子元素相对定位，左浮动，右偏移为50%
 						<pre><code class="html">
-	&lt;div style="position: relative; float: left; left: 50%;"&gt;
-		&lt;div style="position: relative; float: left; right: 50%;"&gt;float&lt;/div&gt;
-	&lt;/div&gt;
+&lt;div style="position: relative; float: left; left: 50%;"&gt;
+	&lt;div style="position: relative; float: left; right: 50%;"&gt;float&lt;/div&gt;
+&lt;/div&gt;
 						</code></pre>
 						<div class="tip">
 							<ul>
@@ -91,10 +91,10 @@
 							<li>不知道块级元素宽度的情况下，设置 CSS3 新增的 transform为translateX(-50%) </li>
 						</ul>
 						<pre><code class="html">
-	&lt;div style="position: relative;"&gt;
-		&lt;div style="position: absolute; left: 50%; margin-left: -50px;"&gt;absoulte&lt;/div&gt;
-		&lt;div style="position: absolute; left: 50%; transform: translateX(-50%);"&gt;css3&lt;/div&gt;
-	&lt;/div&gt;
+&lt;div style="position: relative;"&gt;
+	&lt;div style="position: absolute; left: 50%; margin-left: -50px;"&gt;absoulte&lt;/div&gt;
+	&lt;div style="position: absolute; left: 50%; transform: translateX(-50%);"&gt;css3&lt;/div&gt;
+&lt;/div&gt;
 						</code></pre>
 					</p>
 				</div>
@@ -103,9 +103,9 @@
 					<p>
 						实现方法：添加父级元素并设置为 flex ，再设置 justify-content 为 center。
 						<pre><code class="html">
-	&lt;div style="display: flex; justify-content: center;"&gt;
-		&lt;div&gt;flex&lt;/div&gt;
-	&lt;/div&gt;
+&lt;div style="display: flex; justify-content: center;"&gt;
+	&lt;div&gt;flex&lt;/div&gt;
+&lt;/div&gt;
 						</code></pre>
 					</p>
 				</div>
@@ -118,22 +118,22 @@
 							<li>对于 IE8+ 和其他主流浏览器，将块级元素包裹在表格内，再为 table 设置 algin 为 center</li>
 						</ul>
 						<pre><code class="html">
-		&lt;!-- IE6、IE7 --&gt;
-		&lt;table&gt;
-			&lt;tr&gt;
-				&lt;td style="text-align: center;"&gt;
-					&lt;div&gt;table&lt;/div&gt;
-				&lt;/td&gt;
-			&lt;/tr&gt;
-		&lt;/table&gt;
-		&lt;!-- IE8+ --&gt;
-		&lt;table align="center"&gt;
-			&lt;tr&gt;
-				&lt;td&gt;
-					&lt;div&gt;table&lt;/div&gt;
-				&lt;/td&gt;
-			&lt;/tr&gt;
-		&lt;/table&gt;
+&lt;!-- IE6、IE7 --&gt;
+&lt;table&gt;
+	&lt;tr&gt;
+		&lt;td style="text-align: center;"&gt;
+			&lt;div&gt;table&lt;/div&gt;
+		&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/table&gt;
+&lt;!-- IE8+ --&gt;
+&lt;table align="center"&gt;
+	&lt;tr&gt;
+		&lt;td&gt;
+			&lt;div&gt;table&lt;/div&gt;
+		&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/table&gt;
 						</code></pre>
 					</p>
 				</div>
@@ -152,11 +152,11 @@
 							<li>不知道块级元素高度的情况下，设置上偏移 50%，再设置 CSS3 新增的 transform 为 translateY(-50%)</li>
 						</ul>
 						<pre><code class="html">
-	&lt;div style="height: 100%; position: relative;"&gt;
-		&lt;div style="position: absolute; height: 50px; top: 50%; margin-top: -25px;"&gt;absoulte&lt;/div&gt;
-		&lt;div style="position: absolute; height: 50px; top: 0; bottom: 0; margin-top: auto; margin-bottom: auto"&gt;ltrb&lt;/div&gt;
-		&lt;div style="position: absolute; top: 50%; transform: translateY(-50%);"&gt;css3&lt;/div&gt;
-	&lt;/div&gt;
+&lt;div style="height: 100%; position: relative;"&gt;
+	&lt;div style="position: absolute; height: 50px; top: 50%; margin-top: -25px;"&gt;absoulte&lt;/div&gt;
+	&lt;div style="position: absolute; height: 50px; top: 0; bottom: 0; margin-top: auto; margin-bottom: auto"&gt;ltrb&lt;/div&gt;
+	&lt;div style="position: absolute; top: 50%; transform: translateY(-50%);"&gt;css3&lt;/div&gt;
+&lt;/div&gt;
 						</code></pre>
 					</p>
 				</div>
@@ -165,9 +165,9 @@
 					<p>
 						实现方法：添加父级元素并设置为 flex ，再设置 align-items 为 center。
 						<pre><code class="html">
-	&lt;div style="height: 100%; display: flex; align-items: center;"&gt;
-		&lt;div &gt;flex&lt;/div&gt;
-	&lt;/div&gt;
+&lt;div style="height: 100%; display: flex; align-items: center;"&gt;
+	&lt;div &gt;flex&lt;/div&gt;
+&lt;/div&gt;
 						</code></pre>
 					</p>
 				</div>
@@ -175,9 +175,9 @@
 					<h3>line-height</h3>
 					实现方法：为元素添加与块级元素高度（假设为 100 px）相同的 line-height。
 					<pre><code class="html">
-	&lt;div style="height: 100px; line-height: 100px;"&gt;
-		line-height
-	&lt;/div&gt;
+&lt;div style="height: 100px; line-height: 100px;"&gt;
+	line-height
+&lt;/div&gt;
 					</code></pre>
 					<div class="tip">
 						line-height 只适用于使单行文本垂直居中。

@@ -49,11 +49,11 @@
 			<p>
 				apache 的配置文件<span class="definition"> http.conf </span>默认关闭使用 .htaccess
 				<pre><code class="apache">
-					AllowOverride None
+AllowOverride None
 				</code></pre>
 				如果要开启，需要修改为：
 				<pre><code class="apache">
-					AllowOverride All
+AllowOverride All
 				</code></pre>
 			</p>
 		</section>
@@ -64,24 +64,24 @@
 				<p>
 					使用 URL 重写之前，需要配置 apache 服务器，修改配置文件<span class="definition"> http.conf </span>
 					<pre><code class="apache">
-				#LoadModule rewrite_module modules/mod_rewrite.so
+#LoadModule rewrite_module modules/mod_rewrite.so
 					</code></pre>
 					改为
 					<pre><code class="apache">
-				LoadModule rewrite_module modules/mod_rewrite.so
+LoadModule rewrite_module modules/mod_rewrite.so
 					</code></pre>
 					即将注释删除，开启重写模块，然后在<span class="definition"> .htaccess </span>文件写入
 					<pre><code class="apache">
-				# 判断是否开启重写模块
-				&lt;IfModule mod_rewrite.c&gt;
-				  Options +FollowSymlinks -Multiviews
-				  # 开启重写功能（开关）
-				  RewriteEngine On
-				  # 设置重写范围（过滤）
-				  RewriteCond 测试字符串 正则表达式1 [标识符] 属性测试
-				  # 设置重写规则（重写）
-				  RewriteRule 正则表达式2 新URL [标识符]
-				&lt;/IfModule&gt;
+# 判断是否开启重写模块
+&lt;IfModule mod_rewrite.c&gt;
+  Options +FollowSymlinks -Multiviews
+  # 开启重写功能（开关）
+  RewriteEngine On
+  # 设置重写范围（过滤）
+  RewriteCond 测试字符串 正则表达式1 [标识符] 属性测试
+  # 设置重写规则（重写）
+  RewriteRule 正则表达式2 新URL [标识符]
+&lt;/IfModule&gt;
 					</code></pre>
 					其过程为：
 					<ol>
@@ -101,16 +101,16 @@
 					</ul>
 					例如有一个网站<span class="definition"> www.mysite.cn/index.html </span> ，其内容为：
 					<pre><code class="html">
-			&lt;!DOCTYPE html&gt;
-			&lt;html lang="en"&gt;
-			&lt;head&gt;
-				&lt;meta charset="UTF-8"&gt;
-				&lt;title&gt;demo&lt;/title&gt;
-			&lt;/head&gt;
-			&lt;body&gt;
-				&lt;img src="http://www.othersite.cn/images/pic.jpg"&gt;
-			&lt;/body&gt;
-			&lt;/html&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+	&lt;meta charset="UTF-8"&gt;
+	&lt;title&gt;demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;img src="http://www.othersite.cn/images/pic.jpg"&gt;
+&lt;/body&gt;
+&lt;/html&gt;
 					</code></pre>
 					该网页向另一个网站<span class="definition"> www.othersite.cn </span>请求一个<span class="definition"> pic.jpg </span>的图片，那么此时的<span class="definition"> %{REQUEST_FILENAME} </span>就为<span class="definition"> /images/pic </span>，<span class="definition"> HTTP_REFERER </span>为<span class="definition"> www.mysite.cn </span>。<br>
 					<b>属性测试（可以通过 "!" 来进行取反操作）：</b>
@@ -134,42 +134,42 @@
 				<h3>文档重定向</h3>
 				<p>
 					<pre><code class="apache">
-			# 将 "源路径/目标文档" 定向到 "目标路径/目标文档""
-			Redirect 源路径/目标文档 目标路径/目标文档
-			# 将 "源路径" 下的所有文档定向到 "目标路径"
-			Redirect 源路径 目标路径
+# 将 "源路径/目标文档" 定向到 "目标路径/目标文档""
+Redirect 源路径/目标文档 目标路径/目标文档
+# 将 "源路径" 下的所有文档定向到 "目标路径"
+Redirect 源路径 目标路径
 					</code></pre>
 				</p>
 				<h3>定义错误页面</h3>
 				<p>
 					<pre><code class="apache">
-			# 出现错误后跳转到对应 URL
-			ErrorDocument 状态码 URL
-			# 出现错误后页面显示对应字符串
-			ErrorDocument 状态码 "字符串"
+# 出现错误后跳转到对应 URL
+ErrorDocument 状态码 URL
+# 出现错误后页面显示对应字符串
+ErrorDocument 状态码 "字符串"
 					</code></pre>
 				</p>
 				<h3>用户过滤</h3>
 				<p>
 					对向服务器请求的用户进行过滤
 					<pre><code class="apache">
-			order allow,deny
-			# 设置允许请求的 IP 地址
-			allow from IP地址
-			# 允许所有请求
-			allow from all
-			# 设置拒绝请求的 IP 地址
-			deny form IP 地址
-			# 拒绝所有请求
-			deny from all
+order allow,deny
+# 设置允许请求的 IP 地址
+allow from IP地址
+# 允许所有请求
+allow from all
+# 设置拒绝请求的 IP 地址
+deny form IP 地址
+# 拒绝所有请求
+deny from all
 					</code></pre>
 				</p>
 				<h3>缺省页面</h3>
 				<p>
 					设置当前目录的缺省页面
 					<pre><code class="apache">
-			# 优先级从左到右
-			DirectoryIndex 文件1 文件2 ...
+# 优先级从左到右
+DirectoryIndex 文件1 文件2 ...
 					</code></pre>
 				</p>
 			</p>

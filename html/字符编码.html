@@ -120,13 +120,13 @@
 							</ul>
 							Unicode 转 UTF-8 的方法是在 Unicode 表里找到对应字符的 0/1 编码，填充到上面的 x 里面，多余的 x 用 0 进行补全。例如中文的<span class="definition"> 中 </span>在 Unicode 中是<span class="definition"> 4e2d / 100111000101101</span>，共有 15 bit，也就是至少占用三字节。Unicode 转化为 UTF-8：
 							<pre><code class="java">
-				100111000101101 => 100 111000 101101		（Unicode）
-								+
-						1110xxxx 10xxxxxx 10xxxxxx
-							       ||
-						1110x100 10111000 10101101
-							       ||
-						11100100 10111000 10101101	（UTF-8）
+100111000101101 => 100 111000 101101		（Unicode）
+				+
+		1110xxxx 10xxxxxx 10xxxxxx
+			       ||
+		1110x100 10111000 10101101
+			       ||
+		11100100 10111000 10101101	（UTF-8）
 							</code></pre>
 						</p>
 						<p>
@@ -139,8 +139,8 @@
 							</ul>
 							值得注意的是，UTF-16 存在 大尾序和小尾序的概念。UTF-16 的大尾序和小尾序存储形式都在使用。两个字节的 UTF-16 字符用大尾序方式先读高位再度低位，小尾序先读低位再读高为。例如读取 D0A8801C
 							<pre><code class="java">
-				D0 A8 80 1C // 大尾序
-				A8 D0 1C 80 // 小尾序
+D0 A8 80 1C // 大尾序
+A8 D0 1C 80 // 小尾序
 							</code></pre>
 							 一般来说，以 Macintosh 制作或存储的文字使用大尾序格式，以 Microsoft 或 Linux 制作或存储的文字使用小尾序格式<sup>[10]</sup>。
 						</p>

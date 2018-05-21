@@ -28,7 +28,7 @@
 		<section>
 			<h2>定义</h2>
 			<p>
-				组件实质上是带有预设选项的 Vue 实例。按照之前的流程，我们通常会在 javascript 中创建 Vue 实例并传入选项参数，而使用组件，可以直接创建已经预设好的参数的 Vue 实例。
+				组件是带有预设选项可复用的 Vue 实例，在模版中使用自定义标签名为组件名时，相当于自动<span class="definition"> new Component('组件名') </span>并挂载到元素上。
 			</p>
 		</section>
 		<section>
@@ -37,16 +37,16 @@
 				<h3>全局注册</h3>
 				注册后可以在任何<span class="definition"> new Vue() </span>中使用。
 				<pre><code class="html">
-					&lt;!-- 使用组件 --&gt;
-					&lt;组件名 id="demo"&gt;&lt;/组件名&gt;
-					&lt;script&gt;
-						// 注册组件
-						Vue.component('组件名', { 选项参数 });
-						// 创建实例
-						new Vue({
-							el: '#demo'
-						});
-					&lt;/script&gt;
+&lt;!-- 使用组件 --&gt;
+&lt;组件名 id="demo"&gt;&lt;/组件名&gt;
+&lt;script&gt;
+	// 注册组件
+	Vue.component('组件名', { 选项参数 });
+	// 创建实例
+	new Vue({
+		el: '#demo'
+	});
+&lt;/script&gt;
 				</code></pre>
 				<div class="tip">
 					顺序应该是先 Vue.component ，再 new Vue()，否则会找不到组件而报错。
@@ -54,17 +54,21 @@
 				<h3>局部注册</h3>
 				局部注册后只能在该<span class="definition"> new Vue() </span>的实例中使用。
 				<pre><code class="html">
-					&lt;标签 id="demo"&gt;
-						&lt;组件名&gt;&lt;/组件名&gt;
-					&lt;/标签&gt;
-					&lt;script&gt;
-						new Vue({
-							el: '#demo',
-							component: {
-								'组件名': { 选项参数 }
-							}
-						});
-					&lt;/script&gt;
+&lt;标签 id="demo"&gt;
+	&lt;组件名&gt;&lt;/组件名&gt;
+&lt;/标签&gt;
+&lt;script&gt;
+	new Vue({
+		el: '#demo',
+		component: {
+			'组件名': { 选项参数 }
+		}
+	});
+&lt;/script&gt;
+				</code></pre>
+				<h3>获取组件</h3>
+				<pre><code class="javascript">
+var component = Vue.component('组件名'); // 获得组件构造器（函数）
 				</code></pre>
 			</p>
 		</section>
@@ -90,12 +94,12 @@
 			<p>
 				数据属性，必须是个函数，使用组件的调用该函数获得数据属性的对象，以保证每个组件相互独立。
 				<pre><code class="javascript">
-					Vue.component('demo', {
-						data: function() { // ✔
-							return { ... };
-						},
-						data: { ... } // ✖
-					});
+Vue.component('demo', {
+	data: function() { // ✔
+		return { ... };
+	},
+	data: { ... } // ✖
+});
 				</code></pre>
 				<figure>
 					<img src="../images/vue_component_data_error.jpg">
@@ -114,17 +118,17 @@
 			<p>
 				template 里的内容才是组件的本体，使用组件时，该标签将被 template 值替换。
 				<pre><code class="html">
-					&lt;div id="demo"&gt;
-						&lt;my-message&gt;啊啊啊我不甘心&lt;/my-message&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						Vue.component('my-message', {
-							template: '&lt;div&gt;娃哈哈你又要被我替换掉了&lt;/div&gt;'
-						});
-						new Vue({
-							el: '#demo'
-						});
-					&lt;/script&gt;
+&lt;div id="demo"&gt;
+	&lt;my-message&gt;啊啊啊我不甘心&lt;/my-message&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	Vue.component('my-message', {
+		template: '&lt;div&gt;娃哈哈你又要被我替换掉了&lt;/div&gt;'
+	});
+	new Vue({
+		el: '#demo'
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_component_template.jpg">
@@ -137,81 +141,81 @@
 				<h3>读取</h3>
 				组件内部作用域是独立的，无法直接访问<span class="definition"> new Vue() </span>的选项对象的参数。
 				<pre><code class="html">
-					&lt;div id="demo2"&gt;
-						&lt;my-demo&gt;&lt;/my-demo&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						Vue.component('my-demo', {
-							template: '&lt;div&gt;{{greet}}&lt;/div&gt;'
-						});
-						new Vue({
-							el: '#demo2',
-							data: {
-								greet: 'hello world'
-							}
-						});
-					&lt;/script&gt;
+&lt;div id="demo2"&gt;
+	&lt;my-demo&gt;&lt;/my-demo&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	Vue.component('my-demo', {
+		template: '&lt;div&gt;{{greet}}&lt;/div&gt;'
+	});
+	new Vue({
+		el: '#demo2',
+		data: {
+			greet: 'hello world'
+		}
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_component_props_error.jpg">
 				</figure>
 				此时就需要借助<span class="definition"> props </span>属性，在组件声明该选项，然后在使用组件时为其添加对应属性。
 				<pre><code class="html">
-					&lt;div id="demo2"&gt;
-						&lt;!-- 绑定到 vue 实例的数据属性 --&gt;
-						&lt;my-demo <span class="strong">v-bind:greet="greet"</span>&gt;&lt;/my-demo&gt;
-						&lt;!-- 直接赋值字符串 --&gt;
-						&lt;my-demo <span class="strong">greet="world hello"</span>&gt;&lt;/my-demo&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						Vue.component('my-demo', {
-							<span class="strong">props: ['greet'],</span>
-							template: '&lt;div&gt;{{greet}}&lt;/div&gt;'
-						});
-						new Vue({
-							el: '#demo2',
-							data: {
-								greet: 'hello world'
-							}
-						});
-					&lt;/script&gt;
+&lt;div id="demo2"&gt;
+	&lt;!-- 绑定到 vue 实例的数据属性 --&gt;
+	&lt;my-demo <span class="strong">v-bind:greet="greet"</span>&gt;&lt;/my-demo&gt;
+	&lt;!-- 直接赋值字符串 --&gt;
+	&lt;my-demo <span class="strong">greet="world hello"</span>&gt;&lt;/my-demo&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	Vue.component('my-demo', {
+		<span class="strong">props: ['greet'],</span>
+		template: '&lt;div&gt;{{greet}}&lt;/div&gt;'
+	});
+	new Vue({
+		el: '#demo2',
+		data: {
+			greet: 'hello world'
+		}
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_component_props.jpg">
 				</figure>
 				<div class="tip">详细的 props 属性应该是一个对象，对象的属性值一个用于描述该属性的对象</div>
 				<pre><code class="javascript">
-					Vue.component('my-demo', {
-						props: {
-							greet: {
-								type: String, // 类型
-								require: true, // 是否必须
-								validator: function(value) { // 验证器
-									return ...
-								}
-							}
-						}
-					});
+Vue.component('my-demo', {
+	props: {
+		greet: {
+			type: String, // 类型
+			require: true, // 是否必须
+			validator: function(value) { // 验证器
+				return ...
+			}
+		}
+	}
+});
 				</code></pre>
 				<h3>修改</h3>
 				在组件的模版中，可以通过<span class="definition"> props </span>来读取实例（new Vue()）的参数，但如果想在组件中直接修改这些参数，则会提示错误。此时修改的参数已经是组件间相互独立的，而不是来自于同一个实例的公共的数据属性。
 				<pre><code class="html">
-					&lt;div id="demo"&gt;
-						&lt;my-button v-bind:time="time"&gt;&lt;/my-button&gt;
-						&lt;my-button v-bind:time="time"&gt;&lt;/my-button&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						Vue.component('my-button', {
-							template: '&lt;input type="button" v-model="time" v-on:click="time++"/&gt;',
-							props: ['time']
-						});
-						new Vue({
-							el: '#demo',
-							data: {
-								time: 0
-							}
-						});
-					&lt;/script&gt;
+&lt;div id="demo"&gt;
+	&lt;my-button v-bind:time="time"&gt;&lt;/my-button&gt;
+	&lt;my-button v-bind:time="time"&gt;&lt;/my-button&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	Vue.component('my-button', {
+		template: '&lt;input type="button" v-model="time" v-on:click="time++"/&gt;',
+		props: ['time']
+	});
+	new Vue({
+		el: '#demo',
+		data: {
+			time: 0
+		}
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_component_props_error.gif">
@@ -219,22 +223,22 @@
 				</figure>
 				正确的做法应该是在使用组件时添加自定义事件，然后让组件的模版使用<span class="definition"> $emit('事件名') </span>触发这个自定义事件。
 				<pre><code class="html">
-					&lt;div id="demo"&gt;
-						&lt;my-button v-bind:time="time" <span class="strong">v-on:inc="time++"</span>&gt;&lt;/my-button&gt;
-						&lt;my-button v-bind:time="time" <span class="strong">v-on:inc="time++"</span>&gt;&lt;/my-button&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						Vue.component('my-button', {
-							template: '&lt;input type="button" v-model="time" <span class="strong">v-on:click="$emit(\'inc\')"</span>/&gt;',
-							props: ['time']
-						});
-						new Vue({
-							el: '#demo',
-							data: {
-								time: 0
-							}
-						});
-					&lt;/script&gt;
+&lt;div id="demo"&gt;
+	&lt;my-button v-bind:time="time" <span class="strong">v-on:inc="time++"</span>&gt;&lt;/my-button&gt;
+	&lt;my-button v-bind:time="time" <span class="strong">v-on:inc="time++"</span>&gt;&lt;/my-button&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	Vue.component('my-button', {
+		template: '&lt;input type="button" v-model="time" <span class="strong">v-on:click="$emit(\'inc\')"</span>/&gt;',
+		props: ['time']
+	});
+	new Vue({
+		el: '#demo',
+		data: {
+			time: 0
+		}
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_component_props_normal.gif">
@@ -248,39 +252,39 @@
 				有时我们想在组件上使用 v-model 。
 				<li>方法一，直接在组件标签上写<span class="definition"> v-model="" </span></li>
 				<pre><code class="html">
-					&lt;div id="demo"&gt;
-						&lt;my-input v-model="content"&gt;&lt;/my-input&gt;
-						&lt;div&gt;{{content}}&lt;/div&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						Vue.component('my-input', {
-							template: '&lt;input type="text"&gt;'
-						});
-						var vm = new Vue({
-							el: '#demo',
-							data: {
-								content: '我是默认信息'
-							}
-						});
-					&lt;/script&gt;
+&lt;div id="demo"&gt;
+	&lt;my-input v-model="content"&gt;&lt;/my-input&gt;
+	&lt;div&gt;{{content}}&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	Vue.component('my-input', {
+		template: '&lt;input type="text"&gt;'
+	});
+	var vm = new Vue({
+		el: '#demo',
+		data: {
+			content: '我是默认信息'
+		}
+	});
+&lt;/script&gt;
 				</code></pre>
 				实际上编译成为了：
 				<pre><code class="html">
-					&lt;div id="demo"&gt;
-						&lt;my-input <span class="strong">v-bind:value="content" v-on:input="content = $event"</span>&gt;&lt;/my-input&gt;
-						&lt;div&gt;{{content}}&lt;/div&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						Vue.component('my-input', {
-							template: '&lt;input type="text"&gt;'
-						});
-						var vm = new Vue({
-							el: '#demo',
-							data: {
-								content: '我是默认信息'
-							}
-						});
-					&lt;/script&gt;
+&lt;div id="demo"&gt;
+	&lt;my-input <span class="strong">v-bind:value="content" v-on:input="content = $event"</span>&gt;&lt;/my-input&gt;
+	&lt;div&gt;{{content}}&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	Vue.component('my-input', {
+		template: '&lt;input type="text"&gt;'
+	});
+	var vm = new Vue({
+		el: '#demo',
+		data: {
+			content: '我是默认信息'
+		}
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_component_v_model_1.gif">
@@ -288,22 +292,22 @@
 				</figure>
 				<li>方法二，通过 props 传入数据后，在组件的 template 内写 v-model 进行绑定</li>
 				<pre><code class="html">
-					&lt;div id="demo"&gt;
-						&lt;my-input v-bind:content="content"&gt;&lt;/my-input&gt;
-						&lt;div&gt;{{content}}&lt;/div&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						Vue.component('my-input', {
-							props: ['content'],
-							template: '&lt;input type="text" v-model="content"&gt;'
-						});
-						var vm = new Vue({
-							el: '#demo',
-							data: {
-								content: '我是默认信息'
-							}
-						});
-					&lt;/script&gt;
+&lt;div id="demo"&gt;
+	&lt;my-input v-bind:content="content"&gt;&lt;/my-input&gt;
+	&lt;div&gt;{{content}}&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	Vue.component('my-input', {
+		props: ['content'],
+		template: '&lt;input type="text" v-model="content"&gt;'
+	});
+	var vm = new Vue({
+		el: '#demo',
+		data: {
+			content: '我是默认信息'
+		}
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_component_v_model_2.gif">
@@ -311,22 +315,22 @@
 				</figure>
 				<li>解决方法，还是按照方法一的写法，但在写组件的 template 时候需要一些修改</li>
 				<pre><code class="html">
-					&lt;div id="demo"&gt;
-						&lt;my-input v-model="content"&gt;&lt;/my-input&gt;
-						&lt;div&gt;{{content}}&lt;/div&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						Vue.component('my-input', {
-							<span class="strong">props: ['value'],</span>
-							template: '&lt;input type="text" <span class="strong">v-bind:value="value" v-on:input="$emit(\'input\', $event.target.value)"</span>&gt;'
-						});
-						var vm = new Vue({
-							el: '#demo',
-							data: {
-								content: '我是默认信息'
-							}
-						});
-					&lt;/script&gt;
+&lt;div id="demo"&gt;
+	&lt;my-input v-model="content"&gt;&lt;/my-input&gt;
+	&lt;div&gt;{{content}}&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	Vue.component('my-input', {
+		<span class="strong">props: ['value'],</span>
+		template: '&lt;input type="text" <span class="strong">v-bind:value="value" v-on:input="$emit(\'input\', $event.target.value)"</span>&gt;'
+	});
+	var vm = new Vue({
+		el: '#demo',
+		data: {
+			content: '我是默认信息'
+		}
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_component_v_model_3.gif">
@@ -338,35 +342,35 @@
 			<p>
 				provide 提供给所有后代组件可以访问的数据和方法，子组件使用 inject 来接收。
 				<pre><code class="html">
-					&lt;div id="demo"&gt;
-						&lt;my-out&gt;&lt;/my-out&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						// 子组件的子组件
-						Vue.component('my-in', {
-							<span class="strong">inject: ['message'],</span>
-							template: '&lt;div&gt;I am inner {{message}}&lt;/div&gt;'
-						});
-						// 子组件
-						Vue.component('my-out', {
-							<span class="strong">inject: ['message'],</span>
-							template: `&lt;div&gt;
-							&lt;my-in&gt;&lt;/my-in&gt;
-							&lt;div&gt;I am outer {{message}}&lt;/div&gt;
-							&lt;/div&gt;`
-						});
-						new Vue({
-							el: '#demo',
-							data: {
-								message: 'hello world'
-							},
-							<span class="strong">provide</span>: function() {
-								return {
-									message: this.message
-								}
-							}
-						});
-					&lt;/script&gt;
+&lt;div id="demo"&gt;
+	&lt;my-out&gt;&lt;/my-out&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	// 子组件的子组件
+	Vue.component('my-in', {
+		<span class="strong">inject: ['message'],</span>
+		template: '&lt;div&gt;I am inner {{message}}&lt;/div&gt;'
+	});
+	// 子组件
+	Vue.component('my-out', {
+		<span class="strong">inject: ['message'],</span>
+		template: `&lt;div&gt;
+		&lt;my-in&gt;&lt;/my-in&gt;
+		&lt;div&gt;I am outer {{message}}&lt;/div&gt;
+		&lt;/div&gt;`
+	});
+	new Vue({
+		el: '#demo',
+		data: {
+			message: 'hello world'
+		},
+		<span class="strong">provide</span>: function() {
+			return {
+				message: this.message
+			}
+		}
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_component_provide.jpg">
@@ -378,23 +382,23 @@
 			<p>
 				通过 ref 属性给组件起个别名，然后让 vue 实例使用<span class="definition"> $refs.别名 </span>来读取到组件对象。
 				<pre><code class="html">
-					&lt;div id="demo"&gt;
-						&lt;my-compoent <span class="strong">ref="componentId"</span>&gt;&lt;/my-compoent&gt;
-					&lt;/div&gt;
-					&lt;script&gt;
-						Vue.component('my-compoent', {
-							template: '&lt;div&gt;{{greeet}}&lt;/div&gt;',
-							data: function() {
-								return {
-									greet: 'hello world'
-								}
-							}
-						});
-						var vm = new Vue({
-							el: '#demo'
-						});
-						console.log(<span class="strong">vm.$refs.componentId.greet</span>); // =&gt; hello world
-					&lt;/script&gt;
+&lt;div id="demo"&gt;
+	&lt;my-compoent <span class="strong">ref="componentId"</span>&gt;&lt;/my-compoent&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	Vue.component('my-compoent', {
+		template: '&lt;div&gt;{{greeet}}&lt;/div&gt;',
+		data: function() {
+			return {
+				greet: 'hello world'
+			}
+		}
+	});
+	var vm = new Vue({
+		el: '#demo'
+	});
+	console.log(<span class="strong">vm.$refs.componentId.greet</span>); // =&gt; hello world
+&lt;/script&gt;
 				</code></pre>
 			</p>
 		</section>
@@ -403,33 +407,33 @@
 			<p>
 				按照之前的做法，我们可以用组件名来使用组件。
 				<pre><code class="html">
-					&lt;组件名&gt;&lt;/组件名&gt;
+&lt;组件名&gt;&lt;/组件名&gt;
 				</code></pre>
 				同样也可以在任意标签上（HTML 标签、组件标签、 component）使用<span class="definition"> is </span>属性来使用组件，其效果是相同的。此时可以通过修改<span class="definition"> is </span>属性来动态切换组件。
 				<pre><code class="html">
-					&lt;标签 is="组件名"&gt;&lt;/标签&gt;
+&lt;标签 is="组件名"&gt;&lt;/标签&gt;
 				</code></pre>
 				<h3>keep-alive</h3>
 				通过修改<span class="definition"> is </span>属性来动态切换组件，每次切换时会新建一个组件实例。通过<span class="definition"> keep-alive </span>可以对结果进行缓存，而不是每次都新建实例。
 				<pre><code class="html">
-					&lt;keep-alive&gt;
-						&lt;标签 is="组件名"&gt;&lt;/标签&gt;
-					&lt;/keep-alive&gt;
+&lt;keep-alive&gt;
+	&lt;标签 is="组件名"&gt;&lt;/标签&gt;
+&lt;/keep-alive&gt;
 				</code></pre>
 				<h3>解析问题</h3>
 				有些 HTML 元素，诸如 &lt;ul&gt;、&lt;ol&gt;、&lt;table&gt; 和 &lt;select&gt;，对于哪些元素可以出现在其内部是有严格限制的。而有些元素，诸如 &lt;li&gt;、&lt;tr&gt; 和 &lt;option&gt;，只能出现在其它某些特定的元素内部。<sup>[1]</sup>
 				<pre><code class="html">
-					&lt;table id="demo"&gt;
-					  	&lt;my-row&gt;&lt;/my-row&gt;
-					&lt;/table&gt;
-					&lt;script&gt;
-						Vue.component('my-row', {
-							template: '&lt;tr&gt;&lt;td&gt;hello&lt;/td&gt;&lt;td&gt;world&lt;/td&gt;&lt;/tr&gt;'
-						})
-						new Vue({
-							el: '#demo'
-						});
-					&lt;/script&gt;
+&lt;table id="demo"&gt;
+  	&lt;my-row&gt;&lt;/my-row&gt;
+&lt;/table&gt;
+&lt;script&gt;
+	Vue.component('my-row', {
+		template: '&lt;tr&gt;&lt;td&gt;hello&lt;/td&gt;&lt;td&gt;world&lt;/td&gt;&lt;/tr&gt;'
+	})
+	new Vue({
+		el: '#demo'
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_component_is_error.jpg">
@@ -437,17 +441,17 @@
 				</figure>
 				此时借助<span class="definition"> is </span>来解决问题。
 				<pre><code class="html">
-					&lt;table id="demo"&gt;
-						<span class="strong">&lt;tr is="my-row"&gt;&lt;/tr&gt;</span>
-					&lt;/table&gt;
-					&lt;script&gt;
-						Vue.component('my-row', {
-							template: '&lt;tr&gt;&lt;td&gt;hello&lt;/td&gt;&lt;td&gt;world&lt;/td&gt;&lt;/tr&gt;'
-						});
-						new Vue({
-							el: '#demo'
-						});
-					&lt;/script&gt;
+&lt;table id="demo"&gt;
+	<span class="strong">&lt;tr is="my-row"&gt;&lt;/tr&gt;</span>
+&lt;/table&gt;
+&lt;script&gt;
+	Vue.component('my-row', {
+		template: '&lt;tr&gt;&lt;td&gt;hello&lt;/td&gt;&lt;td&gt;world&lt;/td&gt;&lt;/tr&gt;'
+	});
+	new Vue({
+		el: '#demo'
+	});
+&lt;/script&gt;
 				</code></pre>
 				<figure>
 					<img src="../images/vue_component_is_normal.jpg">

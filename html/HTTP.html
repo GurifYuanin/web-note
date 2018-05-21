@@ -36,71 +36,71 @@
 			<p>
 				当在浏览器敲入 URL 后回车，浏览器通过查询 DNS 得知该域名的 IP，然后创建<span class="definition"> 请求报文 </span>并发送给服务器（IP 地址）。<span class="definition"> 请求报文 </span>的格式为：
 				<pre><code class="http">
-					方法 URI HTTP/版本
-					请求首部字段
-					通用首部字段
-					实体首部字段
+方法 URI HTTP/版本
+请求首部字段
+通用首部字段
+实体首部字段
 
-					报文主体
+报文主体
 				</code></pre>
 				服务器端接受到该请求后，根据情况返回<span class="definition"> 响应报文 </span>，格式为：
 				<pre><code class="http">
-					HTTP/版本 状态码 状态短语
-					响应首部字段
-					通用首部字段
-					实体首部字段
+HTTP/版本 状态码 状态短语
+响应首部字段
+通用首部字段
+实体首部字段
 
-					报文主体
+报文主体
 				</code></pre>
 				可以看到，报文主体和首部字段隔着一个空行（CR+LF）。浏览器通过这种方式来获取 Web 资源。<br>
 				比如在我的网站上有这么一个页面<a href="../demo/http_demo.html"> http://isempty.site/other/web-note/demo/http_demo.html </a>，该页面的 HTML 代码很简单，body 内只有一个<span class="definition">hello ! </span>的文本节点。
 				<pre><code class="html">
-					&lt;!DOCTYPE html&gt;
-					&lt;html lang="en"&gt;
-					&lt;head&gt;
-						&lt;meta charset="UTF-8"&gt;
-						&lt;title&gt;demo&lt;/title&gt;
-					&lt;/head&gt;
-					&lt;body&gt;
-						hello !
-					&lt;/body&gt;
-					&lt;/html&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+	&lt;meta charset="UTF-8"&gt;
+	&lt;title&gt;demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	hello !
+&lt;/body&gt;
+&lt;/html&gt;
 				</code></pre>
 				在 IE 中敲入该 URL 后进行访问，实际上浏览器帮我们整理了需要的信息，发送了以下请求报文：
 				<pre><code class="http">
-					GET http://isempty.site/web-note/demo/http_demo.html HTTP/1.1
-					Accept: text/html, application/xhtml+xml, */*
-					Accept-Language: zh-CN
-					User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
-					Accept-Encoding: gzip, deflate
-					Connection: Keep-Alive
-					Host: isempty.site
-					Pragma: no-cache
+GET http://isempty.site/web-note/demo/http_demo.html HTTP/1.1
+Accept: text/html, application/xhtml+xml, */*
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Accept-Encoding: gzip, deflate
+Connection: Keep-Alive
+Host: isempty.site
+Pragma: no-cache
 				</code></pre>
 				得到的响应报文为：
 				<pre><code class="http">
-					HTTP/1.1 200 OK
-					Date: Wed, 14 Mar 2018 14:19:01 GMT
-					Server: Apache
-					Last-Modified: Wed, 14 Mar 2018 14:17:03 GMT
-					ETag: "78051c-85-567600778a156"
-					Accept-Ranges: bytes
-					Vary: Accept-Encoding,User-Agent
-					Content-Length: 133
-					Keep-Alive: timeout=15, max=300
-					Connection: Keep-Alive
-					Content-Type: text/html
+HTTP/1.1 200 OK
+Date: Wed, 14 Mar 2018 14:19:01 GMT
+Server: Apache
+Last-Modified: Wed, 14 Mar 2018 14:17:03 GMT
+ETag: "78051c-85-567600778a156"
+Accept-Ranges: bytes
+Vary: Accept-Encoding,User-Agent
+Content-Length: 133
+Keep-Alive: timeout=15, max=300
+Connection: Keep-Alive
+Content-Type: text/html
 
-					&lt;!DOCTYPE html&gt;
-					&lt;html lang="en"&gt;
-					&lt;head&gt;
-						&lt;meta charset="UTF-8"&gt;
-						&lt;title&gt;demo&lt;/title&gt;
-					&lt;/head&gt;
-					&lt;body&gt;
-						hello !
-					&lt;/body&gt;
-					&lt;/html&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+	&lt;meta charset="UTF-8"&gt;
+	&lt;title&gt;demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	hello !
+&lt;/body&gt;
+&lt;/html&gt;
 				</code></pre>
 				html 标签前面的一堆东西就是首部字段，HTML 元素标签就是响应报文主体。
 			</p>

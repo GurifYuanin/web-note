@@ -26,10 +26,10 @@ $(function() {
     var category = ['HTML', 'CSS', 'Javascript', 'NodeJS', 'Vue', '移动Web', '调试', '协议', '安全', '后端', '其他']; // 目录分类
     var items = [
         ['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'svg'],
-        ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度'],
+        ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
         ['数据类型', '作用域链', '原型链', '闭包', '事件', '同源策略', '字符编码', 'JSONP', 'this', 'promise'],
-        ['commonJS', 'package.json'],
-        ['安装', '实例', '模版', '组件'],
+        ['commonJS', 'package.json', 'path'],
+        ['安装', '实例', '模版', '组件', 'mixins'],
         ['响应式布局', 'bootstrap'],
         ['抓包工具', 'chrome devtools'],
         ['HTTP'],
@@ -195,7 +195,7 @@ $(function() {
     }
     // 去除多余的字符
     function getName (str) {
-        return str.replace(/[\s@#&;()]/g, '');
+        return str.replace(/[\s@#&;()/]/g, '');
     }
     var $subTitle = $('#container>section>h2'); // 一级子标题
     var subTitleNav = ''; // 子标题导航 html 字符串

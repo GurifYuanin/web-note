@@ -51,18 +51,18 @@
 				</code></pre>
 				得到结果：
 				<pre><code class="javascript">
-					Module {
-					  id: '.',
-					  exports: {},
-					  parent: null,
-					  filename: 'D:\\Git\\web-note\\demo\\commonjs_demo.js',
-					  loaded: false,
-					  children: [],
-					  paths:
-					   [ 'D:\\Git\\web-note\\demo\\node_modules',
-					     'D:\\Git\\web-note\\node_modules',
-					     'D:\\Git\\node_modules',
-					     'D:\\node_modules' ] }
+Module {
+  id: '.',
+  exports: {},
+  parent: null,
+  filename: 'D:\\Git\\web-note\\demo\\commonjs_demo.js',
+  loaded: false,
+  children: [],
+  paths:
+   [ 'D:\\Git\\web-note\\demo\\node_modules',
+     'D:\\Git\\web-note\\node_modules',
+     'D:\\Git\\node_modules',
+     'D:\\node_modules' ] }
 				</code></pre>
 				<ul>
 					<li>id：模块的标识符</li>
@@ -78,17 +78,17 @@
 		<section>
 			<h2>require</h2>
 			<p>
-				<span class="definition"> require </span>是<span class="definition"> Module.prototype </span>提供的一个方法，使用<span class="definition"> require </span>命令实际上是使用<span class="definition"> module.require </span>来<span class="definition"> 异步加载 </span>模块，若无法找到模块则报错。该命令最终获得模块的<span class="definition"> exports </span>对象。
+				<span class="definition"> require </span>是<span class="definition"> Module.prototype </span>提供的一个方法，使用<span class="definition"> require </span>命令实际上是使用<span class="definition"> module.require </span>来<span class="definition"> 同步加载 </span>模块，若无法找到模块则报错。该命令最终获得模块的<span class="definition"> exports </span>对象。
 				<pre><code class="javascript">
-					// 模块 compute.js，编写对外接口 exports
-					module.exports.add = function (a, b) {
-						return a + b;
-					}
+// 模块 compute.js，编写对外接口 exports
+module.exports.add = function (a, b) {
+	return a + b;
+}
 
-					// demo.js 使用模块 compute.js
-					var compute = require('./compute'); // 默认加载 js 文件，所以可以省略后缀名
-					var a = 1, b = 2;
-					console.log(compute.add(a, b)); // => 3
+// demo.js 使用模块 compute.js
+var compute = require('./compute'); // 默认加载 js 文件，所以可以省略后缀名
+var a = 1, b = 2;
+console.log(compute.add(a, b)); // => 3
 				</code></pre>
 			</p>
 		</section>
@@ -97,7 +97,7 @@
 			<p>
 				A 文件通过<span class="definition"> require(B) </span>加载模块的顺序：
 				<ol>
-					<li>如果 B 是相对路径或绝对路径，则直接加载</li>
+					<li>如果 B 是相对路径或绝对路径，则根据该路径直接加载</li>
 					<li>
 						如果 B 不是相对路径或绝对路径
 						<ol>

@@ -41,13 +41,13 @@
 			<p>
 				条件注释法用于检查 IE 浏览器的版本，通过判定是否满足条件来决定是否执行代码。
 				<pre><code class="html">
-					&lt;!-- [if 运算符 IE 版本] &gt;
-						代码
-					&lt;! [endif] --&gt;
+&lt;!-- [if 运算符 IE 版本] &gt;
+	代码
+&lt;! [endif] --&gt;
 
-					&lt;!-- [if lt IE 8] &gt;
-						你的浏览器版本小于 IE8 ，请升级浏览器。
-					&lt;! [endif] --&gt;
+&lt;!-- [if lt IE 8] &gt;
+	你的浏览器版本小于 IE8 ，请升级浏览器。
+&lt;! [endif] --&gt;
 				</code></pre>
 				<figure>
 					<table style="margin: auto"  border="1" cellpadding="1" cellspacing="0">
@@ -119,12 +119,12 @@
 					<figcaption class="description">针对浏览器内核</figcaption>
 				</figure>
 				<pre><code class="css">
-					div {
-						-color: #fff; /* 只有 IE 6 生效 */
-						-web-border-radius: 50%;
-						-moz-border-radius: 50%;
-						border-radius: 50%;
-					}
+div {
+	-color: #fff; /* 只有 IE 6 生效 */
+	-web-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+}
 				</code></pre>
 			</p>
 		</section>
@@ -170,14 +170,14 @@
 					<figcaption class="description">常见选择器前缀</figcaption>
 				</figure>
 				<pre><code class="css">
-					*div {
-						width: 100px; /* 只有 IE 6 生效 */
-					}
-					@media screen and (-ms-high-contrast: active). (-ms-high-contrast: none) {
-						div {
-							width: 200px; /* 只有 IE 10 生效  */
-						}
-					}
+*div {
+	width: 100px; /* 只有 IE 6 生效 */
+}
+@media screen and (-ms-high-contrast: active). (-ms-high-contrast: none) {
+	div {
+		width: 200px; /* 只有 IE 10 生效  */
+	}
+}
 				</code></pre>
 			</p>
 		</section>

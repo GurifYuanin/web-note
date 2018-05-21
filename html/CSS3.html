@@ -48,7 +48,7 @@
 					<h3>border-radius(圆角)</h3>
 					<p>
 						<pre><code class="css">
-							border-radius: 20%; /* 圆角 */
+border-radius: 20%; /* 圆角 */
 						</code></pre>
 						<div class="show" style="
 							border-radius: 20%;
@@ -74,12 +74,12 @@
 							background-clip: content-box;
 						"></div>
 						<pre><code class="css">
-							background-position: left top;
-							background-repeat: no-repeat;
-							background-image: url(../images/rock.jpg);/* 背景图片(可同时设置多个) */
-							background-size: 100px 100px; /* 背景图片宽高 */
-							background-origin: content-box; /* 背景图片绘制起点 */
-							background-clip: content-box; /* 背景图片画布 */
+background-position: left top;
+background-repeat: no-repeat;
+background-image: url(../images/rock.jpg);/* 背景图片(可同时设置多个) */
+background-size: 100px 100px; /* 背景图片宽高 */
+background-origin: content-box; /* 背景图片绘制起点 */
+background-clip: content-box; /* 背景图片画布 */
 						</code></pre>
 						需要注意的是，如果是用外联式引入样式表（link），背景图片的 url 是相对于当前 css 文件，而不是 html 文件。
 					</p>
@@ -98,8 +98,8 @@
 							background: radial-gradient(circle, #000, #fff);
 						"></div>
 						<pre><code class="css">
-							background: linear-gradient(90deg, #000, #fff); /* 线性渐变 */
-							background: radial-gradient(circle, #000, #fff); /* 径向渐变 */
+background: linear-gradient(90deg, #000, #fff); /* 线性渐变 */
+background: radial-gradient(circle, #000, #fff); /* 径向渐变 */
 						</code></pre>
 					</p>
 				</div>
@@ -115,8 +115,8 @@
 							text-shadow: 5px 5px 5px #000;
 						">文字投影</div>
 						<pre><code class="css">
-							text-shadow: 5px 5px 5px #000; /* 文字投影 */
-							box-shadow: 5px 5px 5px #000; /* 盒子投影 */
+text-shadow: 5px 5px 5px #000; /* 文字投影 */
+box-shadow: 5px 5px 5px #000; /* 盒子投影 */
 						</code></pre>
 					</p>
 				</div>
@@ -129,8 +129,8 @@
 							background-color: #888;
 						">abcdefghijklmnopqrstuvwxyz</div>
 						<pre><code class="css">
-							text-overflow: ellipsis; /* 文字溢出部分用"..."代替 */
-							overflow: hidden;
+text-overflow: ellipsis; /* 文字溢出部分用"..."代替 */
+overflow: hidden;
 						</code></pre>
 					</p>
 				</div>
@@ -158,11 +158,11 @@
 							transform: translateZ(100px);
 						">XYZ轴偏移100px</div>
 						<pre><code class="css">
-							transform: rotate(90deg);
-							transform: translate(100px);
-							transform: scale(2, 2);
-							transform: skew(10deg, 10deg);
-							ransform: rotateX(45deg);
+transform: rotate(90deg);
+transform: translate(100px);
+transform: scale(2, 2);
+transform: skew(10deg, 10deg);
+ransform: rotateX(45deg);
 						</code></pre>
 					</p>
 				</div>
@@ -184,11 +184,11 @@
 							background-color: #888;
 						">悬浮我</div>
 						<pre><code class="css">
-							transition: width 1s, height 1s; /* 打开 width 和 height 动画开关 */
-							div:hover {
-								width: 200px;
-								height: 200px
-							}
+transition: width 1s, height 1s; /* 打开 width 和 height 动画开关 */
+div:hover {
+	width: 200px;
+	height: 200px
+}
 						</code></pre>
 					</p>
 				</div>
@@ -212,17 +212,17 @@
 							animation: bigger 1s;
 						">刷新后变大</div>
 						<pre><code class="css">
-							@keyframes bigger{
-								from {
-									width: 100px;
-									height: 100px;
-								}
-								to {
-									width: 200px;
-									height: 200px;
-								}
-							}
-							animation: bigger 1s; /* 添加后执行 */
+@keyframes bigger{
+	from {
+		width: 100px;
+		height: 100px;
+	}
+	to {
+		width: 200px;
+		height: 200px;
+	}
+}
+animation: bigger 1s; /* 添加后执行 */
 						</code></pre>
 					</p>
 				</div>

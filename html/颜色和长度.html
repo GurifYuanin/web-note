@@ -40,7 +40,7 @@
 					<p>
 						命名颜色，就是使用CSS预先设定好的颜色单词。<br>
 						<pre><code class="html">
-			&lt;div style="background-color: black"&gt;black&lt;/div&gt;
+&lt;div style="background-color: black"&gt;black&lt;/div&gt;
 						</code></pre>
 						CSS2.1 规范定义了17个颜色名：
 						<figure>
@@ -58,27 +58,27 @@
 						</figure>
 						每种颜色有 8 位深度，也就是 2<sup>8</sup> = 256 种颜色，其书写方式为：
 						<pre><code class="css">
-			color: rgb(-1, -1, -1); /* × */
-			color: rgb(0, 0, 0); /* √ */
-			color: rgb(123, 123, 123); /* √ */
-			color: rgb(255, 255, 255); /* √ */
-			color: rgb(256, 256, 256); /* × */
+color: rgb(-1, -1, -1); /* × */
+color: rgb(0, 0, 0); /* √ */
+color: rgb(123, 123, 123); /* √ */
+color: rgb(255, 255, 255); /* √ */
+color: rgb(256, 256, 256); /* × */
 						</code></pre>
 					</p>
 					rgba 则是在 rgb 的基础上多加一个不透明度通道，即 red(红色) + green(绿色) + blue(蓝色) + alpha 。<br>
 					alpha 的值为 0~1 , 0 为完全透明， 1 为完全不透明。
 					<pre><code class="html">
-			&lt;div style="background-color: rgb(0, 0, 0);"&gt;rgb(0, 0, 0)&lt;/div&gt;
-			&lt;div style="background-color: rgba(0, 0, 0, 0.5);"&gt;rgba(0, 0, 0, 0.5)&lt;/div&gt;
+&lt;div style="background-color: rgb(0, 0, 0);"&gt;rgb(0, 0, 0)&lt;/div&gt;
+&lt;div style="background-color: rgba(0, 0, 0, 0.5);"&gt;rgba(0, 0, 0, 0.5)&lt;/div&gt;
 					</code></pre>
 					<figure>
 						<img src="../images/rgba_before.jpg" alt="加载失败">
 					</figure>
 					从视觉上看黑色减少了一半，变成了灰色，实际上是将颜色变成半透明，如果这个时候背景颜色是黄色
 					<pre><code class="css">
-			body {
-				 background-color: yellow;
-			}
+body {
+	 background-color: yellow;
+}
 					</code></pre>
 					<figure>
 						<img src="../images/rgba_after.jpg" alt="加载失败">
@@ -95,7 +95,7 @@
 							<li>Lightness 指颜色的明亮程度，值为0~1。</li>
 						</ul>
 						<pre><code class="css">
-			color: hsl(240, 0.5, 0.5);
+color: hsl(240, 0.5, 0.5);
 						</code></pre>
 						hsla 与 rgba 类似，也是添加了一个不透明度通道，只能在 IE9+、Firefox 3+、Chrome、Safari 以及 Opera 10+ 中使用。
 					</p>
@@ -105,14 +105,14 @@
 					<p>
 						十六进制与 rgb 实际上是同一种颜色模式，十六进制使用<span class="definition">#</span> + 3或6个十六进制数表示。
 						<pre><code class="css">
-			color: #123;
-			color: #123456;
+color: #123;
+color: #123456;
 						</code></pre>
 						当<span class="definition">#</span>后接3个数字时，CSS 会将其进行值复制。<br>
 						以下两种写法是等价的：
 						<pre><code class="css">
-			color: #123;
-			color: #112233;
+color: #123;
+color: #112233;
 						</code></pre>
 						十六进制其实也是 rgb 颜色模式。
 						<li>前两个十六进制数字等价于 rgb 的 r </li>
@@ -171,72 +171,72 @@
 						</ul>
 						所有浏览器的默认大小为 16px ，也就是相当于默认执行了
 						<pre><code class="css">
-				body {
-					font-size: 16px;
-				}
+body {
+	font-size: 16px;
+}
 						</code></pre>
 						rl_demo.html源代码：
 						<pre><code class="html">
-				&lt;!DOCTYPE html&gt;
-				&lt;html lang="en"&gt;
-				&lt;head&gt;
-					&lt;meta charset="UTF-8"&gt;
-					&lt;title&gt;rl demo&lt;/title&gt;
-					&lt;style&gt;
-						div {
-							margin: 50px;
-							padding: 0;
-							border: none;
-						}
-					&lt;/style&gt;
-				&lt;/head&gt;
-				&lt;body&gt;
-					&lt;!-- px --&gt;
-					&lt;div style="font-size: 50px;"&gt;
-						&lt;div style="
-							height: 50px;
-							font-size: 50px;
-							background-color: #ff0;
-							line-height: 50px;
-						"&gt;
-							哈(px)
-						&lt;/div&gt;
-					&lt;/div&gt;
-					&lt;!-- em --&gt;
-					&lt;div style="font-size: 50px;"&gt;
-						&lt;div style="
-							height: 1em;
-							font-size: 1em;
-							background-color: #f0f;
-							line-height: 1em;"
-						&gt;
-							哈(em)
-						&lt;/div&gt;
-					&lt;/div&gt;
-					&lt;!-- ex --&gt;
-					&lt;div style="font-size: 50px;"&gt;
-						&lt;div style="
-							height: 1ex;
-							font-size: 1ex;
-							background-color: #0ff;
-							line-height: 1ex;
-						"&gt;
-							哈(ex)
-						&lt;/div&gt;
-					&lt;/div&gt;
-					&lt;!-- rem --&gt;
-					&lt;div style="font-size: 50px"&gt;
-						&lt;div style="
-							height: 1rem;
-							font-size: 1rem;
-							background-color: #00f;
-							line-height: 1rem;
-						"&gt;
-							哈(rem)
-						&lt;/div&gt;
-					&lt;/div&gt;
-				&lt;/body&gt;
-				&lt;/html&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+	&lt;meta charset="UTF-8"&gt;
+	&lt;title&gt;rl demo&lt;/title&gt;
+	&lt;style&gt;
+		div {
+			margin: 50px;
+			padding: 0;
+			border: none;
+		}
+	&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;!-- px --&gt;
+	&lt;div style="font-size: 50px;"&gt;
+		&lt;div style="
+			height: 50px;
+			font-size: 50px;
+			background-color: #ff0;
+			line-height: 50px;
+		"&gt;
+			哈(px)
+		&lt;/div&gt;
+	&lt;/div&gt;
+	&lt;!-- em --&gt;
+	&lt;div style="font-size: 50px;"&gt;
+		&lt;div style="
+			height: 1em;
+			font-size: 1em;
+			background-color: #f0f;
+			line-height: 1em;"
+		&gt;
+			哈(em)
+		&lt;/div&gt;
+	&lt;/div&gt;
+	&lt;!-- ex --&gt;
+	&lt;div style="font-size: 50px;"&gt;
+		&lt;div style="
+			height: 1ex;
+			font-size: 1ex;
+			background-color: #0ff;
+			line-height: 1ex;
+		"&gt;
+			哈(ex)
+		&lt;/div&gt;
+	&lt;/div&gt;
+	&lt;!-- rem --&gt;
+	&lt;div style="font-size: 50px"&gt;
+		&lt;div style="
+			height: 1rem;
+			font-size: 1rem;
+			background-color: #00f;
+			line-height: 1rem;
+		"&gt;
+			哈(rem)
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
 						</code></pre>
 						<figure>
 							<img src="../images/rl_demo.jpg" alt="加载失败" style="width: 100%;">

@@ -30,25 +30,25 @@
 			<p>
 				Promise 是 ES6 新增的构造函数，用于更方便地实现异步编程。
 				<pre><code class="javascript">
-		// 创建一个 Promise 实例，传入执行函数
-		// 执行函数的参数为 resolve 函数和 reject 函数
-		var 实例 = new Promise(function(resolve, reject) {
-			... // 一堆代码
-			if (...) { // 如果达到某个条件，就执行 resolve 函数
-				resolve(value);
-			}
-			if (...) { // 如果达到某个条件，就执行 reject 函数
-				reject(value);
-			}
-		});
+// 创建一个 Promise 实例，传入执行函数
+// 执行函数的参数为 resolve 函数和 reject 函数
+var 实例 = new Promise(function(resolve, reject) {
+	... // 一堆代码
+	if (...) { // 如果达到某个条件，就执行 resolve 函数
+		resolve(value);
+	}
+	if (...) { // 如果达到某个条件，就执行 reject 函数
+		reject(value);
+	}
+});
 
-		// 执行异步任务，reject 函数是可选的
-		// 设置 resolve 函数和 reject 函数的执行内容
-		实例对象.then(function(value){
-			// resolve 函数
-		}, function(value){
-			// reject 函数
-		});
+// 执行异步任务，reject 函数是可选的
+// 设置 resolve 函数和 reject 函数的执行内容
+实例对象.then(function(value){
+	// resolve 函数
+}, function(value){
+	// reject 函数
+});
 				</code></pre>
 			</p>
 		</section>
@@ -63,23 +63,24 @@
 					<li>rejected：出错状态，执行了 reject 函数或执行一堆代码时出错</li>
 					<li>fulfill：将 pending 状态变成 fulfilled 状态（settled）</li>
 					<li>reject：将 pending 状态变成 rejected 状态（settled）</li>
+					<li>return：resolve 函数或 reject 函数执行完后必然返回一个 promise 对象，用于链式调用</li>
 				</ul>
 				<figure>
 					<img src="../images/promise_life.png">
 				</figure>
 				<h3>执行过程</h3>
 				<pre><code class="javascript">
-		var promise = new Promise(function(resolve, reject) {
-			resolve('执行 resolve 里的代码');
-			reject('执行 reject 里的代码');
-			console.log('执行 new Promise 里的代码');
-		});
-		promise.then(function(value) {
-			console.log(value);
-		}, function(value) {
-			console.log(value);
-		});
-		console.log('执行 window 里的代码');
+var promise = new Promise(function(resolve, reject) {
+	resolve('执行 resolve 里的代码');
+	reject('执行 reject 里的代码');
+	console.log('执行 new Promise 里的代码');
+});
+promise.then(function(value) {
+	console.log(value);
+}, function(value) {
+	console.log(value);
+});
+console.log('执行 window 里的代码');
 				</code></pre>
 				<figure>
 					<img src="../images/promise_demo1.jpg">
@@ -93,53 +94,242 @@
 					<li>控制台输出<span class="definition"> 执行 window 里的代码 </span></li>
 					<li>异步执行（终于） resolve 函数，控制台输出<span class="definition"> 执行 resolve 里的代码 </span></li>
 				</ol>
-				<h3>链式调用</h3>
-				promise.then 返回 promise 对象，所以可以进行链式调用。
+				<h3>触发回调</h3>
+				resolve 和 reject 称为回调函数，要触发回调，需要满足：
+				<ol>
+					<li>在 new Promise 中执行了 resolve 或 reject 函数或报错</li>
+					<li>执行 resolve 或 reject 函数时传入的参数非 pending 状态的 promise 对象</li>
+					<li>promise 对象执行了 then 或者 catch 方法</li>
+				</ol>
 				<pre><code class="javascript">
-		var promise = new Promise(function(resolve, reject) {
-			resolve('hello promise');
-		});
-		promise.then(function(value) {
-			console.log(value);
-		}).then(function(value) {
-			console.log(value);
-		});
+var p1 = new Promise(function(resolve, reject){
+	setTimeout(resolve, 3000);
+});
+var p2 = new Promise(function(resolve, reject){
+	resolve(p1);
+});
+p2.then(function(value){
+	console.log(value);
+	console.log('p2 的 resolve 被调用了');
+});
+				</code></pre>
+				<figure>
+					<img src="../images/promise_resolve.gif">
+					<figcaption>3s 后控制台才输出内容</figcaption>
+				</figure>
+				根据条件的第二点，p2 的调用 resolve 函时传入 p1，p1 的状态前 3s 为 pending，因此不触发回调，3s 后其状态为 resolve ，p2 才触发回调。
+				<h3>链式调用</h3>
+				promise.then 返回一个新的 promise 对象，所以可以进行链式调用。
+				<pre><code class="javascript">
+var promise = new Promise(function(resolve, reject) {
+	resolve('hello promise');
+});
+promise.then(function(value) {
+	console.log(value);
+}).then(function(value) {
+	console.log(value);
+});
 				</code></pre>
 				<figure>
 					<img src="../images/promise_demo2.jpg">
 				</figure>
 				可以看到，第二个 then 执行的 resolve 输出了 undefined ，这是因为以上代码等价于
 				<pre><code class="javascript">
-		var promise = new Promise(function(resolve, reject) {
-			resolve('hello promise');
-		});
-		promise.then(function(value) {
-			console.log(value);
-			<div class="strong">
-		return new Promise(function(resolve, reject) {
-			resolve();
-		});
-			</div>
-		}).then(function(value) {
-			console.log(value);
-		});
+var promise = new Promise(function(resolve, reject) {
+	resolve('hello promise');
+});
+promise.then(function(value) {
+	console.log(value);
+	<div class="strong">
+return new Promise(function(resolve, reject) {
+	resolve();
+});
+	</div>
+}).then(function(value) {
+	console.log(value);
+});
 				</code></pre>
-				其 resolve 函数自动返回了个 promise 对象，正确的值传递应该是
+				第一个 resolve 函数<b>自动</b>返回了个新的 promise 对象（没写 return 时），该 promise 对象又执行了 reslove 函数，传入的参数为空，因此第二个 resolve 函数输出的 value 为 undefined。正确的值传递应该是手写 return：
 				<pre><code class="javascript">
-		var promise = new Promise(function(resolve, reject) {
-			resolve('hello promise');
-		});
-		promise.then(function(value) {
-			console.log(value);
-		return new Promise(function(resolve, reject) {
-			resolve(<span class="strong">value</span>);
-		});
-		}).then(function(value) {
-			console.log(value);
-		});
+var promise = new Promise(function(resolve, reject) {
+	resolve('hello promise');
+});
+promise.then(function(value) {
+	console.log(value);
+return new Promise(function(resolve, reject) {
+	resolve(<span class="strong">value</span>);
+});
+}).then(function(value) {
+	console.log(value);
+});
 				</code></pre>
 				<figure>
 					<img src="../images/promise_demo3.jpg">
+				</figure>
+				前一个 then 返回的 promise 对象影响后一个 then 的 resolve 回调，只有前一个 then 返回的 primise 对象执行了 resolve 函数，后一个 then 才执行，<b>保证了链式调用的顺序</b>。
+				<pre><code class="javascript">
+var promise = new Promise(function(resolve, reject){
+	resolve();
+});
+promise.then(function(){
+	console.log('第一个 then');
+	return new Promise(function(resolve, reject){
+		setTimeout(resolve, 1000);
+	});
+}).then(function(){
+	console.log('第二个 then');
+	return new Promise(function(resolve, reject){
+		setTimeout(resolve, 1000);
+	});
+}).then(function(){
+	console.log('第三个 then');
+});
+				</code></pre>
+				<figure>
+					<img src="../images/promise_chain.gif">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>catch</h2>
+			<p>
+				<span class="definition"> catch(function(value){}) </span> 相当于<span class="definition"> then(null, function(value){}) </span>，catch 用于捕获前面所有 promise 对象抛出的错误（执行 reject 函数相当于抛出一个错误）。
+				<pre><code class="javascript">
+/* 方法一 */
+promise.then(function(value){
+	// ...
+}, function(value){
+	// ...
+});
+
+/* 方法二 */
+promise.then(function(value){
+	// ...
+}).catch(function(value){
+	// ...
+});
+				</code></pre>
+				以上写法功能类似，但不等价，方法二可以捕获 new Promise 内执行的错误，同时也可以捕获到 resolve（then）执行的错误。
+				<pre><code class="javascript">
+var promise = new Promise(function(resolve, reject){
+	resolve();
+});
+/* 方法一 */
+promise.then(function(value){
+	console.log('执行了 resolve');
+	asdasd // 一段错误代码
+}, function(value){
+	console.log('执行了 reject');
+});
+
+/* 方法二 */
+promise.then(function(value){
+	console.log('执行了 resolve');
+	asdasd // 一段错误代码
+}).catch(function(value){
+	console.log('执行了 catch');
+});
+				</code></pre>
+				<figure>
+					<img src="../images/promise_way1.jpg">
+					<figcaption>方法一</figcaption>
+				</figure>
+				<figure>
+					<img src="../images/promise_way2.jpg">
+					<figcaption>方法二</figcaption>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>finally</h2>
+			<p>
+				finally 方法：无论结果如何都会触发其回调函数，并且没有回调函数没有传入的参数。
+				<pre><code class="javascript">
+promise.finally(function(){
+	console.log('无论如何我都会被执行');
+});
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>静态/工厂方法</h2>
+			<p>
+				<ul>
+					<li>Promise.all([])</li>
+					<li>Promise.race([])</li>
+				</ul>
+				两个方法都是传入一个数组，数组元素是 promise 实例，最终返回一个新的 promise 对象，新的 promise 对象的状态取决于传入的数组的元素的执行结果。
+				<h3>all</h3>
+				对于 all 方法来说
+				<ul>
+					<li>当传入的数组的所有 promise 对象都是 fulfilled 状态时，返回的对象才是 fulfilled 状态</li>
+					<li>当传入的数组的任意一个 promise 对象是 rejected 状态时，返回的对象是 rejected 状态</li>
+				</ul>
+				<pre><code class="javascript">
+var promise = Promise.all(
+	[
+		new Promise(function(resolve, reject){
+			setTimeout(function(){
+				console.log('我是第一个');
+				resolve();
+			}, 1000);
+		}),
+		new Promise(function(resolve, reject){
+			setTimeout(function(){
+				console.log('我是第二个');
+				resolve();
+			}, 2000);
+		}),
+		new Promise(function(resolve, reject){
+			setTimeout(function(){
+				console.log('我是第三个');
+				resolve();
+			}, 3000);
+		})
+	]);
+promise.then(function(){
+	console.log('所有 promise 对象 fulfilled');
+}).catch(function(){
+	console.log('存在 promise 对象 rejected');
+});
+				</code></pre>
+				<figure>
+					<img src="../images/promise_all.gif">
+					<figcaption>3s 后控制台输出所有的 promise 对象都 fulfilled</figcaption>
+				</figure>
+				<h3>race</h3>
+				对于 race 方法来说，返回的对象的状态取决于第一个有结果的 promise 对象。
+				<pre><code class="javascript">
+var promise = Promise.race(
+	[
+		new Promise(function(resolve, reject){
+			setTimeout(function(){
+				console.log('我是第一个');
+				resolve();
+			}, 1000);
+		}),
+		new Promise(function(resolve, reject){
+			setTimeout(function(){
+				console.log('我是第二个');
+				resolve();
+			}, 2000);
+		}),
+		new Promise(function(resolve, reject){
+			setTimeout(function(){
+				console.log('我是第三个');
+				resolve();
+			}, 3000);
+		})
+	]);
+promise.then(function(){
+	console.log('存在 promise 对象 fulfilled');
+}).catch(function(){
+	console.log('存在 promise 对象 rejected');
+});
+				</code></pre>
+				<figure>
+					<img src="../images/promise_race.gif">
+					<figcaption>1s 后第一个 promise 对象 fulfilled</figcaption>
 				</figure>
 			</p>
 		</section>
@@ -147,6 +337,7 @@
 			<h2>参考文献</h2>
 			<p>
 				<div>[1] MDN Promise <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise</a></div>
+				<div>[2] 阮一峰 ECMAScript 6 入门 <a href="http://es6.ruanyifeng.com/#docs/promise">http://es6.ruanyifeng.com/#docs/promise</a></div>
 			</p>
 		</section>
 	</article>

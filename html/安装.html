@@ -30,7 +30,7 @@
 			<p>
 				直接下载<a download href="https://vuejs.org/js/vue.js"> vue </a>文件后引入。
 				<pre><code class="html">
-		&lt;script src="vue.js"&gt;&lt;/script&gt;
+&lt;script src="vue.js"&gt;&lt;/script&gt;
 				</code></pre>
 			</p>
 		</section>
@@ -39,16 +39,16 @@
 			<p>
 				使用官方提供的命令行工具（此处使用 npm 来安装 CLI）
 				<pre><code class="shell">
-		# 全局安装 vue-cli
-		$ npm install --global vue-cli
-		# 创建一个基于 webpack 模板的新项目
-		$ vue init webpack 项目名
-		# 进入项目
-		$ cd 项目名
-		# 安装依赖模块
-		$ npm install
-		# 运行
-		$ npm run dev
+# 全局安装 vue-cli
+$ npm install --global vue-cli
+# 创建一个基于 webpack 模板的新项目
+$ vue init webpack 项目名
+# 进入项目
+$ cd 项目名
+# 安装依赖模块
+$ npm install
+# 运行
+$ npm run dev
 				</code></pre>
 				生成的项目结构为：
 				<div id="catalogFrame">
@@ -77,26 +77,26 @@
 				</div>
 				<span class="definition"> npm run dev </span>实际上是执行<span class="definition"> 项目名/package.json </span>的：
 				<pre><code class="json">
-		"scripts": {
-		  "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js"
-		}
+"scripts": {
+  "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js"
+}
 				</code></pre>
 				可以在<span class="definition"> config/index.js </span>对启动参数进行配置
 				<pre><code class="javascript">
-		dev: {
-		  // Paths
-		  assetsSubDirectory: 'static',
-		  assetsPublicPath: '/',
-		  proxyTable: {},
+dev: {
+  // Paths
+  assetsSubDirectory: 'static',
+  assetsPublicPath: '/',
+  proxyTable: {},
 
-		  // Various Dev Server settings
-		  host: 'localhost', // can be overwritten by process.env.HOST
-		  port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-		  autoOpenBrowser: false,
-		  errorOverlay: true,
-		  notifyOnErrors: true,
-		  poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
-		}
+  // Various Dev Server settings
+  host: 'localhost', // can be overwritten by process.env.HOST
+  port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+  autoOpenBrowser: false,
+  errorOverlay: true,
+  notifyOnErrors: true,
+  poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
+}
 				</code></pre>
 				默认使用 8080 端口，此时因为我的 8080 端口已被占用，vue 自动检查到并使用了 8081 端口。
 				<figure>
@@ -109,147 +109,147 @@
 				</figure>
 				上述页面访问的是项目根目录下的<span class="definition"> index.html </span>
 				<pre><code class="html">
-		&lt;!DOCTYPE html&gt;
-		&lt;html&gt;
-		  &lt;head&gt;
-		    &lt;meta charset="utf-8"&gt;
-		    &lt;meta name="viewport" content="width=device-width,initial-scale=1.0"&gt;
-		    &lt;title&gt;vue-demo&lt;/title&gt;
-		  &lt;/head&gt;
-		  &lt;body&gt;
-		    &lt;div id="app"&gt;&lt;/div&gt;
-		    &lt;!-- built files will be auto injected --&gt;
-		  &lt;/body&gt;
-		&lt;/html&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta name="viewport" content="width=device-width,initial-scale=1.0"&gt;
+    &lt;title&gt;vue-demo&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id="app"&gt;&lt;/div&gt;
+    &lt;!-- built files will be auto injected --&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
 				</code></pre>
 				页面上的内容实际上是<span class="definition"> &lt;div id="app"&gt;&lt;/div&gt; </span>产生的，因为<span class="definition"> index.html </span>引入了<span class="definition"> src/main.js </span>，创建了一个 vue 实例
 				<pre><code class="javascript">
-		import Vue from 'vue'
-		import App from './App'
-		import router from './router'
+import Vue from 'vue'
+import App from './App'
+import router from './router'
 
-		Vue.config.productionTip = false
+Vue.config.productionTip = false
 
-		/* eslint-disable no-new */
-		new Vue({
-		  el: '#app',
-		  router,
-		  render: h => h(App)
-		})
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  router,
+  render: h => h(App)
+})
 				</code></pre>
 				经过 router（路由）转到模版<span class="definition"> src/components/HelloWorld.vue </span>
 				<pre><code class="html">
-		&lt;template&gt;
-		  &lt;div class="hello"&gt;
-		    &lt;h1&gt;{{ msg }}&lt;/h1&gt;
-		    &lt;h2&gt;Essential Links&lt;/h2&gt;
-		    &lt;ul&gt;
-		      &lt;li&gt;
-		        &lt;a
-		          href="https://vuejs.org"
-		          target="_blank"
-		        &gt;
-		          Core Docs
-		        &lt;/a&gt;
-		      &lt;/li&gt;
-		      &lt;li&gt;
-		        &lt;a
-		          href="https://forum.vuejs.org"
-		          target="_blank"
-		        &gt;
-		          Forum
-		        &lt;/a&gt;
-		      &lt;/li&gt;
-		      &lt;li&gt;
-		        &lt;a
-		          href="https://chat.vuejs.org"
-		          target="_blank"
-		        &gt;
-		          Community Chat
-		        &lt;/a&gt;
-		      &lt;/li&gt;
-		      &lt;li&gt;
-		        &lt;a
-		          href="https://twitter.com/vuejs"
-		          target="_blank"
-		        &gt;
-		          Twitter
-		        &lt;/a&gt;
-		      &lt;/li&gt;
-		      &lt;br&gt;
-		      &lt;li&gt;
-		        &lt;a
-		          href="http://vuejs-templates.github.io/webpack/"
-		          target="_blank"
-		        &gt;
-		          Docs for This Template
-		        &lt;/a&gt;
-		      &lt;/li&gt;
-		    &lt;/ul&gt;
-		    &lt;h2&gt;Ecosystem&lt;/h2&gt;
-		    &lt;ul&gt;
-		      &lt;li&gt;
-		        &lt;a
-		          href="http://router.vuejs.org/"
-		          target="_blank"
-		        &gt;
-		          vue-router
-		        &lt;/a&gt;
-		      &lt;/li&gt;
-		      &lt;li&gt;
-		        &lt;a
-		          href="http://vuex.vuejs.org/"
-		          target="_blank"
-		        &gt;
-		          vuex
-		        &lt;/a&gt;
-		      &lt;/li&gt;
-		      &lt;li&gt;
-		        &lt;a
-		          href="http://vue-loader.vuejs.org/"
-		          target="_blank"
-		        &gt;
-		          vue-loader
-		        &lt;/a&gt;
-		      &lt;/li&gt;
-		      &lt;li&gt;
-		        &lt;a
-		          href="https://github.com/vuejs/awesome-vue"
-		          target="_blank"
-		        &gt;
-		          awesome-vue
-		        &lt;/a&gt;
-		      &lt;/li&gt;
-		    &lt;/ul&gt;
-		  &lt;/div&gt;
-		&lt;/template&gt;
-		&lt;script&gt;
-		export default {
-		  name: 'HelloWorld',
-		  data () {
-		    return {
-		      msg: 'Welcome to Your Vue.js App'
-		    }
-		  }
-		}
-		&lt;/script&gt;
-		&lt;!-- Add "scoped" attribute to limit CSS to this component only --&gt;
-		&lt;style scoped&gt;
-		h1, h2 {
-		  font-weight: normal;
-		}
-		ul {
-		  list-style-type: none;
-		  padding: 0;
-		}
-		li {
-		  display: inline-block;
-		  margin: 0 10px;
-		}
-		a {
-		  color: #42b983;
-		}
-		&lt;/style&gt;
+&lt;template&gt;
+  &lt;div class="hello"&gt;
+    &lt;h1&gt;{{ msg }}&lt;/h1&gt;
+    &lt;h2&gt;Essential Links&lt;/h2&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;a
+          href="https://vuejs.org"
+          target="_blank"
+        &gt;
+          Core Docs
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;a
+          href="https://forum.vuejs.org"
+          target="_blank"
+        &gt;
+          Forum
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;a
+          href="https://chat.vuejs.org"
+          target="_blank"
+        &gt;
+          Community Chat
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;a
+          href="https://twitter.com/vuejs"
+          target="_blank"
+        &gt;
+          Twitter
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;br&gt;
+      &lt;li&gt;
+        &lt;a
+          href="http://vuejs-templates.github.io/webpack/"
+          target="_blank"
+        &gt;
+          Docs for This Template
+        &lt;/a&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;h2&gt;Ecosystem&lt;/h2&gt;
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;a
+          href="http://router.vuejs.org/"
+          target="_blank"
+        &gt;
+          vue-router
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;a
+          href="http://vuex.vuejs.org/"
+          target="_blank"
+        &gt;
+          vuex
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;a
+          href="http://vue-loader.vuejs.org/"
+          target="_blank"
+        &gt;
+          vue-loader
+        &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;a
+          href="https://github.com/vuejs/awesome-vue"
+          target="_blank"
+        &gt;
+          awesome-vue
+        &lt;/a&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+export default {
+  name: 'HelloWorld',
+  data () {
+    return {
+      msg: 'Welcome to Your Vue.js App'
+    }
+  }
+}
+&lt;/script&gt;
+&lt;!-- Add "scoped" attribute to limit CSS to this component only --&gt;
+&lt;style scoped&gt;
+h1, h2 {
+  font-weight: normal;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
+}
+&lt;/style&gt;
 				</code></pre>
 				<h3>错误</h3>
 			在对<span class="definition"> index.html </span>进行编辑时，控制台可能提示错误
@@ -258,11 +258,11 @@
 			</figure>
 			这是由于<span class="definition"> src/main.js </span>里的第一行<span class="definition"> import Vue from 'vue' </span>引用的是<span class="definition"> vue.common.js </span><sup>[2]</sup>而无法使用模版，此时需要在<span class="definition"> build/webpack.dev.conf.js </span>给 'vue' 起个别名，在<span class="definition"> const devWebpackConfig = merge(baseWebpackConfig, { </span>之后追加
 			<pre><code class="javascript">
-		resolve: {
-		        alias: {
-		            'vue': 'vue/dist/vue.js'
-		        }
-		    },
+resolve: {
+        alias: {
+            'vue': 'vue/dist/vue.js'
+        }
+    },
 			</code></pre>
 			然后就可以愉快地使用了
 			<figure>

@@ -59,19 +59,19 @@
 						使用<span class=" definition"> meta </span>标签的<span class="definition"> viewport </span> 属性，对网页宽高、缩放进行控制。<br>
 						参见<a href="../meta标签.html"> meta标签 </a>。
 						<pre><code class="html">
-					&lt;!-- 网页宽度为设备宽度、高度为设备高度、初始缩放为1、最小缩放为0、最大缩放为10、允许缩放 --&gt;
-					&lt;meta name="viewport" content="
-						width=device-width,
-						height=device-height,
-						initial-scale=1,
-						minimum-scale=0,
-						maximum-scale=10,
-						user-scalable=yes
-					"&gt;
-					&lt;!-- IE9 以下不支持该属性，需要引入插件 --&gt;
-					&lt;!--[if lt IE 9]&gt;
-					　　　　&lt;script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"&gt;&lt;/script&gt;
-					&lt;![endif]--&gt;
+&lt;!-- 网页宽度为设备宽度、高度为设备高度、初始缩放为1、最小缩放为0、最大缩放为10、允许缩放 --&gt;
+&lt;meta name="viewport" content="
+	width=device-width,
+	height=device-height,
+	initial-scale=1,
+	minimum-scale=0,
+	maximum-scale=10,
+	user-scalable=yes
+"&gt;
+&lt;!-- IE9 以下不支持该属性，需要引入插件 --&gt;
+&lt;!--[if lt IE 9]&gt;
+　　　　&lt;script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"&gt;&lt;/script&gt;
+&lt;![endif]--&gt;
 						</code></pre>
 					</p>
 				</div>
@@ -87,15 +87,15 @@
 					<p>
 						百分比是相对于其包含块进行计算得到的长度，当包含块数值发生改变时，百分比能对其进行响应变化。
 						<pre><code class="html">
-					&lt;div style="
-						width: 100px;
-						height: 100px;
-					"&gt;
-						&lt;div style="
-							width: 50%;
-							height: 50%;
-						"&gt;&lt;/div&gt;
-					&lt;/div&gt;
+&lt;div style="
+	width: 100px;
+	height: 100px;
+"&gt;
+	&lt;div style="
+		width: 50%;
+		height: 50%;
+	"&gt;&lt;/div&gt;
+&lt;/div&gt;
 						</code></pre>
 						</div>
 					</p>
@@ -105,36 +105,36 @@
 					<p>
 						将每一个元素都设置为浮动元素，当在父元素内，同一行无法容纳多个元素时，多出的元素自动移动到下一行显示。
 						<pre><code class="html">
-					&lt;div style="
-						width: 175px;
-						height: 100px;
-						background-color: #ccc;
-					">
-						&lt;div style="
-							width: 50px;
-							height: 50px;
-							float: left;
-							background-color: #00f;
-						">&lt;/div>
-						&lt;div style="
-							width: 50px;
-							height: 50px;
-							float: left;
-							background-color: #0f0;
-						">&lt;/div>
-						&lt;div style="
-							width: 50px;
-							height: 50px;
-							float: left;
-							background-color: #f00;
-						">&lt;/div>
-						&lt;div style="
-							width: 50px;
-							height: 50px;
-							float: left;
-							background-color: #ff0;
-						">&lt;/div>
-					&lt;/div>
+&lt;div style="
+	width: 175px;
+	height: 100px;
+	background-color: #ccc;
+">
+	&lt;div style="
+		width: 50px;
+		height: 50px;
+		float: left;
+		background-color: #00f;
+	">&lt;/div>
+	&lt;div style="
+		width: 50px;
+		height: 50px;
+		float: left;
+		background-color: #0f0;
+	">&lt;/div>
+	&lt;div style="
+		width: 50px;
+		height: 50px;
+		float: left;
+		background-color: #f00;
+	">&lt;/div>
+	&lt;div style="
+		width: 50px;
+		height: 50px;
+		float: left;
+		background-color: #ff0;
+	">&lt;/div>
+&lt;/div>
 						</code></pre>
 						<div style="
 							width: 175px;
@@ -177,14 +177,14 @@
 							<li>在 CSS 样式表中使用 @media ，选择性使用 CSS 属性</li>
 						</ul>
 						<pre><code class="html">
-							&lt;link rel="stylesheet" href="style.css" media="表达式"&gt;
-							&lt;style&gt;
-								@media 表达式 {
-									选择器 {
-										CSS 属性
-									}
-								}
-							&lt;/style&gt;
+&lt;link rel="stylesheet" href="style.css" media="表达式"&gt;
+&lt;style&gt;
+	@media 表达式 {
+		选择器 {
+			CSS 属性
+		}
+	}
+&lt;/style&gt;
 						</code></pre>
 						表达式最终返回一个布尔值，若真，则应用该样式，若假，则不应用。<br>
 						参见<a href="./link.html"> link </a>。<br>

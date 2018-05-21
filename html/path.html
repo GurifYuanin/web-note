@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>path</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">path</h1>
+		</hgroup>
+		<section>
+			<h2>全局变量</h2>
+			<p>
+				在 node 环境中，有两个全局变量：
+				<ul>
+					<li>__dirname：当前文件的目录</li>
+					<li>__filename：当前文件的文件名 + 后缀</li>
+				</ul>
+				<pre><code class="javascript">
+console.log(__dirname);
+console.log(__filename);
+				</code></pre>
+				<figure>
+					<img src="../images/path_dirname_filename.jpg">
+					<figcaption>执行 D:\Git\web-note\demo\global-object.js</figcaption>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>path</h2>
+			<p>
+				path 是 node 提供的基本包，用于路径处理。
+				<ul>
+					<li>path.basename(url)：获得 url 最后一个分隔符后的内容</li>
+					<li>path.dirname(url)：获得 url 最后一个分隔符前的内容</li>
+					<li>path.extname(url)：获得 url 的文件拓展名</li>
+					<li>path.format(object)：合并 object 为一个 url</li>
+					<li>path.parse(url)：拆分 url 为一个 object</li>
+					<li>path.join(...)：合并多个字符串为一个 url</li>
+					<li>path.resolve(...)：join 并 normalize 并整理为一个绝对路径</li>
+					<li>path.normalize(url)：去除多余的 . 和 .. 来简化 url</li>
+					<li>path.isAbsolut(url)：判断 url 是否为绝对路径</li>
+				</ul>
+				<h3>basename</h3>
+				<pre><code class="javascript">
+console.log(path.basename('a/b/c')); // => c
+console.log(path.basename('a/b/c.html')); // => c.html
+				</code></pre>
+				<h3>dirname</h3>
+				<pre><code class="javascript">
+console.log(path.dirname('a/b/c')); // => a/b
+console.log(path.dirname('a/b/c.html')); // => a/b
+				</code></pre>
+				<h3>extname</h3>
+				<pre><code class="javascript">
+console.log(path.extname('a/b/c')); // => 空字符串
+console.log(path.extname('a/b/c.html')); // => .html
+				</code></pre>
+				<h3>format</h3>
+				对象的参数有<span class="definition"> root, dir, base, name, ext </span>并且如果同时存在：
+				<ul>
+					<li>dir 会覆盖 root</li>
+					<li>base 会覆盖 name 和 ext</li>
+				</ul>
+				<pre><code class="javascript">
+console.log(path.format({
+	root: '/e',
+	dir: '/a/b',
+	base: 'c.html',
+	name: 'd',
+	ext: '.xhtml'
+})); // => a/b\c.html
+				</code></pre>
+				<h3>parse</h3>
+				<pre><code class="javascript">
+console.log(path.parse('a/b/c.html')); // => { root: '', dir: 'a/b', base: 'c.html', ext: '.html', name: 'c' }
+				</code></pre>
+				<h3>join</h3>
+				<pre><code class="javascript">
+console.log(path.join('a/b', 'c.html')); // => a/b/c.html
+console.log(path.join('', 'c.html')); // => c.html
+				</code></pre>
+				<h3>resolve</h3>
+				有以下情况
+				<ul>
+					<li>存在一个根路径和多个相对路径，正常返回</li>
+					<li>存在多个根路径作为参数，则取最后一个作为根路径</li>
+					<li>若合并后不是绝对路径，将当前文件所在路径作为根路径</li>
+				</ul>
+				<pre><code class="javascript">
+console.log(path.resolve('/a/b', 'c.html')); // => D:\a\b\c.html
+console.log(path.resolve('/a', '/b', 'c.html'));// => D:\b\c.html
+console.log(path.resolve('a/b', 'c.html')); // => D:\Git\web-note\demo\a\b\c.html
+				</code></pre>
+				<h3>normail</h3>
+				<pre><code class="javascript">
+console.log(path.normalize('a/../a/../a/b/c.html')); // => a/b/c.html
+console.log(path.normalize('a/b/././c.html')); // => a/b/c.html
+				</code></pre>
+				<h3>isAbsolute</h3>
+				<pre><code class="javascript">
+console.log(path.isAbsolute('C:/')); // => true
+console.log(path.isAbsolute('/')); // => true
+console.log(path.isAbsolute('a/b/c.html')); // => false
+				</code></pre>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Node.js Path <a href="https://nodejs.org/dist/latest-v10.x/docs/api/path.html">https://nodejs.org/dist/latest-v10.x/docs/api/path.html</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

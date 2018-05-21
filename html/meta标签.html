@@ -40,21 +40,21 @@
 		    <p>
 		    	meta标签通常在&lt;head&gt;标签之间，举个例子，下面是meta_demo.html的源代码：
 				<pre><code class="html">
-					&lt;!DOCTYPE html&gt;
-					&lt;html lang="en"&gt;
-					&lt;head&gt;
-						&lt;meta name="keywords" content="note"&gt;
-						&lt;meta name="author" content="GurifYuanin"&gt;
-						&lt;meta name="generator" content="Sublime Text"&gt;
-						&lt;meta name="renderer" content="webkit"&gt;
-						&lt;meta http-equiv="Pragma" content="no-cache"&gt;
-						&lt;meta http-equiv="charset" content="UTF-8"&gt;
-						&lt;title&gt;demo&lt;/title&gt;
-					&lt;/head&gt;
-					&lt;body&gt;
-						Hello meta!
-					&lt;/body&gt;
-					&lt;/html&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+	&lt;meta name="keywords" content="note"&gt;
+	&lt;meta name="author" content="GurifYuanin"&gt;
+	&lt;meta name="generator" content="Sublime Text"&gt;
+	&lt;meta name="renderer" content="webkit"&gt;
+	&lt;meta http-equiv="Pragma" content="no-cache"&gt;
+	&lt;meta http-equiv="charset" content="UTF-8"&gt;
+	&lt;title&gt;demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	Hello meta!
+&lt;/body&gt;
+&lt;/html&gt;
 				</code></pre>
 				中间一串元数据表示的意思该网页：关键字是 <span class="definition">note</span> ，作者是 <span class="definition">GurifYuanin</span> ，写网页编辑器是 <span class="definition">Sublime Text</span> ，浏览器解析时使用 <span class="definition">webkit</span> 内核渲染，读网页的时候 <span class="definition">不使用缓存</span> ，网页的编码字符集是 <span class="definition">UTF-8</span> 。
 				<br>
@@ -132,7 +132,7 @@
 		    	<br>
 		    	描述该网页的一组关键字，方便搜索引擎检索与辨识网站。
 		    	<pre><code class="html">
-		    		&lt;meta name="keywords" content="key1 key2 key3..."&gt;
+&lt;meta name="keywords" content="key1 key2 key3..."&gt;
 		    	</code></pre>
 		    </p>
 		    <p>
@@ -140,7 +140,7 @@
 		    	<br>
 		    	描述该网页的一段文字(不超过150个字符)，方便搜索引擎检索与辨识网站。
 		    	<pre><code class="html">
-		    		&lt;meta name="description" content="this page is ..."&gt;
+&lt;meta name="description" content="this page is ..."&gt;
 		    	</code></pre>
 		    </p>
 		    <p>
@@ -178,7 +178,7 @@
 		    	  </tr>
 		    	</table>
 		    	<pre><code class="html">
-		    		&lt;meta name="robots" content="none"&gt;
+&lt;meta name="robots" content="none"&gt;
 		    	</code></pre>
 		    </p>
 		    <p>
@@ -186,7 +186,7 @@
 		    	<br>
 		    	搜索引擎再次访问的时间间隔。
 		    	<pre><code class="html">
-		    		&lt;meta name="revisit-after" content="1 year"&gt;
+&lt;meta name="revisit-after" content="1 year"&gt;
 		    	</code></pre>
 		    </p>
 		    <p>
@@ -194,7 +194,7 @@
 		    	<br>
 		    	网页的作者。
 		    	<pre><code class="html">
-		    		&lt;meta name="author" content="your name"&gt;
+&lt;meta name="author" content="your name"&gt;
 		    	</code></pre>
 		    </p>
 		    <p>
@@ -202,7 +202,7 @@
 		    	<br>
 		    	网页的制作工具。
 		    	<pre><code class="html">
-		    		&lt;meta name="generator" content="editor"&gt;
+&lt;meta name="generator" content="editor"&gt;
 		    	</code></pre>
 		    </p>
 		    <p>
@@ -210,7 +210,7 @@
 		    	<br>
 		    	网页的版权所有。
 		    	<pre><code class="html">
-		    		&lt;meta name="copyright" content="owner"&gt;
+&lt;meta name="copyright" content="owner"&gt;
 		    	</code></pre>
 		    </p>
 		    <p>
@@ -236,7 +236,7 @@
 		    	  </tr>
 		    	</table>
 		    	<pre><code class="html">
-		    		&lt;meta name="renderer" content="webkit"&gt;
+&lt;meta name="renderer" content="webkit"&gt;
 		    	</code></pre>
 		    </p>
 		    <p>
@@ -309,7 +309,7 @@
 		    	  </tr>
 		    	</table>
 		    	<pre><code class="html">
-		    		&lt;meta name="viewport" content="width=device-width, height=device-height, initial-scale=1"&gt;
+&lt;meta name="viewport" content="width=device-width, height=device-height, initial-scale=1"&gt;
 		    	</code></pre>
 		    </p>
 		    </div>
@@ -320,10 +320,10 @@
 		        	<br>
 		        	设置网页内容的编码字符集，但在HTML5中可以用更简洁的方式来写，以下两种写法是等价的。
 		        	<pre><code class="html">
-		        		&lt;!-- 传统写法 --&gt;
-		        		&lt;meta http-equiv="charset" content="utf-8"&gt;
-		        		&lt;!-- HTML5中 --&gt;
-		        		&lt;meta charset="utf-8"&gt;
+&lt;!-- 传统写法 --&gt;
+&lt;meta http-equiv="charset" content="utf-8"&gt;
+&lt;!-- HTML5中 --&gt;
+&lt;meta charset="utf-8"&gt;
 		        	</code></pre>
 		        </p>
 		        <p>
@@ -349,7 +349,7 @@
 		        	  </tr>
 		        	</table>
 		        	<pre><code class="html">
-		        		&lt;meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"&gt;
+&lt;meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"&gt;
 		        	</code></pre>
 		        </p>
 		        <p>
@@ -387,7 +387,7 @@
 		    		  </tr>
 		    		</table>
 		    		<pre><code class="html">
-		    			&lt;meta http-equiv="cache-control" content="no-siteapp"&gt;
+&lt;meta http-equiv="cache-control" content="no-siteapp"&gt;
 		    		</code></pre>
 		        </p>
 		        <p>
@@ -395,7 +395,7 @@
 		        	<br>
 		        	本地网页缓存最长存活时间，过了这个时间再次读取的时候就必须再次访问服务器获取新网页。
 		        	<pre><code class="html">
-		        		&lt;meta http-equiv="expires" content="mon 01 Jun 2018 23:59:59 GMT"&gt;
+&lt;meta http-equiv="expires" content="mon 01 Jun 2018 23:59:59 GMT"&gt;
 		        	</code></pre>
 		        </p>
 		        <p>
@@ -411,7 +411,7 @@
 		        	<br>
 		        	顾名思义，就是设置cookie
 		        	<pre><code class="html">
-		        		&lt;meta http-equiv="Set-cookit" content="message=xxx; expires=Monday, 01-January-2018 23:59:59 GMT;"&gt;
+&lt;meta http-equiv="Set-cookit" content="message=xxx; expires=Monday, 01-January-2018 23:59:59 GMT;"&gt;
 		        	</code></pre>
 		        </p>
 		    </div>

@@ -313,18 +313,26 @@ body {
     pre {
         code {
             border-radius: 5px;
+            margin: 0;
+            padding: 0 10%;
             .strong {
+                display: inline-block;
                 margin: 5px;
+                padding: 5px;
                 border: dotted 1px #000;
                 border-radius: 5px;
-                padding: 5px;
 
-                color: black !important;
                 background-color: #fff;
             }
         }
     }
-
+    /* 代码展示区 */
+    .show {
+        border: dotted 1px #000;
+        border-radius: 5px;
+        padding: 2%;
+        margin: 2% 0;
+    }
     /* 提示块 */
     .tip {
         border-left: solid 2px #222;
@@ -408,4 +416,5 @@ body {
             text-align: right;
         }
     }
+
 }

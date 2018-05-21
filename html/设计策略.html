@@ -71,19 +71,19 @@
 					</tr>
 				</table>
 				<pre><code class="css">
-					/* 渐进增强 */
-					-webkit-transform:rotate(180deg); /* Safari */
-					-moz-transform:rotate(180deg); /* Firefox */
-					-ms-transform:rotate(180deg); /* IE */
-					-o-transform:rotate(180deg); /* Opera */
-					transform:rotate(180deg);
+/* 渐进增强 */
+-webkit-transform:rotate(180deg); /* Safari */
+-moz-transform:rotate(180deg); /* Firefox */
+-ms-transform:rotate(180deg); /* IE */
+-o-transform:rotate(180deg); /* Opera */
+transform:rotate(180deg);
 
-					/* 优雅降级 */
-					transform:rotate(180deg);
-					-webkit-transform:rotate(180deg); /* Safari */
-					-moz-transform:rotate(180deg); /* Firefox */
-					-ms-transform:rotate(180deg); /* IE */
-					-o-transform:rotate(180deg); /* Opera */
+/* 优雅降级 */
+transform:rotate(180deg);
+-webkit-transform:rotate(180deg); /* Safari */
+-moz-transform:rotate(180deg); /* Firefox */
+-ms-transform:rotate(180deg); /* IE */
+-o-transform:rotate(180deg); /* Opera */
 				</code></pre>
 				对于既支持前缀也支持不增加前缀的浏览器，写在后面的属性会覆盖掉写在前面的属性。<br>
 				理论上以上两种方式呈现的效果是完全一样的，但实际上浏览器对有加前缀的属性和没加前缀的属性，其实现效果并不总是完全一致。<br>
