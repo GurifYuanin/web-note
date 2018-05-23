@@ -41,15 +41,17 @@
 	"&gt;子元素&lt;/div&gt;
 &lt;/div&gt;
 				</code></pre>
-				<div style="
-					background-color: #ddd;
-					border: solid 1px #000;
-				">
+				<div class="show">
 					<div style="
-						background-color: #ff0;
-						width: 50px;
-						height: 50px;
-					">子元素</div>
+						background-color: #ddd;
+						border: solid 1px #000;
+					">
+						<div style="
+							background-color: #ff0;
+							width: 50px;
+							height: 50px;
+						">子元素</div>
+					</div>
 				</div>
 				如果此时子元素设置为浮动，子元素脱离了文档流，无法撑开父元素高度，父元素没有高度，呈现出“高度坍塌”的现象。
 				<pre><code class="html">
@@ -65,16 +67,18 @@
 	"&gt;子元素&lt;/div&gt;
 &lt;/div&gt;
 				</code></pre>
-				<div style="
-					background-color: #ddd;
-					border: solid 1px #000;
-				">
+				<div class="show">
 					<div style="
-						background-color: #ff0;
-						width: 50px;
-						height: 50px;
-						float: left;
-					">子元素</div>
+						background-color: #ddd;
+						border: solid 1px #000;
+					">
+						<div style="
+							background-color: #ff0;
+							width: 50px;
+							height: 50px;
+							float: left;
+						">子元素</div>
+					</div>
 				</div>
 				<div style="clear: left;">
 					解决方法一：使父元素创建<span class="definition"> BFC </span>，在<span class="definition"> BFC </span>中的块级元素可以把浮动元素包含进来，父元素的高度就可以被撑开了。开启<span class="definition"> BFC </span>的方式参见<a href="./格式化上下文.html"> 此处 </a>。<br>
@@ -93,17 +97,19 @@
 	"&gt;子元素&lt;/div&gt;
 &lt;/div&gt;
 					</code></pre>
-					<div style="
-						background-color: #ddd;
-						border: solid 1px #000;
-						overflow: hidden;
-					">
+					<div class="show">
 						<div style="
-							background-color: #ff0;
-							width: 50px;
-							height: 50px;
-							float: left;
-						">子元素</div>
+							background-color: #ddd;
+							border: solid 1px #000;
+							overflow: hidden;
+						">
+							<div style="
+								background-color: #ff0;
+								width: 50px;
+								height: 50px;
+								float: left;
+							">子元素</div>
+						</div>
 					</div>
 					解决方法二：在父元素内追加一个 clear : left / both 的块级元素，实现的方法有两种：
 					<ul>
@@ -159,20 +165,22 @@
 	"&gt;上外边距 50 px&lt;/div&gt;
 &lt;/div&gt;
 				</code></pre>
-				<div style="
-					overflow: auto;
-					border: solid 1px #000;
-				">
+				<div class="show">
 					<div style="
-						background-color: #888;
-						height: 50px;
-						margin-bottom: 50px;
-					">下外边距 50 px</div>
-					<div style="
-						background-color: #888;
-						height: 50px;
-						margin-top: 50px;
-					">上外边距 50 px</div>
+						overflow: auto;
+						border: solid 1px #000;
+					">
+						<div style="
+							background-color: #888;
+							height: 50px;
+							margin-bottom: 50px;
+						">下外边距 50 px</div>
+						<div style="
+							background-color: #888;
+							height: 50px;
+							margin-top: 50px;
+						">上外边距 50 px</div>
+					</div>
 				</div>
 				解决方式：打破这个规则，让其中一个兄弟块级元素属于另一个<span class="definition"> BFC </span>中。<br>
 				此处使用的方法是让第二个兄弟元素左浮动，于是这个元素会处于另一个<span class="definition"> BFC </span>中，不会与第一个兄弟元素的下外边距合并。
@@ -194,21 +202,23 @@
 	"&gt;上外边距 50 px&lt;/div&gt;
 &lt;/div&gt;
 				</code></pre>
-				<div style="
-					overflow: auto;
-					border: solid 1px #000;
-				">
+				<div class="show">
 					<div style="
-						background-color: #888;
-						height: 50px;
-						margin-bottom: 50px;
-					">下外边距 50 px</div>
-					<div style="
-						background-color: #888;
-						height: 50px;
-						margin-top: 50px;
-						float: left;
-					">上外边距 50 px</div>
+						overflow: auto;
+						border: solid 1px #000;
+					">
+						<div style="
+							background-color: #888;
+							height: 50px;
+							margin-bottom: 50px;
+						">下外边距 50 px</div>
+						<div style="
+							background-color: #888;
+							height: 50px;
+							margin-top: 50px;
+							float: left;
+						">上外边距 50 px</div>
+					</div>
 				</div>
 			</p>
 		</section>

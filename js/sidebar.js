@@ -23,12 +23,12 @@ $(function() {
     var $showCatalog = $('#showCatalog'); // 显示目录图片
     var $title = $('#title'); // 文章标题
     var $container = $('#container'); // 文章内容
-    var category = ['HTML', 'CSS', 'Javascript', 'NodeJS', 'Vue', '移动Web', '调试', '协议', '安全', '后端', '其他']; // 目录分类
+    var category = ['HTML', 'CSS', 'Javascript', 'NodeJS', 'VueJS', '移动Web', '调试', '协议', '安全', '后端', '其他']; // 目录分类
     var items = [
         ['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'svg'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
-        ['数据类型', '作用域链', '原型链', '闭包', '事件', '同源策略', '字符编码', 'JSONP', 'this', 'promise'],
-        ['commonJS', 'package.json', 'path'],
+        ['数据类型', '数组和字符串', '作用域链', '原型链', '闭包', '事件', '同源策略', '字符编码', 'JSONP', 'this', 'promise'],
+        ['commonJS', 'package.json', 'path', 'loader'],
         ['安装', '实例', '模版', '组件', 'mixins'],
         ['响应式布局', 'bootstrap'],
         ['抓包工具', 'chrome devtools'],
@@ -147,6 +147,7 @@ $(function() {
         }, time * 1000);
     }
     // 折叠目录
+    $hideCatalog.attr('title', '点击隐藏侧栏');
     $hideCatalog.click(function(event) {
         $sidebar.animate({ // 侧栏隐藏
             'width': '0',
@@ -163,6 +164,7 @@ $(function() {
     });
 
     // 展开目录
+    $showCatalog.attr('title', '点击显示侧栏');
     $showCatalog.click(function(event) {
         var width = getViewport().width;
         var padding;
@@ -234,23 +236,25 @@ $(function() {
         that.click(function(event) {
              scrollToSubTitle(name);
         });
-        that.mousedown(function() {
-            that.css({
-                'backgroundColor': '#888',
-                'color': '#fff'
-            });
-        });
-        that.mouseup(function() {
-            that.css({
-                'backgroundColor': '#fff',
-                'color': '#000'
-            });
-        });
+        // that.mousedown(function() {
+        //     that.css({
+        //         'backgroundColor': '#888',
+        //         'color': '#fff'
+        //     });
+        // });
+        // that.mouseup(function() {
+        //     that.css({
+        //         'backgroundColor': '#fff',
+        //         'color': '#000'
+        //     });
+        // });
     });
     var isLeave = false; // 判断光标是否已经离开导航面板
+    var isShow = false; // 判断导航块是否已经出现
     var itemInterval = 50; // 导航项动画间隔
     var blockInterval = 100; // 块动画间隔
-    $subTitleToggle.mouseenter(function(event) {
+    // 展开子标题导航
+    function showBlock(event) {
         var time = 0;
         // 块消失
         for (i = $subTitleBlock.length; i >= 0; i--, time += blockInterval) {
@@ -274,8 +278,13 @@ $(function() {
                 }, delay);
             })();
         }
-    });
-    $subTitleNav.mouseleave(function() {
+        isShow = true;
+        // 取消事件冒泡
+        event.stopPropagation(); // 非IE
+        window.event.cancelBubble = true; // IE
+    }
+    // 隐藏子标题导航
+    function hideBlock() {
         isLeave = true; // 加锁，不让导航项出现
         // 导航项消失
         for (var time = 0, i = 0; i < $subTitleItem.length ; i++, time += itemInterval) {
@@ -300,9 +309,14 @@ $(function() {
         setTimeout(function() {
             isLeave = false; // 开锁，允许导航项出现
         }, $subTitleItem.length * itemInterval + $subTitleBlock.length * blockInterval);
-    });
-    // 滚动条到底时隐藏导航项
-    var showable = true;
+        isShow = false;
+    }
+    $subTitleToggle.attr('title', '点击显示子标题导航');
+    $subTitleToggle.click(showBlock);
+    document.body.onclick = hideBlock;
+    // $subTitleNav.mouseleave(hideBlock);
+    // 滚动条到底时隐藏导航开关、隐藏子标题导航
+    var showable = true; // 标志是否可以隐藏导航开关
     $(window).scroll(function(){
         var scrollTop = $(this).scrollTop();
         var scrollHeight = $(document).height();
@@ -315,6 +329,9 @@ $(function() {
                 $subTitleToggle.stop().show('slow');
                 showable = false;
             }
+        }
+        if (isShow) {
+            hideBlock();
         }
     });
     // 按照视窗大小定义 html 字体大小
@@ -332,62 +349,69 @@ $(function() {
         return 10;
     }
     // 追加上一篇和下一篇操作
-    function wrapByA(href) {
-        if (href === '没有了') {
-            return '<a href="javascript:void(0)">' + href + '</a>';
-        } else {
-            return '<a href="./' + href + '.html">' + href + '</a>';
+    {
+        function wrapByA(href) {
+            if (href === '没有了') {
+                return '<a href="javascript:void(0)">' + href + '</a>';
+            } else {
+                return '<a href="./' + href + '.html">' + href + '</a>';
+            }
         }
-    }
-    var url = window.location.href;
-    var currentTitle = decodeURI(url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')));
-    var preTitle, nextTitle, indexX, indexY;
-    var flag = false;
-    var row = items.length;
-    for (var i = 0; i < row; i++) {
-        for (var j = 0; j < items[i].length; j++) {
-            if (currentTitle === items[i][j]) {
-                indexY = j;
-                flag = true;
+        var url = window.location.href;
+        var currentTitle = decodeURI(url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')));
+        var preTitle, nextTitle, indexX, indexY;
+        var flag = false;
+        var row = items.length;
+        for (var i = 0; i < row; i++) {
+            for (var j = 0; j < items[i].length; j++) {
+                if (currentTitle === items[i][j]) {
+                    indexY = j;
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag) {
+                indexX = i;
                 break;
             }
         }
-        if (flag) {
-            indexX = i;
-            break;
+        if (indexX === 0){
+            if (indexY === 0) {
+                preTitle = '没有了';
+            } else {
+                preTitle = items[indexX][indexY - 1];
+            }
+        } else {
+            if (indexY === 0) {
+                preTitle = items[indexX - 1][items[indexX - 1].length - 1];
+            } else {
+                preTitle = items[indexX][indexY - 1];
+            }
         }
+        if (indexX === row - 1){
+            if (indexY === items[indexX].length - 1) {
+                nextTitle = '没有了';
+            } else {
+                nextTitle = items[indexX][indexY + 1];
+            }
+        } else {
+            if (indexY === items[indexX].length - 1) {
+                nextTitle = items[indexX + 1][0];
+            } else {
+                nextTitle = items[indexX][indexY + 1];
+            }
+        }
+        preTitle = wrapByA(preTitle);
+        nextTitle = wrapByA(nextTitle);
+        $('.refer').after('<div id="footer" ><div class="prePage">上一篇：' + preTitle + '</div><div class="nextPage">下一篇：' + nextTitle + '</div></div>');
     }
-    if (indexX === 0){
-        if (indexY === 0) {
-            preTitle = '没有了';
-        } else {
-            preTitle = items[indexX][indexY - 1];
-        }
-    } else {
-        if (indexY === 0) {
-            preTitle = items[indexX - 1][items[indexX - 1].length - 1];
-        } else {
-            preTitle = items[indexX][indexY - 1];
-        }
-    }
-    if (indexX === row - 1){
-        if (indexY === items[indexX].length - 1) {
-            nextTitle = '没有了';
-        } else {
-            nextTitle = items[indexX][indexY + 1];
-        }
-    } else {
-        if (indexY === items[indexX].length - 1) {
-            nextTitle = items[indexX + 1][0];
-        } else {
-            nextTitle = items[indexX][indexY + 1];
-        }
-    }
-    preTitle = wrapByA(preTitle);
-    nextTitle = wrapByA(nextTitle);
-    $('.refer').after('<div id="footer" ><div class="prePage">上一篇：' + preTitle + '</div><div class="nextPage">下一篇：' + nextTitle + '</div></div>');
-    // $('html').eq(0).css('font-size', getRootFontSize()); // 设置 html（根） 字体大小
 
+    // $('html').eq(0).css('font-size', getRootFontSize()); // 设置 html（根） 字体大小
+    // 侧栏高度自适应
+    // $(window).on("load resize",function(){
+    //     var h = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;
+    //     $sidebar.css("height", h);
+    // });
     // 目录结构部分
     var dir = $('#catalogFrame img');
     dir.click(function(event) {

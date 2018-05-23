@@ -64,24 +64,26 @@
 		position: relative;
 		top: 50px;
 	"&gt;&lt;/div&gt;
-	123456789
+	<span class="strong">123456789</span>
 &lt;/div&gt;
 				</code></pre>
 				其运行结果为：
-				<div style="
-					height: 100px;
-					width: 100px;
-					background-color: #ddd;
-				">
+				<div class="show">
 					<div style="
-						height: 50px;
-						width: 50px;
-						background-color: #000;
-						opacity: .5;
-						position: relative;
-						top: 50px;
-					"></div>
-					123456789
+						height: 100px;
+						width: 100px;
+						background-color: #ddd;
+					">
+						<div style="
+							height: 50px;
+							width: 50px;
+							background-color: #000;
+							opacity: .5;
+							position: relative;
+							top: 50px;
+						"></div>
+						123456789
+					</div>
 				</div>
 			</p>
 		</section>
@@ -104,25 +106,27 @@
 		position: absolute;
 		top: 50px;
 	"&gt;&lt;/div&gt;
-	123456789
+	<span class="strong">123456789</span>
 &lt;/div&gt;
 				</code></pre>
 				其运行结果为：
-				<div style="
-					height: 100px;
-					width: 100px;
-					background-color: #ddd;
-					position: relative;
-				">
+				<div class="show">
 					<div style="
-						height: 50px;
-						width: 50px;
-						background-color: #000;
-						opacity: .5;
-						position: absolute;
-						top: 50px;
-					"></div>
-					123456789
+						height: 100px;
+						width: 100px;
+						background-color: #ddd;
+						position: relative;
+					">
+						<div style="
+							height: 50px;
+							width: 50px;
+							background-color: #000;
+							opacity: .5;
+							position: absolute;
+							top: 50px;
+						"></div>
+						123456789
+					</div>
 				</div>
 			</p>
 		</section>
@@ -130,7 +134,7 @@
 			<h2>fixed</h2>
 			<p>
 				<span class="definition"> fixed </span>使元素相对视窗偏移，元素脱离文档流和文本流。<br>
-				<div>
+				<div class="show">
 					<input id="show-fixed" type="button" value="显示fixed框">
 					<div id="fixed-info"></div>
 				</div>
@@ -143,7 +147,7 @@
 					font-size: 20px;
 					line-height: 100px;
 					position: fixed;
-					bottom: 0;
+					top: 0;
 					right: 0;
 				">
 					fixed
@@ -167,7 +171,7 @@
 	font-size: 20px;
 	line-height: 100px;
 	position: fixed;
-	bottom: 0;
+	top: 0;
 	right: 0;
 "&gt;
 	fixed

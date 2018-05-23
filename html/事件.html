@@ -248,11 +248,11 @@
 					<li>srcElement：触发事件的 HTML 元素（IE）</li>
 					<li>currentTarget：执行事件处理程序的 HTML 元素</li>
 					<li>bubbles：事件是否冒泡</li>
-					<li>stopProgagation()：取消事件进一步捕获或冒泡</li>
+					<li>stopPropagation()：取消事件进一步捕获或冒泡（非 IE）</li>
 					<li>cancelBubble：设置为 true 时取消事件冒泡（IE）</li>
 					<li>stopImmediatePropagation()：取消事件进一步捕获或冒泡、阻止事件处理程序被调用</li>
 					<li>cancelable：是否允许取消事件默认行为</li>
-					<li>preventDefault()：取消事件默认行为</li>
+					<li>preventDefault()：取消事件默认行为（非 IE）</li>
 					<li>returnValue：设置为 false 时取消事件默认行为（IE）</li>
 					<li>defaultPrevented：是否已经取消事件默认行为</li>
 				</ul>

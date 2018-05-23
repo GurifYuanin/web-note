@@ -82,6 +82,8 @@ var component = Vue.component('组件名'); // 获得组件构造器（函数）
 					<li>methods：方法</li>
 					<li>watch：侦听属性</li>
 					<li>template：模版</li>
+					<li>render：渲染函数</li>
+					<li>functional：函数式组件</li>
 					<li>生命周期钩子</li>
 					<li>mixins：混合</li>
 					<li>props：特性，访问父组件数据</li>
@@ -133,6 +135,168 @@ Vue.component('demo', {
 				<figure>
 					<img src="../images/vue_component_template.jpg">
 				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>render</h2>
+			<p>
+				有时我们需要动态渲染 template ，例如
+				<pre><code class="javascript">
+var level = 1;
+Vue.component('my-component', {
+	props: ['level'],
+	template: '&lt;h' + level + '&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/h' + level + '&gt;'
+});
+				</code></pre>
+				这种方法是允许的（没理由不行），但如果使用以下方法：
+				<pre><code class="javascript">
+Vue.component('my-component', {
+	props: ['level'],
+	template: '&lt;h' + this.level + '&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/h' + this.level + '&gt;'
+});
+				</code></pre>
+				全局注册组件时还没有传入 level ，只有在 html 中使用组件时才通过 props 传入 level，最结果为报错
+				<figure>
+					<img src="../images/vue_no_render.jpg">
+				</figure>
+				这时就需要渲染函数 render 。
+				<pre><code class="javascript">
+Vue.component('my-component', {
+	render: function(createElement) {
+		return createElement('h' + this.level, this.$slots.default);
+	}
+})
+				</code></pre>
+				<h3>createElement</h3>
+				形参 createElement 是 Vue 内部提供的一个方法，创建一个虚拟节点（VNode），调用时接受以下参数：
+				<ul>
+					<li>tag：标签名（字符串|对象|函数）</li>
+					<li>data：标签数据（对象）</li>
+					<li>children：子节点（字符串|数组）</li>
+				</ul>
+				<pre><code class="javascript">
+Vue.component('my-componeny', {
+	render: function(createElement) {
+		return createElement(
+			'div', // 标签名
+			{
+				class: { // 类
+					error: true
+				},
+				style: { // CSS 样式
+					backgroundColor: 'red'
+				},
+				attrs: { // HTML 属性
+					id: 'error-window'
+				},
+				props: { // 组件 props
+					message: '404' // （相当于&lt;div v-bind:message="404"&gt;&lt;/div&gt;）
+				},
+				domProps: { // dom 属性
+					innerHTML: 'it is wrong!'
+				},
+				on: { // 事件
+					click: function(){ console.log('you clicked it') }
+				},
+				nativeOn: { // 原生事件
+					click: function() { console.log('you clicked it again') }
+				},
+				directives: [ // 指令
+					name: 'my-directive',
+					value: '1',
+					expression: '1 + 1',
+					arg: 'hello',
+					modifiers: {
+					  message: true
+					}
+				],
+				scopedSlots: { // 作用域插槽
+
+				},
+				slot: 'slot-name', // 插槽名
+				key: 'key',
+				ref: 'ref'
+			},
+			[
+				'hello', // 文本节点
+				createElement('div', 'world') // div 节点
+			]
+		)
+	}
+});
+				</code></pre>
+				<h3>v-model</h3>
+				参见 props（下下节）部分关于组件使用 v-model 的问题，渲染函数中应该使用以下方式书写：
+				<pre><code class="javascript">
+&lt;div id="demo"&gt;
+	&lt;my-component v-model="content"&gt;&lt;/my-component&gt;
+	&lt;div&gt;{{content}}&lt;/div&gt;
+&lt;/div&gt;
+Vue.component('my-component', {
+	<span class="strong">props: ['value'],</span>
+	render: function (createElement) {
+		<span class="strong">var that = this;</span>
+		return createElement('input', {
+	    	domProps: {
+	      		<span class="strong">value: this.value</span>
+	   		},
+	    	on: {
+	    		<span class="strong">
+input: function (event) {
+	that.$emit('input', event.target.value);
+}
+	    		</span>
+	    	}
+	  	});
+	}
+});
+new Vue({
+	el: '#demo',
+	data: {
+		content: 'hello world'
+	}
+});
+				</code></pre>
+				<h3>插槽</h3>
+				<ul>
+					<li>this.$slots.插槽名：读取具名插槽的值</li>
+					<li>this.$slots.defaukt：读取默认插槽的值</li>
+					<li>this.$scopedSlots.插槽名：读取具名作用域插槽的值</li>
+					<li>this.$scopedSlots.default：读取默认作用域插槽的值</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>functional</h2>
+			<p>
+				开启 functional 后，组件将作为一个函数被使用，因而：
+				<ul>
+					<li>无 this，需要通过 render 函数的第二个参数获取上下文对象</li>
+					<li>无状态，开销低</li>
+				</ul>
+				<pre><code class="javascript">
+Vue.component('my-component', {
+	functional: true,
+	props: [],
+	render: function(createElement, context) {
+		return createElement(
+			'div',
+			context.data,
+			context.children
+		);
+	}
+});
+				</code></pre>
+				context 可访问到：
+				<ul>
+					<li>context.props：组件的 props 对象</li>
+					<li>context.data：数据对象</li>
+					<li>context.children：子节点（VNode）数组（&lt;组件名&gt;&lt;/组件名&gt; 内的所有元素）</li>
+					<li>context.parent：父组件</li>
+					<li>context.slots()：插槽数组（&lt;组件名&gt;&lt;/组件名&gt; 内的所有插槽）</li>
+					<li>context.listeners</li>
+					<li>context.injections</li>
+				</ul>
 			</p>
 		</section>
 		<section>
@@ -321,8 +485,8 @@ Vue.component('my-demo', {
 &lt;/div&gt;
 &lt;script&gt;
 	Vue.component('my-input', {
-		<span class="strong">props: ['value'],</span>
-		template: '&lt;input type="text" <span class="strong">v-bind:value="value" v-on:input="$emit(\'input\', $event.target.value)"</span>&gt;'
+		<span class="strong">props: ['value'],</span> // props 解决读取问题
+		template: '&lt;input type="text" <span class="strong">v-bind:value="value" v-on:input="$emit(\'input\', $event.target.value)"</span>&gt;' // $emit 解决修改问题
 	});
 	var vm = new Vue({
 		el: '#demo',
