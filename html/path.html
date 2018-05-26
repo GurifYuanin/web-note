@@ -44,6 +44,24 @@ console.log(__filename);
 			</p>
 		</section>
 		<section>
+			<h2>process.cwd()</h2>
+			<p>
+				process.cwd() 返回当前程序的工作路径，即使用 node 指令时的 pwd 。
+				<pre><code class="javascript">
+console.log(process.cwd());
+				</code></pre>
+				<figure>
+					<img src="../images/path_cwd.jpg">
+					<figcaption>在 D:\Git\web-note\ 下执行 node demo/global-object.js</figcaption>
+				</figure>
+				可以通过 process.chdir(directory) 来改变改值。
+				<pre><code class="shell">
+$ node -e 'process.chdir("C:/"); console.log(process.cwd())'
+C:\
+				</code></pre>
+			</p>
+		</section>
+		<section>
 			<h2>path</h2>
 			<p>
 				path 是 node 提供的基本包，用于路径处理。

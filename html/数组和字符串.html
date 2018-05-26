@@ -40,6 +40,7 @@ var arr2 = new Array(3);
 			<h2>数组方法</h2>
 			<p>
 				<h3>数组连接：concat / join</h3>
+				concat、join 不改变原来数组，而是返回一个新数组。
 				<pre><code class="javascript">
 // concat 连接所有数组，返回一个新数组
 新数组 = 数组1.concat(数组2, 数组3, ...);
@@ -52,6 +53,7 @@ var arr = [1, 2].concat([3, 4], [5, 6]);// => [1, 2, 3, 4, 5, 6]
 var string = [1, 2, 3, 4, 5].join(' '); // => '1 2 3 4 5'
 				</code></pre>
 				<h3>元素操作：push / unshift / pop / shift / splice</h3>
+				push、unshift、pop、shift 改变原来数组，splice 都会改变原来的数组
 				<pre><code class="javascript">
 // push 在数组尾部推入元素，返回新数组长度
 // unshift 在数组头部推入元素，返回新数组长度
@@ -89,6 +91,7 @@ arr; // => ['a', 'b', 'x', 'y', 'z', 'e']
 					<li>index：元素索引，可选</li>
 					<li>array：原数组，可选</li>
 				</ul>
+				三者都不会改变原来数组，forEach 返回 undefined ，filter 和 map 返回新数组。
 				<pre><code class="javascript">
 // forEach 遍历所有元素，执行函数
 数组.forEach(function(element, index, array){ ... });

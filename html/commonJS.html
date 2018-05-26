@@ -105,6 +105,7 @@ console.log(compute.add(a, b)); // => 3
 							<li>
 								如果 B 不是内置模块，按照 A 的<span class="definition"> module.paths </span>数组依次查找
 							</li>
+							<li>如果 B 不是模块而是目录，则自动寻找目录下的 index.js 文件作为模块</li>
 						</ol>
 					</li>
 				</ol>
