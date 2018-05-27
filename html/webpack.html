@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>webpack</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">webpack</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				webpack 是一个现代 JavaScript 应用程序的静态模块打包器。<sup>[1]</sup>它可以帮助我们：
+				<ul>
+					<li>打包多个文件为一个或多个 javascript 文件</li>
+					<li>使用 loader 将非 javascript 文件转化为 javascript 模块</li>
+					<li>使用插件拷贝、压缩文件等</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>安装</h2>
+			<p>
+				使用 npm 安装 webpack
+				<pre><code class="shell">
+# 创建项目
+$ mkdir 项目名
+# 进入项目
+$ cd 项目名
+# 初始化 package.json
+$ npm init -y
+# 下载 webpack
+$ npm install --save-dev webpack
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>配置</h2>
+			<p>
+				<h3>配置文件</h3>
+				官方推荐使用配置文件执行 webpack，此处命名为 webpack.conf.js
+				<pre><code class="javascript">
+var path = require('path'); // 路径处理包
+
+module.exports = {
+	// 模式
+	mode: 'development', // production development none
+	devtool: 'inline-source-map', // 源代码映射方式
+	context: __dirname, // webpack 项目所在路径
+	// 入口文件
+	entry: {
+		app: 'index.js'
+	},
+	// 出口文件
+	output: {
+		path: path.resolve(__dirname, 'dist'),
+		filename: 'buundle.js'
+	},
+	// 模块
+	module: {
+		rules: [
+			{
+				test: /.js$/,
+				loader: 'babel-loader',
+				options: {
+					preset: ['es2015']
+				}
+			}
+		]
+	},
+	// 插件
+	plugins: [],
+	// 解析模块请求
+	resolve: {
+		 alias: { // 模块别名
+			'old-module': 'new-module'
+		}
+	},
+	// 开发服务器
+	devServer: {
+		proxy: { // 后端服务器代理
+			'/api': 'http://localhost:8080'
+		},
+		contentBase: path.resolve(__dirname, 'dist'), // 服务器根目录
+		hot: true, // 是否开启模块热替换（需要 HotModuleReplacementPlugin 插件）
+		compress: true, // 是否将所有文件进行压缩
+		historyApiFallback: true, // 
+		https: false, // 是否开启 https
+		noInfo: true // 热替换时只显示 error 和 warn
+	}
+}
+				</code></pre>
+				<h3>mode</h3>
+				mode 表示打包的模式
+				<ul>
+					<li>development：将 process.env.NODE_ENV 的值设为 development。启用<span class="definition"> NamedChunksPlugin </span>和<span class="definition"> NamedModulesPlugin </span></li>
+					<li>production：将 process.env.NODE_ENV 的值设为 production。启用<span class="definition"> FlagDependencyUsagePlugin </span>,<span class="definition">FlagIncludedChunksPlugin</span>, <span class="definition"> ModuleConcatenationPlugin </span>,<span class="definition">NoEmitOnErrorsPlugin</span>,<span class="definition"> OccurrenceOrderPlugin </span>,<span class="definition"> SideEffectsFlagPlugin </span> 和<span class="definition"> UglifyJsPlugin </span></li>
+					<li>none</li>
+				</ul>
+				<h3>context</h3>
+				webpack 的根路径，且应该是个绝对路径。webpack 开始编译时，会以此为<span class="definition"> / </span>（根路径）来对需要的文件进行打包。例如如果执行<span class="definition"> webpack --config C:/my-project/webpack.conf.js </span>：
+				<pre><code class="javascript">
+module.exports = {
+	context: path.join('C:/my-project', 'src'),
+	entry: 'index.js'
+}
+				</code></pre>
+				此时打包时会把<span class="definition"> C:/my-project/src/index.js </span>当做入口文件，而不是<span class="definition"> C:/my-project/index.js </span>。
+				<h3>output</h3>
+				<h4>path</h4>
+				打包输出后的文件所在的目录，该参数应该是个绝对路径。
+				<h4>filename</h4>
+				打包输出后的文件名。当输出多个文件时，output.filename 可以使用以下占位符：
+				<ul>
+					<li>[name]：原先文件的文件名字</li>
+					<li>[id]：原先文件的 chunk id</li>
+					<li>[hash]：原先文件的 hash</li>
+					<li>[query]：文件名 ? 后的字符</li>
+				</ul>
+				<h4>publicPath</h4>
+				打包后的文件如果静态资源的请求，如<span class="definition">&lt;img href="demo.jpg"&gt;</span>，publicPath 用于设置这些资源的公共路径。
+				<ul>
+					<li>
+						当 publicPaht 为绝对路径时，其解析后的最终路径为：
+						<div class="show">
+					publicPath + loader.name
+				</div>
+				例如使用在 webpack.conf.js 中使用 url-loader ：
+				<pre><code class="javascript">
+module.exports = {
+	output: {
+		publicPath: '/static/'
+	},
+	module: {
+		rules: [
+			{
+				test: /\.(png|jpe?g|gif|svg)$/,
+				loader: 'url-loader',
+				options: {
+					name: 'img/[name].[ext]'
+				}
+			}
+		]
+	}
+}
+				</code></pre>
+				那么<span class="definition">&lt;img href="demo.jpg"&gt;</span>将被解析为<span class="definition">&lt;img href="/static/img/demo.jpg"&gt;</span>
+					</li>
+					<li>
+						当 publicPath 为相对路径时，相对地址的开始是引入打包文件的 html 文件。
+						<pre><code class="javascript">
+module.exports = {
+	output: {
+		publicPath: './static',
+		path: '/src',
+		filename: 'bundle.js'
+	},
+	module: {
+		rules: [
+			{
+				test: /\.(png|jpe?g|gif|svg)$/,
+				loader: 'url-loader',
+				options: {
+					name: 'img/[name].[ext]'
+				}
+			}
+		]
+	}
+}
+						</code></pre>
+						如果打包文件<span class="definition"> /src/bundle.js </span>被<span class="definition"> /dist/index.html </span>加载
+						<pre><code class="html">
+&lt;script src="../src/bundle.js"&gt;&lt;/script&gt;
+						</code></pre>
+						那么<span class="definition">&lt;img href="demo.jpg"&gt;</span>将被解析为<span class="definition">&lt;img href="/dist/static/img/demo.jpg"&gt;</span>
+					</li>
+				</ul>
+				<h4>hashDigestLength</h4>
+				设置 hash 的长度，默认为 20 。
+				<h3>resolve</h3>
+				resolve.alias 用于给 import 或 require 时给模块路径起别名。如果在 webpack.conf.js 配置别名为：
+				<pre><code class="javascript">
+module.exports = {
+	resolve: {
+		alias: {
+			'dir': '../module'
+		}
+	}
+}
+				</code></pre>
+				在实际打包中，将进行以下变化
+				<pre><code class="javascript">
+require demo from 'dir/demo.js';
+// 解析为
+require demo from '../module/demo.js';
+				</code></pre>
+				<h3>devServer</h3>
+				使用 webpack 的提供的小型服务器，修改资源时可以实现重新加载(live reloading)。
+				<pre><code class="shell">
+# 安装 npm 包
+npm install --save-dev webpack-dev-server
+# 配置 webpack.conf.js
+# 启动服务器
+webpack-dev-server --open
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>运行</h2>
+			<p>
+				<h3>config</h3>
+				可以直接在命令行输入 webpack 命令并传入配置参数，但不推荐，应遵照上一节所说使用配置文件。
+				<pre><code class="shell">
+$ webpack --config webpack.conf.js
+				</code></pre>
+				<h3>script</h3>
+				更高效的方法是写入到 package.json 的 script 里。
+				<pre><code class="javascript">
+{
+	"script": {
+		"build": "webpack --config webpack.conf.js"
+	}
+}
+				</code></pre>
+				然后在命令行直接输入，其效果与上一种是一样的
+				<pre><code class="shell">
+$ npm run build
+				</code></pre>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] webpack <a href="https://webpack.docschina.org/concepts">https://webpack.docschina.org/concepts</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

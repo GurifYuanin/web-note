@@ -212,42 +212,27 @@ $ npm install url-loader --save-dev
 			<p>
 				下载 npm 包
 				<pre><code class="shell">
-$ npm install vue-loader --save-dev
+$ npm install vue-loader css-loader vue-template-compiler --save-dev
 				</code></pre>
 				<ul>
+					<li>vue-template-compiler、css-loader：vue-loader 的（peerDependency）依赖包</li>
 					<li>vue-loader：将 .vue 文件编译为 javascript 文件</li>
 				</ul>
 				<pre><code  class="javascript">
+var VueLoaderPlugin = require('vue-loader/lib/plugin'); // webpack4.x 时需要添加的插件
 module.exports = {
 	module: {
 		rules: [
 			{
 				test: /\.vue$/,
-				use: [
-					{
-						loader: 'vue-loader',
-						options: {
-							transformAssetUrls: { // 将 video、source、img、image 标签的 src 转换为 require
-								video: ['src', 'poster'],
-								source: 'src',
-								img: 'src',
-								image: 'xlink:href'
-							},
-							hotReload: true // 开启热替换（默认开启）
-						},
-						loader: { // 处理内部 style、script 块
-							js: ['babel-loader'],
-							css: ['vue-style-loader', 'css-loader', 'sass-loader']
-						}
-					}
-				]
+				use: ['vue-loader']
 			}
 		]
 	},
 	plugins: [
 		new VueLoaderPlugin()
 	]
-}
+};
 				</code></pre>
 			</p>
 		</section>
@@ -255,6 +240,7 @@ module.exports = {
 			<h2>参考文献</h2>
 			<p>
 				<div>[1] loader <a href="https://webpack.docschina.org/concepts/loaders/">https://webpack.docschina.org/concepts/loaders/</a></div>
+				<div>[2] vue-loader <a href="https://vue-loader-v14.vuejs.org/zh-cn/start/spec.html">https://vue-loader-v14.vuejs.org/zh-cn/start/spec.html</a></div>
 			</p>
 		</section>
 	</article>
