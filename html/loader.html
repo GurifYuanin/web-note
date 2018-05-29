@@ -198,9 +198,9 @@ $ npm install url-loader --save-dev
 		loader: 'url-loader',
 		options: {
 			limit: 10000, // 当文件　< 10000 byte 时编码为 base64
-			publicPath: 'static', // 输出根目录，默认为 webpack 配置文件的 exports.output.publicPath
-			outputPath: 'img', // 输出目录，默认为 undefined
-			name: '[name].[hash:7].[ext]' // 输出名
+			publicPath: 'static', // 被被打包文件里进行对静态资源进行 url 请求后时，url 的根目录，默认为 webpack 配置文件的 exports.output.publicPath（__webpack_public_path__）
+			path: path.resolve(__dirname, 'dist/img'), // 被拷贝的静态资源的输出目录，默认为 webpack 配置文件的 exports.output.path
+			name: '[name].[hash:7].[ext]' // 被拷贝的静态资源的输出名
 		}
 	]
 }

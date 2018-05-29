@@ -81,49 +81,55 @@
 						</ol>
 						第 1 / 3 点参见<a href="./CSS怪异现象.html"> 此处 </a>，此处解释第 2 点。<br>
 						我们知道，浮动元素脱离了文档流（Normal Flow），其后的非浮动的兄弟元素会无视该元素占据其位置，最终结果是浮动元素覆盖了其后的兄弟元素。
-						<div>
-							<div style="
-								float: left;
-								width: 100px;
-								height: 50px;
-								background-color: #888;
-							">浮动元素</div>
-							<div style="
-								width: 200px;
-								height: 100px;
-								background-color: #eee;
-							">非浮动元素</div>
+						<div class="show">
+							<div>
+								<div style="
+									float: left;
+									width: 100px;
+									height: 50px;
+									background-color: #888;
+								">浮动元素</div>
+								<div style="
+									width: 200px;
+									height: 100px;
+									background-color: #eee;
+								">非浮动元素</div>
+							</div>
 						</div>
 						将非浮动元素设置为<span class="definition"> BFC </span>后：
 						<li>设置为浮动 / 非块级盒子的块级容器 / hidden</li>
-						<div style="height: 100px">
-							<div style="
-								float: left;
-								width: 100px;
-								height: 50px;
-								background-color: #888;
-							">浮动元素</div>
-							<div style="
-								width: 200px;
-								height: 100px;
-								background-color: #eee;
-								overflow: hidden;
-							">非浮动元素</div>
+						<div class="show">
+							<div style="height: 100px">
+								<div style="
+									float: left;
+									width: 100px;
+									height: 50px;
+									background-color: #888;
+								">浮动元素</div>
+								<div style="
+									width: 200px;
+									height: 100px;
+									background-color: #eee;
+									overflow: hidden;
+								">非浮动元素</div>
+							</div>
 						</div>
 						<li>设置为绝对定位（同样脱离文档流，绝对定位的元素比浮动更高）</li>
-						<div style="height: 100px">
-							<div style="
-								float: left;
-								width: 100px;
-								height: 50px;
-								background-color: #888;
-							">浮动元素</div>
-							<div style="
-								width: 200px;
-								height: 100px;
-								background-color: #eee;
-								position: absolute;
-							">非浮动元素</div>
+						<div class="show">
+							<div style="height: 100px">
+								<div style="
+									float: left;
+									width: 100px;
+									height: 50px;
+									background-color: #888;
+								">浮动元素</div>
+								<div style="
+									width: 200px;
+									height: 100px;
+									background-color: #eee;
+									position: absolute;
+								">非浮动元素</div>
+							</div>
 						</div>
 					</p>
 				</div>
@@ -138,12 +144,14 @@
 					<li> line box 的宽度由包含块宽度和浮动子元素决定</li>
 					<li> line box 的高度由 line-height 决定</li>
 				</ul>
-				<p style="
-					background-color: #ccc;
-				">
-					abc
-					<em>def</em>
-				</p>
+				<div class="show">
+					<p style="
+						background-color: #ccc;
+					">
+						abc
+						<em>def</em>
+					</p>
+				</div>
 				<pre><code class="html">
 &lt;p style="
 	background-color: #ccc;

@@ -64,8 +64,10 @@ bar
 					node -e 'javascript 代码' 表示直接执行（eval）其后的 javascript 代码
 				</div>
 				<h3>NODE_ENV</h3>
-				使用 wepack 配置文件来配置 process.env.NODE_ENV：
-				<pre><code class="javascript">
+				<ul>
+					<li>
+						影响被打包的文件：使用 wepack 配置文件来配置 process.env.NODE_ENV
+						<pre><code class="javascript">
 // webpack4.x
 module.exports = {
 	mode: 'development' // process.env.NODE_ENV = development
@@ -95,7 +97,39 @@ module.exports = {
 	    new webpack.NoEmitOnErrorsPlugin()
 	]
 }
-				</code></pre>
+						</code></pre>
+						之后在被打包的文件，例如 index.js 使用 process.env.NODE_ENV
+						<pre><code class=javascript>
+console.log(process.env.NODE_ENV); // => 输出 development 或 production
+						</code></pre>
+						<div class="tip">
+							为什么设置 DefinePlugin 插件的时候需要 JSON.stringify('production') 而不是直接 'production'？ 因为 JSON.stringify('production') 的执行结果为 "'production'"，而 DefinePlugin 插件的作用是找到所有匹配 process.env.NODE_ENV 然后直接替换为后面的<span class="different"> 去掉一层引号的 </span>参数。
+						</div>
+					</li>
+					<li>
+						影响 webpack 配置文件 webpack.conf.js：使用命令行传入参数来配置 NODE_ENV
+						<pre><code class="shell">
+# window 平台
+$ set NODE_ENV=development && webpack --config webpack.conf.js
+# mac
+$ NODE_ENV=development webpack --config webpack.conf.js
+						</code></pre>
+						之后在 webpack.conf.js 使用 process.env.NODE_ENV
+						<pre><code class="javascript">
+module.exports = {
+	entry: 'index.js'
+}
+console.log(process.env.NODE_ENV); // => 输出 development 或 production
+						</code></pre>
+						为了消除不同操作系统的差异，可以使用 cross-env 包
+						<pre><code class="shell">
+# 下载 cross-env
+$ npm install --save-dev cross-env
+# 使用
+$ cross-env NODE_ENV=development webpack --config webpack.conf.js
+						</code></pre>
+					</li>
+				</ul>
 			</p>
 		</section>
 		<section>
