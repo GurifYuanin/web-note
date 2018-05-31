@@ -19,6 +19,8 @@ $subTitleToggleSize: 4rem;
 $blockColor: #bbb #ddd #ddd #bbb;
 $blockLength: length($blockColor);
 
+$deviceThreshold: 601px;
+
 @mixin getFixedPosition($flag: "block") {
     position: fixed;
     left: 0;
@@ -159,7 +161,7 @@ body {
     background-color: $sidebarBackgroundColor;
 
     // 屏幕大于等于 600px 时的样式
-    @media (min-device-width:601px) {
+    @media (min-device-width: $deviceThreshold) {
         padding: 1%;
         width: 25%;
 
@@ -247,7 +249,7 @@ body {
     line-height: 1.5rem;
 
     // 屏幕大于等于 600px 时的样式
-    @media (min-device-width:601px) {
+    @media (min-device-width:$deviceThreshold) {
         width: 65%;
     }
     /* 目录结构部分 */
@@ -325,6 +327,9 @@ body {
             border-radius: 5px;
             margin: 0;
             padding: 0 10%;
+            @media (max-device-width: $deviceThreshold) {
+                padding: 0 2%;
+            }
             .strong {
                 display: inline-block;
                 margin: 5px;
@@ -386,8 +391,24 @@ body {
             }
         }
     }
-
-
+    @mixin message () {
+        font-size: 1rem;
+        padding: 1%;
+        border-radius: 5px;
+        border: solid 1px #eee;
+    }
+    /* 成功消息 */
+    .successMessage {
+        @include message();
+        color:  #28a745;
+        background-color: rgb(212, 237, 218);
+    }
+    /* 失败消息 */
+    .failMessage {
+        @include message();
+        color:  #dc3545;
+        background-color: rgb(255, 237, 218);
+    }
     /* 图片居中 */
     figure {
         text-aligin: center;
@@ -405,12 +426,16 @@ body {
         border: 1px solid $tableDeepColor;
 
         color: $tableDeepColor;
+
+        margin: 2.5% 5%;
         th {
             border: none;
             padding: 1%;
 
             color: $tableShallow;
             background-color: $tableDeepColor;
+            text-align: center;
+            min-width: 100px;
         }
         td {
             padding: 1%;

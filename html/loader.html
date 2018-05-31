@@ -109,7 +109,7 @@ $ npm install sass-loader node-sass webpack css-loader style-loader --save-dev
 		{
 			loader: 'css-loader',
 			options: {
-				root: '/css', // 将 css 内所有 url 请求的路径前添加该路径（跟路径除外）
+				root: '/css', // 将 css 内所有 url 请求的路径前添加该路径（根路径除外）
 				url: true, // 将 url() 解析为 require()
 				import: true, // 将 @import 解析为 require()
 				modules: true, // 开启 css 模块，暴露随机类名的对象给 javascript

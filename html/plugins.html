@@ -60,7 +60,8 @@ module.exports = {
 		<section>
 			<h2>html-webpack-plugin</h2>
 			<p>
-				当使用 webpack 打包工具对 javascript 等文件进行打包时，其输出名可能经常进行变更（例如使用hash），手动修改 index.html （假设为入口文件）十分繁琐，此时就需要<span class="definition"> html-webpack-plugin </span>插件来动态生成入口文件（ HTML5 ）。
+				当使用 webpack 打包工具对 javascript 等文件进行打包时，其输出名可能经常进行变更（例如使用hash），手动修改 index.html （假设为入口文件）十分繁琐，此时就需要<span class="definition"> html-webpack-plugin </span>插件来动态生成入口文件（ HTML5 ）。<br>
+				下载 npm 包。
 				<pre><code class="shell">
 $ npm install --save-dev html-webpack-plugin
 				</code></pre>
@@ -110,11 +111,109 @@ module.exports = {
 				</div>
 			</p>
 		</section>
+		<section>
+			<h2>CopyWebpackPlugin</h2>
+			<p>
+				CopyWebpackPlugin 用于文件或目录的拷贝。<br>
+				下载 npm 包。
+				<pre><code class="shell">
+$ npm install --save-dev copy-webpack-plugin
+				</code></pre>
+				配置 webpack.conf.js
+				<pre><code class="javascript">
+require CopyWebpackPlugin = require('copy-webpack-plugin');
+module.exports = {
+	plugins: [
+		new CopyWebpackPlugin([
+			{
+				from: './static/**', // 被拷贝的文件，可以使用 glob 模式和占位符
+				to: '', // 拷贝到的路径
+				toType: '', // 自定义 [ext] 占位符
+				ignore: ['.*'], // 不拷贝的文件，可以使用 glob 模式
+			}
+		])
+	]
+}
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>DefinePlugin</h2>
+			<p>
+				DefinePlugin 是 webpack 自带的插件，它用于定义字符串替换，使用 webpack 打包时对定义的字符串进行一一替换。<br>
+				配置 webpack.conf.js
+				<pre><code class="javascript">
+var webpack = require('webpack');
+module.exports = {
+	plugins: [
+		new webpack.DefinePlugin({
+			key: 'value'
+		})
+	]
+}
+				</code></pre>
+				例如 index.js 未打包时的代码为：
+				<pre><code class="javascript">
+var value = 'hello world';
+console.log(key);
+				</code></pre>
+				打包后则成为了：
+				<pre><code class="javascript">
+var value = 'hello world';
+console.log(value);
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>HotModuleReplacementPlugin</h2>
+			<p>
+				HotModuleReplacementPlugin 是 webpack 自带的插件，它用于启动模块热替换功能，再使用 HMR 接口对指定模块进行监听。
+				<pre><code class="javascript">
+var webpack = require('webpack');
+module.exports = {
+	devServer: { // 配合开发服务器
+		hot: true
+	},
+	plugins: [
+		new webpack.HotModuleReplacementPlugin() // HotModuleReplacementPlugin 通常不需要传入选项对象
+	]
+}
+				</code></pre>
+				在 index.js 中使用 HMR 接口监听热替换的模块，假设为 component.js
+				<pre><code class="javascript">
+export default function() {
+	var element = document.createElement('div');
+	element.innerHTML = 'hello world';
+	return element;
+}
+				</code></pre>
+				在打包文件中写入监听：
+				<pre><code class="javascript">
+import component from './component.js';
+var element = component();
+document.body.appendChild(element);
+
+if (module.hot) { // 检查是否开启 HMR
+	module.hot.accept('./component.js', function() { // 监听模块 component.js
+	// 监听到模块 component.js 发生修改，进行页面 DOM 修改
+	var nextElement = component();
+        document.body.replaceChild(nextElement, element);
+        element = nextElement;
+	});
+}
+				</code></pre>
+				<figure>
+					<img src="../images/plugins_hmr.gif">
+					<figcaption>修改模块 component.js 时自动更新且不刷新页面</figcaption>
+				</figure>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
 				<div>[1] 插件(plugins) <a href="https://webpack.docschina.org/concepts/plugins/">https://webpack.docschina.org/concepts/plugins/</a></div>
 				<div>[2] html-webpack-plugin <a href="https://github.com/jantimon/html-webpack-plugin">https://github.com/jantimon/html-webpack-plugin</a></div>
+				<div>[3] stoneniqiu 模块热替换<a href="http://www.cnblogs.com/stoneniqiu/p/6496425.html">http://www.cnblogs.com/stoneniqiu/p/6496425.html</a></div>
 			</p>
 		</section>
 	</article>

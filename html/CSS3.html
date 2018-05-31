@@ -39,7 +39,8 @@
 			<h2>新特性</h2>
 			<p>
 				<style>
-					.show {
+					.show-block {
+						border: solid 1px #000;
 						width: 100px;
 						height: 100px;
 					}
@@ -50,7 +51,7 @@
 						<pre><code class="css">
 border-radius: 20%; /* 圆角 */
 						</code></pre>
-						<div class="show" style="
+						<div class="show-block" style="
 							border-radius: 20%;
 							background-color: #888;
 						"></div>
@@ -65,7 +66,7 @@ border-radius: 20%; /* 圆角 */
 							<li>background-origin</li>
 							<li>background-clip</li>
 						</ul>
-						<div class="show" style="
+						<div class="show-block" style="
 							background-position: left top;
 							background-repeat: no-repeat;
 							background-image: url(../images/rock.jpg);
@@ -91,10 +92,10 @@ background-clip: content-box; /* 背景图片画布 */
 							<li>Linear Gradients(线性渐变)</li>
 							<li>Radial Gradients(径向渐变)</li>
 						</ul>
-						<div class="show" style="
+						<div class="show-block" style="
 							background: linear-gradient(90deg, #000, #fff);
 						"></div>
-						<div class="show" style="
+						<div class="show-block" style="
 							background: radial-gradient(circle, #000, #fff);
 						"></div>
 						<pre><code class="css">
@@ -110,7 +111,7 @@ background: radial-gradient(circle, #000, #fff); /* 径向渐变 */
 						<li>box-shadow(盒子投影)</li>
 					</ul>
 					<p>
-						<div class="show" style="
+						<div class="show-block" style="
 							box-shadow: 5px 5px 5px #000;
 							text-shadow: 5px 5px 5px #000;
 						">文字投影</div>
@@ -123,7 +124,7 @@ box-shadow: 5px 5px 5px #000; /* 盒子投影 */
 				<div>
 					<h3>text-overflow</h3>
 					<p>
-						<div class="show" style="
+						<div class="show-block" style="
 							overflow: hidden;
 							text-overflow: ellipsis;
 							background-color: #888;
@@ -137,22 +138,22 @@ overflow: hidden;
 				<div>
 					<h3>transform</h3>
 					<p>
-						<div class="show" style="
+						<div class="show-block" style="
 							transform: rotate(90deg);
 						">旋转90deg</div>
-						<div class="show" style="
+						<div class="show-block" style="
 							transform: translate(100px);
 						">偏移100px</div>
-						<div class="show" style="
+						<div class="show-block" style="
 							transform: scale(2, 2);
 						">XY缩放2倍</div>
-						<div class="show" style="
+						<div class="show-block" style="
 							transform: skew(10deg, 10deg);
 						">XY倾斜10deg</div>
-						<div class="show" style="
+						<div class="show-block" style="
 							transform: rotateX(45deg);
 						">X轴旋转45deg(3d)</div>
-						<div class="show" style="
+						<div class="show-block" style="
 							transform: translateX(100px);
 							transform: translateY(100px);
 							transform: translateZ(100px);
@@ -173,18 +174,24 @@ ransform: rotateX(45deg);
 							.animate {
 								width: 100px;
 								height: 100px;
+								color: white;
 							}
 							.animate:hover{
 								width: 200px;
 								height: 200px;
 							}
 						</style>
-						<div class="animate" style="
-							transition: width 1s, height 1s;
-							background-color: #888;
-						">悬浮我</div>
+						<div class="show">
+							<div class="animate" style="
+								transition: width 1s, height 1s;
+								background-color: #888;
+							">悬浮我</div>
+						</div>
+						
 						<pre><code class="css">
-transition: width 1s, height 1s; /* 打开 width 和 height 动画开关 */
+div {
+	transition: width 1s, height 1s; /* 打开 width 和 height 动画开关 */
+}
 div:hover {
 	width: 200px;
 	height: 200px
@@ -195,23 +202,44 @@ div:hover {
 				<div>
 					<h3>@keyframes</h3>
 					<p>
-						<style>
-							@keyframes bigger{
-								from {
+						<div class="show">
+							<div class="keyframes">点击按钮</div>
+							<input id="bigger" type="button" value="变大">
+							<style>
+								@keyframes bigger{
+									from {
+										width: 100px;
+										height: 100px;
+									}
+									to {
+										width: 200px;
+										height: 200px;
+									}
+								}
+
+								.keyframes {
 									width: 100px;
 									height: 100px;
+									color: white;
+									background-color: #888;
 								}
-								to {
-									width: 200px;
-									height: 200px;
+								.be-bigger {
+									animation: bigger 1s;
 								}
-							}
-						</style>
-						<div class="show" style="
-							background-color: #888;
-							animation: bigger 1s;
-						">刷新后变大</div>
+							</style>
+							<script>
+								$(function() {
+									$('#bigger').click(function() {
+										setTimeout(function() {
+											$('.keyframes').removeClass('be-bigger');
+										}, 1000);
+										$('.keyframes').addClass('be-bigger');
+									});
+								});
+							</script>
+						</div>
 						<pre><code class="css">
+/* 设置一个动画 */
 @keyframes bigger{
 	from {
 		width: 100px;
@@ -222,7 +250,9 @@ div:hover {
 		height: 200px;
 	}
 }
-animation: bigger 1s; /* 添加后执行 */
+div {
+	animation: bigger 1s; /* 添加后立即执行 */
+}
 						</code></pre>
 					</p>
 				</div>

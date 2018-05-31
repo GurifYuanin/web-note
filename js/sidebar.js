@@ -421,4 +421,9 @@ $(function() {
             brother.toggle(500);
         }
     });
+    $('table').attr({
+        'border': 1,
+        'cellpadding': 1,
+        'cellspacing': 0
+    })
 });
