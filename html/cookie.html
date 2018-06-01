@@ -121,9 +121,77 @@ document.cookie = 'key=value; path=path; domain=domain; max-age=second; expires=
 			</p>
 		</section>
 		<section>
+			<h2>HTTP cookie</h2>
+			<p>
+				我们使用<a href="./抓包工具.html"> Fiddler </a>来查看 cookie 在 HTTP 报文中的表示，访问<a href="../demo/cookie_demo.php"> cookie_demo.php </a>，该页面设置了两个 cookie ：message1=hello;message2=world，然后分别在 php 和 javascript 中将其输出到页面。
+				<pre><code class="php">
+&lt;?php
+	setcookie('message1', 'hello', time() + 3600);
+	setcookie('message2', 'world', time() + 3600);
+	for ($i = 1; isset($_COOKIE['message'.$i]); $i++) {
+		echo 'php: message' . $i . ' = ' . $_COOKIE['message' . $i] . '&lt;br&gt;';
+	}
+ ?&gt;
+ &lt;script&gt;
+ 	var allCookie = document.cookie;
+ 	var cookieArr = allCookie.split(';');
+ 	var cookieString = '';
+ 	for (var i = 1; i &lt;= cookieArr.length; i++) {
+ 		cookieString += 'javascript: ' + cookieArr[i - 1] + '&lt;br&gt;';
+ 	}
+ 	var div = document.createElement('div');
+ 	div.innerHTML = cookieString;
+ 	document.body.appendChild(div);
+ &lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/cookie_browser.jpg">
+					<figcaption>在浏览器中访问的结果</figcaption>
+				</figure>
+				<figure>
+					<img src="../images/cookie_fiddle.jpg">
+					<figcaption>在 fiddler 查看响应报文</figcaption>
+				</figure>
+				客户端发送的请求报文使用<span class="definition"> Cookie </span>字段传输 cookie。
+				<pre><code class="http">
+Cookie: key=hello; expires=Green Time; Max-Age=second; path=path; domain=domain; secure; HttpOnly
+				</code></pre>
+				服务器发送的响应报文使用<span class="definition"> set-cookie </span>字段给客户端设置 cookie。
+				<pre><code class="http">
+Set-Cookie: key=hello; expires=Green Time; Max-Age=second; path=path; domain=domain; secure; HttpOnly
+				</code></pre>
+			</p>
+		</section>
+		<section>
 			<h2>缺点</h2>
 			<p>
-				由于 cookie 是以明文的方式进行传输，其中涉及了一些个人信息或浏览记录，一些网络攻击者可能利用这些隐私信息进行一些恶意行为（修改 cookie 、盗用账户等）。
+				<ul>
+					<li>由于 cookie 是以明文的方式进行传输，其中涉及了一些个人信息或浏览记录，一些网络攻击者可能利用这些隐私信息进行一些恶意行为（修改 cookie 、盗用账户等）</li>
+					<li>每个 cookie 最大为 4KB</li>
+					<li>除 Safari 外其他浏览器都对一个域上 cookie 的数量有所限制</li>
+					<table>
+						<tr>
+							<th>浏览器</th>
+							<th>数量</th>
+						</tr>
+						<tr>
+							<td>IE6</td>
+							<td>20</td>
+						</tr>
+						<tr>
+							<td>IE7+</td>
+							<td>50</td>
+						</tr>
+						<tr>
+							<td>Firefox</td>
+							<td>50</td>
+						</tr>
+						<tr>
+							<td>Chrome</td>
+							<td>53</td>
+						</tr>
+					</table>
+				</ul>
 			</p>
 		</section>
 		<section class="refer">

@@ -192,7 +192,7 @@
 							</figure>
 						</li>
 					</ol>
-					写在矢量形状上的属性：
+					写在矢量形状上的属性：（同时也可以写在 css 样式（&lt;style&gt;）里）
 					<ol>
 						<li>
 							<span class="definition"> fill="color" </span>：用于设置形状的填充颜色
@@ -241,7 +241,7 @@
 		<section>
 			<h2>矩形</h2>
 			<p>
-				矩形可设置的属性有：
+				使用 rect 来绘制矩形，矩形可设置的属性有：
 				<ul>
 					<li>x：矩形左上角的 x 坐标</li>
 					<li>y：矩形左上角的 y 坐标</li>
@@ -261,9 +261,25 @@
 			</p>
 		</section>
 		<section>
+			<h2>多边形</h2>
+			<p>
+				使用 ponlygon 来绘制多边形，多边形可设置的属性只有<span class="definition"> points </span>，通过<span class="definition"> points="x1,y1 x2,y2 x3,y3..." </span>来指定多边形的点。
+				<pre><code class="html">
+&lt;svg&gt;
+	&lt;polygon points="0,0 100,100 0,50" fill="red"/&gt;
+&lt;/svg&gt;
+				</code></pre>
+				<div class="show">
+					<svg height="100">
+						<polygon points="0,0 100,100 0,50" fill="red"/>
+					</svg>
+				</div>
+			</p>
+		</section>
+		<section>
 			<h2>正圆</h2>
 			<p>
-				矩形可设置的属性有：
+				使用 circle 来绘制正圆，正圆可设置的属性有：
 				<ul>
 					<li>cx：圆心 x 坐标</li>
 					<li>cy：圆心 y 坐标</li>
@@ -277,6 +293,50 @@
 				<div class="show">
 					<svg height="50">
 						<circle cx="25" cy="25" r="25" fill="red"/>
+					</svg>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>椭圆</h2>
+			<p>
+				使用 ellipse 来绘制椭圆，类似于正圆，但椭圆需要设置两个半径：
+				<ul>
+					<li>cx：圆心 x 坐标</li>
+					<li>cy：圆心 y 坐标</li>
+					<li>rx：x轴 半径</li>
+					<li>ry：y轴 半径</li>
+				</ul>
+				<pre><code class="html">
+&lt;svg&gt;
+	&lt;ellipse cx="50" cy="25" rx="50" ry="25" fill="red"/&gt;
+&lt;/svg&gt;
+				</code></pre>
+				<div class="show">
+					<svg height="50">
+						<ellipse cx="50" cy="25" rx="50" ry="25" fill="red"/>
+					</svg>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>直线</h2>
+			<p>
+				使用 line 来绘制直线，直线可设置的属性有：
+				<ul>
+					<li>x1：第一个点的 x 坐标</li>
+					<li>y1：第一个点的 y 坐标</li>
+					<li>x2：第二个点的 x 坐标</li>
+					<li>y2：第二个点的 y 坐标</li>
+				</ul>
+<pre><code class="html">
+&lt;svg&gt;
+	&lt;line x1="0" y1="0" x2="100" y2="0" stroke="red"/&gt;
+&lt;/svg&gt;
+				</code></pre>
+				<div class="show">
+					<svg height="2">
+						<line x1="0" y1="0" x2="100" y2="0" stroke="red"/>
 					</svg>
 				</div>
 			</p>
@@ -328,7 +388,26 @@
 					</li>
 					<li><span class="definition"> A rx ry x-axis-rotation large-arc-flag sweep-flag x y </span>：画一段弧线</li>
 				</ul>
-
+			</p>
+		</section>
+		<section>
+			<h2>文本</h2>
+			<p>
+				使用 text 来绘制文本，其属性有：
+				<ul>
+					<li>x：文本的 x 坐标</li>
+					<li>y：文本的 y 坐标</li>
+				</ul>
+				<pre><code class="html">
+&lt;svg&gt;
+	&lt;text x="0" y="15" fill="red"&gt;hello world&lt;/text&gt;
+&lt;/svg&gt;
+				</code></pre>
+				<div class="show">
+					<svg height="15">
+						<text x="0" y="15" fill="red">hello world</text>
+					</svg>
+				</div>
 			</p>
 		</section>
 		<section>
@@ -468,12 +547,13 @@
 						</script>
 					</div>
 					<pre><code class="html">
+&lt;!-- 此处代码简化为点击按钮后显示线条 --&gt;
 &lt;!-- html 代码 --&gt;
 &lt;svg&gt;
 	&lt;!-- 画一条 200px 的水平线 --&gt;
 	&lt;path id="path" d="M 0 0 L 200 0" stroke-width="2" stroke="black" stroke-dasharray="100%" stroke-dashoffset="0%"/&gt;
 &lt;/svg&gt;
-&lt;input id="btn" type="button" value="隐藏"&gt;
+&lt;input id="btn" type="button" value="显示"&gt;
 &lt;!-- css 样式 --&gt;
 &lt;style&gt;
 	#path {
@@ -504,12 +584,17 @@
 				绘制完成后保存得到 .svg 文件，使用文本编辑器打开后查看其代码，可以使用第一节讲的方法直接嵌入到 HTML 文档中。
 				<figure>
 					<img src="../images/svg_google_docs.jpg">
-					<figcaption>google docs</figcaption>
+					<figcaption>使用 google docs</figcaption>
+				</figure>
+				<figure>
 					<img src="../images/svg_google_docs_code.jpg">
-					<figcaption>svg 代码</figcaption>
+					<figcaption>查看 svg 代码</figcaption>
 				</figure>
 				<div class="show">
 					<svg id="sai-ya-ren" version="1.1" viewBox="0.0 0.0 960.0 720.0" fill="none" stroke="none" stroke-linecap="square" stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><clipPath id="p.0"><path d="m0 0l960.0 0l0 720.0l-960.0 0l0 -720.0z" clip-rule="nonzero"/></clipPath><g clip-path="url(#p.0)"><path fill="#000000" fill-opacity="0.0" d="m0 0l960.0 0l0 720.0l-960.0 0z" fill-rule="evenodd"/><path fill="#cfe2f3" d="m346.3281 360.0l0 0c0 -66.06543 53.55661 -119.62204 119.62204 -119.62204c66.06543 0 119.62207 53.55661 119.62207 119.62204c0 66.06543 -53.55664 119.62204 -119.62207 119.62204c-66.06543 0 -119.62204 -53.55661 -119.62204 -119.62204z" fill-rule="evenodd"/><path fill="#a5b4c2" d="m415.16614 324.22415c0 -6.8818054 5.578827 -12.460632 12.460632 -12.460632c6.8818054 0 12.460632 5.578827 12.460632 12.460632c0 6.8818054 -5.578827 12.460632 -12.460632 12.460632c-6.8818054 0 -12.460632 -5.578827 -12.460632 -12.460632m76.64673 0c0 -6.8818054 5.5787964 -12.460632 12.460632 -12.460632c6.8818054 0 12.460632 5.578827 12.460632 12.460632c0 6.8818054 -5.578827 12.460632 -12.460632 12.460632c-6.881836 0 -12.460632 -5.578827 -12.460632 -12.460632" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m401.1142 412.16797q64.83594 44.528107 129.52045 0" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m346.3281 360.0l0 0c0 -66.06543 53.55661 -119.62204 119.62204 -119.62204c66.06543 0 119.62207 53.55661 119.62207 119.62204c0 66.06543 -53.55664 119.62204 -119.62207 119.62204c-66.06543 0 -119.62204 -53.55661 -119.62204 -119.62204z" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m415.16614 324.22415c0 -6.8818054 5.578827 -12.460632 12.460632 -12.460632c6.8818054 0 12.460632 5.578827 12.460632 12.460632c0 6.8818054 -5.578827 12.460632 -12.460632 12.460632c-6.8818054 0 -12.460632 -5.578827 -12.460632 -12.460632m76.64673 0c0 -6.8818054 5.5787964 -12.460632 12.460632 -12.460632c6.8818054 0 12.460632 5.578827 12.460632 12.460632c0 6.8818054 -5.578827 12.460632 -12.460632 12.460632c-6.881836 0 -12.460632 -5.578827 -12.460632 -12.460632" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m401.1142 412.16797q64.83594 44.528107 129.52045 0" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m346.3281 360.0l0 0c0 -66.06543 53.55661 -119.62204 119.62204 -119.62204c66.06543 0 119.62207 53.55661 119.62207 119.62204c0 66.06543 -53.55664 119.62204 -119.62207 119.62204c-66.06543 0 -119.62204 -53.55661 -119.62204 -119.62204z" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m374.8084 495.56693l273.4173 0l0 74.04727l-273.4173 0z" fill-rule="evenodd"/><path fill="#000000" d="m386.3709 535.2869l0 -22.90625l3.03125 0l0 9.40625l11.90625 0l0 -9.40625l3.03125 0l0 22.90625l-3.03125 0l0 -10.796875l-11.90625 0l0 10.796875l-3.03125 0zm34.015625 -5.34375l2.90625 0.359375q-0.6875 2.546875 -2.546875 3.953125q-1.859375 1.40625 -4.75 1.40625q-3.640625 0 -5.78125 -2.234375q-2.125 -2.25 -2.125 -6.296875q0 -4.1875 2.15625 -6.5q2.15625 -2.3125 5.59375 -2.3125q3.328125 0 5.4375 2.265625q2.109375 2.265625 2.109375 6.375q0 0.25 -0.015625 0.75l-12.375 0q0.15625 2.734375 1.546875 4.1875q1.390625 1.453125 3.46875 1.453125q1.546875 0 2.640625 -0.8125q1.09375 -0.8125 1.734375 -2.59375zm-9.234375 -4.546875l9.265625 0q-0.1875 -2.09375 -1.0625 -3.140625q-1.34375 -1.625 -3.484375 -1.625q-1.9375 0 -3.265625 1.296875q-1.3125 1.296875 -1.453125 3.46875zm15.609375 9.890625l0 -22.90625l2.8125 0l0 22.90625l-2.8125 0zm7.109375 0l0 -22.90625l2.8125 0l0 22.90625l-2.8125 0zm6.125 -8.296875q0 -4.609375 2.5625 -6.828125q2.140625 -1.84375 5.21875 -1.84375q3.421875 0 5.59375 2.25q2.171875 2.234375 2.171875 6.1875q0 3.203125 -0.96875 5.046875q-0.953125 1.828125 -2.796875 2.84375q-1.828125 1.015625 -4.0 1.015625q-3.484375 0 -5.640625 -2.234375q-2.140625 -2.234375 -2.140625 -6.4375zm2.890625 0q0 3.1875 1.390625 4.78125q1.390625 1.578125 3.5 1.578125q2.09375 0 3.484375 -1.59375q1.390625 -1.59375 1.390625 -4.859375q0 -3.078125 -1.40625 -4.65625q-1.390625 -1.59375 -3.46875 -1.59375q-2.109375 0 -3.5 1.578125q-1.390625 1.578125 -1.390625 4.765625zm27.90625 8.296875l-5.078125 -16.59375l2.90625 0l2.640625 9.578125l0.984375 3.5625q0.0625 -0.265625 0.859375 -3.421875l2.640625 -9.71875l2.890625 0l2.484375 9.625l0.828125 3.171875l0.953125 -3.203125l2.84375 -9.59375l2.734375 0l-5.1875 16.59375l-2.921875 0l-2.640625 -9.9375l-0.640625 -2.828125l-3.359375 12.765625l-2.9375 0zm19.0 -8.296875q0 -4.609375 2.5625 -6.828125q2.140625 -1.84375 5.21875 -1.84375q3.421875 0 5.59375 2.25q2.171875 2.234375 2.171875 6.1875q0 3.203125 -0.96875 5.046875q-0.953125 1.828125 -2.796875 2.84375q-1.828125 1.015625 -4.0 1.015625q-3.484375 0 -5.640625 -2.234375q-2.140625 -2.234375 -2.140625 -6.4375zm2.890625 0q0 3.1875 1.390625 4.78125q1.390625 1.578125 3.5 1.578125q2.09375 0 3.484375 -1.59375q1.390625 -1.59375 1.390625 -4.859375q0 -3.078125 -1.40625 -4.65625q-1.390625 -1.59375 -3.46875 -1.59375q-2.109375 0 -3.5 1.578125q-1.390625 1.578125 -1.390625 4.765625zm15.921875 8.296875l0 -16.59375l2.53125 0l0 2.515625q0.96875 -1.765625 1.78125 -2.328125q0.828125 -0.5625 1.8125 -0.5625q1.421875 0 2.890625 0.90625l-0.96875 2.609375q-1.03125 -0.609375 -2.0625 -0.609375q-0.921875 0 -1.65625 0.5625q-0.734375 0.546875 -1.046875 1.53125q-0.46875 1.5 -0.46875 3.28125l0 8.6875l-2.8125 0zm10.625 0l0 -22.90625l2.8125 0l0 22.90625l-2.8125 0zm17.9375 0l0 -2.09375q-1.578125 2.46875 -4.640625 2.46875q-1.984375 0 -3.65625 -1.09375q-1.65625 -1.09375 -2.578125 -3.046875q-0.90625 -1.96875 -0.90625 -4.515625q0 -2.484375 0.828125 -4.5q0.828125 -2.03125 2.484375 -3.109375q1.65625 -1.078125 3.703125 -1.078125q1.5 0 2.671875 0.640625q1.171875 0.625 1.90625 1.640625l0 -8.21875l2.796875 0l0 22.90625l-2.609375 0zm-8.890625 -8.28125q0 3.1875 1.34375 4.765625q1.34375 1.578125 3.171875 1.578125q1.84375 0 3.125 -1.5q1.296875 -1.515625 1.296875 -4.609375q0 -3.40625 -1.3125 -5.0q-1.3125 -1.59375 -3.234375 -1.59375q-1.875 0 -3.140625 1.53125q-1.25 1.53125 -1.25 4.828125z" fill-rule="nonzero"/><path fill="#000000" fill-opacity="0.0" d="m309.87402 279.11285l-80.8819 -131.02362" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m309.87402 279.11285l-80.8819 -131.02362" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m235.82152 151.51968l150.39369 92.28346" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m235.82152 151.51968l150.39369 92.28346" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m386.2021 243.7979l3.433075 4.566925" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m386.2021 243.7979l3.433075 4.566925" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m388.48032 247.21523l-36.44095 -174.29922" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m388.48032 247.21523l-36.44095 -174.29922" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m352.02625 72.91076l103.653534 123.02363" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m352.02625 72.91076l103.653534 123.02363" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m475.063 219.87401l55.811035 -150.39369" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m475.063 219.87401l55.811035 -150.39369" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m535.44354 67.215225l10.267761 159.49606" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m535.44354 67.215225l10.267761 159.49606" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m544.55646 228.98688l134.42517 -136.72441" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m544.55646 228.98688l134.42517 -136.72441" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m684.68243 90.0l-88.8504 154.92914" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m684.68243 90.0l-88.8504 154.92914" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m592.4042 254.04987l169.7638 -50.141724" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m592.4042 254.04987l169.7638 -50.141724" fill-rule="evenodd"/><path fill="#000000" fill-opacity="0.0" d="m762.1522 203.92389l-145.82678 107.08661" fill-rule="evenodd"/><path stroke="#000000" stroke-width="1.0" stroke-linejoin="round" stroke-linecap="butt" d="m762.1522 203.92389l-145.82678 107.08661" fill-rule="evenodd"/></g></svg>
+					<figure>
+						<figcaption>为 path 添加了动画</figcaption>
+					</figure>
 				</div>
 				<style>
 					#sai-ya-ren path {

@@ -142,7 +142,7 @@ document.domain = 'c.c:80'; // 报错
 						<ul>
 							<li>URL的片段标识符</li>
 							<li>window.name</li>
-							<li>window.postMessage</li>
+							<li>postMessage</li>
 						</ul>
 						<div>
 							<h4>片段标识符</h4>
@@ -255,9 +255,9 @@ document.domain = 'c.c:80'; // 报错
 							</p>
 						</div>
 						<div>
-							<h4>window.postMessage</h4>
+							<h4>postMessage</h4>
 							<p>
-								<span class="definition">window.postMessage</span>是HTML5为<span class="definition">window</span>新增的属性，允许不同源网页进行数据通信。<br>
+								<span class="definition"> postMessage </span>是 HTML5 新增的特性，为<span class="definition"> window </span>添加了<span class="definition"> postMessage() </span>方法，允许不同源网页进行数据通信。<br>
 								例如pm_parent.html想给pm_child.html发送数据，则
 								<pre><code class="javascript">
 /* pm_parent.html通过postMessage()方法发送数据给pm_child.html */
@@ -290,7 +290,7 @@ window.onmessage = function(event) {
 						<div>
 							<h4>JSONP</h4>
 							<p>
-								JSONP（JSON with Padding）是数据格式JSON的一种“使用模式”，可以让网页从别的网域要数据<sup>[4]</sup>。<br>
+								<a href="./JSONP.html"> JSONP </a>（JSON with Padding）是数据格式JSON的一种“使用模式”，可以让网页从别的网域要数据<sup>[4]</sup>。<br>
 								简而言之，JSONP是一种对JSON数据格式的巧用，由于<span class="definition">script</span>标签的<span class="definition">src</span>属性没有对目标网站进行不同源的限制，使得可以对不同源的网站发送请求，目标网站接受到JSON数据后进行处理，返回<span class="definition">回调函数(数据)</span>这种格式的数据，script就会运行这个回调函数。<br>
 								<pre><code class="javascript">
 function 回调函数(data) {
@@ -308,7 +308,7 @@ document.body.appendChild(script);
 						<div>
 							<h4>WebSocket</h4>
 							<p>
-								WebSocket是一种在单个TCP连接上进行全双工通讯的协议<sup>[5]</sup>。使用该协议没有同源策略的限制。
+								<a href="./HTML5.html#WebSocket"> WebSocket </a>是一种在单个TCP连接上进行全双工通讯的协议<sup>[5]</sup>。使用该协议没有同源策略的限制。
 							</p>
 						</div>
 						<div>
