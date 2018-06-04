@@ -28,7 +28,21 @@
 		<section>
 			<h2>定义</h2>
 			<p>
-				HTTP（HyperText Transfer Protocol，超文本传输协议）是一种用于分布式、协作式和超媒体信息系统的应用层协议<sup>[1]</sup>
+				HTTP（HyperText Transfer Protocol，超文本传输协议）是一种用于分布式、协作式和超媒体信息系统的应用层协议<sup>[1]</sup>。
+				<h3>版本</h3>
+				<p>
+					现有版本：
+					<ul>
+						<li>0.9</li>
+						<li>1.0</li>
+						<li>1.1</li>
+						<li>2.0</li>
+					</ul>
+				</p>
+				<h3>端口</h3>
+				<p>
+					使用端口：80。
+				</p>
 			</p>
 		</section>
 		<section>
@@ -40,7 +54,7 @@
 请求首部字段
 通用首部字段
 实体首部字段
-
+\r\n
 报文主体
 				</code></pre>
 				服务器端接受到该请求后，根据情况返回<span class="definition"> 响应报文 </span>，格式为：
@@ -49,7 +63,7 @@ HTTP/版本 状态码 状态短语
 响应首部字段
 通用首部字段
 实体首部字段
-
+\r\n
 报文主体
 				</code></pre>
 				可以看到，报文主体和首部字段隔着一个空行（CR+LF）。浏览器通过这种方式来获取 Web 资源。<br>
@@ -106,12 +120,156 @@ Content-Type: text/html
 			</p>
 		</section>
 		<section>
+			<h2>请求首部字段</h2>
+			<p>
+				<h3>Host</h3>
+				<p>
+					Host 是 HTTP 1.1 新增的字段，表示受请求的主机名。
+				</p>
+				<h3>Range</h3>
+				<p>
+					在服务器支持范围请求的情况下，Range 用于指定获得响应主体的部分内容，其返回的响应必然是 206 。
+					<ul>
+						<li>unit：单位</li>
+						<li>start：开始位置</li>
+						<li>end：结束位置</li>
+					</ul>
+					<pre><code class="http">
+Range: unit=start-end
+					</code></pre>
+					例如向 www.baidu.com 请求两个字节（第 0 个和第 1 个）：
+					<pre><code class="http">
+# 请求报文
+GET https://www.baidu.com HTTP/1.1
+User-Agent: Fiddler
+Host: www.baidu.com
+Range: bytes=0-1
+
+					</code></pre>
+				</p>
+				<h3>Referer</h3>
+				<p>
+					Refer 表示进行请求的源，例如下面是<span class="definition"> www.origin.com/index.html </span>页面，向<span class="definition"> www.demo.com </span>请求一张图片<span class="definition"> demo.jpg </span>。
+					<pre><code class="html">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+	&lt;meta charset="UTF-8"&gt;
+	&lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;img src="http://www.demo.com/demo.jpg"&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+					</code></pre>
+					那么 Referer 应该为：
+					<pre><code class="http">
+Refer: www.origin.com/index.html
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>响应首部字段</h2>
+			<p>
+				<h3>Content-Range & Content-Length</h3>
+				<p>
+					当请求首部字段有 Range 时，服务器返回响应主体的部分内容。
+					<ul>
+						<li>unit：单位</li>
+						<li>start：开始位置</li>
+						<li>end：结束位置</li>
+						<li>size：整个文件大小</li>
+						<li>length：结束位置 - 开始位置</li>
+					</ul>
+					<pre><code class="http">
+Content-Range: unit start-end/size
+Content-Length: length
+					</code></pre>
+					www.baidu.com 返回两个字节的内容：
+					<pre><code class="http">
+# 响应报文
+HTTP/1.1 206 Partial Content
+Cache-Control: no-cache
+Connection: Keep-Alive
+Content-Length: 2
+Content-Range: bytes 0-1/227
+Content-Type: text/html
+Date: Mon, 04 Jun 2018 02:20:25 GMT
+Last-Modified: Fri, 11 May 2018 09:27:00 GMT
+P3p: CP=" OTI DSP COR IVA OUR IND COM "
+Pragma: no-cache
+Server: BWS/1.1
+Set-Cookie: BD_NOT_HTTPS=1; path=/; Max-Age=300
+Strict-Transport-Security: max-age=0
+X-Ua-Compatible: IE=Edge,chrome=1
+
+&lt;h
+					</code></pre>
+				</p>
+				<h3>Connection & Keep-Alive</h3>
+				<p>
+					Connection 用于设置 HTTP 为短连接或长连接，Keep-Alive 用于设置长连接时间
+					<ul>
+						<li>Connection: close -> 短连接，一次请求/响应之后，就会关闭连接</li>
+						<li>Connection: keep-alive -> 长连接，连接永久有效</li>
+						<li>Keep-Alive：timeout=second -> 长连接情况下 second 空闲后断开连接</li>
+					</ul>
+					<div class="tip">
+						HTTP 1.0 默认短连接，HTTP 1.1 默认长连接。
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
 			<h2>请求方法</h2>
 			<p>
 				<ul>
-					<li>GET：从指定的资源请求数据。</li>
-					<li>POST：向指定的资源提交要被处理的数据</li>
+					<li>
+						HTTP 1.0
+						<ul>
+							<li>GET：从指定的资源请求数据</li>
+							<li>POST：向指定的资源提交要被处理的数据</li>
+							<li>HEAD：类似于 GET 请求，只不过返回的响应中没有具体的内容，用于获取报头</li>
+						</ul>
+					</li>
+					<li>
+						HTTP 1.1
+						<ul>
+							<li>PUT：从客户端向服务器传送的数据取代指定的文档的内容</li>
+							<li>DELETE：请求服务器删除指定的页面</li>
+							<li>OPTIONS：请求查看服务器的性能</li>
+							<li>TRACE：回显服务器收到的请求，主要用于测试或诊断</li>
+							<li>CONNECT：HTTP/1.1 协议中预留给能够将连接改为管道方式的代理服务器</li>
+						</ul>
+					</li>
 				</ul>
+				<table>
+					<tr>
+						<th>方法</th>
+						<th>目的</th>
+						<th>幂等</th>
+						<th>大小</th>
+						<th>参数</th>
+					</tr>
+					<tr>
+						<td>GET</td>
+						<td>查询数据</td>
+						<td>✔</td>
+						<td>受 url 长度限制，因浏览器不同而差异（2KB）</td>
+						<td>请求报文第一行的 URI 里的 ？key=value</td>
+					</tr>
+					<tr>
+						<td>POST</td>
+						<td>更新数据</td>
+						<td>✖</td>
+						<td>无限制</td>
+						<td>报文主体内</td>
+					</tr>
+				</table>
+				<div class="tip">
+					请求方法只是一种约定，实际应用中开发者可以随意使用方法进行随意操作，只不过不符合设计规范。
+				</div>
 			</p>
 		</section>
 		<section>
@@ -127,39 +285,99 @@ Content-Type: text/html
 				</ul>
 				以下只列举常见的状态码。
 				<div>
+					<style>
+						.http-version-img {
+							height: 1rem;
+							border: groove 2px #6cb206;
+							border-radius: 5px;
+							margin: 0 5px;
+							padding: 5px;
+						}
+					</style>
+					<h3>100</h3>
 					<p>
-						<h3>200</h3>
-						200 表示服务器对客户端的请求进行正常处理。
+						<img class="http-version-img" src="../images/http_1.1.png">
+						100 表示服务器对客户端的部分请求已经接收，客户端继续发剩余部分。（Continue，继续）
 					</p>
+					<h3>101</h3>
 					<p>
-						<h3>204</h3>
-						204 表示请求同样正常处理，但响应主体部分。
+						<img class="http-version-img" src="../images/http_1.1.png">
+						101 表示服务器将遵从客户的请求转换到另外一种协议。（Switching Protocols，协议转换）
 					</p>
+					<h3>200</h3>
 					<p>
-						<h3>304</h3>
-						304 并不是资源重定向，而是客户端的缓存未清除，服务器端觉得客户端可以直接使用缓存，于是返回主体为空的响应报文。
+						<img class="http-version-img" src="../images/http_1.0.png">
+						200 表示服务器对客户端的请求进行正常处理。（OK，成功）
 					</p>
+					<h3>202</h3>
 					<p>
-						<h3>400</h3>
-						400 表示客户端进行请求时语法错误，需要修改后重新发送请求。
+						<img class="http-version-img" src="../images/http_1.0.png">
+						202 表示服务器已接受请求，但尚未处理。（Accepted，已接受）
 					</p>
+					<h3>204</h3>
 					<p>
-						<h3>403</h3>
-						403 表示客户端进行的请求由于某种原因（权限、未授权等）被服务器端拒绝了。
+						<img class="http-version-img" src="../images/http_1.0.png">
+						204 表示请求同样正常处理，但报文主体为空。（No Content，无内容）
 					</p>
+					<h3>206</h3>
 					<p>
-						<h3>404</h3>
-						404 表示服务器端找不到该资源。
+						<img class="http-version-img" src="../images/http_1.1.png">
+						206 表示服务器成功处理了部分 GET 请求。（Partial Content，部分内容）
 					</p>
+					<h3>301</h3>
 					<p>
-						<h3>500</h3>
-						500 表示服务器端执行时发生了错误。
+						<img class="http-version-img" src="../images/http_1.0.png">
+						301 表示请求的网页已永久移动到新位置，自动将请求者转到新位置（GET 或 HEAD 时）。（Moved Permanently，永久重定向）
 					</p>
+					<h3>302</h3>
 					<p>
-						<h3>503</h3>
-						503 表示服务器端正在处于超负荷或者停机维护中。
+						<img class="http-version-img" src="../images/http_1.0.png">
+						302 表示请求的网页已永久移动到新位置，服务器目前从不同位置的网页响应请求，请求者应继续使用原有位置来进行后的请求。（Found，临时重定向）
+					</p>
+					<h3>304</h3>
+					<p>
+						<img class="http-version-img" src="../images/http_1.0.png">
+						304 并不是资源重定向，而是客户端的缓存未清除，服务器端觉得客户端可以直接使用缓存，于是返回主体为空的响应文。（Not Modified，未修改）
+					</p>
+					<h3>400</h3>
+					<p>
+						<img class="http-version-img" src="../images/http_1.0.png">
+						400 表示客户端进行请求时语法错误，需要修改后重新发送请求。（Bad Request，请求错误）
+					</p>
+					<h3>401</h3>
+					<p>
+						<img class="http-version-img" src="../images/http_1.0.png">
+						401 表示请求要求身份验证。（未授权）
+					</p>
+					<h3>403</h3>
+					<p>
+						<img class="http-version-img" src="../images/http_1.0.png">
+						403 表示客户端进行的请求由于某种原因（权限、未授权等）被服务器端拒绝了。（Forbidden，禁止）
+					</p>
+					<h3>404</h3>
+					<p>
+						<img class="http-version-img" src="../images/http_1.0.png">
+						404 表示服务器端找不到该资源。（Not Found，未找到）
+					</p>
+					<h3>500</h3>
+					<p>
+						<img class="http-version-img" src="../images/http_1.0.png">
+						500 表示服务器端执行时发生了错误。（服务器内部错误)）
+					</p>
+					<h3>503</h3>
+					<p>
+						<img class="http-version-img" src="../images/http_1.0.png">
+						503 表示服务器端正在处于超负荷或者停机维护中。（服务不可用）
 					</p>
 				</div>
+				<p>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>https</h2>
+			<p>
+				https = http + ssl。
 			</p>
 		</section>
 		<section class="refer">

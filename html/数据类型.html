@@ -161,6 +161,22 @@ var ergouzi = new Person();
 ergouzi instanceof Person; // => true
 				</code></pre>
 			</p>
+			<h3>莫名其妙的现象</h3>
+			<p>
+				<pre><code class="javascript">
+// 字符串字面量不是 String 的实例
+'我是字符串' instanceof String // => false
+
+// 字符串对象的不是字符串类型，而是对象
+typeof new String('我是字符串') // => object
+
+// undefined 不是关键字，IE6, 7, 8 、其他浏览器的函数内可以被重写
+(function() {
+	var undefined = 1;
+	console.log(undefined); // => 1
+})();
+				</code></pre>
+			</p>
 		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
