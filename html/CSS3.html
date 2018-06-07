@@ -10,6 +10,29 @@
 	<script src="../js/highlight.pack.js"></script>
 	<script src="../js/sidebar.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
+	<style>
+		.show-inline-block {
+			display: inline-block;
+			border: solid 1px #000;
+			width: 100px;
+			height: 100px;
+		}
+		.inline-flex-container {
+			display: inline-flex;
+			width: 20%;
+			margin: 1% 4% 1% 0;
+			border: solid 1px #888;
+		}
+		.inline-flex-container-vertical {
+			height: 9rem;
+		}
+		.flex-item {
+			color: white;
+			background-color: rgb(90, 150, 255);
+			width: 20%;
+			margin: 2.5%;
+		}
+	</style>
 </head>
 <body>
 	<aside id="sidebar">
@@ -36,159 +59,219 @@
 			</p>
 		</section>
 		<section>
-			<h2>新特性</h2>
+			<h2>圆角</h2>
 			<p>
-				<style>
-					.show-block {
-						border: solid 1px #000;
-						width: 100px;
-						height: 100px;
-					}
-				</style>
-				<div>
-					<h3>border-radius(圆角)</h3>
-					<p>
-						<pre><code class="css">
-border-radius: 20%; /* 圆角 */
-						</code></pre>
-						<div class="show-block" style="
-							border-radius: 20%;
-							background-color: #888;
-						"></div>
-					</p>
+				border 用于设置圆角，遵循值复制原则：
+				<ul>
+					<li>border: 左上角 右上角 右下角 左下角</li>
+				</ul>
+				<pre><code class="css">
+border-radius: 20%;
+				</code></pre>
+				<div class="show">
+					<div class="show-inline-block" style="border-radius: 20%;"></div>
 				</div>
-				<div>
-					<h3>background(背景图片)</h3>
-					<p>
-						<ul>
-							<li>background-image</li>
-							<li>background-size</li>
-							<li>background-origin</li>
-							<li>background-clip</li>
-						</ul>
-						<div class="show-block" style="
-							background-position: left top;
-							background-repeat: no-repeat;
-							background-image: url(../images/rock.jpg);
-							background-size: 100px 100px;
-							background-origin: content-box;
-							background-clip: content-box;
-						"></div>
-						<pre><code class="css">
+			</p>
+		</section>
+		<section>
+			<h2>背景图片</h2>
+			<p>
+				<ul>
+					<li>background-image: url('img1'), url('img2')</li>
+					<li>background-size: width height</li>
+					<li>background-origin: border-box | padding-box | content-box</li>
+					<li>background-clip: border-box | padding-box | content-box</li>
+				</ul>
+				<div class="show-inline-block" style="
+					background-position: left top;
+					background-repeat: no-repeat;
+					background-image: url(../images/rock.jpg);
+					background-size: 100px 100px;
+					background-origin: content-box;
+					background-clip: content-box;
+				"></div>
+				<pre><code class="css">
 background-position: left top;
 background-repeat: no-repeat;
-background-image: url(../images/rock.jpg);/* 背景图片(可同时设置多个) */
+background-image: url(../images/rock.jpg);/* 背景图片(多张图片时重叠) */
 background-size: 100px 100px; /* 背景图片宽高 */
 background-origin: content-box; /* 背景图片绘制起点 */
 background-clip: content-box; /* 背景图片画布 */
-						</code></pre>
-						需要注意的是，如果是用外联式引入样式表（link），背景图片的 url 是相对于当前 css 文件，而不是 html 文件。
-					</p>
-				</div>
-				<div>
-					<h3>Gradients</h3>
-					<p>
-						<ul>
-							<li>Linear Gradients(线性渐变)</li>
-							<li>Radial Gradients(径向渐变)</li>
-						</ul>
-						<div class="show-block" style="
-							background: linear-gradient(90deg, #000, #fff);
-						"></div>
-						<div class="show-block" style="
-							background: radial-gradient(circle, #000, #fff);
-						"></div>
-						<pre><code class="css">
+				</code></pre>
+				需要注意的是，如果是用外联式引入样式表（link），背景图片的 url 是相对于当前 css 文件，而不是 html 文件。
+			</p>
+		</section>
+		<section>
+			<h2>渐变</h2>
+			<p>
+				linear-gradients 用于设置线性渐变，radial-gradients 用于设置径向渐变：
+				<ul>
+					<li>background: linear-gradients(direction, color1 position1, color2 position2, ...)</li>
+					<li>background: repeating-linear-gradients(direction, color1, color2, ...)</li>
+					<li>background: radial-gradients(center, shape, size, color1 position1, color2 position2, ...)</li>
+					<li>background: repeating-radial-gradients(center, shape, size, color1 position1, color2 position2, ...)</li>
+				</ul>
+				样式值的意思为：
+				<ul>
+					<li>direction：left | top | right | bottom | &lt;number&gt;deg，线性渐变方向</li>
+					<li>color：任意颜色（可以带透明度）</li>
+					<li>position：任意长度，颜色所在位置</li>
+					<li>center：中心点所在位置，参考 background-position</li>
+					<li>shape：circle | ellipse，径向渐变形状</li>
+					<li>size：closest-side | farthest-side | closest-corner | farthest-corner，径向渐变范围大小</li>
+				</ul>
+				<pre><code class="css">
 background: linear-gradient(90deg, #000, #fff); /* 线性渐变 */
 background: radial-gradient(circle, #000, #fff); /* 径向渐变 */
-						</code></pre>
-					</p>
+				</code></pre>
+				<div class="show">
+					 <div class="show-inline-block" style="
+					 	background: linear-gradient(90deg, #000, #fff);
+					 "></div>
+					 <div class="show-inline-block" style="
+					 	background: radial-gradient(circle, #000, #fff);
+					 "></div>
 				</div>
-				<div>
-					<h3>shadow</h3>
+			</p>
+		</section>
+		<section>
+			<h2>投影</h2>
+			<p>
+				text-shadow 用于设置文字投影，box-shadow 用于设置元素投影。
+				<ul>
+					<li>text-shadow：x-offset y-offset blur color</li>
+					<li>box-shadow：x-offset y-offset blur spread color inset</li>
+				</ul>
+				样式值的意思为：
+				<ul>
+					<li>x-offset：投影的 x 偏移（向右为正方向）</li>
+					<li>y-offset：投影的 y 偏移（向下为正方向）</li>
+					<li>blur：投影的模糊度</li>
+					<li>spread：投影的尺寸</li>
+					<li>color：投影颜色</li>
+					<li>inset：切换为内投影</li>
+				</ul>
+				<pre><code class="css">
+text-shadow: 5px 5px 5px gray; /* 文字投影 */
+box-shadow: 5px 5px 5px 5px gray; /* 外部投影 */
+box-shadow: 5px 5px 5px 5px gray inset; /* 内部投影 */
+				</code></pre>
+				<div class="show">
+					<div class="show-inline-block" style="text-shadow: 5px 5px 5px gray;">文字投影</div>
+					<div class="show-inline-block" style="box-shadow: 5px 5px 5px 5px gray">外部投影</div>
+					<div class="show-inline-block" style="box-shadow: 5px 5px 5px 5px gray inset">内部投影</div>
+				</div>
+
+			</p>
+		</section>
+		<section>
+			<h2>文本属性</h2>
+			<p>
+				<h3>text-overflow</h3>
+				<p>
+					text-overflow 用于设置文本溢出父级容器时如何进行处理。
 					<ul>
-						<li>text-shadow(文字投影)</li>
-						<li>box-shadow(盒子投影)</li>
+						<li>clip：裁切溢出文本</li>
+						<li>ellipsis：使用 ... 代替溢出文本</li>
+						<li>文本：使用文本代替溢出文本（FF 专属）</li>
 					</ul>
-					<p>
-						<div class="show-block" style="
-							box-shadow: 5px 5px 5px #000;
-							text-shadow: 5px 5px 5px #000;
-						">文字投影</div>
-						<pre><code class="css">
-text-shadow: 5px 5px 5px #000; /* 文字投影 */
-box-shadow: 5px 5px 5px #000; /* 盒子投影 */
-						</code></pre>
-					</p>
-				</div>
-				<div>
-					<h3>text-overflow</h3>
-					<p>
-						<div class="show-block" style="
+					<pre><code class="css">
+overflow: hidden;
+
+text-overflow: clip;
+text-overflow: ellipsis;
+text-overflow: helloff;
+					</code></pre>
+					<div class="show">
+						<div class="show-inline-block" style="
+							overflow: hidden;
+							text-overflow: clip;
+						">abcdefghijklmnopqrstuvwxyz</div>
+						<div class="show-inline-block" style="
 							overflow: hidden;
 							text-overflow: ellipsis;
-							background-color: #888;
 						">abcdefghijklmnopqrstuvwxyz</div>
-						<pre><code class="css">
-text-overflow: ellipsis; /* 文字溢出部分用"..."代替 */
-overflow: hidden;
-						</code></pre>
-					</p>
-				</div>
-				<div>
-					<h3>transform</h3>
-					<p>
-						<div class="show-block" style="
-							transform: rotate(90deg);
-						">旋转90deg</div>
-						<div class="show-block" style="
-							transform: translate(100px);
-						">偏移100px</div>
-						<div class="show-block" style="
-							transform: scale(2, 2);
-						">XY缩放2倍</div>
-						<div class="show-block" style="
-							transform: skew(10deg, 10deg);
-						">XY倾斜10deg</div>
-						<div class="show-block" style="
-							transform: rotateX(45deg);
-						">X轴旋转45deg(3d)</div>
-						<div class="show-block" style="
-							transform: translateX(100px);
-							transform: translateY(100px);
-							transform: translateZ(100px);
-						">XYZ轴偏移100px</div>
-						<pre><code class="css">
+						<div class="show-inline-block" style="
+							overflow: hidden;
+							text-overflow: helloff;
+						">abcdefghijklmnopqrstuvwxyz</div>
+					</div>
+				</p>
+				<h3>word-break</h3>
+				<p>
+					word-break 用于设置文字换行方式。
+					<ul>
+						<li>normal：浏览器默认换行方式</li>
+						<li>break-all：直接换行</li>
+						<li>keep-all：只能在半角空格或连字符处换行</li>
+					</ul>
+					<div class="show">
+						<div class="show-inline-block" style="word-break: normal">
+							hello my frequenttttttttt words
+						</div>
+						<div class="show-inline-block" style="word-break: break-all">
+							hello my frequenttttttttt words
+						</div>
+						<div class="show-inline-block" style="word-break: keep-all">
+							hello my frequenttttttttt words
+						</div>
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>transform</h2>
+			<p>
+				<div class="show-inline-block" style="
+					transform: rotate(90deg);
+				">旋转90deg</div>
+				<div class="show-inline-block" style="
+					transform: translate(100px);
+				">偏移100px</div>
+				<div class="show-inline-block" style="
+					transform: scale(2, 2);
+				">XY缩放2倍</div>
+				<div class="show-inline-block" style="
+					transform: skew(10deg, 10deg);
+				">XY倾斜10deg</div>
+				<div class="show-inline-block" style="
+					transform: rotateX(45deg);
+				">X轴旋转45deg(3d)</div>
+				<div class="show-inline-block" style="
+					transform: translateX(100px);
+					transform: translateY(100px);
+					transform: translateZ(100px);
+				">XYZ轴偏移100px</div>
+				<pre><code class="css">
 transform: rotate(90deg);
 transform: translate(100px);
 transform: scale(2, 2);
 transform: skew(10deg, 10deg);
 ransform: rotateX(45deg);
-						</code></pre>
-					</p>
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>transition</h2>
+			<p>
+				<style>
+					.animate {
+						width: 100px;
+						height: 100px;
+						color: white;
+					}
+					.animate:hover{
+						width: 200px;
+						height: 200px;
+					}
+				</style>
+				<div class="show">
+					<div class="animate" style="
+						transition: width 1s, height 1s;
+						background-color: #888;
+					">悬浮我</div>
 				</div>
-				<div>
-					<h3>transition</h3>
-					<p>
-						<style>
-							.animate {
-								width: 100px;
-								height: 100px;
-								color: white;
-							}
-							.animate:hover{
-								width: 200px;
-								height: 200px;
-							}
-						</style>
-						<div class="show">
-							<div class="animate" style="
-								transition: width 1s, height 1s;
-								background-color: #888;
-							">悬浮我</div>
-						</div>
-						
-						<pre><code class="css">
+				<pre><code class="css">
 div {
 	transition: width 1s, height 1s; /* 打开 width 和 height 动画开关 */
 }
@@ -196,49 +279,49 @@ div:hover {
 	width: 200px;
 	height: 200px
 }
-						</code></pre>
-					</p>
-				</div>
-				<div>
-					<h3>@keyframes</h3>
-					<p>
-						<div class="show">
-							<div class="keyframes">点击按钮</div>
-							<input id="bigger" type="button" value="变大">
-							<style>
-								@keyframes bigger{
-									from {
-										width: 100px;
-										height: 100px;
-									}
-									to {
-										width: 200px;
-										height: 200px;
-									}
-								}
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>@keyframes</h2>
+			<p>
+				<div class="show">
+					<div class="keyframes">点击按钮</div>
+					<input id="bigger" type="button" value="变大">
+					<style>
+						@keyframes bigger{
+							from {
+								width: 100px;
+								height: 100px;
+							}
+							to {
+								width: 200px;
+								height: 200px;
+							}
+						}
 
-								.keyframes {
-									width: 100px;
-									height: 100px;
-									color: white;
-									background-color: #888;
-								}
-								.be-bigger {
-									animation: bigger 1s;
-								}
-							</style>
-							<script>
-								$(function() {
-									$('#bigger').click(function() {
-										setTimeout(function() {
-											$('.keyframes').removeClass('be-bigger');
-										}, 1000);
-										$('.keyframes').addClass('be-bigger');
-									});
-								});
-							</script>
-						</div>
-						<pre><code class="css">
+						.keyframes {
+							width: 100px;
+							height: 100px;
+							color: white;
+							background-color: #888;
+						}
+						.be-bigger {
+							animation: bigger 1s;
+						}
+					</style>
+					<script>
+						$(function() {
+							$('#bigger').click(function() {
+								setTimeout(function() {
+									$('.keyframes').removeClass('be-bigger');
+								}, 1000);
+								$('.keyframes').addClass('be-bigger');
+							});
+						});
+					</script>
+				</div>
+				<pre><code class="css">
 /* 设置一个动画 */
 @keyframes bigger{
 	from {
@@ -253,9 +336,409 @@ div:hover {
 div {
 	animation: bigger 1s; /* 添加后立即执行 */
 }
-						</code></pre>
-					</p>
-				</div>
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>flex</h2>
+			<p>
+				flex box 是一种当页面需要适应不同的屏幕大小以及设备类型时确保元素拥有恰当的行为的布局方式。其分为两部分：
+				<ul>
+					<li>flex container：容器，即父元素，所有子元素自动成为容器的成员</li>
+					<li>flex item：项目，即容器的成员</li>
+				</ul>
+				设置<span class="definition"> flex container </span>后，flex item 的以下属性将失效：
+				<ul>
+					<li>float、clear</li>
+					<li>vertical-align</li>
+				</ul>
+				<h3>容器（container）</h3>
+				<p>
+					容器可以设置的属性：
+					<ol>
+						<li>flex-direction：row | row-reverse | column | column-reverse 项目排列方向</li>
+						<li>flex-wrap：nowrap | wrap | wrap-reverse 项目换行方式</li>
+						<li>justify-content：flex-start | center | flex-end | space-between | space-around 项目水平对齐方式</li>
+						<li>align-items：flex-start | center | flex-end | baseline | stretch 单行时，项目垂直对齐方式</li>
+						<li>align-content：flex-start | center | flex-end | space-between | space-around | stretch 多行时，项目垂直对齐方式</li>
+					</ol>
+					<h4>display</h4>
+					通过修改 display 来设置为 flex 容器：
+					<pre><code class="html">
+&lt;div style="display: flex"&gt;块级元素&lt;/div&gt;
+&lt;span style="display: inline-flex"&gt;行内元素&lt;/span&gt;
+					</code></pre>
+					<h4>flex-direction</h4>
+					通过修改 flex-direction 来设置项目的排列方向：
+					<ul>
+						<li>row：水平从左到右，默认</li>
+						<li>row-reverse：水平从右到左</li>
+						<li>column：垂直从上到下</li>
+						<li>column-reverse：垂直从下到上</li>
+					</ul>
+					<pre><code class="html">
+&lt;div style="display: inline-flex; <span class="strong">flex-direction: row;</span>"&gt;
+	&lt;div style="width: 20%; margin: 2.5%"&gt;item1&lt;/div&gt;
+	&lt;div style="width: 20%; margin: 2.5%"&gt;item2&lt;/div&gt;
+	&lt;div style="width: 20%; margin: 2.5%"&gt;item3&lt;/div&gt;
+	&lt;div style="width: 20%; margin: 2.5%"&gt;item4&lt;/div&gt;
+&lt;/div&gt;
+row-reverse...
+column...
+comlumn-reverse...
+					</code></pre>
+					<div class="show">
+						<div class="inline-flex-container" style="flex-direction: row;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+						</div>
+						<div class="inline-flex-container" style="flex-direction: row-reverse;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+						</div>
+						<div class="inline-flex-container" style="flex-direction: column;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+						</div>
+						<div class="inline-flex-container" style="flex-direction: column-reverse;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+						</div>
+					</div>
+					<h4>flex-wrap</h4>
+					通过修改 flex-wrap 来设置项目的换行方式：
+					<ul>
+						<li>nowrap：不换行，默认</li>
+						<li>wrap：往下方换行</li>
+						<li>wrap-reverse：往上方换行</li>
+					</ul>
+					<pre><code class="html">
+&lt;div style="display: inline-flex; <span class="strong">flex-wrap: nowrap;</span>"&gt;
+	&lt;div style="width: 20%; margin: 2.5%"&gt;item1&lt;/div&gt;
+	&lt;div style="width: 20%; margin: 2.5%"&gt;item2&lt;/div&gt;
+	&lt;div style="width: 20%; margin: 2.5%"&gt;item3&lt;/div&gt;
+	&lt;div style="width: 20%; margin: 2.5%"&gt;item4&lt;/div&gt;
+	&lt;div style="width: 20%; margin: 2.5%"&gt;item5&lt;/div&gt;
+&lt;/div&gt;
+wrap...
+wrap-reverse...
+					</code></pre>
+					<div class="show">
+						<div class="inline-flex-container" style="flex-wrap: nowrap">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+							<div class="flex-item">item5</div>
+						</div>
+						<div class="inline-flex-container" style="flex-wrap: wrap">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+							<div class="flex-item">item5</div>
+						</div>
+						<div class="inline-flex-container" style="flex-wrap: wrap-reverse;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+							<div class="flex-item">item5</div>
+						</div>
+					</div>
+					<h4>justify-content</h4>
+					justify-content 类似于 text-align，用来设置项目的水平对齐方式：
+					<ul>
+						<li>flex-start：左对齐，默认</li>
+						<li>center：居中对齐</li>
+						<li>flex-end：右对齐</li>
+						<li>space-between：（线状分布）两端对齐</li>
+						<li>space-around：（环状分布）两端对齐</li>
+					</ul>
+					<pre><code class="html">
+&lt;div style="display: inline-flex; <span class="strong">justify-content: start;</span>"&gt;
+	&lt;div style="width: 20%; margin: 2.5%"&gt;item1&lt;/div&gt;
+	&lt;div style="width: 20%; margin: 2.5%"&gt;item2&lt;/div&gt;
+	&lt;div style="width: 20%; margin: 2.5%"&gt;item3&lt;/div&gt;
+&lt;/div&gt;
+center
+flex-end...
+space-between...
+space-around...
+					</code></pre>
+					<div class="show">
+						<div class="inline-flex-container" style="justify-content: flex-start;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+						</div>
+						<div class="inline-flex-container" style="justify-content: center;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+						</div>
+						<div class="inline-flex-container" style="justify-content: flex-end;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+						</div>
+						<div class="inline-flex-container" style="justify-content: space-between;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+						</div>
+						<div class="inline-flex-container" style="justify-content: space-around;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+						</div>
+					</div>
+					<h4>align-items</h4>
+					单行时（flex-wrap: nowrap），align-items 类似 vertical-align，用来设置项目的垂直对齐方式：
+					<ul>
+						<li>flex-start：顶对齐</li>
+						<li>center：居中对齐</li>
+						<li>flex-end：底对齐</li>
+						<li>baseline：基线对齐</li>
+						<li>stretch：上下拉升占满容器，默认</li>
+					</ul>
+					<pre><code class="html">
+&lt;div style="display: inline-flex; <span class="strong">align-items: flex-start;</span> height: 9rem;"&gt;
+	&lt;div"&gt;item1&lt;/div&gt;
+	&lt;div"&gt;item2&lt;/div&gt;
+	&lt;div"&gt;item3&lt;/div&gt;
+	&lt;div"&gt;item4&lt;/div&gt;
+&lt;/div&gt;
+center...
+flex-end...
+baseline...
+stretch...
+					</code></pre>
+					<div class="show">
+						<div class="inline-flex-container inline-flex-container-vertical" style="align-items: flex-end;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+						</div>
+						<div class="inline-flex-container inline-flex-container-vertical" style="align-items: center;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+						</div>
+						<div class="inline-flex-container inline-flex-container-vertical" style="align-items: flex-end;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+						</div>
+						<div class="inline-flex-container inline-flex-container-vertical" style="align-items: baseline;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+						</div>
+						<div class="inline-flex-container inline-flex-container-vertical" style="align-items: stretch;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+						</div>
+					</div>
+					<h4>align-content</h4>
+					多行时（flex-wrap: wrap | wrap-reverse），align-content 类似于 vertical-align，用来设置项目的垂直对齐：
+					<ul>
+						<li>flex-start：顶对齐</li>
+						<li>center：垂直居中</li>
+						<li>flex-end：底对齐</li>
+						<li>space-between：（线状分布）上下两端对齐</li>
+						<li>space-around：（环状分布）上下两端对齐</li>
+						<li>stretch：（拉伸项目）上下两端对齐，默认</li>
+					</ul>
+					<pre><code class="html">
+&lt;div style="display: inline-flex; <span class="strong">flex-wrap: wrap; align-content: flex-start;</span>"&gt;
+	&lt;div"&gt;item1&lt;/div&gt;
+	&lt;div"&gt;item2&lt;/div&gt;
+	&lt;div"&gt;item3&lt;/div&gt;
+	&lt;div"&gt;item4&lt;/div&gt;
+	&lt;div"&gt;item5&lt;/div&gt;
+&lt;/div&gt;
+center...
+flex-end...
+space-between...
+space-around...
+stretch...
+					</code></pre>
+					<div class="show">
+						<div class="inline-flex-container inline-flex-container-vertical" style="flex-wrap: wrap; align-content: flex-start;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+							<div class="flex-item">item5</div>
+						</div>
+						<div class="inline-flex-container inline-flex-container-vertical" style="flex-wrap: wrap; align-content: center;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+							<div class="flex-item">item5</div>
+						</div>
+						<div class="inline-flex-container inline-flex-container-vertical" style="flex-wrap: wrap; align-content: flex-end;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+							<div class="flex-item">item5</div>
+						</div>
+						<div class="inline-flex-container inline-flex-container-vertical" style="flex-wrap: wrap; align-content: space-between;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+							<div class="flex-item">item5</div>
+						</div>
+						<div class="inline-flex-container inline-flex-container-vertical" style="flex-wrap: wrap; align-content: space-around;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+							<div class="flex-item">item5</div>
+						</div>
+						<div class="inline-flex-container inline-flex-container-vertical" style="flex-wrap: wrap; align-content: stretch;">
+							<div class="flex-item">item1</div>
+							<div class="flex-item">item2</div>
+							<div class="flex-item">item3</div>
+							<div class="flex-item">item4</div>
+							<div class="flex-item">item5</div>
+						</div>
+					</div>
+				</p>
+				<h3>项目（items）</h3>
+				<p>
+					项目可以设置的属性：
+					<ol>
+						<li>order: &lt;integer&gt; 项目位置的权重值</li>
+						<li>flex-grow：&lt;number&gt; 项目缩放的权重值</li>
+						<li>flex-shrink：&lt;number&gt; 项目缩小的权重值</li>
+						<li>flex-basis：长度 | auto 项目自定义宽度</li>
+						<li>align-self：auto | flex-start | flex-end | center | baseline | stretch 项目自定义垂直对齐方式</li>
+					</ol>
+					<h4>order</h4>
+					默认为 0 ，权重越小越靠前。
+					<pre><code class="html">
+&lt;div style="display: inline-flex;"&gt;
+	&lt;div style="order: 1"&gt;1&lt;/div&gt;
+	&lt;div style="order: 0"&gt;0&lt;/div&gt;
+	&lt;div style="order: -1"&gt;-1&lt;/div&gt;
+&lt;/div&gt;
+					</code></pre>
+					<div class="show">
+						<div class="inline-flex-container">
+							<div class="flex-item" style="order: 1">1</div>
+							<div class="flex-item" style="order: 0">0</div>
+							<div class="flex-item" style="order: -1">-1</div>
+						</div>
+					</div>
+					<h4>flex-grow</h4>
+					默认为 0 ，即不缩放。在有剩余空间的情况下：
+					<ul>
+						<li><= 0 时表示不缩放</li>
+						<li>> 0 时表示缩放，值的大小表示缩放的权重（瓜分剩下的空间）</li>
+					</ul>
+					<pre><code class="html">
+&lt;div style="display: inline-flex;"&gt;
+	&lt;div style="flex-grow: 0"&gt;0&lt;/div&gt;
+	&lt;div style="flex-grow: 2"&gt;2&lt;/div&gt;
+	&lt;div style="flex-grow: 1"&gt;1&lt;/div&gt;
+&lt;/div&gt;
+					</code></pre>
+					<div class="show">
+						<div class="inline-flex-container">
+							<div class="flex-item" style="flex-grow: 0;">0</div>
+							<div class="flex-item" style="flex-grow: 2;">2</div>
+							<div class="flex-item" style="flex-grow: 1;">1</div>
+						</div>
+					</div>
+					<h4>flex-shrink</h4>
+					默认为 1 ，即缩小。在空间不足的情况下：
+					<ul>
+						<li><= 0 时表示不缩小</li>
+						<li>> 0 时表示缩小，值的大小表示缩小的权重（分配需要缩小的空间）</li>
+					</ul>
+					<pre><code class="html">
+&lt;div style="display: inline-flex;"&gt;
+	&lt;div style="flex-shrink: 0"&gt;0&lt;/div&gt;
+	&lt;div style="flex-shrink: 3"&gt;3&lt;/div&gt;
+	&lt;div style="flex-shrink: 2"&gt;2&lt;/div&gt;
+	&lt;div style="flex-shrink: 1"&gt;1&lt;/div&gt;
+	&lt;div style="flex-shrink: 1"&gt;1&lt;/div&gt;
+&lt;/div&gt;
+					</code></pre>
+					<div class="show">
+						<div class="inline-flex-container">
+							<div class="flex-item" style="flex-shrink: 0;">0</div>
+							<div class="flex-item" style="flex-shrink: 3;">3</div>
+							<div class="flex-item" style="flex-shrink: 2;">2</div>
+							<div class="flex-item" style="flex-shrink: 1;">1</div>
+							<div class="flex-item" style="flex-shrink: 1;">1</div>
+						</div>
+					</div>
+					<h4>flex-basis</h4>
+					默认为 auto，flex-basis 设置项目的宽度。在其内容比该值小的情况下：
+					<ul>
+						<li>auto：由 width 决定</li>
+						<li>长度单位：覆盖掉 width 来自定义宽度</li>
+					</ul>
+					<pre><code class="html">
+&lt;div style="display: inline-flex;"&gt;
+	&lt;div style="flex-basis: auto"&gt;auto&lt;/div&gt;
+	&lt;div style="flex-basis: 20px"&gt;20&lt;/div&gt;
+	&lt;div style="flex-basis: 40px"&gt;40&lt;/div&gt;
+&lt;/div&gt;
+					</code></pre>
+					<div class="show">
+						<div class="inline-flex-container">
+							<div class="flex-item" style="flex-basis: auto;">auto</div>
+							<div class="flex-item" style="flex-basis: 20px;">20</div>
+							<div class="flex-item" style="flex-basis: 40px;">40</div>
+						</div>
+					</div>
+					<h4>align-self</h4>
+					默认为 stretch，与 align-items 一样的效果，但此处只作用于该项目：
+					<pre><code class="html">
+&lt;div style="display: inline-flex;"&gt;
+	&lt;div style="align-self: auto;"&gt;auto&lt;/div&gt;
+	&lt;div style="align-self: flex-start;"&gt;flex-start&lt;/div&gt;
+	&lt;div style="align-self: center;"&gt;center&lt;/div&gt;
+	&lt;div style="align-self: flex-end;"&gt;flex-end&lt;/div&gt;
+&lt;/div&gt;
+					</code></pre>
+					<div class="show">
+						<div class="inline-flex-container inline-flex-container-vertical">
+							<div class="flex-item" style="align-self: auto;">auto</div>
+							<div class="flex-item" style="align-self: flex-start;">flex-start</div>
+							<div class="flex-item" style="align-self: center;">center</div>
+							<div class="flex-item" style="align-self: flex-end;">flex-end</div>
+						</div>
+					</div>
+				</p>
+				<h3>合并属性</h3>
+				<p>
+					<ul>
+						<li>flex-flow：flex-direction flex-wrap 的合并</li>
+						<li>flex：flex-grow flex-shrink flex-basis 的合并</li>
+					</ul>
+				</p>
 			</p>
 		</section>
 		<section class="refer">
@@ -263,6 +746,7 @@ div {
 			<p>
 				<div>[1] MDN CSS <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS">https://developer.mozilla.org/zh-CN/docs/Web/CSS</a></div>
 				<div>[2] 菜鸟教程 CSS3 <a href="http://www.runoob.com/css3/css3-tutorial.html">http://www.runoob.com/css3/css3-tutorial.html</a></div>
+				<div>[3] A Complete Guide to Flexbox <a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/">https://css-tricks.com/snippets/css/a-guide-to-flexbox/</a></div>
 			</p>
 		</section>
 	</article>

@@ -175,6 +175,9 @@ typeof new String('我是字符串') // => object
 	var undefined = 1;
 	console.log(undefined); // => 1
 })();
+
+Boolean([]); // => true
+Boolean(Number([])); // => false，因为 Number([]) -> Number('') -> 0
 				</code></pre>
 			</p>
 		</section>

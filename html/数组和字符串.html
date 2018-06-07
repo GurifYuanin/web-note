@@ -52,8 +52,8 @@ var arr = [1, 2].concat([3, 4], [5, 6]);// => [1, 2, 3, 4, 5, 6]
 
 var string = [1, 2, 3, 4, 5].join(' '); // => '1 2 3 4 5'
 				</code></pre>
-				<h3>元素操作：push / unshift / pop / shift / splice</h3>
-				push、unshift、pop、shift 改变原来数组，splice 都会改变原来的数组
+				<h3>元素操作：push / unshift / pop / shift / splice / [index]</h3>
+				push、unshift、pop、shift、splice 都会改变原来的数组。
 				<pre><code class="javascript">
 // push 在数组尾部推入元素，返回新数组长度
 // unshift 在数组头部推入元素，返回新数组长度
@@ -83,6 +83,12 @@ arr; // => [2, 3, 4]
 var arr = ['a', 'b', 'c', 'd', 'e'];
 arr.splice(2, 2, 'x', 'y', 'z'); // => ['c', 'd']
 arr; // => ['a', 'b', 'x', 'y', 'z', 'e']
+
+// 使用 [index] 的方法来添加元素
+数组[index] = 元素
+
+var arr = [];
+arr[5] = 5; // => [undefined, undefined, undefined, undefined, 5]
 				</code></pre>
 				<h3>数组遍历：forEach / filter / map</h3>
 				三者都是对数组的遍历，传入一个函数，函数的参数完全一样

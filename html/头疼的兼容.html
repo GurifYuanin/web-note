@@ -39,16 +39,38 @@
 				<p>
 					IE6 IE7 IE8(Q) 混淆了 DOM 对象的属性（property）及 HTML 标签属性（attribute）这两个概念。其对于 getAttribute 及 setAttribute 方法的实现与 HTML DOM 对象的属性的 getter 与 setter 操作等价。<sup>[1]</sup>
 					<ul>
-						<li>property：使用 element.PropertyName 读写，如 input 元素的 type、value、name，但也可访问 style、class、id，该值是字符串或对象</li>
-						<li>attribute：使用 element.getAttribute('AttributeName') 和 element.setAttribute('AttributeName', 'value') 读写，如 style、class、id、on事件名，该值为字符串</li>
+						<li>property：使用 element.PropertyName 读写，表示对象上的键值对，键值可能为对象、函数、字符串等类型</li>
+						<li>attribute：使用 element.getAttribute('AttributeName') 和 element.setAttribute('AttributeName', 'value') 读写，表示 HTML 标签上的键值对，键值类型是字符串</li>
 					</ul>
 					造成的影响：
 					<ul>
 						<li>无法通过 "Element.setAttribute("class", "AttributeValue")" 设置元素的 class 属性，而需要使用 "Element.setAttribute("className", "AttributeValue")"</li>
+						<pre><code class="javascript">
+// 正常情况，设置 class="nav"
+element.setAttribute('class', 'nav');
+element.className = 'nav';
+// 但在 IE6 7 8
+element.setAttribute('className', 'nav') <=> element.className = 'nav'
+						</code></pre>
 						<li>无法通过 "Element.setAttribute("style", "AttributeValue")" 设置元素的 style 属性，通过 "Element.getAttribute("style")" 得到的不是元素的 style 属性的字符串值，而是一个对象</li>
+						<pre><code class="javascript">
+// 正常情况
+element.getAttribute('style'); // 得到字符串
+element.style; // 得到对象
+// 但在 IE6 7 8
+element.getAttribute('style') <=> element.style // 都是得到 style 对象
+						</code></pre>
 						<li>无法通过诸如 "Element.setAttribute("onclick", "alert('ok')")" 为元素绑定事件</li>
+						<pre><code class="javascript">
+// 正常情况
+element.getAttribute('onclick'); // 得到字符串
+element.onclick; // 得到函数
+// 但在 IE6 7 8
+element.getAttribute('onclick') <=> element.onclick // 都是得到函数
+						</code></pre>
 					</ul>
 				</p>
+				<input id="demo" type="text" name="myname" value="myvalue" class="a b" style="color: white">
 			</p>
 		</section>
 		<section class="refer">

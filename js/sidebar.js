@@ -25,7 +25,7 @@ $(function() {
     var $container = $('#container'); // 文章内容
     var category = ['HTML', 'CSS', 'Javascript', 'NodeJS', 'VueJS', '移动Web', '调试', '协议', '安全', '后端', '其他']; // 目录分类
     var items = [
-        ['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'svg'],
+        ['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'canvas', 'svg'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
         ['数据类型', '数组和字符串', '作用域链', '原型链', '闭包', '事件', '同源策略', '字符编码', 'JSONP', 'this', 'jquery', 'promise'],
         ['commonJS', 'package.json', 'path', 'process', 'webpack', 'plugins', 'loader'],

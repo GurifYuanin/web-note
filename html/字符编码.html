@@ -148,6 +148,71 @@ A8 D0 1C 80 // 小尾序
 				</p>
 			</p>
 		</section>
+		<section>
+			<h2>编码与解码</h2>
+			<p>
+				<h3>Javascript</h3>
+				<p>
+					在 Javascript 中，与编码相关的（全局）函数有三个：
+					<ul>
+						<li>escape 和 unescape</li>
+						<li>encodeURI 和 decodeURI</li>
+						<li>encodeURIComponent 和 decodeURIcomponent</li>
+					</ul>
+					<h4>escape</h4>
+					escape(string) 将 string 转义为 unicode 编码，即 %xx 或 %uxxxx，除了以下字符不进行编码：
+					<ul>
+						<li>数字</li>
+						<li>字母</li>
+						<li>* @ - _ + . /</li>
+					</ul>
+					<h4>encodeURI</h4>
+					encodeURI(string) 将 string 转义为 utf-8 编码，即 %xx，除了以下字符不进行编码：
+					<ul>
+						<li>数字</li>
+						<li>字母</li>
+						<li> - _ . ! ~ * ' ( ) ; / ? : @ & = + $ , #</li>
+					</ul>
+					<h4>encodeURIComponent</h4>
+					encodeURIComponent(string) 将 string 转义为 utf-8 编码，即 %xx，除了以下字符不进行编码：
+					<ul>
+						<li>数字</li>
+						<li>字母</li>
+						<li> - _ . ! ~ * ' ( )</li>
+					</ul>
+					<pre><code class="javascript">
+var string = 'http://demo.com/index.html?username=用户&password=123456';
+escape(string); // => http%3A//demo.com/index.html%3Fusername%3D%u7528%u6237%26password%3D123456
+encodeURI(string); // => http://demo.com/index.html?username=%E7%94%A8%E6%88%B7&password=123456
+encodeURIComponent(string); // => http%3A%2F%2Fdemo.com%2Findex.html%3Fusername%3D%E7%94%A8%E6%88%B7%26password%3D123456
+					</code></pre>
+				</p>
+				<h3>PHP</h3>
+				<p>
+					<ul>
+						<li>rawurlencode 和 rawurldecode</li>
+						<li>urlencode 和 urldecode</li>
+					</ul>
+					<h4>rawurlencode</h4>
+					rawurlencode($string) 按照 RFC 3986 对 URL 进行编码，将 $string 转义为 utf-8 编码，即 %xx，除了以下字符不进行编码：
+					<ul>
+						<li>数字</li>
+						<li>字母</li>
+						<li>- _ .</li>
+					</ul>
+					<h4>urlencode</h4>
+					urlencode($string) 将 $string 转义为 utf-8 编码，即 %xx，除了以下字符不进行编码：
+					<ul>
+						<li>数字</li>
+						<li>字母</li>
+						<li>- _ .</li>
+					</ul>
+					<div class="tip">
+						注意： urlencode 会将<span class="definition"> 空格 </span>编码为<span class="definition"> + </span>，而不是<span class="definition"> %20 </span>。
+					</div>
+				</p>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
@@ -161,6 +226,7 @@ A8 D0 1C 80 // 小尾序
 				<div>[8] Literal strings Unicode <a href="https://learn.rmotr.com/python/understanding-unicode-in-python/strings-and-unicode/unicode-in-python">https://learn.rmotr.com/python/understanding-unicode-in-python/strings-and-unicode/unicode-in-python</a></div>
 				<div>[9] 阮一峰 字符编码笔记：ASCII，Unicode 和 UTF-8 <a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html">http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html</a></div>
 				<div>[10] 维基百科 UTF-16 <a href="https://zh.wikipedia.org/wiki/UTF-16">https://zh.wikipedia.org/wiki/UTF-16</a></div>
+				<div>[11] PHP手册 rawurlencode <a href="http://php.net/manual/zh/function.rawurlencode.php">http://php.net/manual/zh/function.rawurlencode.php</a></div>
 			</p>
 		</section>
 	</article>

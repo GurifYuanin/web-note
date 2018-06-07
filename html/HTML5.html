@@ -44,27 +44,49 @@
 &lt;/body&gt;
 &lt;/html&gt;
 				</code></pre>
-				<span class="definition">&lt;!DOCTYPE html&gt;</span> 声明当前文档以 HTML5 为标准。<br>
-				<span class="definition">&lt;meta charset="UTF-8"&gt;</span> ( HTML5 中)等价于 <span class="definition">&lt;meta http-equiv="charset" content="utf-8"&gt;</span>。
+				<h3>模式</h3>
+				<p>
+					<span class="definition">&lt;!DOCTYPE html&gt;</span> 告知浏览器的解析器，用什么文档类型 规范来解析这个文档。
+					<ul>
+						<li>混杂模式：不写 &lt;!DOCTYPE&gt;，页面以宽松的向后兼容的方式显示，用于兼容非标准代码</li>
+						<li>标准模式：使用 &lt;!DOCTYPE&gt;，页面要求标签必须闭合，不能使用已经废弃的标签等等</li>
+					</ul>
+					<pre><code class="html">
+&lt;!-- html5 --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;!-- html4.01 --&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd"&gt;
+&lt;!-- xhtml1.0 --&gt;
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+					</code></pre>
+				</p>
+				<h3>charset</h3>
+				<p>
+					<span class="definition">&lt;meta charset="UTF-8"&gt;</span> ( HTML5 中)等价于 <span class="definition">&lt;meta http-equiv="charset" content="utf-8"&gt;</span>。
+				</p>
 			</p>
 		</section>
 		<section>
 			<h2>canvas</h2>
 			<p>
-				anvas 是 HTML5 新增的标签，使用该标签和脚本可以绘制线条、形状、渐变、文字等。
+				canvas 是 HTML5 新增的标签，使用该标签和脚本可以绘制线条、形状、渐变、文字等。
 				<pre><code class="html">
-&lt;!-- HTML 中 width 和 height 是画布大小 --&gt;
+&lt;!-- 在 HTML 中 width 和 height 是画布大小 --&gt;
 &lt;canvas id="canvas" width="100px" height="100px"&gt;&lt;/canvas&gt;
-&lt;script&gt;
-	var canvas = document.getElementById('canvas'); // 获取元素
-	var context = canvas.getContext('2d'); // 获取 context
-	// javascript 中 width 和 height 是图像大小
-	context.heigt = '100px';
-	context.width = '100px';
-	// 使用 context 进行绘图
-	// ...
-&lt;/script&gt;
 				</code></pre>
+				&lt;canvas&gt; 标签只是个容器，内容的绘制需要借助 javascript 来控制。
+				<pre><code class="javascript">
+var canvas = document.getElementById('canvas'); // 获取元素
+var context = canvas.getContext('2d'); // 获取 context
+// javascript 中 width 和 height 是图像大小
+context.height = '100px';
+context.width = '100px';
+// 使用 context 进行绘图
+// ...
+				</code></pre>
+				绘制方法参见<a href="./canvas.html">此处</a>。
 			</p>
 		</section>
 		<section>
@@ -402,6 +424,7 @@ if ('WebSocket' in window) {
 			<p>
 				<div>[1] 维基百科 HTML5 <a href="https://zh.wikipedia.org/wiki/HTML5">https://zh.wikipedia.org/wiki/HTML5</a></div>
 				<div>[2] 菜鸟教程 HTML5 <a href="http://www.runoob.com/html/html5-intro.html">http://www.runoob.com/html/html5-intro.html</a></div>
+				<div>[3] 尹萨萨 [标准模式与混杂模式] <a href="https://www.jianshu.com/p/4aa37da38b81">https://www.jianshu.com/p/4aa37da38b81</a></div>
 			</p>
 		</section>
 	</article>
