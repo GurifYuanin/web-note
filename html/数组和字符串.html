@@ -90,28 +90,28 @@ arr; // => ['a', 'b', 'x', 'y', 'z', 'e']
 var arr = [];
 arr[5] = 5; // => [undefined, undefined, undefined, undefined, 5]
 				</code></pre>
-				<h3>数组遍历：forEach / filter / map</h3>
-				三者都是对数组的遍历，传入一个函数，函数的参数完全一样
+				<h3>数组遍历：forEach / filter / map / findIndex</h3>
+				四者都是对数组的遍历，传入一个函数，函数的参数完全一样
 				<ul>
 					<li>element：元素值，必须</li>
 					<li>index：元素索引，可选</li>
 					<li>array：原数组，可选</li>
 				</ul>
-				三者都不会改变原来数组，forEach 返回 undefined ，filter 和 map 返回新数组。
+				四者都不会改变原来数组，forEach 返回 undefined ，filter 和 map 返回新数组，findIndex 返回第一个执行函数返回 true 的 index
 				<pre><code class="javascript">
 // forEach 遍历所有元素，执行函数
 数组.forEach(function(element, index, array){ ... });
 
 [1, 2, 3, 4, 5].forEach(function(element, index, array){
 	console.log(element);
-}); // => 打印 1 2 3 4 5
+}); // => 返回 undefined，打印 1 2 3 4 5
 
 
 // filter 遍历所有元素，执行判断函数，过滤部分元素，返回新数组
 // 返回值：true => 保留元素
 // 返回值：false => 过滤元素
 新数组 = 原数组.filter(function(element, index, array){ return ... });
-var arr = [1, 2, 3, 4, 5].filter(function(element){
+arr = [1, 2, 3, 4, 5].filter(function(element){
 	return element > 2;
 }); // => [3, 4, 5]
 
@@ -119,9 +119,17 @@ var arr = [1, 2, 3, 4, 5].filter(function(element){
 // 返回值 => 元素的新值
 新数组 = 原数组.map(function(element, index, array){ return ... });
 
-var arr = [1, 2, 3, 4, 5].map(function(element, index, array){
+arr = [1, 2, 3, 4, 5].map(function(element, index, array){
 	return element * element;
 }); // => [1, 4, 9, 16, 25]
+
+// findIndex 遍历所有元素并调用函数，当函数返回 true 时返回该元素的 index
+数组.findIndex(function(element, index, array){ return ... });
+
+index = [1, 2, 3, 4, 5].findIndex(function(element, index, array) {
+	return element >= 3;
+}); // => 2
+
 				</code></pre>
 				<h3>数组排序：sort / reverse</h3>
 				<pre><code class="javascript">

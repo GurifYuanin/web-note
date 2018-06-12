@@ -29,7 +29,7 @@ $(function() {
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
         ['数据类型', '数组和字符串', '作用域链', '原型链', '闭包', '事件', '同源策略', '字符编码', 'JSONP', 'this', 'jquery', 'promise'],
         ['commonJS', 'package.json', 'path', 'process', 'webpack', 'plugins', 'loader'],
-        ['安装', '实例', '模版', '组件', 'mixins'],
+        ['安装', '实例', '模版', '组件', 'mixins', 'router'],
         ['响应式布局', 'bootstrap'],
         ['抓包工具', 'chrome devtools'],
         ['HTTP'],
@@ -185,7 +185,7 @@ $(function() {
             'slow');
 		widthAndMargin(90, 65, 20, 0.5);
     });
-    $('a').attr('target', '_blank'); // 所有链接默认新标签打开
+    $('a').not('.self').attr('target', '_blank'); // 所有链接默认新标签打开
 
     // 滚动到指定子标题
     function scrollToSubTitle(name) {

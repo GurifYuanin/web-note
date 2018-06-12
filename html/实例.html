@@ -43,6 +43,8 @@ var 实例名 = new Vue(选项对象);
 						<li>生命周期钩子</li>
 						<li>component：组件</li>
 						<li>mixins：混合</li>
+						<li>store：将状态（Vuex state）从根组件“注入”到每一个子组件中</li>
+						<li>router：配置路由</li>
 					</ol>
 					<pre><code class="javascript">
 var vm = new Vue({
@@ -356,6 +358,43 @@ new Vue({
 			<h2>mixins</h2>
 			<p>
 				mixins 是对 vue 实例选项的一种预设，详见<a href="mixins.html"> mixins </a>。
+			</p>
+		</section>
+		<section>
+			<h2>store</h2>
+			<p>
+				使用 store 选项将状态（Vuex state）注入到每一个子组件中，详见<a href="./vuex.html"> Vuex </a>。
+				<pre><code class="javascript">
+Vue.use(Vuex);
+new Vue({
+	store,
+	component: {
+		myComponent: {
+			// 组件选项
+		}
+	}
+});
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>router</h2>
+			<p>
+				使用 router 选项配置路由，详见<a href="./router.html"> vue-router </a>。
+				<pre><code class="javascript">
+new Vue({
+	router: new VueRouter({
+		routes: [
+			{
+				path: '/foo',
+				component: {
+					// 组件选项
+				}
+			}
+		]
+	})
+});
+				</code></pre>
 			</p>
 		</section>
 		<section class="refer">

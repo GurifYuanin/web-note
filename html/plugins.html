@@ -208,6 +208,30 @@ if (module.hot) { // 检查是否开启 HMR
 				</figure>
 			</p>
 		</section>
+		<section>
+			<h2>CommonsChunkPlugin</h2>
+			<p>
+				CommonsChunkPlugin 是 webpack 自带的插件，用于提取公共模块为单独文件。
+				<pre><code class="javascript">
+var webpack = require('webpack');
+module.exports = {
+	// 多个入口文件
+	entry: {
+		vender: ['vue', 'vue-router']
+	},
+	plugins: [
+		new webpack.optimize.CommonsChunkPlugin({
+			name: 'vender',
+			filename: 'vender.[hash:8].js' // 将 vue.js vue-router.js 打包到 vender.[hash:8].js 文件
+		}),
+		new webpack.optimize.CommonsChunkPlugin({
+			name: 'runtime' // 选择一个未使用的名字，将 webpack 的代码打包到 runtime.[hash:8].js 文件（分离 webpack 出去）
+		})
+	]
+}
+				</code></pre>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>

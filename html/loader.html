@@ -198,13 +198,70 @@ $ npm install url-loader --save-dev
 		loader: 'url-loader',
 		options: {
 			limit: 10000, // 当文件　< 10000 byte 时编码为 base64
-			publicPath: 'static', // 被被打包文件里进行对静态资源进行 url 请求后时，url 的根目录，默认为 webpack 配置文件的 exports.output.publicPath（__webpack_public_path__）
+			publicPath: 'static', // 被打包文件里进行对静态资源进行 url 请求后时，url 的根目录，默认为 webpack 配置文件的 exports.output.publicPath（__webpack_public_path__）
 			path: path.resolve(__dirname, 'dist/img'), // 被拷贝的静态资源的输出目录，默认为 webpack 配置文件的 exports.output.path
 			name: '[name].[hash:7].[ext]' // 被拷贝的静态资源的输出名
 		}
 	]
 }
 				</code></pre>
+				开发时根据正常写 url ，例如在 webpack.conf.js 配置：
+				<pre><code class="javascript">
+module.exports = {
+	output: {
+		filename: 'bundle.js',
+		path: path.resolve(__dirname, 'dist')
+	},
+	module: {
+		rules: [
+			{
+			    test: /\.scss$/,
+			    use: ['style-loader', 'css-loader', 'sass-loader']
+			},
+			{
+				test: /\.(jpe?g|gif|png|svg)$/,
+				use: [
+					{
+						loader: 'url-loader',
+						options: {
+							name: 'img/[name].[hash:7].[ext]'
+						}
+			    	}
+			  	]
+			}
+		]
+}
+}
+				</code></pre>
+				在 index.scss 中请求 background.jpg：
+				<pre><code class="css">
+background-image: url('../img/background.jpg');
+				</code></pre>
+				<div class="show" id="catalogFrame">
+					<img src="../images/dir.png">src<br>
+					<div>
+						<img src="../images/dir.png">assets<br>
+						<div>
+							<img src="../images/dir.png">img<br>
+							<div>
+								<img src="../images/image.png">background.jpg<br>
+							</div>
+							<img src="../images/dir.png">style<br>
+							<div>
+								<img src="../images/sass.png">index.scss<br>
+							</div>
+						</div>
+						<img src="../images/dir.png">app<br>
+					</div>
+					<img src="../images/dir.png">dist<br>
+					<div>
+						<img src="../images/dir.png">img<br>
+						<div>
+							<img src="../images/image.png">background.edcad3c.jpg<br></br>
+						</div>
+					</div>
+				</div>
+				url-loader 会将 background.jpg 拷贝到 dist/img 下，修改<span class="definition"> url('../img/background.jpg') </span>为<span class="definition"> url('img/background.edcad3c.jpg') </span>，若有配置 publicPath，则修改为<span class="definition"> url('publicPath/img/background.edcad3c.jpg') </span>
 			</p>
 		</section>
 		<section>
