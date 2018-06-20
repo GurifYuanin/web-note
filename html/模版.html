@@ -222,17 +222,10 @@ vm.object = Object.assign({}, vm.object, {
 		<section>
 			<h2>表单</h2>
 			<p>
-				<style>
-					.showArea{
-						border: dotted 1px #888;
-						margin: 1%;
-						padding: 1%;
-					}
-				</style>
 				表单值的绑定使用<span class="definition"> v-model </span>命令来进行<span class="definition"> 双向绑定 </span>。
 				<h3>文本框</h3>
 				<span class="definition"> v-model </span>直接取代了<span class="definition"> value </span>属性（设置了<span class="definition"> value </span>属性也会被无视）。
-				<div id="text" class="showArea">
+				<div id="text" class="show">
 					<input type="text" v-model="content" placeholder="请在此处输入内容">
 					<div>你输入了：{{content}}</div>
 				</div>
@@ -246,7 +239,7 @@ vm.object = Object.assign({}, vm.object, {
 				</script>
 				<h3>单选框</h3>
 				当被选中时，<span class="definition"> v-model </span>的值等于<span class="definition"> value </span>（选项）的值。
-				<div id="radioBox" class="showArea">
+				<div id="radioBox" class="show">
 					<input id="radio" type="radio" value="option" v-model="content">
 					<label for="radio">option</label>
 					<div>{{content}}</div>
@@ -261,7 +254,7 @@ vm.object = Object.assign({}, vm.object, {
 				</script>
 				<h3>复选框</h3>
 				<li>单个复选框时，当被选中时，<span class="definition"> v-model </span>的值为 true ，未选中时则为 false 。<span class="definition"> value </span>值不受影响</li>
-				<div id="singleCheckBoxA" class="showArea">
+				<div id="singleCheckBoxA" class="show">
 					<input id="checkBoxA" type="checkbox" value="option" v-model="content">
 					<div>{{content}}</div>
 				</div>
@@ -274,7 +267,7 @@ vm.object = Object.assign({}, vm.object, {
 					});
 				</script>
 				可以为复选框添加<span class="definition"> true-value="选中时的值" </span>和<span class="definition"> false-value="未选中时的值" </span>命令来对此进行修改。
-				<div id="singleCheckBoxB" class="showArea">
+				<div id="singleCheckBoxB" class="show">
 					<input type="checkbox" v-model="content" true-value="被选中" false-value="没被选中">
 					<div>{{content}}</div>
 				</div>
@@ -287,7 +280,7 @@ vm.object = Object.assign({}, vm.object, {
 					});
 				</script>
 				<li>多个复选框时，当被选中时，被选中的选项的<span class="definition"> value </span>将推入<span class="definition"> v-model </span>指向的数组，取消选中时将元素推出</li>
-				<div id="checkBox" class="showArea">
+				<div id="checkBox" class="show">
 					<input type="checkbox" id="option1" value="option1" v-model="content">
 					<label for="option1">option1</label>
 					<input type="checkbox" id="option2" value="option2" v-model="content">
@@ -304,7 +297,7 @@ vm.object = Object.assign({}, vm.object, {
 				</script>
 				<h3>下拉列表</h3>
 				下拉列表类似于单选框，被选中时其<span class="definition"> v-model </span>等于被选中的项的<span class="definition"> value </span>。
-				<div id="select" class="showArea">
+				<div id="select" class="show">
 					<select name="" id="" v-model="content">
 						<option value="option1">option1</option>
 						<option value="option2">option2</option>
