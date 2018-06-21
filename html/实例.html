@@ -38,6 +38,7 @@ var 实例名 = new Vue(选项对象);
 						<li>data：数据属性</li>
 						<li>computed：计算属性</li>
 						<li>methods：方法</li>
+						<li>filters：过滤器</li>
 						<li>watch：侦听属性</li>
 						<li>template：模版</li>
 						<li>生命周期钩子</li>
@@ -99,9 +100,9 @@ if (vm.$options.el) {
 			</p>
 		</section>
 		<section>
-			<h2>元素</h2>
+			<h2>el</h2>
 			<p>
-				元素决定了 vue 实例绑定的 HTML 元素，被绑定的元素可以在 HTML 标签内使用双花括号<span class="definition"> {{}} </span>来对数据、方法进行访问。<br>
+				el 决定了 vue 实例绑定的 HTML 元素，被绑定的元素可以在 HTML 标签内使用双花括号<span class="definition"> {{}} </span>来对数据、方法进行访问。<br>
 				元素的选择方式与 jquery 的<span class="definition"> $() </span>方法一样，但只会选出第一个被选中的元素。
 				<pre><code class="html">
 &lt;div id="app"&gt;{{message}}&lt;/div&gt;
@@ -117,7 +118,7 @@ if (vm.$options.el) {
 			</p>
 		</section>
 		<section>
-			<h2>数据</h2>
+			<h2>data</h2>
 			<p>
 				<pre><code class="javascript">
 var 实例名 = new Vue({
@@ -176,9 +177,9 @@ setTimeout(function(){
 			</p>
 		</section>
 		<section>
-			<h2>计算属性</h2>
+			<h2>computed</h2>
 			<p>
-				计算属性可以是一个带有返回值的函数，此时计算属性只有 getter ，访问后获得返回值。
+				computed 可以是一个带有返回值的函数，此时计算属性只有 getter ，访问后获得返回值。
 				<pre><code class="html">
 new Vue({
 	computed: {
@@ -233,7 +234,7 @@ new Vue({
 			</p>
 		</section>
 		<section>
-			<h2>方法</h2>
+			<h2>methods</h2>
 			<p>
 				<pre><code class="html">
 &lt;标签&gt;{{方法名(参数)}}&lt;/标签&gt;
@@ -272,9 +273,35 @@ new Vue({
 			</p>
 		</section>
 		<section>
-			<h2>侦听属性</h2>
+			<h2>filters</h2>
 			<p>
-				侦查属性是对数据属性的侦听，侦查属性与数据属性同名，当数据属性改变时触发，传入改变后的值作为形参。
+				filters 与方法类似，不同的是其调用方式。
+				<h3>创建过滤器</h3>
+				<p>
+					<pre><code class="javascript">
+// 全局创建过滤器
+Vue.filter('过滤器名', function(参数) {});
+// 局部创建过滤器
+new Vue({
+	filters: {
+		过滤器名: function(参数) {}
+	}
+});
+					</code></pre>
+				</p>
+				<h3>使用过滤器</h3>
+				<p>
+					可以在 {{}} 内或 v-bind 内使用过滤器，使用<span class="definition"> | </span>将参数与过滤器隔开，参数将传入过滤器作为第一个参数，并且支持链式写法。
+					<pre><code class="html">
+{{'hello' | reverse | toUpperCase}}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>watch</h2>
+			<p>
+				watch 是对数据属性的侦听，侦查属性与数据属性同名，当数据属性改变时触发，传入改变后的值作为形参。
 				<pre><code class="javascript">
 new Vue({
 	data: {
@@ -309,7 +336,7 @@ new Vue({
 			</p>
 		</section>
 		<section>
-			<h2>模版</h2>
+			<h2>template</h2>
 			<p>
 				<h3>替换</h3>
 				模版值将替换掉挂载元素内的所有内容。
