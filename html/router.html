@@ -35,14 +35,14 @@
 &lt;script src="https://unpkg.com/vue-router/dist/vue-router.js"&gt;&lt;/script&gt;
 					</code></pre>
 				</p>
-				<h2>npm</h2>
+				<h3>npm</h3>
 				<p>
 					使用 npm 在项目中作为依赖包下载，并 import 到项目中。
 					<ol>
 						<li>下载 vue-router</li>
 						<pre><code class="shell">
-# 不需要 --save-dev 参数，因为 vue-router 将应用在生产环境
-$ npm install vue-router
+# 不是 --save-dev 参数，因为 vue-router 将应用在生产环境
+$ npm install vue-router --save
 						</code></pre>
 						<li>import vue-router 模块</li>
 						<pre><code class="javascript">
@@ -63,16 +63,16 @@ Vue.use(VueRouter); // 不可缺少
 					<li>在 html 中使用<span class="definition"> &lt;router-link&gt;&lt;/router-link&gt; </span>（路由）来设置导航</li>
 					<pre><code class="html">
 &lt;div id="app"&gt;
-&lt;router-link to="/path"&gt;go to path&lt;/router-link&gt;
+	&lt;router-link to="/path"&gt;go to path&lt;/router-link&gt;
 &lt;/div&gt;
 					</code></pre>
 					实际会被渲染为：
 					<pre><code class="html">
 &lt;div id="app"&gt;
-&lt;a href="#/path"&gt;go to path&lt;/a&gt;
+	&lt;a href="#/path"&gt;go to path&lt;/a&gt;
 &lt;/div&gt;
 					</code></pre>
-					a 标签被点击后将做的事情：
+					当 a 标签被点击时将做发生的事：
 					<ul>
 						<li>为 a 标签添加 router-link-active 的 css 类</li>
 						<li>执行 router.push('path')</li>
@@ -108,6 +108,7 @@ router: new VueRouter({
 				<div class="tip">
 					假设：以下例子写在 http://demo/index.html 页面上。
 				</div>
+				router-link 是路由导航，类似于超链接，不过它将路由的结果放在 router-view 上。
 				<h3>to</h3>
 				<p>
 					to 可以赋值为 String 或 Object 。
@@ -137,6 +138,13 @@ router: new VueRouter({
 &lt;router-link to="/path" tag="div"&gt;go to path&lt;/router-link&gt;
 &lt;!-- 将被渲染为 --&gt;
 &lt;div&gt;go to path&lt;/div&gt;
+					</code></pre>
+				</p>
+				<h3>replace</h3>
+				<p>
+					添加 replace 属性后，每次点击 router-link 不会添加路由的 history 记录。
+					<pre><code class="html">
+&lt;router-link to="path" replace&gt;go to path&lt;/router-link&gt;
 					</code></pre>
 				</p>
 				<h3>append</h3>
@@ -179,7 +187,7 @@ routes: [
 			</p>
 		</section>
 		<section>
-			<h2>Router 选项</h2>
+			<h2>new VueRouter 选项</h2>
 			<p>
 				使用 new VueRouter() 时，传入一个对象，该对象可以设置以下选项：
 				<ul>
@@ -220,9 +228,75 @@ routes: [
 			</p>
 		</section>
 		<section>
-			<h2>this.$route</h2>
+			<h2>$router</h2>
 			<p>
-				
+				<h3>push / replace / append</h3>
+				<p>
+					当点击 router-link 时，实际上是调用了 push 方法，可以用 push 方法来手动路由。
+					<pre><code class="javascript">
+var vm = new Vue(
+	router: new VueRouter({
+		route: {
+			path: '/path',
+			component: {}
+		}
+	})
+);
+vm.$router.push('/path');
+					</code></pre>
+					同理：
+					<ul>
+						<li>当 router-link 上有 replace 属性时，则调用 replace 方法。</li>
+						<li>当 router-link 上有 append 属性时，则调用 append 方法。</li>
+					</ul>
+				</p>
+				<h3>forward / back / go</h3>
+				<p>
+					<ul>
+						<li>使用 forward 方法向前跳转一个页面</li>
+						<li>使用 back 方法向后跳转一个页面</li>
+						<li>使用 go(n) 相对跳转 n 个页面，n 为负数时向后，n 为正数时向前</li>
+					</ul>
+				</p>
+				<h3>导航守卫</h3>
+				<p>
+					可以为路由添加全局守卫进程，在每次跳转时，都会触发该进程。
+					<ul>
+						<li>beforeEach(function(to, from, next){})：每次导航前触发</li>
+						<li>beforeResolve(function(to, from, next){})：每次解析前触发</li>
+						<li>afterEach(function(to, from){})：所有组件内守卫和异步路由组件被解析之后触发</li>
+						<li>...</li>
+					</ul>
+					其形参代表了：
+					<ul>
+						<li>from 和 to 都是一个路由对象，即下一节所说的的 $route</li>
+						<li>next 为一个函数</li>
+						<ul>
+							<li>如果在守卫进程里没有被调用，则下一个钩子不会被解析</li>
+							<li>如果执行 next()，则正常解析下一个钩子</li>
+							<li>如果执行 next(路径)，则跳转到该路径</li>
+							<li>如果执行 next(new Error())，则导航中止，触发 $router.onError</li>
+						</ul>
+					</ul>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>$route</h2>
+			<p>
+				$route 表示当前激活的路由的状态信息，包含了当前 URL 解析得到的信息，还有 URL 匹配到的路由记录。
+				<h3>name</h3>
+				<p>
+					路由的名字，即设置 new VueRouter 时设置的 route 数组的元素对象的 name 属性。
+				</p>
+				<h3>path / params / query / fullPath</h3>
+				<p>
+					fullPath = path + params + query。
+				</p>
+				<h3>matched</h3>
+				<p>
+					matched 是一个数组，记录了所有嵌套路由的路由记录。
+				</p>
 			</p>
 		</section>
 		<section class="refer">

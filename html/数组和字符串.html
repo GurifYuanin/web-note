@@ -90,14 +90,14 @@ arr; // => ['a', 'b', 'x', 'y', 'z', 'e']
 var arr = [];
 arr[5] = 5; // => [undefined, undefined, undefined, undefined, 5]
 				</code></pre>
-				<h3>数组遍历：forEach / filter / map / findIndex</h3>
-				四者都是对数组的遍历，传入一个函数，函数的参数完全一样
+				<h3>数组遍历：forEach / filter / map / findIndex / some/ every</h3>
+				六者都是对数组的遍历，传入一个函数，函数的参数完全一样
 				<ul>
 					<li>element：元素值，必须</li>
 					<li>index：元素索引，可选</li>
 					<li>array：原数组，可选</li>
 				</ul>
-				四者都不会改变原来数组，forEach 返回 undefined ，filter 和 map 返回新数组，findIndex 返回第一个执行函数返回 true 的 index
+				六者都不会改变原来数组，forEach 返回 undefined ，filter 和 map 返回新数组，findIndex 返回第一个执行函数返回 true 的 index 值，some 和 every 返回 boolean。
 				<pre><code class="javascript">
 // forEach 遍历所有元素，执行函数
 数组.forEach(function(element, index, array){ ... });
@@ -130,6 +130,23 @@ index = [1, 2, 3, 4, 5].findIndex(function(element, index, array) {
 	return element >= 3;
 }); // => 2
 
+// some 遍历所有元素并将所有返回结果进行或运算，最后将这个或运算的结果返回
+bool = [1, 2, 3, 4].some(function(element, index, array) { return element > 3 }); // => true
+// 其等价于
+var flag = false, arr = [1, 2, 3, 4];
+for (var i = 0; i < arr.length; i++) {
+	flag = flag || arr[i] > 3;
+}
+return flag;
+
+// every 遍历所有元素并将所有返回结果进行与运算，最后将这个与运算的结果返回
+bool = [1, 2, 3, 4].every(function(element, index, array) { return element > 3 }); // => false
+// 其等价于
+var flag = true, arr = [1, 2, 3, 4];
+for (var i = 0; i < arr.length; i++) {
+	flag = flag && arr[i] > 3;
+}
+return flag;
 				</code></pre>
 				<h3>数组排序：sort / reverse</h3>
 				<pre><code class="javascript">
