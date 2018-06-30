@@ -53,6 +53,27 @@ Vue.use(VueRouter); // 不可缺少
 						</code></pre>
 					</ol>
 				</p>
+				<h3>懒加载</h3>
+				<p>
+					使用 babel 实现路由的懒加载。
+					<pre><code class="javascript">
+# 下载 babel 插件
+$ npm install --save-dev babel-plugin-syntax-dynamic-import
+
+// 配置 babel 插件，使用的是 .babelrc 文件
+{
+	"plugins": ["syntax-dynamic-import"]
+}
+
+// 实现懒加载，ES6 语法
+new VueRouter({
+	routes: [
+		path: '/my-component',
+		component: <span class="strong">() => import('my-component.vue')</span>
+	]
+})
+					</code></pre>
+				</p>
 			</p>
 		</section>
 		<section>
