@@ -75,26 +75,40 @@ LoadModule rewrite_module modules/mod_rewrite.so
 # 判断是否开启重写模块
 &lt;IfModule mod_rewrite.c&gt;
   Options +FollowSymlinks -Multiviews
+
   # 开启重写功能（开关）
   RewriteEngine On
+
   # 设置重写范围（过滤）
   RewriteCond 测试字符串 正则表达式1 [标识符] 属性测试
+
   # 设置重写规则（重写）
   RewriteRule 正则表达式2 新URL [标识符]
 &lt;/IfModule&gt;
 					</code></pre>
 					其过程为：
 					<ol>
-						<li>用户在浏览器输入 URL 向服务器发起请求</li>
-						<li>服务器接收到请求，提取出测试字符串
-						，如果符合属性测试，则进行正则表达式1匹配（正则表达式1可以省略，即不进行正则表达式的过滤）</li>
+						<li>客户端向服务器发起 URL 请求</li>
 						<li>
-							如果正则匹配不成功，则被过滤掉而不重写。<br>
-							如果正则匹配成功，则根据重写规则，再对用户输入的 URL 进行正则表达式2匹配，如果匹配成功，则产生新 URL，返回对应资源（并将新 URL 显示在浏览器地址栏）<br>
+							服务器接收到请求，如果符合属性测试，根据测试字符串提取出字符串
+							<ol>
+								<li>如果有正则表达式1，则将提取出的测试字符串与之匹配，匹配成功的进入下一步，匹配失败则不进行重写</li>
+								<li>如果无正则表达式1，则进入下一步</li>
+							</ol>
+						</li>
+						<li>
+							将提取出的字符串与正则表达式2进行匹配，生成新的 URL，返回新 URL 的资源，但新 URL 不显示在浏览器上
 						</li>
 					</ol>
-					测试字符串可以包含服务器变量，用<span class="definition"> %{服务器变量名} </span>来引用，服务器变量包括<span class="definition"> HTTP头部信息、服务器内部信息、日期和时间、特殊变量 </span>。<br>
-					<b>服务器变量（常用部分）：</b>
+					<div class="tip">
+						<ul>
+							<li>可以写多个<span class="definition"> </span>规则，表示其中一个满足就可以进行重写，然后无视后面的<span class="definition"> RewriteCond </span></li>
+							<li>进行重写后的 URL 请求不用对再过一遍重写模块，而是直接返回服务器上的该资源</li>
+						</ul>
+					</div>
+					<h4>测试字符串</h4>
+					测试字符串用于提取请求 URL 中的信息，可以包含服务器变量，用<span class="definition"> %{服务器变量名} </span>来引用，服务器变量包括<span class="definition"> HTTP头部信息、服务器内部信息、日期和时间、特殊变量 </span>。<br>
+					<h5>服务器变量（常用部分）：</h5>
 					<ul>
 						<li>REQUEST_FILENAME：请求的全部路径和参数</li>
 						<li>HTTP_REFERER：发起请求的网站</li>
@@ -113,7 +127,8 @@ LoadModule rewrite_module modules/mod_rewrite.so
 &lt;/html&gt;
 					</code></pre>
 					该网页向另一个网站<span class="definition"> www.othersite.cn </span>请求一个<span class="definition"> pic.jpg </span>的图片，那么此时的<span class="definition"> %{REQUEST_FILENAME} </span>就为<span class="definition"> /images/pic </span>，<span class="definition"> HTTP_REFERER </span>为<span class="definition"> www.mysite.cn </span>。<br>
-					<b>属性测试（可以通过 "!" 来进行取反操作）：</b>
+					<h4>属性测试（可以通过 "!" 来进行取反操作）：</h4>
+					测试属性用于过滤不符合的 URL 请求，被过滤的请求将不进行重写。
 					<ul>
 						<li>-d：是一个目录（directory）</li>
 						<li>-f：是一个普通文件（file）</li>
@@ -123,7 +138,8 @@ LoadModule rewrite_module modules/mod_rewrite.so
 						<li>-U：是一个存在的 URL，并且通过子请求</li>
 						<li>-x：具有可执行权限</li>
 					</ul>
-					<b>标识符（常用部分，使用时可以使用多个标识符并用 "," 隔开）：</b>
+					例如写了<span class="definition">  RewriteCond %{REQUEST_FILENAME} !-f </span>，则只有进行文件请求时才会进行重写，不符合该规则（例如目录）将被无视。
+					<h4>标识符（常用部分，使用时可以使用多个标识符并用 "," 隔开）：</h4>
 					<ul>
 						<li>NC：no case，无视大小写</li>
 						<li>L：last，最后一个规则，若该匹配条件成功，则不进行后面的匹配</li>
@@ -133,11 +149,22 @@ LoadModule rewrite_module modules/mod_rewrite.so
 				</p>
 				<h3>文档重定向</h3>
 				<p>
+					直接将 URL 定向到新的 URL。
 					<pre><code class="apache">
 # 将 "源路径/目标文档" 定向到 "目标路径/目标文档""
 Redirect 源路径/目标文档 目标路径/目标文档
+
 # 将 "源路径" 下的所有文档定向到 "目标路径"
 Redirect 源路径 目标路径
+					</code></pre>
+					例如站点<span class="definition"> site.cn </span>进行以下设置：
+					<pre><code class="apache">
+Redirect /dir /main
+
+浏览器输入 -> 最终获得资源
+http://site.cn/dir -> http://site.cn/main
+http://site.cn/dir/index.php -> http://site.cn/main/index.php
+http://site.cn/other/dir -> http://site.cn/other/dir
 					</code></pre>
 				</p>
 				<h3>定义错误页面</h3>
@@ -154,12 +181,16 @@ ErrorDocument 状态码 "字符串"
 					对向服务器请求的用户进行过滤
 					<pre><code class="apache">
 order allow,deny
+
 # 设置允许请求的 IP 地址
 allow from IP地址
+
 # 允许所有请求
 allow from all
+
 # 设置拒绝请求的 IP 地址
 deny form IP 地址
+
 # 拒绝所有请求
 deny from all
 					</code></pre>

@@ -280,9 +280,36 @@ require demo from '../module/demo.js';
 # 安装 npm 包
 npm install --save-dev webpack-dev-server
 # 配置 webpack.conf.js
+module.exports = {
+	devServer: {
+		baseContent: '/dist/', // 服务器根目录所在路径
+		compress: true, // 是否开启 gzip 压缩
+		hostname: 'localhost', // 服务器主机名
+		port: 8080, // 服务器端口
+		proxy: { // 代理服务器
+			'apis': { // 匹配以 http://localhost:8080/apis 开头的所有请求
+				target: 'http://mysite.com', // 代理为 http://mysite.com/apis 开头的请求
+				secure: false, // 是否为 https
+				changeOrigin: true, // 是否允许跨域
+				pathRewrite: {
+					'/^apis': '/other' // 最后重写为 http://mysite.com/other
+				}
+			}
+		},
+		clientLogLevel: 'warning', // 控制台警告等级 none error warning info
+		overlay: { // 当运行出现警告或者报错时是否显示一个黑色遮罩
+			warnings: false,
+			errors: true
+		},
+		hot: true, // 是否开启热重载功能
+		open: true, // 运行服务器时自动打开浏览器访问该服务器
+	}
+}
 # 启动服务器
 webpack-dev-server --config webpack.conf.js
 					</code></pre>
+					在浏览器中通过 http://localhost:8080 来访问该服务器，当请求<span class="definition"> http://localost:8080/apis/something </span>时，符合代理请求，将被代理为<span class="definition"> http://mysite.com/other/something </span>，从而解决开发中跨域问题。
+					<div class="tip">hostname 设置为 0.0.0.0 时可以提供外部访问，外部通过你所在机器的 IP + port 来访问</div>
 				</p>
 			</p>
 		</section>

@@ -267,8 +267,8 @@ vm.$router.push('/path');
 					</code></pre>
 					同理：
 					<ul>
-						<li>当 router-link 上有 replace 属性时，则调用 replace 方法。</li>
-						<li>当 router-link 上有 append 属性时，则调用 append 方法。</li>
+						<li>当 router-link 上有 replace 属性时，实际上调用的是 replace 方法。</li>
+						<li>当 router-link 上有 append 属性时，实际上调用的是 append 方法。</li>
 					</ul>
 				</p>
 				<h3>forward / back / go</h3>
@@ -281,7 +281,7 @@ vm.$router.push('/path');
 				</p>
 				<h3>导航守卫</h3>
 				<p>
-					可以为路由添加全局守卫进程，在每次跳转时，都会触发该进程。
+					可以为路由添加全局守卫（类似于事件 / 钩子），在每次跳转时，都会触发该守卫。
 					<ul>
 						<li>beforeEach(function(to, from, next){})：每次导航前触发</li>
 						<li>beforeResolve(function(to, from, next){})：每次解析前触发</li>
@@ -299,6 +299,53 @@ vm.$router.push('/path');
 							<li>如果执行 next(new Error())，则导航中止，触发 $router.onError</li>
 						</ul>
 					</ul>
+					以下代码通过导航守卫实现面包屑和单页面的登录检验功能。
+					<pre><code class="javascript">
+const store = new Vuex.Store({
+	state: {
+		isLoggedin: false
+	}
+});
+const router = new VueRouter({
+	routes: [
+		{
+			path: '/main/',
+			name: '首页',
+			component: {}
+		}
+	]
+});
+const routeList = []; // 存放路由地址
+
+router.beforeEach((to, from, next) => {
+  /* 实现面包屑功能 */
+  var index = routeList.indexOf(to.name); // 取出即将进入的组件的名字
+  if (index !== -1) {
+    routeList.splice(index + 1, routeList.length - index - 1); // 如果存在路由列表，则把之后的路由都删掉
+  } else {
+    routeList.push(to.name); // 否则，将组件名字推入数组
+  }
+  to.meta.routeList = routeList; // 将数组赋值给 meta 属性，在组件内使用 this.$route.meta.routeList 来读取该数组
+
+  /* 验证登录功能 */
+  if (to.path === '/login') {
+    next(); // 进入的是登录页面，正常路由
+  } else {
+    if (store.state.isLoggedin) {
+      next(); // 已经登录，正常路由
+    } else {
+      next({path: '/login'}); // 未登录，路由到登录页面
+    }
+  }
+});
+					</code></pre>
+					在组件中通过<span class="definition"> this.$route.meta.routeList </span>读取数组。
+					<pre><code class="javascript">
+当前位置：
+&lt;div v-for="position in $route.meta.routeList"&gt;
+	> {{position}}
+&lt;/div&gt;
+					</code></pre>
 				</p>
 			</p>
 		</section>

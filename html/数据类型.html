@@ -118,6 +118,61 @@ undefined == true
 			</p>
 		</section>
 		<section>
+			<h2>String</h2>
+			<p>
+				参见<a href="./数组和字符串.html#字符串方法">数组和字符串</a>部分。
+			</p>
+		</section>
+		<section>
+			<h2>Symbol</h2>
+			<p>
+				Symbol 是 ES6 新增的数据类型，每次使用 Symbol() 方法都会创建一个独一无二的值。
+				<pre><code class="javascript">
+Symbol() === Symbol(); // => false
+Symbol() == Symbol(); // => false
+
+var s = Symbol();
+console.log(typeof s); // => Symbol()
+				</code></pre>
+				Symbol() 方法接受一个字符串作为参数，作为这个 Symbol 的描述或提示。
+				<pre><code class="javascript">
+var s = Symbol('hello world');
+console.log(s); // => Symbol(hello world);
+				</code></pre>
+				<h3>作为对象的键</h3>
+				由于每次使用 Symbol() 都返回不同的值，因此当作为对象的键时，可以有效避免命名冲突问题。
+				<pre><code class="javascript">
+/* 传统做法，使用字符串作为键 */
+// 一、在对象中指定键名
+var obj = {
+	key: 'hello world'
+};
+// 实际上等价于
+var obj = {
+	"key": 'hello world'
+}
+// 二、使用 []
+obj["key"] = 'hello world';
+// 三、使用 .
+obj.key = 'hello world';
+// 四、使用 Object.defineProperty
+Object.defineProperty(obj, "key", {value: 'hello world'});
+
+/* 使用 Symbol 作为键 */
+// 创建 Symbol 作为引用
+var key = Symbol();
+// 一、在对象中
+var obj = {
+	[key]: 'hello world' // 使用 [] 来解析 key ，否则默认直接解析为字符串 "key"
+}
+// 二、使用 []
+obj[key] = 'hello world';
+// 三、使用 Object.defineProperty
+Object.defineProperty(obj, key, {value: 'hello world'});
+				</code></pre>
+			</p>
+		</section>
+		<section>
 			<h2>typeof</h2>
 			<p>
 				使用 typeof 进行类型检测，返回一个字符串

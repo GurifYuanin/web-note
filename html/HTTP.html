@@ -67,7 +67,7 @@ HTTP/版本 状态码 状态短语
 报文主体
 				</code></pre>
 				可以看到，报文主体和首部字段隔着一个空行（CR+LF）。浏览器通过这种方式来获取 Web 资源。<br>
-				比如在我的网站上有这么一个页面<a href="../demo/http_demo.html"> http://isempty.site/other/web-note/demo/http_demo.html </a>，该页面的 HTML 代码很简单，body 内只有一个<span class="definition">hello ! </span>的文本节点。
+				比如在我的网站上有这么一个页面<a href="http://isempty.site/web-note/demo/http_demo.html"> http://isempty.site/web-note/demo/http_demo.html </a>，该页面的 HTML 代码很简单，body 内只有一个<span class="definition">hello ! </span>的文本节点。
 				<pre><code class="html">
 &lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
@@ -116,7 +116,7 @@ Content-Type: text/html
 &lt;/body&gt;
 &lt;/html&gt;
 				</code></pre>
-				html 标签前面的一堆东西就是首部字段，HTML 元素标签就是响应报文主体。
+				html 标签前面的一堆东西就是首部字段，HTML 元素标签就是响应报文主体，显示在浏览器上的是响应报文主体内容。
 			</p>
 		</section>
 		<section>
@@ -124,7 +124,7 @@ Content-Type: text/html
 			<p>
 				<h3>Host</h3>
 				<p>
-					Host 是 HTTP 1.1 新增的字段，表示受请求的主机名。
+					Host 是 HTTP 1.1 新增的字段，表示接受请求的主机名。
 				</p>
 				<h3>Range</h3>
 				<p>
@@ -192,8 +192,10 @@ Content-Length: length
 HTTP/1.1 206 Partial Content
 Cache-Control: no-cache
 Connection: Keep-Alive
+<span class="strong">
 Content-Length: 2
 Content-Range: bytes 0-1/227
+</span>
 Content-Type: text/html
 Date: Mon, 04 Jun 2018 02:20:25 GMT
 Last-Modified: Fri, 11 May 2018 09:27:00 GMT
@@ -218,6 +220,98 @@ X-Ua-Compatible: IE=Edge,chrome=1
 					<div class="tip">
 						HTTP 1.0 默认短连接，HTTP 1.1 默认长连接。
 					</div>
+				</p>
+			</p>
+		</section>
+				<section>
+			<h2>通用首部字段</h2>
+			<p>
+				<h3>Content-Type</h3>
+				<p>
+					Content-Type 用于设置发起请求或响应请求时候，携带的数据的类型、数据的字符编码。其值的格式如下：
+					<pre><code class="http">
+Content-Type: media-type; charset=字符编码; boundary=一串字符
+					</code></pre>
+					<h4>media-type</h4>
+					media-type 用于指定数据类型，常用的有如下
+					<ul>
+						<li>application/x-www-form-urlencoded：表单数据，即键值对</li>
+						<li>multipart/form-data：混合表单，即既有键值对，也有文件等数据</li>
+						<li>application/json：json 数据</li>
+						<li>text/plain：字符串</li>
+						<li>text/html：html 文件</li>
+					</ul>
+					<h5>application/x-www-form-urlencoded</h5>
+					我们知道，当使用 GET 请求时，提交的表单数据跟在 URL 后，在 PHP 中通过 $_GET 变量来读取。
+					<pre><code class="php">
+// 在浏览器上输入该 URL 发起请求，username=123456&password=123456 为携带的请求参数
+http://isempty.site?username=123456&password=123456
+
+// 实际上的请求报文为：
+GET http://isempty.site?username=123456&password=123456 HTTP/1.1
+Host: isempty.site
+Content-Length: 31
+
+// 在 PHP 中获得参数
+&lt;php&gt;
+	echo $_GET['username']; // => 123456
+	echo $_GET['password']; // => 123456
+&lt;/php&gt;
+					</code></pre>
+					当使用 POST 请求时，提交的数据放到了请求主体内，在 PHP 中通过 $_POST 变量来读取。
+					<pre><code class="php">
+// 浏览器默认发送 GET 请求，所以需要自己通过其他方式写一个 POST 请求并发送给服务器
+// 请求报文
+POST http://isempty.site/ HTTP/1.1
+Host: isempty.site
+Content-Length: 31
+
+username=123456&password=123456
+
+// 在 PHP 中获得参数
+&lt;php&gt;
+	echo $_POST['username']; // => 123456
+	echo $_POST['password']; // => 123456
+&lt;/php&gt;
+					</code></pre>
+					<h4>application/json</h4>
+					json 数据需要存放在报文主体内，实际上是 json 格式的字符串。
+					<pre><code class="php">
+// 请求报文
+POST http://isempty.site/ HTTP/1.1
+host: isempty.site
+Content-Length: 37
+
+{"username":"123456","password":"123456"}
+
+// 在 PHP 中获得参数
+&lt;php&gt;
+	$json = file_get_contents("php://input"); // 获得 json 字符串
+	$json = json_decode($json); // 解码，将字符串解码为 json 对象
+&lt;/php&gt;
+
+// 响应报文同理
+
+// 在 javascript 中，通常是 ajax 请求后获得 json 字符串
+axios('http://isempty.site')
+	.then(response => {
+		let json = response.data; // 获得 json 字符串
+		json = JSON.parse(json); // 解码，将字符串解码为 json 对象
+	}).catch(error => {
+
+	});
+					</code></pre>
+					<div class="tip">
+						<ul>
+							<li>在 PHP 中使用 json_decode 解析字符串时，必须为 utf-8 编码，否则会返回 null</li>
+							<li>在 PHP 中使用 json_decode 解析字符串时，键值对必须是双引号（json 规范），否则会返回 null</li>
+						</ul>
+					</div>
+					<h4>charset</h4>
+					charset 用于设置数据内容的字符编码。
+					<pre><code class="http">
+Content-Type: application/json; charset=utf-8
+					</code></pre>
 				</p>
 			</p>
 		</section>
