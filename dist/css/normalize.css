@@ -71,6 +71,7 @@ main { /* 1 */
 
 figure {
   margin: 1em 40px;
+  text-align: center;
 }
 
 /**

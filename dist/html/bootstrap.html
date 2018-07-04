@@ -14,13 +14,16 @@
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
-			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
 			目录
 		</section>
 	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
 	<article id="container">
 		<hgroup>
-			<h1>bootstrap</h1>
+			<h1 id="title">bootstrap</h1>
 		</hgroup>
 		<section>
 			<h2>定义</h2>
@@ -66,34 +69,34 @@
 				container 使元素固定宽度（默认100%）并支持响应式布局。<br>
 				container-fluid 使元素宽度始终等于浏览器视窗（viewport）宽度。<br>
 				<pre><code class="html">
-					&lt;body&gt;
-						&lt;div class="container" style="
-							background-color: #bbb;
-							height: 100px;
-						"&gt;container&lt;/div&gt;
-						&lt;div class="container-fluid" style="
-							background-color: #eee;
-							height: 100px;
-						"&gt;container-fluid&lt;/div&gt;
-					&lt;/body&gt;
+&lt;body&gt;
+	&lt;div class="container" style="
+		background-color: #bbb;
+		height: 100px;
+	"&gt;container&lt;/div&gt;
+	&lt;div class="container-fluid" style="
+		background-color: #eee;
+		height: 100px;
+	"&gt;container-fluid&lt;/div&gt;
+&lt;/body&gt;
 				</code></pre>
 				<img style="width 80%;" src="../images/container_demo.jpg" alt="加载失败"><br>
 				bootstrap.css 部分源码：
 				<pre><code class="CSS">
-					.container {
-					  width: 100%;
-					  padding-right: 15px;
-					  padding-left: 15px;
-					  margin-right: auto;
-					  margin-left: auto;
-					}
-					.container-fluid {
-					  width: 100%;
-					  padding-right: 15px;
-					  padding-left: 15px;
-					  margin-right: auto;
-					  margin-left: auto;
-					}
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.container-fluid {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
 				</code></pre>
 				从 bootstrap.css 源码看到， bootstrap 为容器设置了 15px 的左右内边距。
 			</p>
@@ -104,19 +107,19 @@
 				bootstrap 的网格布局将一行划分为十二列，一个元素可以根据要求占据多个列（每个元素左右外边距各为 15px ），同一列无法全部容纳时候，多余元素自动归入下一列。<br>
 				bootstrap 提供了两种方式的网格布局方式：
 				<pre><code class="html">
-					&lt;!-- 自适应方式 --&gt;
-					&lt;div class="row"&gt;
-						&lt;div class="col"&gt;第一列&lt;/div&gt;
-						&lt;div class="col"&gt;第二列&lt;/div&gt;
-						...
-						&lt;div class="col"&gt;第n列&lt;/div&gt;
-					&lt;/div&gt;
-					&lt;!-- 按权重方式 --&gt;
-					&lt;div class="row"&gt;
-						&lt;div class="col-设备-所占列数"&gt;&lt;/div&gt;
-						...
-						&lt;div class="col-设备-所占列数"&gt;&lt;/div&gt;
-					&lt;/div&gt;
+&lt;!-- 自适应方式 --&gt;
+&lt;div class="row"&gt;
+	&lt;div class="col"&gt;第一列&lt;/div&gt;
+	&lt;div class="col"&gt;第二列&lt;/div&gt;
+	...
+	&lt;div class="col"&gt;第n列&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- 按权重方式 --&gt;
+&lt;div class="row"&gt;
+	&lt;div class="col-设备-所占列数"&gt;&lt;/div&gt;
+	...
+	&lt;div class="col-设备-所占列数"&gt;&lt;/div&gt;
+&lt;/div&gt;
 				</code></pre>
 				<li>自适应方式，使子元素在减去每个元素的外边距后，每个子元素自动等分父元素宽度。</li>
 				<figure style="text-align: center;">
@@ -269,10 +272,10 @@
 			<p>
 				bootstrap 提供了一组预设消息提示框的类，完整用法如下（提示框颜色与背景色种类相同）：
 				<pre><code class="html">
-					&lt;div class="alert alert-success alert-dismissable fade show"&gt;
-						关我之前请读这条&lt;a class="alert-link" href="#"&gt;信息&lt;/a&gt;
-						&lt;button type="button" class="close" data-dismiss="alert"&gt;x&lt;/button&gt;
-					&lt;/div&gt;
+&lt;div class="alert alert-success alert-dismissable fade show"&gt;
+	关我之前请读这条&lt;a class="alert-link" href="#"&gt;信息&lt;/a&gt;
+	&lt;button type="button" class="close" data-dismiss="alert"&gt;x&lt;/button&gt;
+&lt;/div&gt;
 				</code></pre>
 				<img style="width: 80%;" src="../images/bootstrap_alert.jpg" alt="加载失败"><br>
 				<img src="../images/bootstrap_demo.gif" alt="加载失败">
@@ -431,17 +434,19 @@
 			<p>
 				bootstrap 提供了一组设置进度条的类。
 				<pre><code class="html">
-					&lt;!-- 模版 --&gt;
-					&lt;父标签 class="progress"&gt;
-						&lt;进度条标签 class="progress-bar" style="width: 进度%"&gt;进度条内部标签&lt;/进度条标签&gt;
-					&lt;/父标签&gt;
+&lt;!-- 模版 --&gt;
+&lt;父标签 class="progress"&gt;
+	&lt;进度条标签 class="progress-bar" style="width: 进度%"&gt;进度条内部标签&lt;/进度条标签&gt;
+&lt;/父标签&gt;
 
-					&lt;!-- 实例 --&gt;
-					&lt;div class="progress"&gt;
-						&lt;div class="progress-bar" style="width: 50%"&gt;50%&lt;/div&gt;
-					&lt;/div&gt;
+&lt;!-- 实例 --&gt;
+&lt;div class="progress"&gt;
+	&lt;div class="progress-bar" style="width: 50%"&gt;50%&lt;/div&gt;
+&lt;/div&gt;
 				</code></pre>
-				<img src="../images/bootstrap_progress.jpg" alt="加载失败">
+				<figure>
+					<img src="../images/bootstrap_progress.jpg" alt="加载失败">
+				</figure>
 				<ul>
 					<li>
 						设置进度条颜色（添加在进度条标签上）：
@@ -468,18 +473,20 @@
 			<p>
 				bootstrap 提供了一组设置下拉列表的类。（点击按钮后显示下拉列表）
 				<pre><code class="html">
-			&lt;div class="dropdown"&gt;
-				&lt;button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"&gt;按钮文字&lt;/button&gt;
-				&lt;div class="dropdown-menu"&gt;
-					&lt;div class="dropdown-divider"&gt;&lt;/div&gt;
-					&lt;div class="dropdown-header"&gt;标题&lt;/div&gt;
-					&lt;a class="dropdown-item" href="#"&gt;开启项&lt;/a&gt;
-					&lt;a class="dropdown-item disabled" href="#"&gt;禁止项&lt;/a&gt;
-				&lt;/div&gt;
-			&lt;/div&gt;
+&lt;div class="dropdown"&gt;
+	&lt;button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"&gt;按钮文字&lt;/button&gt;
+	&lt;div class="dropdown-menu"&gt;
+		&lt;div class="dropdown-divider"&gt;&lt;/div&gt;
+		&lt;div class="dropdown-header"&gt;标题&lt;/div&gt;
+		&lt;a class="dropdown-item" href="#"&gt;开启项&lt;/a&gt;
+		&lt;a class="dropdown-item disabled" href="#"&gt;禁止项&lt;/a&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
 				</code></pre>
-				<img src="../images/bootstrap_dropdown_code.jpg" alt="加载失败"><br>
-				<img src="../images/bootstrap_dropdown.jpg" alt="加载失败"><br>
+				<figure>
+					<img src="../images/bootstrap_dropdown_code.jpg" alt="加载失败"><br>
+					<img src="../images/bootstrap_dropdown.jpg" alt="加载失败"><br>
+				</figure>
 			</p>
 		</section>
 		<section>
@@ -487,13 +494,15 @@
 			<p>
 				bootstrap 提供了一组设置折叠的类。
 				<pre><code class="html">
-					&lt;button data-toggle="collapse" data-target="#被折叠部分ID">折叠按钮&lt;/button&gt;
-					&lt;div id="被折叠部分ID" class="collapse show"&gt;
-					被折叠部分
-					&lt;/div&gt;
+&lt;button data-toggle="collapse" data-target="#被折叠部分ID">折叠按钮&lt;/button&gt;
+&lt;div id="被折叠部分ID" class="collapse show"&gt;
+被折叠部分
+&lt;/div&gt;
 				</code></pre>
-				<img src="../images/bootstrap_collapse_code.jpg" alt="加载失败"><br>
-				<img src="../images/bootstrap_collapse.gif" alt="加载失败"><br>
+				<figure>
+					<img src="../images/bootstrap_collapse_code.jpg" alt="加载失败"><br>
+					<img src="../images/bootstrap_collapse.gif" alt="加载失败"><br>
+				</figure>
 			</p>
 		</section>
 		<section>
@@ -501,24 +510,28 @@
 			<p>
 				bootstrap 提供了一组设置导航条的类。
 				<pre><code class="html">
-				&lt;nav class="navbar navbar-expand-sm fixed-top bg-dark navbar-dark"&gt;
-					&lt;a class="navbar-brand" href="#"&gt;logo&lt;/a&gt;
-					&lt;ul class="navbar-nav"&gt;
-					  	&lt;li class="nav-item"&gt;
-							&lt;a class="nav-link" href="#"&gt;链接&lt;/a&gt;
-						&lt;/li&gt;
-					 &lt;/ul&gt;
-					 &lt;form class="form-inline"&gt;
-					 	&lt;input class="form-control" type="text"&gt;
-					 	&lt;button class="btn btn-success" type="submit"&gt;按钮&lt;/button&gt;
-					 &lt;/form&gt;
-					&lt;span class="navbar-text"&gt;
-					非链接文本
-					&lt;/span&gt;
-				&lt;/nav&gt;
+&lt;nav class="navbar navbar-expand-sm fixed-top bg-dark navbar-dark"&gt;
+	&lt;a class="navbar-brand" href="#"&gt;logo&lt;/a&gt;
+	&lt;ul class="navbar-nav"&gt;
+	  	&lt;li class="nav-item"&gt;
+			&lt;a class="nav-link" href="#"&gt;链接&lt;/a&gt;
+		&lt;/li&gt;
+	 &lt;/ul&gt;
+	 &lt;form class="form-inline"&gt;
+	 	&lt;input class="form-control" type="text"&gt;
+	 	&lt;button class="btn btn-success" type="submit"&gt;按钮&lt;/button&gt;
+	 &lt;/form&gt;
+	&lt;span class="navbar-text"&gt;
+	非链接文本
+	&lt;/span&gt;
+&lt;/nav&gt;
 				</code></pre>
-				<img src="../images/bootstrap_nav_code.jpg" alt="加载失败"><br>
-				<img src="../images/bootstrap_nav.jpg" alt="加载失败"><br>
+				<figure>
+					<img src="../images/bootstrap_nav_code.jpg" alt="加载失败">
+				</figure>
+				<figure>
+					<img src="../images/bootstrap_nav.jpg" alt="加载失败">
+				</figure>
 			</p>
 		</section>
 		<section class="refer">

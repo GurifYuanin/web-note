@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vuex</title>
+	<title>bootstrap</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">Vuex</h1>
+		</hgroup>
+		<section>
+			<h2>下载</h2>
+			<p>
+				<h3>CDN</h3>
+				<p>
+					直接在页面中通过 script 标签导入。
+					<pre><code class="html">
+&lt;script src="https://unpkg.com/vuex"&gt;&lt;/script&gt;
+					</code></pre>
+				</p>
+				<h3>npm</h3>
+				先安装 vuex 后作为插件引入 vue。
+				<pre><code class="javascript">
+# 以生产环境安装 vuex
+$ npm install --save vuex
+
+// 使用 ES6 语法导入 vuex
+import Vue from 'vue';
+import Vuex from 'vuex';
+Vue.use(Vuex);
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>定义</h2>
+			<p>
+				Vuex 类似创建了一个仓库，可以将所有组件都需要的数据和方法存放到这个仓库里，并提供给所有组件使用。
+				<pre><code class="javascript">
+// 创建 Vuex 对象
+var store = new Vuex.Store({
+	state: {}, // 存放状态
+	getter: {}, // 存放计算属性
+	mutation: {}, // 存放变更状态的方法
+	actions: {}, // 存放异步操作的方法
+	modules: {} // 模块化 store
+});
+// 在根组件中注册后可以在其所有子组件使用
+new Vue({
+	store: store
+});
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>state & getter</h2>
+			<p>
+				state 类似于组件的 data 属性，getter 类似于组件的 computed 属性。
+				<h3>state</h3>
+				<ol>
+					<li>在 Vuex 中定义 state</li>
+					<pre><code class="javascript">
+var store = new Vuex.Store({
+	state: {
+		greet: 'hello world',
+		...
+	}
+})
+					</code></pre>
+					<li>在组件对象内，使用 this.$store.state 来引用 state</li>
+					<pre><code class="javascript">
+export default {
+	created: function () {
+		console.log(this.$store.state.greet);
+	}
+}
+					</code></pre>
+					<li>在非组件内部，使用创建出来的 store 对象来引用 state</li>
+					<pre><code class="javascript">
+console.log(store.state.greet);
+					</code></pre>
+				</ol>
+				<h3>getter</h3>
+				<ol>
+					<li>在 Vuex 中定义 getter，getter 的值为一个方法，自动传入 state 对象作为第一个参数，自动传入 getters 对象作为第二个参数</li>
+					<pre><code class="javascript">
+var store = new Vuex.Store({
+	getters: {
+		teerg: function (state, getters) {
+			return state.greet.reverse();
+		}
+	}
+})
+					</code></pre>
+					<li>同理于 state 其调用方法</li>
+					<pre><code class="javascript">
+export default {
+	created: function () {
+		console.log(this.$store.getters.teerg);
+	}
+}
+
+console.log(store.getters.teerg);
+					</code></pre>
+				</ol>
+			</p>
+		</section>
+		<section>
+			<h2>mutation & action</h2>
+			<p>
+				mutation 和 action 都是方法，mutation 用于修改 state ，action 用于提交异步操作。
+				<h3>mutation</h3>
+				<ol>
+					<li>在 Vuex 中声明 mutation，自动传入 state 对象作为第一个参数，调用时可以传入第二个参数，无法传递多余参数</li>
+					<pre><code class="javascript">
+new Vuex.Store({
+	mutations: {
+		updateGreet: function (state, string) {
+			state.greet = string;
+		}
+	}
+})
+					</code></pre>
+					<li>调用时需要使用 commit('mutation名', 参数)</li>
+					<pre><code class="javascript">
+export default {
+	created: function () {
+		this.$store.commit('updateGreet', 'world hello');
+	}
+}
+					</code></pre>
+				</ol>
+				<h3>action</h3>
+				<ol>
+					<li>在 Vuex 中声明 action，传入 context 对象作为第一个参数，调用时可以传入第二个参数，无法传递多余参数</li>
+					<pre><code class="javascript">
+new Vuex.Store({
+	actions: {
+		asyncUpdateGreet: function (context, string) {
+			// context 类似于 store 对象，可以通过 context 访问 store 的 state、getters、commit 等
+			setTimeout(function() {
+				context.commit('updateGreet', string);
+			}, 3000);
+		}
+	}
+})
+					</code></pre>
+					<li>调用时需要使用 dispatch('action名', 参数)</li>
+					<pre><code class="javascript">
+export default {
+	created: function () {
+		this.$store.dispatch('asyncUpdateGreet', 'world hello');
+	}
+}
+					</code></pre>
+				</ol>
+			</p>
+		</section>
+		<section>
+			<h2>module</h2>
+			<p>
+				module 允许我们将 store 分成若干个模块。
+				<pre><code class="javascript">
+new Vuex.Store({
+	modules: {
+		moduleName: {
+			namespaced: true, // 是否开启命名空间
+			state: {
+				greet: 'hello world'
+			},
+			getters: {
+				teerg: function (state, getters, rootState, rootGetters) {
+					/*
+					 * state 访问的是该模块内的 state
+					 * getters 访问的是该模块内的 getters
+					 * rootState 访问的是根节点的 state
+					 * rootGetters 访问的是根节点的 getters
+					 */
+					return state.greet.reverse();
+				}
+			},
+			mutations: {
+				updateGreet (state, string) {
+					// 同样，state 访问的是该模块内的 state
+					state.greet = string;
+				}
+			},
+			actions: {
+				asyncUpdateGreet (context, string) {
+					// 同样，context 访问的是该模块的上下文
+					// context.commit|dispatch('updateGreet', '') 访问模块内的 mutation
+					// context.commit|dispatch('updateGreet', '', {root: true}) 访问全局的 mutation
+					context.commit('updateGreet', string);
+				}
+			}
+		}
+	}
+})
+				</code></pre>
+				<h3>使用：不开启 namespaced</h3>
+				在不开启 namespad 时，模块内各属性和方法的调用：
+				<pre><code class="javascript">
+export default {
+	created: function () {
+		this.$store.state.moduleName.greet;
+		this.$store.getters.moduleName.teerg;
+		this.$store.commit('updateGreet', 'world hello');
+		this.$store.dispatch('asyncUpdateGreet', 'world hello');
+	}
+}
+				</code></pre>
+				<h3>使用：开启了 namespaced</h3>
+				开启了 namespaced 后，使用 getter 、 mutation 和 action 时需要添加前缀。
+				<pre><code class="javascript">
+export default {
+	created: function () {
+		this.$store.state.moduleName.greet;
+		this.$store.getters['moduleName/teerg'];
+		this.$store.commit('moduleName/updateGreet', 'world hello');
+		this.$store.dispatch('moduleName/asyncUpdateGreet', 'world hello');
+	}
+}
+				</code></pre>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Vuex <a href="https://vuex.vuejs.org/zh/">https://vuex.vuejs.org/zh/</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

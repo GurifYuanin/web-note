@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>插件</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">plugins</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				webpack 插件是一个具有 apply 属性的 JavaScript 对象。apply 属性会被 webpack compiler 调用，并且 compiler 对象可在整个编译生命周期访问。<sup>[1]</sup>
+			</p>
+		</section>
+		<section>
+			<h2>使用</h2>
+			<p>
+				<ol>
+					<li>
+						下载对应 npm 包。
+						<pre><code class="shell">
+$ npm install --save-dev 插件名
+						</code></pre>
+					</li>
+					<li>
+						在 webpack 配置文件进行配置
+						<pre><code class="javascript">
+var 插件构造函数 = require('插件名');
+module.exports = {
+	plugins: [
+		new 插件构造函数({
+			// 插件参数
+		})
+	]
+}
+						</code></pre>
+					</li>
+				</ol>
+			</p>
+		</section>
+		<section>
+			<h2>html-webpack-plugin</h2>
+			<p>
+				当使用 webpack 打包工具对 javascript 等文件进行打包时，其输出名可能经常进行变更（例如使用hash），手动修改 index.html （假设为入口文件）十分繁琐，此时就需要<span class="definition"> html-webpack-plugin </span>插件来动态生成入口文件（ HTML5 ）。<br>
+				下载 npm 包。
+				<pre><code class="shell">
+$ npm install --save-dev html-webpack-plugin
+				</code></pre>
+				配置 webpack.conf.js
+				<pre><code class="javascript">
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+module.exports = {
+	output: {
+		filename: 'bundle.js',
+		path: path.resolve(__dirname, 'dist')
+	},
+	plugins: [
+		new HtmlWebpackPlugin({
+			meta: {author: 'me'}, // 添加 &lt;meta name="author" content="me"&gt; 标签
+			title: 'home', //  添加 &lt;title&gt;home&lt;/title&gt; 标签
+			filename: 'index.html', // 生成的文件名，默认为 index.html
+			favicon: './src/asserts/img/favicon.ico', // 从 webpack 配置文件开始寻找 icon 文件并复制到 index.html 同级路径下
+			hash: true, // 开启后在该文档 script 和 link 进行 url 请求后自动追加 ?[hash:20]
+			minify: {}, // 传入 html-minifier 选项来控制压缩
+			cache: true, // 使用缓存，表示修改文件后才会 emit
+			showErrors: true, // 开启后如果编译错误，错误消息将写进 html 页面
+			template: './src/index.html', // 使用模版，从 webpack 配置文件开始寻找模版
+			templateParameters: {}, // 向模版传入的参数
+			inject: 'body' // script 标签放在 body 尾部（ true | 'body' | 'head' | false ）
+		})
+	]
+}
+				</code></pre>
+				（模版文件<span class="definition"> ./src/index.html </span>内容只有在 body 内的<span class="definition"> hello world </span>）<br>
+				最终生成的 html 文件<span class="definition"> ./dist/index.html </span>自动使用<span class="definition"> &lt;script&gt;</span>标签来引入 webpack 打包的输出文件。
+				<pre><code class="html">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+	&lt;meta charset="UTF-8"&gt;
+	&lt;meta name="author" content="me"&gt;
+	&lt;title&gt;home&lt;/title&gt;
+&lt;link rel="shortcut icon" href="favicon.ico"&gt;&lt;/head&gt;
+&lt;body&gt;
+	hello world
+	&lt;script type="text/javascript" src="bundle.js?87dbe529ad9135f91934"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+				</code></pre>
+				<div class="tip">
+					如果需要使用该插件生成多个 html 页面，则向 plugins 数组传入多个 html-webpack-plugin 插件实例
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>CopyWebpackPlugin</h2>
+			<p>
+				CopyWebpackPlugin 用于文件或目录的拷贝。<br>
+				下载 npm 包。
+				<pre><code class="shell">
+$ npm install --save-dev copy-webpack-plugin
+				</code></pre>
+				配置 webpack.conf.js
+				<pre><code class="javascript">
+require CopyWebpackPlugin = require('copy-webpack-plugin');
+module.exports = {
+	plugins: [
+		new CopyWebpackPlugin([
+			{
+				from: './static/**', // 被拷贝的文件，可以使用 glob 模式和占位符
+				to: '', // 拷贝到的路径
+				toType: '', // 自定义 [ext] 占位符
+				ignore: ['.*'], // 不拷贝的文件，可以使用 glob 模式
+			}
+		])
+	]
+}
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>DefinePlugin</h2>
+			<p>
+				DefinePlugin 是 webpack 自带的插件，它用于定义字符串替换，使用 webpack 打包时对定义的字符串进行一一替换。<br>
+				配置 webpack.conf.js
+				<pre><code class="javascript">
+var webpack = require('webpack');
+module.exports = {
+	plugins: [
+		new webpack.DefinePlugin({
+			key: 'value'
+		})
+	]
+}
+				</code></pre>
+				例如 index.js 未打包时的代码为：
+				<pre><code class="javascript">
+var value = 'hello world';
+console.log(key);
+				</code></pre>
+				打包后则成为了：
+				<pre><code class="javascript">
+var value = 'hello world';
+console.log(value);
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>HotModuleReplacementPlugin</h2>
+			<p>
+				HotModuleReplacementPlugin 是 webpack 自带的插件，它用于启动模块热替换功能，再使用 HMR 接口对指定模块进行监听。
+				<pre><code class="javascript">
+var webpack = require('webpack');
+module.exports = {
+	devServer: { // 配合开发服务器
+		hot: true
+	},
+	plugins: [
+		new webpack.HotModuleReplacementPlugin() // HotModuleReplacementPlugin 通常不需要传入选项对象
+	]
+}
+				</code></pre>
+				在 index.js 中使用 HMR 接口监听热替换的模块，假设为 component.js
+				<pre><code class="javascript">
+export default function() {
+	var element = document.createElement('div');
+	element.innerHTML = 'hello world';
+	return element;
+}
+				</code></pre>
+				在打包文件中写入监听：
+				<pre><code class="javascript">
+import component from './component.js';
+var element = component();
+document.body.appendChild(element);
+
+if (module.hot) { // 检查是否开启 HMR
+	module.hot.accept('./component.js', function() { // 监听模块 component.js
+	// 监听到模块 component.js 发生修改，进行页面 DOM 修改
+	var nextElement = component();
+        document.body.replaceChild(nextElement, element);
+        element = nextElement;
+	});
+}
+				</code></pre>
+				<figure>
+					<img src="../images/plugins_hmr.gif">
+					<figcaption>修改模块 component.js 时自动更新且不刷新页面</figcaption>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>CommonsChunkPlugin</h2>
+			<p>
+				CommonsChunkPlugin 是 webpack 自带的插件，用于提取公共模块为单独文件。
+				<pre><code class="javascript">
+var webpack = require('webpack');
+module.exports = {
+	// 多个入口文件
+	entry: {
+		vender: ['vue', 'vue-router']
+	},
+	plugins: [
+		new webpack.optimize.CommonsChunkPlugin({
+			name: 'vender',
+			filename: 'vender.[hash:8].js' // 将 vue.js vue-router.js 打包到 vender.[hash:8].js 文件
+		}),
+		new webpack.optimize.CommonsChunkPlugin({
+			name: 'runtime' // 选择一个未使用的名字，将 webpack 的代码打包到 runtime.[hash:8].js 文件（分离 webpack 出去）
+		})
+	]
+}
+				</code></pre>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 插件(plugins) <a href="https://webpack.docschina.org/concepts/plugins/">https://webpack.docschina.org/concepts/plugins/</a></div>
+				<div>[2] html-webpack-plugin <a href="https://github.com/jantimon/html-webpack-plugin">https://github.com/jantimon/html-webpack-plugin</a></div>
+				<div>[3] stoneniqiu 模块热替换<a href="http://www.cnblogs.com/stoneniqiu/p/6496425.html">http://www.cnblogs.com/stoneniqiu/p/6496425.html</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

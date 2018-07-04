@@ -86,7 +86,7 @@ for (var key in arr) {
 				<p>
 					Symbol.iterator 是数据结构的一个属性，本身是一个函数，调用后获得该数据结构的迭代器。<br>
 					类比在 Java 中对链表的迭代：
-					<pre><code class="javascript">
+					<pre><code class="Java">
 LinkedList&lt;String&gt; list = new LinkedList&lt;String&gt;(); // 创建一个链表对象
 Iterator&lt;String&gt; iterator = list.iterator(); // 获得该链表的迭代器
 while (iterator.hasNext()) { // 检查是否到链表尾部
@@ -96,7 +96,7 @@ while (iterator.hasNext()) { // 检查是否到链表尾部
 					在 javascript 中，Symbol.iterator 属性模拟了个该迭代过程，可以手写一个迭代器。
 					<pre><code class="javascript">
 var obj = {
-	data: [1, 2, 3, 4, 5],
+	data: [1, 2, 3, 4, 5], // 被迭代的数据
 	[Symbol.iterator]: function () {
 		var that = this;
 		var index = 0;

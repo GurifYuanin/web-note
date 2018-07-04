@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>package.json</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">package.json</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				package.json 用于描述项目的基本信息（项目名、版本等）和项目依赖，其内容为一个 JSON 对象。
+			</p>
+		</section>
+		<section>
+			<h2>创建</h2>
+			<p>
+				在命令行使用<span class="definition"> npm init </span>，填入基本项信息来创建一个 package.json 文件。
+				<pre><code class="shell">
+$ npm init
+				</code></pre>
+				<figure>
+					<img src="../images/package_json_init.jpg">
+				</figure>
+				也可以使用<span class="definition"> npm init -y </span>来快速创建一个 package.json 文件。
+				<pre><code class="shell">
+$ npm init -y
+				</code></pre>
+				<figure>
+					<img src="../images/package_json_init_y.jpg">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>配置项</h2>
+			<p>
+				<h3>name</h3>
+				项目名。如果要发布该包，名字和版本将作为唯一的标识符，项目名和版本就是必填项。<br>
+				项目名应遵循：
+				<ul>
+					<li><= 214 个字符</li>
+					<li>不能以点或下划线开头，也不能包含任何非 URL 安全字符</li>
+					<li>全部小写</li>
+				</ul>
+				<pre><code class="json">
+"name": "my-project"
+				</code></pre>
+				其他人使用该字段来指定使用的项目：
+				<pre><code class="javascript">
+require('my-project');
+				</code></pre>
+				<h3>version</h3>
+				版本号，即<span class="definition"> x.x.x </span>。
+				<pre><code class="json">
+"version": "1.0.0"
+				</code></pre>
+				<h3>description</h3>
+				项目的描述，帮助他人理解你的项目。
+				<pre><code class="json">
+"description": "greetings to this world"
+				</code></pre>
+				<h3>keywords</h3>
+				项目的关键字，同样是帮助他人理解你的项目。
+				<pre><code class="json">
+"keywords": ["greet", "world"]
+				</code></pre>
+				<h3>homepage</h3>
+				项目主页 URL 。
+				<pre><code class="json">
+"homepage": "https://github.com/GurifYuanin"
+				</code></pre>
+				<h3>bugs</h3>
+				项目出问题时，该在哪里寻求帮助。
+				<pre><code class="json">
+"bugs": {
+	url: "https://www.google.com",
+	email: "12315@163.com"
+}
+				</code></pre>
+				<h3>license</h3>
+				其他人使用该包时需要遵守的协议。
+				<pre><code class="json">
+"license": "MIT"
+				</code></pre>
+				<h3>author</h3>
+				该项目的贡献者，当是团体时使用数组。
+				<pre><code class="json">
+"author": {
+	"name" : "GurifYuanin",
+	"email" : "silent.oridin@gmail.com",
+	"url" : "https://github.com/GurifYuanin"
+}
+				</code></pre>
+				<h3>files</h3>
+				以数组的方式写下匹配规则（规则包括文件、目录、glob 模式），发布项目时就会打包这些文件。
+				<pre><code class="json">
+"files": [
+	"lib/",
+	"dist/",
+	"scripts/",
+	"index.js"
+]
+				</code></pre>
+				可以创建<span class="definition"> .npmignore </span>（类似 .gitignore ），写入规则，符合该规则文件将不会被打包。
+				<h3>main</h3>
+				当模块用于服务器端时，应用程序的入口文件。
+				<pre><code class="json">
+"name": "demo"
+"main": "index.js"
+				</code></pre>
+				当其他用户使用：
+				<pre><code class="javascript">
+require('demo');
+				</code></pre>
+				实际上是返回 index.js 的<span class="definition"> module.exports </span>对象。
+				<h3>browser</h3>
+				当模块是用于浏览器端的时候，browser 指定该模板供浏览器使用的版本。
+				<pre><code class="json">
+"browser": {
+  "pack": "./node_modules/pack.js"
+}
+				</code></pre>
+				<h3>bin</h3>
+				bin 用于将命令与指定位置的文件进行映射。在 package.json 写入：
+				<pre><code class="json">
+"bin": {
+	"getit": "./bin/get.js"
+}
+				</code></pre>
+				安装该模块的时候，npm 会在<span class="definition"> ./node_modules/.bin </span>下创建 getit 符号链接，之后就可以直接在命令行通过输入 getit 来执行<span class="definition"> ./bin/get.js </span>。
+				<pre><code class="shell">
+$ getit
+				</code></pre>
+				<h3>scripts</h3>
+				在默认情况下， npm 会有以下配置项：
+				<pre><code class="json">
+"scripts": {
+	"start": "node server.js",
+	"install": "node-gyp rebuild"
+}
+				</code></pre>
+				scripts 用于写入可执行的脚本命令。
+				<pre><code class="json">
+"scripts": {
+	"start": "index.js",
+	"test": "echo \"testing the project\""
+}
+				</code></pre>
+				在命令行通过<span class="definition"> npm run 命令名 </span>来直接执行。
+				<pre><code class="shell">
+$ npm run start
+				</code></pre>
+				<h3>config</h3>
+				config 用于配置环境变量。
+				<pre><code class="json">
+"config": {
+	"port": "8080"
+}
+				</code></pre>
+				运行脚本时通过<span class="definition"> process.env.npm_package_config_配置项 </span>来读取配置。
+				<pre><code class="javascript">
+http
+  .createServer(...)
+  .listen(process.env.npm_package_config_port)
+				</code></pre>
+				<h3>dependencies</h3>
+				dependencies 表示运行程序时依赖的模块及版本号。
+				<pre><code class="json">
+"dependencies": {
+	"module1": "1.0.0",
+	"module2": "1.0.0 - 2.0.0",
+	"module3": "1.0.x",
+	"module4": "~1.0.0",
+	"module5": "^1.0.0",
+	"module6": "*",
+	"module7": "latest",
+}
+				</code></pre>
+				版本号（部分）表示的意思：
+				<ul>
+					<li>1.0.0：指定必须该版本</li>
+					<li>1.0.0 - 2.0.0：从 1.0.0 到 2.0.0 之间的任何版本</li>
+					<li>1.0.x：x 表示该位的版本随意</li>
+					<li>~1.0.0： 1.0.x 且 1.0.0 以上</li>
+					<li>^1.0.0： 1.x.x 且 1.0.0 以上</li>
+					<li>*：任意版本</li>
+					<li>latest：最新版本</li>
+				</ul>
+				<h3>devDependencies</h3>
+				devDependencies 表示开发程序时依赖的模块及版本号，版本号规范同 dependencies 。
+				<h3>peerDependencies</h3>
+				当用户使用该模块作为插件时，该字段表示使用该模块时需要的模块和版本号。
+				<pre><code class="json">
+"peerDependencies": {
+	"module": "^1.0.0"
+}
+				</code></pre>
+				<h3>engines</h3>
+				engines 用于表示模块的运行对平台的要求。
+				<pre><code class="json">
+"engines": {
+	"node": ">=0.4.2",
+	"npm": "~1.0.20"
+}
+				</code></pre>
+				<h3>private</h3>
+				通过设置 private 可以对包发布进行控制。
+				<pre><code class="json">
+"private": true
+				</code></pre>
+				设为私有后，再使用<span class="definition"> npm publish </span>进行包发布时会被直接拒绝。
+				<figure>
+					<img src="../images/npm_private.jpg">
+				</figure>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] npm package.json <a href="https://docs.npmjs.com/files/package.json">https://docs.npmjs.com/files/package.json</a></div>
+				<div>[2] 阮一峰 package.json文件 <a href="http://javascript.ruanyifeng.com/nodejs/packagejson.html#toc8">http://javascript.ruanyifeng.com/nodejs/packagejson.html#toc8</a></div>
+				<div>[3] json.is <a href="http://package.json.is/">http://package.json.is/</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

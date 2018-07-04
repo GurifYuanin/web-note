@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>实例</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">实例</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				每个 Vue 应用都是通过用 Vue 函数创建一个新的 Vue 实例开始的<sup>[1]</sup>。
+					<pre><code class="javascript">
+var 实例名 = new Vue(选项对象);
+					</code></pre>
+					选项对象可以为 vue 实例绑定以下选项属性：
+					<ol>
+						<li>el：元素</li>
+						<li>data：数据属性</li>
+						<li>computed：计算属性</li>
+						<li>methods：方法</li>
+						<li>filters：过滤器</li>
+						<li>watch：侦听属性</li>
+						<li>template：模版</li>
+						<li>生命周期钩子</li>
+						<li>component：组件</li>
+						<li>mixins：混合</li>
+						<li>store：将状态（Vuex state）从根组件“注入”到每一个子组件中</li>
+						<li>router：配置路由</li>
+					</ol>
+					<pre><code class="javascript">
+var vm = new Vue({
+  el: '选择器',
+  data: {
+    数据属性名: 数据值
+  },
+  computed: {
+    计算属性名: function() {
+      实例名|this.数据属性名...
+  }
+},
+  watch: {
+    数据属性名: function(){ // 数据发生改变时触发 }
+},
+  methods: {
+    方法名: function(形参){
+      this.$emit('自定义事件名'); // 触发自定义事件
+  }
+},
+  template: '模版内容',
+  [before + ]
+  created: function(){ },
+  mounted: function(){ },
+  updated: function() { },
+  destroyed: function() { },
+  components: { // 局部注册组件
+    '组件名': { // 组件选项 }
+},
+  mixins: [ mixins对象 ]
+});
+// 可以通过 实例名.$选项名 来引用选项属性
+vm.$el === $('选择器')[0]; // => true
+					</code></pre>
+					其内部工作流程为：
+					<pre><code class="javascript">
+// 调用 this._init
+...
+initLifecycle(vm); // 初始化生命周期
+initEvents(vm); // 初始化事件
+initRender(vm); // 初始化渲染
+callHook(vm, 'beforeCreate'); // 调用 beforeCreate 钩子
+initInjections(vm); // 初始化 inject
+initState(vm); // 初始化状态
+initProvide(vm); // 初始化 provide
+callHook(vm, 'created'); // 调用 created 钩子
+...
+if (vm.$options.el) {
+  vm.$mount(vm.$options.el); // 挂载到元素上
+}
+					</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>el</h2>
+			<p>
+				el 决定了 vue 实例绑定的 HTML 元素，被绑定的元素可以在 HTML 标签内使用双花括号<span class="definition"> {{}} </span>来对数据、方法进行访问。<br>
+				元素的选择方式与 jquery 的<span class="definition"> $() </span>方法一样，但只会选出第一个被选中的元素。
+				<pre><code class="html">
+&lt;div id="app"&gt;{{message}}&lt;/div&gt;
+&lt;script&gt;
+	new Vue({
+		el: '#app',
+		data: {
+			message: 'hello world'
+		}
+	});
+&lt;/script&gt;
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>data</h2>
+			<p>
+				<pre><code class="javascript">
+var 实例名 = new Vue({
+	data: {
+		数据属性名: 数据值
+	}
+});
+				</code></pre>
+				<h3>使用数据</h3>
+				在 javascript 中通过 实例名.数据属性名 来引用数据值
+				<pre><code class="javascript">
+实例名.数据属性名
+console.log(vm.message);
+				</code></pre>
+				在 html 中通过双花括号包裹（“Mustache”语法 ）数据属性名来引用数据值，该过程称为<span class="definition"> 插值 </span>。
+				<pre><code class="html">
+&lt;标签&gt;{{数据属性名}}&lt;/标签&gt;
+&lt;div&gt;{{message}}&lt;/div&gt;
+				</code></pre>
+				<h3>转义</h3>
+				其插入的值是转义后的，不会被当做 html 标签被浏览器进行渲染。
+				<figure>
+					<img src="../images/vue_data.jpg">
+					<figcaption>当 message 是 &lt;h1&gt;hello&lt;/h1&gt; 时</figcaption>
+				</figure>
+				如果想取消这种转义，则不要在标签内部使用数据，而是使用<span class="definition"> v-html </span>指令
+				<pre><code class="html">
+&lt;div v-html="message"&gt;&lt;/div&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_raw_data.jpg">
+					<figcaption> 取消转义使用原生的 html 文本 </figcaption>
+				</figure>
+				<h3>响应式</h3>
+				绑定的数据是响应式的，修改数据时视图也会进行更新。
+				<pre><code class="javascript">
+var vm = new Vue({
+  el: '#demo',
+  data: {
+    message: 'hello world'
+  }
+});
+// 设置定时器，2s 后修改 message 的值
+setTimeout(function(){
+  vm.message = 'hi !!!';
+}, 2000);
+				</code></pre>
+				<figure>
+					<img src="../images/vue_data_response.gif">
+				</figure>
+				如果想取消自动更新，可在标签上添加指令<span class="definition"> v-once</span>
+				<pre><code class="html">
+&lt;标签 v-once&gt;{{数据属性名}}&lt;/标签&gt;
+&lt;div v-once&gt;{{message}}&lt;/div&gt;
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>computed</h2>
+			<p>
+				computed 可以是一个带有返回值的函数，此时计算属性只有 getter ，访问后获得返回值。
+				<pre><code class="html">
+new Vue({
+	computed: {
+		计算属性名: function() {
+			return ...
+		}
+	}
+});
+				</code></pre>
+				计算属性也可以是一个对象，为其设置 getter 和 setter ，访问时获得 getter 的返回值，修改时调用 setter ，传入的形参为修改后的值。
+				<pre><code class="javascript">
+new Vue({
+	computed: {
+		计算属性名: {
+			getter: function() {
+				return ...;
+			},
+			setter: function(val) {
+				...
+			}
+		}
+	}
+});
+				</code></pre>
+				<h3>缓存</h3>
+				计算属性同样是响应式的，只有当计算属性内的相关依赖改变时才会重新执行一遍函数：<a href="../demo/vue_computed.html"> demo </a>
+				<pre><code class="html">
+&lt;div id="demo"&gt;{{getMessage}}&lt;/div&gt;
+&lt;script&gt;
+	var vm = new Vue({
+	  el: '#demo',
+	  data: {
+	    message: 'hello world'
+	  },
+	  computed: {
+	    getMessage: function() {
+	      return this.message;
+	    }
+	  }
+	});
+&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_computed.gif">
+				</figure>
+				<h3>不是函数</h3>
+				计算属性的性质类似于数据属性，不是一个函数，如果在 html 中把它当做方法来调用则会报错。
+				<figure>
+					<img src="../images/vue_computed_error.jpg">
+					<figcaption> {{getMessage()}} </figcaption>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>methods</h2>
+			<p>
+				<pre><code class="html">
+&lt;标签&gt;{{方法名(参数)}}&lt;/标签&gt;
+&lt;script&gt;
+	new Vue({
+		methods: {
+			方法名: function(形参) {
+				...
+			}
+		}
+	});
+&lt;/script&gt;
+				</code></pre>
+				方法的调用与函数调用无差异：<a href="../demo/vue_methods.html">输出当前时间</a>
+				<pre><code class="html">
+&lt;div id="demo"&gt;{{getDate()}}&lt;/div&gt;
+&lt;script&gt;
+	var vm = new Vue({
+		el: '#demo',
+		methods: {
+			getDate: function() {
+				return new Date();
+			}
+		}
+	});
+&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_methods_normal.jpg">
+					<figcaption>正常调用时</figcaption>
+				</figure>
+				<figure>
+					<img src="../images/vue_methods_abnormal.jpg">
+					<figcaption>省略 () 时，即 &lt;div id="demo"&gt;{{getDate}}&lt;/div&gt;</figcaption>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>filters</h2>
+			<p>
+				filters 与方法类似，不同的是其调用方式。
+				<h3>创建过滤器</h3>
+				<p>
+					<pre><code class="javascript">
+// 全局创建过滤器
+Vue.filter('过滤器名', function(参数) {});
+// 局部创建过滤器
+new Vue({
+	filters: {
+		过滤器名: function(参数) {}
+	}
+});
+					</code></pre>
+				</p>
+				<h3>使用过滤器</h3>
+				<p>
+					可以在 {{}} 内或 v-bind 内使用过滤器，使用<span class="definition"> | </span>将参数与过滤器隔开，参数将传入过滤器作为第一个参数，并且支持链式写法。
+					<pre><code class="html">
+{{'hello' | reverse | toUpperCase}}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>watch</h2>
+			<p>
+				watch 是对数据属性的侦听，侦查属性与数据属性同名，当数据属性改变时触发，传入改变后的值作为形参。
+				<pre><code class="javascript">
+new Vue({
+	data: {
+		数据属性名: 值
+	},
+	watch: {
+		数据属性名: function(val) {
+			...
+		}
+	}
+});
+				</code></pre>
+				<pre><code class="html">
+&lt;div id="demo"&gt;{{message}}&lt;/div&gt;
+&lt;script&gt;
+	var vm = new Vue({
+		el: '#demo',
+		data: {
+			message: 'hello world'
+		},
+		watch: {
+			message: function(val) {
+				console.warn('你把 message 改为' + val);
+			}
+		}
+	});
+&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_watch.gif">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>template</h2>
+			<p>
+				<h3>替换</h3>
+				模版值将替换掉挂载元素内的所有内容。
+				<pre><code class="javascript">
+new Vue({
+	template: '模版值'
+});
+				</code></pre>
+				<pre><code class="html">
+&lt;div id="demo">啊啊啊我不甘心！！！&lt;/div&gt;
+&lt;script&gt;
+	new Vue({
+		el: '#demo',
+		template: '&lt;div&gt;任你写什么都会被我替换掉娃哈哈&lt;/div&gt;'
+	});
+&lt;/script&gt;
+				</code></pre>
+				<figure>
+					<img src="../images/vue_template.jpg">
+				</figure>
+				<h3>根标签</h3>
+				模版值不能是纯文本节点，必须带有一个根标签，否则会报错
+				<figure>
+					<img src="../images/vue_template_error.jpg">
+					<figcaption>template: 'hello world'</figcaption>
+				</figure>
+				更多可参见<a href="模版.html">模版</a>部分。
+			</p>
+		</section>
+		<section>
+			<h2>生命周期钩子</h2>
+			<p>
+				每个 Vue 实例在被创建时都要经过一系列的初始化过程<sup>[1]</sup>，该阶段将运行一些生命周期的钩子，此后在不同的生命周期也会有不同的钩子被调用。
+				<figure>
+					<img src="../images/vue_hook.png">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>component</h2>
+			<p>
+				component 用于局部注册组件，详见<a href="组件.html">组件</a>的局部注册部分。
+			</p>
+		</section>
+		<section>
+			<h2>mixins</h2>
+			<p>
+				mixins 是对 vue 实例选项的一种预设，详见<a href="mixins.html"> mixins </a>。
+			</p>
+		</section>
+		<section>
+			<h2>store</h2>
+			<p>
+				使用 store 选项将状态（Vuex state）注入到每一个子组件中，详见<a href="./vuex.html"> Vuex </a>。
+				<pre><code class="javascript">
+Vue.use(Vuex);
+new Vue({
+	store,
+	component: {
+		myComponent: {
+			// 组件选项
+		}
+	}
+});
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>router</h2>
+			<p>
+				使用 router 选项配置路由，详见<a href="./router.html"> vue-router </a>。
+				<pre><code class="javascript">
+new Vue({
+	router: new VueRouter({
+		routes: [
+			{
+				path: '/foo',
+				component: {
+					// 组件选项
+				}
+			}
+		]
+	})
+});
+				</code></pre>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Vue.js <a href="https://cn.vuejs.org/v2/guide/">https://cn.vuejs.org/v2/guide/</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

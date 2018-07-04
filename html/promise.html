@@ -156,12 +156,25 @@ var promise = new Promise(function(resolve, reject) {
 });
 promise.then(function(value) {
 	console.log(value);
+	<div class="strong">
 return new Promise(function(resolve, reject) {
-	resolve(<span class="strong">value</span>);
+	resolve(value);
 });
+	</div>
 }).then(function(value) {
 	console.log(value);
 });
+				</code></pre>
+				当你只是想返回一个值给下一个 then 用，不必创建 Promise 对象再调用 resolve 回调函数进行传数据，可以直接将该数据返回，效果是一样的。
+				<pre><code class="javascript">
+promise.then(function(value) {
+	console.log(value);
+	<div class="strong">
+return value;
+	</div>
+}).then(function(value) {
+	console.log(value);
+})
 				</code></pre>
 				<figure>
 					<img src="../images/promise_demo3.jpg">

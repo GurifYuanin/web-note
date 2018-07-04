@@ -14,13 +14,16 @@
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
-			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
 			目录
 		</section>
 	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
 	<article id="container">
 		<hgroup>
-			<h1>事件</h1>
+			<h1 id="title">事件</h1>
 		</hgroup>
 		<section>
 			<h2>定义</h2>
@@ -45,9 +48,9 @@
 			<p>
 				由于 HTML 中元素可以相互包含，用户在触发某个事件的时候（如进行点击）就需要判断是在哪个元素上触发。例如
 				<pre><code class="html">
-				&lt;div&gt;
-					&lt;p&gt;点击我&lt;/p&gt;
-				&lt;/div&gt;
+&lt;div&gt;
+	&lt;p&gt;点击我&lt;/p&gt;
+&lt;/div&gt;
 				</code></pre>
 				当用户点击 p 元素时，是该先触发 p 上的事件，还是先触发 div 上的事件？<br>
 				事件流是描述事件的发生顺序<sup>[1]</sup>。“DOM2级事件”规定事件流包括三个阶段：
@@ -64,34 +67,34 @@
 						<h3>事件捕获</h3>
 						事件捕获是网景提出的一种事件流，其思想是最底（外）层的元素（即 document）应该先接收到事件，再逐级传递给最顶（内）层的元素（被点击的元素）。
 						<pre><code class="html">
-				&lt;style&gt;
-					#outer{
-						background-color: #ff0;
-						height: 100px;
-						width: 100px;
-					}
-					 #inner {
-						background-color: #f0f;
-						height: 50px;
-						width: 50px;
-					}
-				&lt;/style&gt;
-				&lt;div id="outer"&gt;
-					&lt;div id="inner"&gt;点击我&lt;/div&gt;
-				&lt;/div&gt;
-				&lt;script&gt;
-					var outer = document.getElementById('outer');
-					var inner = document.getElementById('inner');
-					document.addEventListener('click', function() {
-						console.log('document');
-					}, true);
-					outer.addEventListener('click', function() {
-						console.log('outer');
-					}, true);
-					inner.addEventListener('click', function() {
-						console.log('inner');
-					}, true);
-				&lt;/script&gt;
+&lt;style&gt;
+	#outer{
+		background-color: #ff0;
+		height: 100px;
+		width: 100px;
+	}
+	 #inner {
+		background-color: #f0f;
+		height: 50px;
+		width: 50px;
+	}
+&lt;/style&gt;
+&lt;div id="outer"&gt;
+	&lt;div id="inner"&gt;点击我&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	var outer = document.getElementById('outer');
+	var inner = document.getElementById('inner');
+	document.addEventListener('click', function() {
+		console.log('document');
+	}, true);
+	outer.addEventListener('click', function() {
+		console.log('outer');
+	}, true);
+	inner.addEventListener('click', function() {
+		console.log('inner');
+	}, true);
+&lt;/script&gt;
 						</code></pre>
 						<style>
 							#outer{
@@ -164,35 +167,35 @@
 						<h3>DOM2级事件流</h3>
 						DOM2级事件流把事件触发顺序分成了三个阶段，先触发事件捕获（从 document 到目标元素），处于目标阶段（在目标元素上执行相应代码），事件冒泡（从目标元素到 document ）。
 						<pre><code class="html">
-				&lt;style type="text/css"&gt;
-					#d1 {
-						height: 100px;
-						background-color: #ccc;
-					}
-					#d2 {
-						height: 50px;
-						background-color: #888;
-					}
-				&lt;/style&gt;
-				&lt;div id="d1"&gt;
-					&lt;div id="d2"&gt;点我&lt;/div&gt;
-				&lt;/div&gt;
-				&lt;script type="text/javascript"&gt;
-					var d1 = document.getElementById('d1');
-					var d2 = document.getElementById('d2');
-					d1.addEventListener('click', function(){
-						console.log('d1 捕获');
-					}, true);
-					d1.addEventListener('click', function(){
-						console.log('d1 冒泡');
-					}, false);
-					d2.addEventListener('click', function(){
-						console.log('d2 捕获');
-					}, true);
-					d2.addEventListener('click', function(){
-						console.log('d2 冒泡');
-					}, false);
-				&lt;/script&gt;
+&lt;style type="text/css"&gt;
+	#d1 {
+		height: 100px;
+		background-color: #ccc;
+	}
+	#d2 {
+		height: 50px;
+		background-color: #888;
+	}
+&lt;/style&gt;
+&lt;div id="d1"&gt;
+	&lt;div id="d2"&gt;点我&lt;/div&gt;
+&lt;/div&gt;
+&lt;script type="text/javascript"&gt;
+	var d1 = document.getElementById('d1');
+	var d2 = document.getElementById('d2');
+	d1.addEventListener('click', function(){
+		console.log('d1 捕获');
+	}, true);
+	d1.addEventListener('click', function(){
+		console.log('d1 冒泡');
+	}, false);
+	d2.addEventListener('click', function(){
+		console.log('d2 捕获');
+	}, true);
+	d2.addEventListener('click', function(){
+		console.log('d2 冒泡');
+	}, false);
+&lt;/script&gt;
 						</code></pre>
 						<style type="text/css">
 							#d1 {
@@ -245,11 +248,11 @@
 					<li>srcElement：触发事件的 HTML 元素（IE）</li>
 					<li>currentTarget：执行事件处理程序的 HTML 元素</li>
 					<li>bubbles：事件是否冒泡</li>
-					<li>stopProgagation()：取消事件进一步捕获或冒泡</li>
+					<li>stopPropagation()：取消事件进一步捕获或冒泡（非 IE）</li>
 					<li>cancelBubble：设置为 true 时取消事件冒泡（IE）</li>
 					<li>stopImmediatePropagation()：取消事件进一步捕获或冒泡、阻止事件处理程序被调用</li>
 					<li>cancelable：是否允许取消事件默认行为</li>
-					<li>preventDefault()：取消事件默认行为</li>
+					<li>preventDefault()：取消事件默认行为（非 IE）</li>
 					<li>returnValue：设置为 false 时取消事件默认行为（IE）</li>
 					<li>defaultPrevented：是否已经取消事件默认行为</li>
 				</ul>
@@ -445,7 +448,6 @@
 					</li>
 					<li>对于 keypress 事件，在 IE9+、Chrome、Firefox 中通过 evnet.charCode ，在 Safari 5 和 Chrome 中使用 keyIdentifier ，在最新 DOM 中使用 char  获取按下的键盘键位的 ASCII 值。</li>
 				</ul>
-
 			</p>
 		</section>
 		<section class="refer">

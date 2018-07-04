@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>demo</title>
+	<script src="../js/vue.js"></script>
+</head>
+<body>
+	<div id="demo">
+		<my-out></my-out>
+	</div>
+	<script>
+		Vue.component('my-in', {
+			inject: ['message'],
+			template: '<div>I am inner {{message}}</div>'
+		});
+		Vue.component('my-out', {
+			inject: ['message'],
+			template: `<div>
+			<my-in></my-in>
+			<div>I am outer {{message}}</div>
+			</div>`
+		});
+		new Vue({
+			el: '#demo',
+			data: {
+				message: 'hello world'
+			},
+			provide: function() {
+				return {
+					message: this.message
+				}
+			}
+		});
+	</script>
+</body>
+</html>

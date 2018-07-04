@@ -14,13 +14,16 @@
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
-			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
 			目录
 		</section>
 	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
 	<article id="container">
 		<hgroup>
-			<h1>选择器</h1>
+			<h1 id="title">选择器</h1>
 		</hgroup>
 		<section>
 			<h2>定义</h2>
@@ -43,11 +46,11 @@
 			<p>
 				通配选择器选中所有元素。
 				<pre><code class="css">
-					/* 所有的元素内外边距设置为 0 */
-					* {
-					margin: 0;
-					padding: 0;
-					}
+/* 所有的元素内外边距设置为 0 */
+* {
+	margin: 0;
+	padding: 0;
+}
 				</code></pre>
 			</p>
 		</section>
@@ -56,9 +59,9 @@
 			<p>
 				元素选择器直接使用标签名来获取元素。
 				<pre><code class="css">
-					tag-name {
-						text-decoration: none;
-					}
+tag-name {
+	text-decoration: none;
+}
 				</code></pre>
 			</p>
 		</section>
@@ -67,10 +70,10 @@
 			<p>
 				id 是赋予元素的唯一标志，一个 id 只能被使用一次，因而使用 id 选择器生成的样式是唯一的。
 				<pre><code class="css">
-					#id-name {
-						width: 100px;
-						height: 100px;
-					}
+#id-name {
+	width: 100px;
+	height: 100px;
+}
 				</code></pre>
 			</p>
 		</section>
@@ -79,10 +82,10 @@
 			<p>
 				类(class)可以在多个元素使用，因而可以使用类选择器给一组元素设置同样的样式。
 				<pre><code class="css">
-					.class-name {
-						width: 100px;
-						height: 100px;
-					}
+.class-name {
+	width: 100px;
+	height: 100px;
+}
 				</code></pre>
 			</p>
 		</section>
@@ -91,12 +94,12 @@
 			<p>
 				属性选择器是对已选中元素的二次筛选，选择具有或不具有某个属性或属性值的元素。
 				<pre><code class="css">
-					seletcor[attr1][attr2]...[attrn] {} /* 选择同时拥有这些属性的元素 */
-					selector[attr="value"] {} /* 选择属性值为 value 的元素 */
-					selector[attr~="value"] {} /* 选择属性值包含 value 的元素 */
-					selector[attr^="value"] {} /* 选择属性值以 value 开头的元素 */
-					selector[attr$="value"] {} /* 选择属性值以 value 结尾的元素 */
-					selector[attr*="value"] {} /* 选择属性值包含 value 的元素 */
+seletcor[attr1][attr2]...[attrn] {} /* 选择同时拥有这些属性的元素 */
+selector[attr="value"] {} /* 选择属性值为 value 的元素 */
+selector[attr~="value"] {} /* 选择属性值包含 value 的元素 */
+selector[attr^="value"] {} /* 选择属性值以 value 开头的元素 */
+selector[attr$="value"] {} /* 选择属性值以 value 结尾的元素 */
+selector[attr*="value"] {} /* 选择属性值包含 value 的元素 */
 				</code></pre>
 			</p>
 		</section>
@@ -105,20 +108,20 @@
 			<p>
 				包含选择器又称后代选择器，指基于已选择元素，在其子孙节点中选出元素。中间使用<span class="definition"> 空格 </span>隔开。
 				<pre><code class="css">
-					selector1 selector2 {} /* 在选择器1选出的元素的后代中，使用选择器2进行二次筛选 */
+	selector1 selector2 {} /* 在选择器1选出的元素的后代中，使用选择器2进行二次筛选 */
 
-					&lt;!-- HTML --&gt;
-					&lt;div&gt;
-					&lt;p&gt;&lt;/p&gt;
-						&lt;span&gt;
-							&lt;p&gt;&lt;/p&gt;
-						&lt;/span&gt;
-					&lt;/div&gt;
-					/* CSS */
-					div p {
-						width: 100px;
-						height: 100px;
-					}
+	&lt;!-- HTML --&gt;
+	&lt;div&gt;
+	&lt;p&gt;&lt;/p&gt;
+		&lt;span&gt;
+			&lt;p&gt;&lt;/p&gt;
+		&lt;/span&gt;
+	&lt;/div&gt;
+	/* CSS */
+	div p {
+		width: 100px;
+		height: 100px;
+	}
 				</code></pre>
 			</p>
 		</section>
@@ -127,7 +130,7 @@
 			<p>
 				兄弟选择器指基于已选择元素，在其兄弟节点中选出元素。中间用<span class="definition">~</span>隔开。
 				<pre><code class="css">
-					selector1 ~ selector2 {}
+selector1 ~ selector2 {}
 				</code></pre>
 			</p>
 		</section>
@@ -136,7 +139,7 @@
 			<p>
 				子代带选择器指基于已选择元素，在其子代节点中选出元素。中间用<span class="definition">></span>隔开。
 				<pre><code class="css">
-					selector1 > selector2 {}
+selector1 > selector2 {}
 				</code></pre>
 			</p>
 		</section>

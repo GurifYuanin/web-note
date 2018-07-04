@@ -14,13 +14,16 @@
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
-			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
 			目录
 		</section>
 	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
 	<article id="container">
 		<hgroup>
-			<h1>元素定位</h1>
+			<h1 id="title">元素定位</h1>
 		</hgroup>
 		<section>
 			<h2>定义</h2>
@@ -48,36 +51,39 @@
 			<p>
 				<span class="definition"> relative </span>从视觉上看，元素相对原先位置进行偏移，但元素依旧占据着原来的位置，元素位于文档流(normal flow)中。<br>
 				<pre><code class="html">
-					&lt;div style="
+&lt;div style="
+	height: 100px;
+	width: 100px;
+	background-color: #ddd;
+"&gt;
+	&lt;div style="
+		height: 50px;
+		width: 50px;
+		background-color: #000;
+		opacity: .5;
+		position: relative;
+		top: 50px;
+	"&gt;&lt;/div&gt;
+	<span class="strong">123456789</span>
+&lt;/div&gt;
+				</code></pre>
+				其运行结果为：
+				<div class="show">
+					<div style="
 						height: 100px;
 						width: 100px;
 						background-color: #ddd;
-					"&gt;
-						&lt;div style="
+					">
+						<div style="
 							height: 50px;
 							width: 50px;
 							background-color: #000;
 							opacity: .5;
 							position: relative;
 							top: 50px;
-						"&gt;&lt;/div&gt;
+						"></div>
 						123456789
-					&lt;/div&gt;
-				</code></pre>
-				<div style="
-					height: 100px;
-					width: 100px;
-					background-color: #ddd;
-				">
-					<div style="
-						height: 50px;
-						width: 50px;
-						background-color: #000;
-						opacity: .5;
-						position: relative;
-						top: 50px;
-					"></div>
-					123456789
+					</div>
 				</div>
 			</p>
 		</section>
@@ -86,38 +92,41 @@
 			<p>
 				<span class="definition"> absolute </span>使元素相对非<span class="definition"> static </span>定位的最近的祖先元素偏移，元素脱离文档流和文本流，即元素不再占据位置，对其他非绝对定位的元素和文本进行覆盖。
 				<pre><code class="html">
-					&lt;div style="
+&lt;div style="
+	height: 100px;
+	width: 100px;
+	background-color: #ddd;
+	position: relative;
+"&gt;
+	&lt;div style="
+		height: 50px;
+		width: 50px;
+		background-color: #000;
+		opacity: .5;
+		position: absolute;
+		top: 50px;
+	"&gt;&lt;/div&gt;
+	<span class="strong">123456789</span>
+&lt;/div&gt;
+				</code></pre>
+				其运行结果为：
+				<div class="show">
+					<div style="
 						height: 100px;
 						width: 100px;
 						background-color: #ddd;
 						position: relative;
-					"&gt;
-						&lt;div style="
+					">
+						<div style="
 							height: 50px;
 							width: 50px;
 							background-color: #000;
 							opacity: .5;
 							position: absolute;
 							top: 50px;
-						"&gt;&lt;/div&gt;
+						"></div>
 						123456789
-					&lt;/div&gt;
-				</code></pre>
-				<div style="
-					height: 100px;
-					width: 100px;
-					background-color: #ddd;
-					position: relative;
-				">
-					<div style="
-						height: 50px;
-						width: 50px;
-						background-color: #000;
-						opacity: .5;
-						position: absolute;
-						top: 50px;
-					"></div>
-					123456789
+					</div>
 				</div>
 			</p>
 		</section>
@@ -125,7 +134,7 @@
 			<h2>fixed</h2>
 			<p>
 				<span class="definition"> fixed </span>使元素相对视窗偏移，元素脱离文档流和文本流。<br>
-				<div>
+				<div class="show">
 					<input id="show-fixed" type="button" value="显示fixed框">
 					<div id="fixed-info"></div>
 				</div>
@@ -138,7 +147,7 @@
 					font-size: 20px;
 					line-height: 100px;
 					position: fixed;
-					bottom: 0;
+					top: 0;
 					right: 0;
 				">
 					fixed
@@ -153,20 +162,20 @@
 					};
 				</script>
 				<pre><code class="html">
-					&lt;div id="fixed-block" style="
-						display: none;
-						background-color: #ddd;
-						height: 100px;
-						width: 100px;
-						text-align: center;
-						font-size: 20px;
-						line-height: 100px;
-						position: fixed;
-						bottom: 0;
-						right: 0;
-					"&gt;
-						fixed
-					&lt;/div&gt;
+&lt;div id="fixed-block" style="
+	display: none;
+	background-color: #ddd;
+	height: 100px;
+	width: 100px;
+	text-align: center;
+	font-size: 20px;
+	line-height: 100px;
+	position: fixed;
+	top: 0;
+	right: 0;
+"&gt;
+	fixed
+&lt;/div&gt;
 				</code></pre>
 			</p>
 		</section>

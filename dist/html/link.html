@@ -14,13 +14,16 @@
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
-			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
 			目录
 		</section>
 	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
 	<article id="container">
 		<hgroup>
-			<h1>link</h1>
+			<h1 id="title">link</h1>
 		</hgroup>
 		<section>
 			<h2>定义</h2>
@@ -43,6 +46,10 @@
 							<img src="../images/rel.jpg" alt="加载失败">
 							<figcaption class="description">截图自W3C</figcaption>
 						</figure>
+						<pre><code class="html">
+&lt;!-- 加载图标 --&gt;
+&lt;link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon" /&gt;
+						</code></pre>
 					</p>
 				</div>
 				<div>
@@ -74,7 +81,7 @@
 						</figure>
 						<figure>
 							<figcaption class="figTitle">其他查询条件</figcaption>
-							<table border="1" cellpadding="1" cellspacing="0" style="margin: auto;">
+							<table style="margin: auto;">
 								<tr>
 									<th>值</th>
 									<th>可用值</th>
@@ -168,8 +175,8 @@
 							</table>
 						</figure>
 						<pre><code class="html">
-						&lt;!-- 该样式表会应用在“屏幕大小不超过800px的计算机屏幕” --&gt;
-						&lt;link rel="stylesheet" href="style.css" media="screen and (max-device-width:800px)"&gt;
+&lt;!-- 该样式表会应用在“屏幕大小不超过800px的计算机屏幕” --&gt;
+&lt;link rel="stylesheet" href="style.css" media="screen and (max-device-width:800px)"&gt;
 						</code></pre>
 					</p>
 				</div>
@@ -212,10 +219,10 @@
 				</ul>
 				同样用于引入样式表时，两者的下载时间不同：
 				<pre><code class="html">
-					&lt;link rel="stylesheet" href="style.css"&gt;
-					&lt;style&gt;
-						@import url(style.css);
-					&lt;/style&gt;
+&lt;link rel="stylesheet" href="style.css"&gt;
+&lt;style&gt;
+	@import url(style.css);
+&lt;/style&gt;
 				</code></pre>
 				link 的加载和渲染参见<a href="./href和src.html">此处</a><br>
 				@import 则会等待页面加载完毕后再加载，因此可能会出现 FOUC(Flash Of Unstyled Content/无样式内容闪烁) 现象：打开网页后先看到无样式的文档，过一段时间后样式才被加载进来，页面才呈现为正常内容(无样式的页面 -> 有样式的页面)。

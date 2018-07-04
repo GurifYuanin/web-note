@@ -7,24 +7,18 @@ var gulp = require('gulp'),
 
 // 复制 html 文件（不压缩因为文档中一些地方需要空白）
 gulp.task('copyhtml', function() {
-    gulp.src(['./html/*.html'])
-             .pipe(gulp.dest('./dist/html')
-             .pipe(gulp.dest('F:/Web/site/public/other/web-note/html'))
-             );
+    gulp.src(['./html/*.html']).pipe(gulp.dest('./dist/html'));
+    gulp.src(['./html/*.html']).pipe(gulp.dest('F:/Web/site/public/other/web-note/html'));
 });
 // 复制 demo 文件
 gulp.task('copydemo', function() {
-    gulp.src('./demo/*.html')
-             .pipe(gulp.dest('./dist/demo')
-             .pipe(gulp.dest('F:/Web/site/public/other/web-note/demo'))
-             );
+    gulp.src('./demo/*.html').pipe(gulp.dest('./dist/demo'));
+    gulp.src('./demo/*.html').pipe(gulp.dest('F:/Web/site/public/other/web-note/demo'));
 });
 // 复制 css 文件
 gulp.task('copycss', function(){
-    gulp.src(['./css/**'])
-        .pipe(gulp.dest('./dist/css')
-        .pipe(gulp.dest('F:/Web/site/public/other/web-note/css'))
-        );
+    gulp.src(['./css/**']).pipe(gulp.dest('./dist/css'));
+    gulp.src(['./css/**']).pipe(gulp.dest('F:/Web/site/public/other/web-note/css'));
 });
 // 监听 sass 编译
 gulp.task('sass', function () {
@@ -38,18 +32,16 @@ gulp.task('sass', function () {
             remove: true, // 是否删除过时前缀
             flexbox: false // 是否为 flexbox 添加前缀
         }))
-        .pipe(gulp.dest('css'))
-        .pipe(gulp.dest('./dist/css')
-        .pipe(gulp.dest('F:/Web/site/public/other/web-note/css'))
-        );
+        .pipe(gulp.dest('css'));
+    gulp.src('./css/*.css').pipe(gulp.dest('./dist/css'));
+    gulp.src('./css/*.css').pipe(gulp.dest('F:/Web/site/public/other/web-note/css'));
 });
 // 压缩图片
 gulp.task('minifyimg', function() {
     gulp.src('./images/**')
              .pipe(minifyimg())
-             .pipe(gulp.dest('./dist/images')
-             .pipe(gulp.dest('F:/Web/site/public/other/web-note/images'))
-             );
+             .pipe(gulp.dest('./dist/images'));
+    gulp.src('./dist/images').pipe(gulp.dest('F:/Web/site/public/other/web-note/images'));
 });
 // 压缩 js 文件
 gulp.task('minifyjs', function() {
@@ -58,9 +50,8 @@ gulp.task('minifyjs', function() {
                 mangle: true, // 是否修改变量名
                 compress: true // 是否完全压缩
         }))
-             .pipe(gulp.dest('./dist/js')
-             .pipe(gulp.dest('F:/Web/site/public/other/web-note/js'))
-             );
+             .pipe(gulp.dest('./dist/js'));
+    gulp.src('./dist/js').pipe(gulp.dest('F:/Web/site/public/other/web-note/js'));
 });
 
 // 监听常用文件夹

@@ -14,13 +14,16 @@
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
-			<img id="hideCatalog" src="../images/目录.png" alt="加载失败">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
 			目录
 		</section>
 	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
 	<article id="container">
 		<hgroup>
-			<h1>伪类伪元素</h1>
+			<h1 id="title">伪类伪元素</h1>
 		</hgroup>
 		<section>
 			<h2>定义及作用</h2>
@@ -41,20 +44,20 @@
 				根据CSS3的定义，<span class="definition">Pseudo-elements create abstractions about the document tree beyond those specified by the document language</span>，伪元素创建了抽象的元素，这些抽象元素不属于文档语言能创造的明确标签。<br>
 				例如使用<span class="definition">:first-letter</span>为“ABC”文本添加样式，这个伪元素将选择文本的第一个字母(A)，然后为其添加样式
 				<pre><code class="html">
-					&lt;style&gt;
-						div:first-letter {
-							background-color: #888;
-						}
-					&lt;/style&gt;
-					&lt;div&gt;
-						ABC
-					&lt;/div&gt;
+&lt;style&gt;
+	div:first-letter {
+		background-color: #888;
+	}
+&lt;/style&gt;
+&lt;div&gt;
+	ABC
+&lt;/div&gt;
 				</code></pre>
 				虽然说“A”已经有了样式，但你在HTML源代码中不会看到
 				<pre><code class="html">
-					&lt;div&gt;
-						&lt;span style="background-color: #888;"&gt;A&lt;/span&gt;BC
-					&lt;/div&gt;
+&lt;div&gt;
+	&lt;span style="background-color: #888;"&gt;A&lt;/span&gt;BC
+&lt;/div&gt;
 				</code></pre>
 			</p>
 		</section>
@@ -69,7 +72,7 @@
 					</tr>
 					<tr>
 						<td>:active</td>
-						<td>元素被激活时的状态</td>
+						<td>链接被激活时的状态（鼠标按下）</td>
 						<td>1</td>
 					</tr>
 					<tr>
@@ -143,7 +146,13 @@
 						<td>3</td>
 					</tr>
 				</table>
-				<li>关于链接的四个伪类应该按照 :link -> :visited -> :hover -> :active 的顺序添加样式。</li>
+				<div class="tip">
+					关于链接的四个伪类应该按照 :link -> :visited -> :hover -> :active 的顺序添加样式。
+				</div>
+				<figure>
+					<img src="../images/love.jpg">
+					<figcaption>LoVeHAte 原则</figcaption>
+				</figure>
 			</p>
 		</section>
 		<section>
@@ -184,18 +193,18 @@
 				CSS3使用<span class="definition">::</span>作为伪元素的开头，以此来区分伪元素和伪类。<br>
 				但为了兼容旧版本，使用CSS1、CSS2的伪元素时候，大多数浏览器既支持单冒号的写法，也支持双冒号的写法。
 				<pre><code class="css">
-					selector:before {
-						// √
-					}
-					selector::before {
-						// √
-					}
-					selector:selection {
-						// ×
-					}
-					selector::selection {
-						// √
-					}
+selector:before {
+	// √
+}
+selector::before {
+	// √
+}
+selector:selection {
+	// ×
+}
+selector::selection {
+	// √
+}
 				</code></pre>
 			</p>
 		</section>

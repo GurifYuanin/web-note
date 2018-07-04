@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>静态资源</title>
+	<script>
+		window.onload = function() {
+			var url = window.location.toString();
+			if (url.indexOf('?') !== -1) {
+				var query = url.substring(url.indexOf('?') + 1).split('&');
+				if (query[0].search(/^username=/) === 0 && query[1].search(/^password/) === 0) {
+					var username = query[0].substring(query[0].indexOf('=') + 1);
+					var password = query[1].substring(query[1].indexOf('=') + 1);
+					document.getElementById('username').value = username;
+					document.getElementById('password').value = password;
+				}
+			}
+		};
+	</script>
+	<style>
+		#login {
+			background: url('../images/money.jpg') no-repeat left top;
+			background-size: 100% 100%;
+			border: dotted 1px #000;
+			border-radius: 50px;
+			margin: auto;
+			padding: 5% 0;
+			width: 50%;
+		}
+		#login > div {
+			padding: 1% 0;
+			margin: auto;
+			width: 50%;
+			text-align: center;
+		}
+		#login > div > input {
+			background-color: #fefefe;
+			height: 1.1rem;
+			border-radius: 5px;
+			border: solid 2px #000;
+		}
+		.label {
+			color: black;
+			font-weight: bold;
+			font-size: 1.1rem;
+			display: inline-block;
+			width: 20%;
+			margin-left: -20%;
+		}
+		.bottom {
+			color: white;
+			font-size: .9rem;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<form id="login" action="buynow.com">
+		<div>
+			<img src="../images/buy.png">
+		</div>
+		<div>
+			<span class="label">用户名：</span>
+			<input id="username" type="text" name="username">
+		</div>
+		<div>
+			<span class="label">密码：</span>
+			<input id="password" type="password" name="password">
+		</div>
+		<div>
+			<a class="bottom" href="javascript:void(0)">忘记密码</a>
+			<a class="bottom" href="javascript:void(0)">免费注册</a>
+		</div>
+	</form>
+</body>
+</html>

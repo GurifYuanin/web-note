@@ -35,7 +35,7 @@ $(function() {
         ['HTTP'],
         ['CSRF', 'XSS'],
         ['Thinkphp5.1', 'htaccess'],
-        ['浏览器渲染', '设计策略', 'cookie', '头疼的兼容', '命名规范', '字符编码']
+        ['路径匹配', '浏览器渲染', '设计策略', 'cookie', '头疼的兼容', '命名规范', '字符编码']
     ];
     var $body = $('html, body');
     for (var i = 0; i < category.length; i++) {

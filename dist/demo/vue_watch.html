@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>侦听属性</title>
+	<script src="../js/vue.js"></script>
+</head>
+<body>
+	<div id="demo">{{message}}</div>
+	<script>
+		var vm = new Vue({
+			el: '#demo',
+			data: {
+				message: 'hello world'
+			},
+			watch: {
+				message: function(val) {
+					console.warn('你把 message 改为' + val);
+				}
+			}
+		});
+	</script>
+</body>
+</html>
