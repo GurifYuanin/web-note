@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Generator</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">Generator</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				Generator 函数是 ES6 的新特性，可以更方便地进行同步操作与异步编程。
+			</p>
+		</section>
+		<section>
+			<h2>Genrator 函数</h2>
+			<p>
+				学习 Genrator 函数需要知道以下概念：
+				<ul>
+					<li>function* ：声明函数时，function 关键字跟一个符号<span class="definition"> * </span>，表示是 Genrator 函数</li>
+					<li>yield 语句：用于暂停（suspend）执行 Generator 函数</li>
+					<li>yield* 语句：用于暂停（suspend）执行 Generator 函数，并将另一个 Generator 函数引入内部</li>
+					<li>next 方法：用于开始 Generator 函数</li>
+				</ul>
+				<h3>function*</h3>
+				<p>
+					function 后附带一个<span class="definition"> * </span>表示该函数是 Generator 函数，该函数有以下特性：
+					<ul>
+						<li>调用后返回一个 Generator 对象，其大概长这样：</li>
+						<pre><code class="javascript">
+{
+	[[GeneratorStatus]]: "suspended", // 表示该对象的状态，目前已经 suspended （暂停 / 悬挂）
+	__proto__: { // 其原型为 Generator 对象
+		__proto__: {
+			next: f,
+			return: f,
+			throw: f,
+			...
+		}
+	},
+	...
+}
+						</code></pre>
+						<li>调用后不会马上执行代码，需要使用返回的对象的 next 方法来执行内部代码</li>
+						<pre><code class="javascript">
+function* gen () {
+	console.log('hello world');
+}
+var instance = gen(); // 没事发生
+var result = instance.next(); // => 输出 hello world
+console.log(result); // => 输出 { value: undefined, done: true }
+						</code></pre>
+					</ul>
+				</p>
+				<h3>yield</h3>
+				<p>
+					在 Generator 函数使用 yield 语句就类似于添加一个断点，让函数执行到该位置，然后暂停执行，等下一个 next 方法使用时继续执行，整个执行顺序为：
+					<ol>
+						<li>调用 Generator 函数，返回对象（为了方便，称之为 g 对象）</li>
+						<li>使用 g.next()，从函数开头执行到第一个 yield，并且会执行 yield 后的代码，然后退出（但还没有将返回值赋值给等号左侧的表达式）</li>
+						<pre><code class="javascript">
+var number1 = 0, number2 = 0;
+function* gen () {
+	number2 = yield number1 = 1;
+}
+gen().next();
+console.log(number1); // => 1
+console.log(number2); // => 0
+						</code></pre>
+					</ol>
+				</p>
+				<h3>next</h3>
+				<p>
+					g 的 next 方法可以让暂停的 Generator 函数继续执行下去，直到遇到下一个 yield 或 return。
+					<h4>next 的参数</h4>
+					<ul>
+						<li>当直接使用 g.next() 时，暂停位置的 yield 语句返回值为 undefined</li>
+						<li>当使用 g.next(参数) 时，暂停位置的 yield 语句返回值为传入的参数</li>
+						<pre><code class="javascript">
+var number1 = 0, number2 = 0;
+function* gen () {
+	number1 = yield;
+	number2 = yield;
+}
+var g = gen();
+g.next(); // 运行到第一行，但未赋值给 number1
+g.next(); // => number1 为 undefined、number2 为 0
+g.next(1); // => number1 为 undefined、number2 为 1
+
+						</code></pre>
+					</ul>
+					<h4>next 的返回值</h4>
+					使用 next 方法得到的返回值为一个对象：
+					<pre><code class="javascript">
+{
+	value: ...,
+	done: ...
+}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>
