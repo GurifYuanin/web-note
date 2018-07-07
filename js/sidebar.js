@@ -18,11 +18,48 @@ $(function() {
             'height': height
         };
     }
+    function wrapByA(href) {
+        if (href === '没有了') {
+            return '<a href="javascript:void(0)">' + href + '</a>';
+        } else {
+            return '<a href="./' + href + '.html">' + href + '</a>';
+        }
+    }
+    // 按照视窗大小定义 html 字体大小
+    function getRootFontSize() {
+        var width = window.innnerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        if (width > 1200) {
+            return 16;
+        }
+        if (width > 800) {
+            return 14;
+        }
+        if (width > 400) {
+            return 12;
+        }
+        return 10;
+    }
+    // 滚动到指定 id 的位置
+    function scrollTo(name, el) {
+        if (el) {
+            el.animate({scrollTop: $('#' + name).offset().top - 100}, 500);
+            return;
+        }
+        if (name === '返回顶部') {
+            $body.animate({scrollTop: 0}, 500);
+        } else {
+            $body.animate({scrollTop: $('#' + name).offset().top}, 500);
+        }
+    }
+    var url = window.location.href;
+    var currentTitle = decodeURI(url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')));
     var $sidebar = $('#sidebar'); // 导航条
     var $hideCatalog = $('#hideCatalog'); // 隐藏目录图片
     var $showCatalog = $('#showCatalog'); // 显示目录图片
+    var $catalog = $('#catalog'); // 隐藏侧栏按钮
     var $title = $('#title'); // 文章标题
     var $container = $('#container'); // 文章内容
+    var $body = $('html, body');
     var category = ['HTML', 'CSS', 'Javascript', 'NodeJS', 'VueJS', '移动Web', '调试', '协议', '安全', '后端', '其他']; // 目录分类
     var items = [
         ['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'canvas', 'svg'],
@@ -37,42 +74,98 @@ $(function() {
         ['Thinkphp5.1', 'htaccess'],
         ['路径匹配', '浏览器渲染', '设计策略', 'cookie', '头疼的兼容', '命名规范', '字符编码']
     ];
-    var $body = $('html, body');
+    // 插入侧栏
+    var str = '';
     for (var i = 0; i < category.length; i++) {
-        $sidebar.append(
-            surroundedByTag(
-                '<img src="../images/slide_down.png">' + category[i],
-                'h3')
-            );
-        var tmp = '';
-        for (var j = 0; j < items[i].length; j++) {
-            tmp += surroundedByTag(surroundedByTag(items[i][j], 'a'), 'div');
-            // $sidebar.append(surroundedByTag(surroundedByTag(items[i][j], 'a'), 'div'));
+        str += surroundedByTag('<img src="../images/slide_down.png">' + category[i], 'h3');
+        for (var j = 0, tmp = '', insertedId = ''; j < items[i].length; j++) {
+            if (items[i][j] === currentTitle) {
+                insertedId = ' id="currentItem" ';
+            } else {
+                insertedId = '';
+            }
+            tmp += '<div' + insertedId + '>' + surroundedByTag(items[i][j], 'a') + '</div>';
         }
-        $sidebar.append(surroundedByTag(tmp, 'section'));
+        str += surroundedByTag(tmp, 'section');
     }
+    $sidebar.append(str);
+
+    // SE
+    $catalog.append('<section id="searchContainer"><input id="searchInput" type="text" placeholder="搜索文章（支持正则）"/><section id="searchResult"></section></section>');
+    var $searchInput = $('#searchInput');
+    var $searchResult = $('#searchResult');
+    $searchResult.css('display', 'none');
+    $searchInput.keyup(function(event) {
+        var value = $searchInput.val(), str = '';
+        value = value || ' ';
+        // 遍历出匹配的 li
+        items.forEach(function(item) {
+            item.forEach(function(el) {
+                var reg = null;
+                if (/\/.+\/i?g?m?/.test(value)) { // 支持正则
+                    reg = eval(value);
+                } else {
+                    reg = eval('/' + value + '/i');
+                }
+                if (reg.test(el)) {
+                    str += surroundedByTag(el.replace(reg, '<span>' + el.match(reg) + '</span>'), 'li');
+                }
+            });
+        });
+        // 将 li 插入到 html
+        if (value.trim() === '' || str.trim() === '') {
+            $searchResult.css('display', 'none');
+        } else {
+            $searchResult.css('display', 'block');
+            $searchResult.html(str);
+            // 为 li 添加点击事件
+            $('#searchResult li').each(function() {
+                $(this).click(function() {
+                    window.open('./' + this.innerText + '.html');
+                });
+            });
+        }
+        // 如果按钮为 enter 则自动跳转到第一个 li
+        if (event.keyCode === 13 && str.trim() !== '') {
+            $('#searchResult li').eq(0).click();
+        }
+    });
+    $container.click(function() {
+        $searchResult.css('display', 'none');
+    });
     /*
     侧栏结构：
     <aside id="sidebar">
     	<section id="catalog">
             <img id="hideCatalog">
 		      目录
+            /////////////////////////////////// 插入 SE
+            <section>
+                <input id="searchInput">
+                <section id="searchResult">
+                    <li>搜索出来的条目</li>
+                </section>
+            </section>
         </section>
+        //////////////////////////////////////// 此处开始插入
+        //////////////////////////////////////// 第一层循环
 		<h3>
             <img src="../images/slide_down.png">
-            类别
+            catalog 类别
         </h3>
+        //////////////////////////////////////// 第二层循环
         <section>
             <div>
                 <a>
-                    条目
-                    </a>
-                </div>
+                    items 条目
+                </a>
+            </div>
         </section>
     </aside>
     */
     // 点击类别开关子项
-    $('#sidebar h3').each(function(){
+    var $itemHead = $('#sidebar h3');
+    $itemHead.each(function(){
         var that = $(this),
             img = that.children();
         that.click(function() {
@@ -89,7 +182,7 @@ $(function() {
     $title.after('<svg style="display: block; margin: auto; width:' + lineLength + 'px" xmlns="http://www.w3.org/2000/svg" version="1.1" height="1px"><path id="line" d="M 0 0 L ' + lineLength + ' 0" style="stroke: #000; stroke-width: 1; stroke-dasharray: ' + lineLength + '; stroke-dashoffset: ' + lineLength + '; fill: none;"/></svg>');
     var $line = $('#line');
     // 文章标题事件
-    $title.mouseover(function(event) {
+    $title.mouseover(function() {
         $title.animate({
                 'padding-top': '1%',
                 'padding-bottom': '1%'
@@ -99,7 +192,7 @@ $(function() {
             'stroke-dashoffset': 0
         }, 'fast');
     });
-    $title.mouseout(function(event) {
+    $title.mouseout(function() {
         $title.animate({
                 'padding-top': '0',
                 'padding-bottom': '0'
@@ -187,14 +280,6 @@ $(function() {
     });
     $('a').not('.self').attr('target', '_blank'); // 所有链接默认新标签打开
 
-    // 滚动到指定子标题
-    function scrollToSubTitle(name) {
-        if (name === '返回顶部') {
-            $body.animate({scrollTop: 0}, 500);
-        } else {
-            $body.animate({scrollTop: $('#' + name).offset().top}, 500);
-        }
-    }
     // 去除多余的字符
     function getName (str) {
         return str.replace(/[\s@#&;()/.]/g, '');
@@ -216,7 +301,7 @@ $(function() {
         $(this).wrap('<a style="height: 50%; margin: 0; padding: 0; text-decoration: none; color: #000;" id="' + name + '" href="#' + name + '"></a>');
         // 点击后滑动窗口
         $(this).click(function(event) {
-            scrollToSubTitle(name);
+            scrollTo(name);
         });
         subTitleNav += '<div class="subTitleItem">' + this.innerHTML + '</div>';
     });
@@ -227,14 +312,13 @@ $(function() {
     $('body').append(subTitleNav + subTitleToggleString);
     // 设置跳转事件
     var $subTitleItem = $('.subTitleItem');
-    var $subTitleNav = $('#subTitleNav');
     var $subTitleToggle = $('#subTitleToggle');
     var $subTitleBlock = $('#subTitleToggle div');
     $subTitleItem.each(function(){
         var name = getName(this.innerHTML);
         var that = $(this);
         that.click(function(event) {
-             scrollToSubTitle(name);
+             scrollTo(name);
         });
         // that.mousedown(function() {
         //     that.css({
@@ -334,87 +418,89 @@ $(function() {
             hideBlock();
         }
     });
-    // 按照视窗大小定义 html 字体大小
-    function getRootFontSize() {
-        var width = window.innnerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        if (width > 1200) {
-            return 16;
-        }
-        if (width > 800) {
-            return 14;
-        }
-        if (width > 400) {
-            return 12;
-        }
-        return 10;
-    }
+
     // 追加上一篇和下一篇操作
-    {
-        function wrapByA(href) {
-            if (href === '没有了') {
-                return '<a href="javascript:void(0)">' + href + '</a>';
-            } else {
-                return '<a href="./' + href + '.html">' + href + '</a>';
-            }
-        }
-        var url = window.location.href;
-        var currentTitle = decodeURI(url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')));
-        var preTitle, nextTitle, indexX, indexY;
-        var flag = false;
-        var row = items.length;
-        for (var i = 0; i < row; i++) {
-            for (var j = 0; j < items[i].length; j++) {
-                if (currentTitle === items[i][j]) {
-                    indexY = j;
-                    flag = true;
-                    break;
-                }
-            }
-            if (flag) {
-                indexX = i;
+    var preTitle, nextTitle, indexX, indexY;
+    var flag = false;
+    var row = items.length;
+    for (var i = 0; i < row; i++) {
+        for (var j = 0; j < items[i].length; j++) {
+            if (currentTitle === items[i][j]) {
+                indexY = j;
+                flag = true;
                 break;
             }
         }
-        if (indexX === 0){
-            if (indexY === 0) {
-                preTitle = '没有了';
-            } else {
-                preTitle = items[indexX][indexY - 1];
-            }
-        } else {
-            if (indexY === 0) {
-                preTitle = items[indexX - 1][items[indexX - 1].length - 1];
-            } else {
-                preTitle = items[indexX][indexY - 1];
-            }
+        if (flag) {
+            indexX = i;
+            break;
         }
-        if (indexX === row - 1){
-            if (indexY === items[indexX].length - 1) {
-                nextTitle = '没有了';
-            } else {
-                nextTitle = items[indexX][indexY + 1];
-            }
-        } else {
-            if (indexY === items[indexX].length - 1) {
-                nextTitle = items[indexX + 1][0];
-            } else {
-                nextTitle = items[indexX][indexY + 1];
-            }
-        }
-        preTitle = wrapByA(preTitle);
-        nextTitle = wrapByA(nextTitle);
-        $('.refer').after('<div id="footer" ><div class="prePage">上一篇：' + preTitle + '</div><div class="nextPage">下一篇：' + nextTitle + '</div></div>');
     }
+    if (indexX === 0){
+        if (indexY === 0) {
+            preTitle = '没有了';
+        } else {
+            preTitle = items[indexX][indexY - 1];
+        }
+    } else {
+        if (indexY === 0) {
+            preTitle = items[indexX - 1][items[indexX - 1].length - 1];
+        } else {
+            preTitle = items[indexX][indexY - 1];
+        }
+    }
+    if (indexX === row - 1){
+        if (indexY === items[indexX].length - 1) {
+            nextTitle = '没有了';
+        } else {
+            nextTitle = items[indexX][indexY + 1];
+        }
+    } else {
+        if (indexY === items[indexX].length - 1) {
+            nextTitle = items[indexX + 1][0];
+        } else {
+            nextTitle = items[indexX][indexY + 1];
+        }
+    }
+    preTitle = wrapByA(preTitle);
+    nextTitle = wrapByA(nextTitle);
+    $('.refer').after('<div id="footer" ><div class="prePage">上一篇：' + preTitle + '</div><div class="nextPage">下一篇：' + nextTitle + '</div></div>');
 
+    // 将不是目前浏览的条目收起来
+    items.forEach(function(item, index) {
+        if (item.findIndex(function(el) {
+            return el === currentTitle;
+        }) === -1) {
+            $itemHead.eq(index).click();
+        }
+    });
+    setTimeout(function() {
+        scrollTo('currentItem', $sidebar);
+        var el = $('#currentItem > a');
+        el.animate({
+            'font-size': '1.25rem',
+            'font-weight': 900
+        },1000, function() {
+            el.animate({
+                'font-size': '1rem',
+                'font-weight': 'bold'
+            },1000);
+        });
+    }, 500);
     // $('html').eq(0).css('font-size', getRootFontSize()); // 设置 html（根） 字体大小
     // 侧栏高度自适应
     // $(window).on("load resize",function(){
     //     var h = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;
     //     $sidebar.css("height", h);
     // });
+    //
     // 目录结构部分
+    // div#catalogFrame
+    //     img
+    //     div
+    // 点击后 slideUp 和 slideDown
     var dir = $('#catalogFrame img');
-    dir.click(function(event) {
+    dir.click(function() {
         var brother = $(this).next().next();
         console.dir(brother);
         if (typeof brother !== 'undefined' && brother.prop('tagName') === 'DIV') {
@@ -425,5 +511,5 @@ $(function() {
         'border': 1,
         'cellpadding': 1,
         'cellspacing': 0
-    })
+    });
 });

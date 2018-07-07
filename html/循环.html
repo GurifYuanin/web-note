@@ -68,6 +68,14 @@ for (var key in obj) {
 // => 'hello'
 // => 'world'
 				</code></pre>
+				for...in 可以循环出继承而来的可枚举属性，更多时候，我们希望过滤掉这些属性。
+				<pre><code class="javascript">
+for (var key in obj) {
+	if (obj.hasOwnProperty(key)) {
+		// ...
+	}
+}
+				</code></pre>
 				for...in 也可以对数组进行遍历，key 即为数组的下标，但无法保证遍历的顺序，并且有可能遍历到非数字下标的属性。
 				<pre><code class="javascript">
 var arr = [1, 2, 3, 4, 5];
@@ -93,7 +101,7 @@ while (iterator.hasNext()) { // 检查是否到链表尾部
 	System.out.println(iterator.next()); // 不是到尾部，取出链表的一个元素
 }
 					</code></pre>
-					在 javascript 中，Symbol.iterator 属性模拟了个该迭代过程，可以手写一个迭代器。
+					在 javascript 中，Symbol.iterator 属性模拟了这个迭代过程，可以手写一个迭代器。
 					<pre><code class="javascript">
 var obj = {
 	data: [1, 2, 3, 4, 5], // 被迭代的数据
@@ -129,6 +137,14 @@ while (!(entry = iterator.next()).done) {
 							<li>arguments</li>
 							<li>NodeList</li>
 						</ul>
+						可以在控制台查看该属性：
+						<pre><code class="javascript">
+console.log([][Symbol.iterator]);
+						</code></pre>
+						<figure>
+							<img src="../images/loop_for_in.jpg" alt="">
+							<figcaption>[][Symbol.iterator] 为一个函数</figcaption>
+						</figure>
 					</p>
 					<h3>使用 for...of</h3>
 					<p>
@@ -137,6 +153,16 @@ while (!(entry = iterator.next()).done) {
 var arr = [1, 2, 3, 4, 5];
 for (value of arr) {
 	console.log(value);
+}
+// => 1 2 3 4 5
+						</code></pre>
+						其等价于：
+						<pre><code class="javascript">
+var arr = [1, 2, 3, 4, 5];
+var iterator = arr[Symbol.iterator]();
+var entry = null;
+while (!(entry = iterator.next()).done) {
+	console.log(entry.value);
 }
 // => 1 2 3 4 5
 						</code></pre>

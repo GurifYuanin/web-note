@@ -26,6 +26,162 @@
 			<h1 id="title">命名规范</h1>
 		</hgroup>
 		<section>
+			<h2>HTML</h2>
+			<p>
+				<h3>标签</h3>
+				<p>
+					由于 HTML 不区分大小写，按照书写规范，除了<span class="definition"> &lt;!DOCTYPE&gt; 声明 </span>，所有标签都应该小写。
+					<pre><code class="html">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+	&lt;meta charset="utf-8"&gt;
+	&lt;title&gt;hi&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	hello world
+&lt;/body&gt;
+&lt;/html&gt;
+					</code></pre>
+				</p>
+				<h3>属性顺序</h3>
+				<p>
+					书写 html 标签上的属性应该按照以下顺序：
+					<ol>
+						<li>class id</li>
+						<li>src href</li>
+						<li>for type</li>
+						<li>name value</li>
+						<li>max min pattern</li>
+						<li>placeholder title alt</li>
+					</ol>
+					<pre><code class="html">
+&lt;input class="input" id="user" type="text" name="username" value="123456" placeholder="请输入用户名"&gt;
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>CSS</h2>
+			<p>
+				<h3>class</h3>
+				<p>
+					类名使用 kebab-case 命名方法。
+					<pre><code class="css">
+.my-class {
+	color: red;
+}
+					</code></pre>
+				</p>
+				<h3>id</h3>
+				<p>
+					id 使用驼峰式命名。
+					<pre><code class="css">
+#myId {
+	color: green;
+}
+					</code></pre>
+				</p>
+				<h3>样式顺序</h3>
+				<p>
+					书写 CSS 样式时，应按照一定顺序：
+					<ol>
+						<li>元素属性：display float</li>
+						<li>元素位置：position top right bottom left</li>
+						<li>盒式结构：broder border-radius width height</li>
+						<li>文本样式：font line-height text-align</li>
+						<li>颜色：color background-color</li>
+						<li>其他：opacity</li>
+					</ol>
+					<pre><code class="css">
+div {
+	display: block;
+	position: absolute;
+
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+
+	border: solid 1px #000;
+	border-radius: 5px;
+	width: 100%;
+	height: 100%;
+
+	font-size: 16px;
+	line-height: 24px;
+	text-align: center;
+
+	color: #222;
+	background-color: #fff;
+
+	opacity: .9;
+}
+					</code></pre>
+				</p>
+				<h3>scss</h3>
+				<p>
+					书写 scss 里的样式属性时按照以下顺序：
+					<ol>
+						<li>@extend</li>
+						<li>@include</li>
+						<li>自身属性</li>
+						<li>嵌套属性</li>
+					</ol>
+					<pre><code class="css">
+#container {
+	@include my-mixin();
+
+	float: left;
+
+	> div {
+		text-align: center;
+	}
+}
+					</code></pre>
+				</p>
+				<h3>16 进制颜色</h3>
+				<p>
+					使用 16 进制颜色的时候尽量遵循以下规则：
+					<ul>
+						<li>使用小写字母</li>
+						<li>尽量简写为 #xxx</li>
+					</ul>
+					<pre><code class="css">
+div {
+	color: #FFF; // ✖
+	color: #ffffff; // ✖
+	color: #fff; // ✔
+}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>javascript</h2>
+			<p>
+				<h3>变量</h3>
+				<p>
+					普通变量使用驼峰式命名。
+					<pre><code class="javascript">
+var myArr = [];
+let myArr = [];
+					</code></pre>
+					jquery 对象前需要添加 $。
+					<pre><code class="javascript">
+$items = $('.item');
+					</code></pre>
+				</p>
+				<h3>常量</h3>
+				<p>
+					常量全部大写。
+					<pre><code class="javascript">
+const PASS = 60;
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
 			<h2>Vue</h2>
 			<p>
 				<h3>组件</h3>
@@ -35,14 +191,45 @@
 				</ul>
 				<h3>数据属性</h3>
 				<ul>
-					<li></li>
+					数据属性使用驼峰式命名。
+					<pre><code class="javascript">
+new Vue({
+	data: {
+		myDate: 'nothing'
+	}
+})
+					</code></pre>
 				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>php</h2>
+			<p>
+				<h3>类名</h3>
+				<p>
+					类名使用大驼峰式，即每个单词首字母大写。
+					<pre><code class="php">
+class MyClass {
+
+}
+					</code></pre>
+				</p>
+				<h3>变量 & 函数</h3>
+				<p>
+					变量和函数名采用驼峰式命名。
+					<pre><code class="php">
+$myArr = [];
+function myFunction () {
+	
+}
+					</code></pre>
+				</p>
 			</p>
 		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
-				<div></div>
+				<div>[1] AlloyTeam 编程规范 <a href="http://alloyteam.github.io/CodeGuide/#project-naming">http://alloyteam.github.io/CodeGuide/#project-naming</a></div>
 			</p>
 		</section>
 	</article>

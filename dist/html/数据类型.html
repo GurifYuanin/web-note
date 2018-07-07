@@ -170,6 +170,17 @@ obj[key] = 'hello world';
 // 三、使用 Object.defineProperty
 Object.defineProperty(obj, key, {value: 'hello world'});
 				</code></pre>
+				因为使用 Symbol() 永远不会返回同一个值，所以会出现以下情况：
+				<pre><code class="javascript">
+var obj = {}; // 公用的对象
+var symbol = Symbol('myKey');
+obj[symbol] = function(){ // 一堆东西 }
+
+/////////////////////////////
+
+var sameSymbol = Symbol('myKey');
+console.log(obj[sameSymbol]); // => undefined
+				</code></pre>
 			</p>
 		</section>
 		<section>

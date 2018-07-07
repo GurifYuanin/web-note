@@ -94,6 +94,30 @@ console.log('执行 window 里的代码');
 					<li>控制台输出<span class="definition"> 执行 window 里的代码 </span></li>
 					<li>异步执行（终于） resolve 函数，控制台输出<span class="definition"> 执行 resolve 里的代码 </span></li>
 				</ol>
+				<h3>传统回调</h3>
+				<p>
+					传统的回调方式是将函数传入另一个函数里面，在该函数内某个位置执行。
+					<pre><code class="javascript">
+function a (fun) {
+	// a 的代码
+	fun();
+}
+function b () {
+	// b 的代码
+}
+a(b);
+					</code></pre>
+					而 promise 是先执行 new Promise 时传入的函数的代码，等到调用并传入 resolve 或 reject 回调函数时，才会执行这些回调。
+					<pre><code class="javascript">
+function a () { // a 的代码 }
+function b () { // b 的代码 }
+var p = new Promise(function (resolve, reject) {
+	a(); // 优先执行 a 的代码
+	resolve(); // 调用回调函数 resolve
+});
+p.then(b); // 传入 b 作为回调函数 resolve
+					</code></pre>
+				</p>
 				<h3>触发回调</h3>
 				resolve 和 reject 称为回调函数，要触发回调，需要满足：
 				<ol>
@@ -101,6 +125,20 @@ console.log('执行 window 里的代码');
 					<li>执行 resolve 或 reject 函数时传入的参数非 pending 状态的 promise 对象</li>
 					<li>promise 对象执行了 then 或者 catch 方法</li>
 				</ol>
+				<h4>需要 promise 对象的状态变更为 fulfill 或 reject 时才会去触发回调</h4>
+				<pre><code class="javascript">
+var p1 = new Promise(function(resolve, reject) {
+	setTimeout(resolve, 3000);
+});
+p1.then(function() {
+	console.log('resolve 了');
+});
+				</code></pre>
+				<figure>
+					<img src="../images/promise_resolve_1.gif" alt="">
+					<figcaption>3s 后才执行 resolve（将状态变更为 fulfill），此时才触发回调</figcaption>
+				</figure>
+				<h4>调用 resolve 或 reject 回调函数时，其形参是非 pending 对象</h4>
 				<pre><code class="javascript">
 var p1 = new Promise(function(resolve, reject){
 	setTimeout(resolve, 3000);
@@ -117,7 +155,21 @@ p2.then(function(value){
 					<img src="../images/promise_resolve.gif">
 					<figcaption>3s 后控制台才输出内容</figcaption>
 				</figure>
-				根据条件的第二点，p2 的调用 resolve 函时传入 p1，p1 的状态前 3s 为 pending，因此不触发回调，3s 后其状态为 resolve ，p2 才触发回调。
+				<h4>使用了 then 或 catch，即传入了回调函数</h4>
+				<pre><code class="javascript">
+var p1 = new Promise(function(resolve, reject) {
+	resolve();
+});
+setTimeout(function () {
+	p1.then(function () {
+		console.log('you have a resolve');
+	});
+}, 3000);
+				</code></pre>
+				<figure>
+					<img src="../images/promise_resolve_2.gif" alt="">
+					<figure>3s 后才传入回调函数</figure>
+				</figure>
 				<h3>链式调用</h3>
 				promise.then 返回一个新的 promise 对象，所以可以进行链式调用。
 				<pre><code class="javascript">
@@ -156,12 +208,25 @@ var promise = new Promise(function(resolve, reject) {
 });
 promise.then(function(value) {
 	console.log(value);
+	<div class="strong">
 return new Promise(function(resolve, reject) {
-	resolve(<span class="strong">value</span>);
+	resolve(value);
 });
+	</div>
 }).then(function(value) {
 	console.log(value);
 });
+				</code></pre>
+				当你只是想返回一个值给下一个 then 用，不必创建 Promise 对象再调用 resolve 回调函数进行传数据，可以直接将该数据返回，效果是一样的。
+				<pre><code class="javascript">
+promise.then(function(value) {
+	console.log(value);
+	<div class="strong">
+return value;
+	</div>
+}).then(function(value) {
+	console.log(value);
+})
 				</code></pre>
 				<figure>
 					<img src="../images/promise_demo3.jpg">
