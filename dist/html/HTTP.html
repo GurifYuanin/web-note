@@ -66,8 +66,8 @@ HTTP/版本 状态码 状态短语
 \r\n
 报文主体
 				</code></pre>
-				可以看到，报文主体和首部字段隔着一个空行（CR+LF）。浏览器通过这种方式来获取 Web 资源。<br>
-				比如在我的网站上有这么一个页面<a href="http://isempty.site/web-note/demo/http_demo.html"> http://isempty.site/web-note/demo/http_demo.html </a>，该页面的 HTML 代码很简单，body 内只有一个<span class="definition">hello ! </span>的文本节点。
+				可以看到，报文主体和首部字段隔着一个空行（CR+LF）。空行后的就是浏览器上渲染的内容，空行前是该次报文的首部信息。<br>
+				浏览器通过这种方式来获取 Web 资源。比如在我的网站上有这么一个页面<a href="http://isempty.site/web-note/demo/http_demo.html"> http://isempty.site/web-note/demo/http_demo.html </a>，该页面的 HTML 代码很简单，body 内只有一个<span class="definition">hello ! </span>的文本节点。
 				<pre><code class="html">
 &lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;

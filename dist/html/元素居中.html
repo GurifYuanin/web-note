@@ -185,6 +185,20 @@
 				</div>
 			</p>
 		</section>
+		<section>
+			<h2>vertical-align</h2>
+			<p>
+				CSS 有一个属性<span class="definition"> vertical-align </span>用于垂直对齐方式，然而并不是添加该属性后所有东西都会对齐，它对块内的行内（inline）元素或表格单元（table-cell）元素起作用，并且是相对于当前行，而不是整个父元素。
+				<div class="show" style="height: 100px; line-height: 100px; font-size: 10px; vertical-align: middle;">
+					参照文字<img src="../images/putin.jpg" style="height: 10px;">
+				</div>
+				<pre><code class="html">
+&lt;div class="show" style="height: 100px;<span class="strong">line-height: 100px;</span>font-size: 10px; vertical-align: middle;">
+	参照文字&lt;img src="../images/putin.jpg" style="height: 10px;">
+&lt;/div>
+				</code></pre>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>

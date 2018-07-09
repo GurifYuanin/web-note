@@ -60,7 +60,7 @@ $(function() {
     var $title = $('#title'); // 文章标题
     var $container = $('#container'); // 文章内容
     var $body = $('html, body');
-    var category = ['HTML', 'CSS', 'Javascript', 'NodeJS', 'VueJS', '移动Web', '调试', '协议', '安全', '后端', '其他']; // 目录分类
+    var category = ['HTML', 'CSS', 'Javascript', 'NodeJS', 'VueJS', '移动Web', '工具', '协议', '安全', '后端', '其他']; // 目录分类
     var items = [
         ['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'canvas', 'svg'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
@@ -68,7 +68,7 @@ $(function() {
         ['commonJS', 'package.json', 'path', 'process', 'webpack', 'plugins', 'loader'],
         ['安装', '实例', '模版', '组件', 'mixins', 'router', 'vuex'],
         ['响应式布局', 'bootstrap'],
-        ['抓包工具', 'chrome devtools'],
+        ['抓包工具', 'chrome devtools', 'git'],
         ['HTTP'],
         ['CSRF', 'XSS'],
         ['Thinkphp5.1', 'htaccess'],
@@ -94,6 +94,7 @@ $(function() {
     $catalog.append('<section id="searchContainer"><input id="searchInput" type="text" placeholder="搜索文章（支持正则）"/><section id="searchResult"></section></section>');
     var $searchInput = $('#searchInput');
     var $searchResult = $('#searchResult');
+    var liIndex = 0;
     $searchResult.css('display', 'none');
     $searchInput.keyup(function(event) {
         var value = $searchInput.val(), str = '';
@@ -115,7 +116,7 @@ $(function() {
         // 将 li 插入到 html
         if (value.trim() === '' || str.trim() === '') {
             $searchResult.css('display', 'none');
-        } else {
+        } else if ((event.keyCode < 37 || event.keyCode > 40) && event.keyCode !== 13){
             $searchResult.css('display', 'block');
             $searchResult.html(str);
             // 为 li 添加点击事件
@@ -126,8 +127,45 @@ $(function() {
             });
         }
         // 如果按钮为 enter 则自动跳转到第一个 li
-        if (event.keyCode === 13 && str.trim() !== '') {
-            $('#searchResult li').eq(0).click();
+        if (str.trim() === '') {
+            return;
+        }
+        var list = $('#searchResult li');
+        switch (event.keyCode) {
+            case 13: {
+                var index = list.toArray().findIndex(function(element) {
+                    return element.style.backgroundColor === 'rgb(239, 239, 239)';
+                });
+                index === -1 ? list.eq(0).click(): list.eq(index).click();
+                break;
+            }
+            case 37: break;
+            case 38: {
+                if (liIndex > 0) {
+                    liIndex--;
+                }
+                if (liIndex < list.length - 1) {
+                    list.eq(liIndex).css('background-color', '');
+                }
+                if (liIndex > 0) {
+                    list.eq(liIndex - 1).css('background-color', '#efefef');
+                }
+                break;
+            }
+            case 39: break;
+            case 40: {
+                if (liIndex > 0) {
+                    list.eq(liIndex - 1).css('background-color', '');
+                }
+                if (liIndex < list.length - 1) {
+                    list.eq(liIndex).css('background-color', '#efefef');
+                    liIndex++;
+                }
+                break;
+            }
+            default: {
+                liIndex = 0;
+            }
         }
     });
     $container.click(function() {
@@ -282,7 +320,7 @@ $(function() {
 
     // 去除多余的字符
     function getName (str) {
-        return str.replace(/[\s@#&;()/.]/g, '');
+        return str.replace(/[\s$@#&;()/.]/g, '');
     }
     var $subTitle = $('#container>section>h2'); // 一级子标题
     var subTitleNav = ''; // 子标题导航 html 字符串

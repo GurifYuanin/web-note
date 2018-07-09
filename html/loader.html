@@ -157,17 +157,17 @@ $ npm install babel-runtime --save
 		{
 			loader: 'babel-loader',
 			options: {
-				presets: ['@babel/preset-env', { // babel 会根据环境要求编译 javascript 代码
-					targets: {
-						'browsers': ['last 2 versions', 'not ie <= 8'], // 浏览器端
-						'node': 'current', // 服务器端
-						'modules': 'commonjs', // "amd" | "umd" | "systemjs" | "commonjs" | false
-						'debug': false, // 是否开启 debug
-						'include': ['transform-es2015-arrow-functions'], // 强制开启的编译模块
-						'exclude': [] // 强制禁用的编译模块
-					}
-				}],
 				plugins: ['@babel/transform-runtime'], // 使用 babel 插件
+				presets: ['@babel/preset-env', { // babel 会根据环境要求编译 javascript 代码
+					targets: { // preset-env 的目标环境
+						'browsers': ['last 2 versions', 'not ie <= 8'], // 浏览器端的版本
+						'node': 'current', // 服务器端 / Nodejs 的版本
+					},
+					'debug': false, // 是否开启 debug
+					'modules': false, // 将 es6 模块语法转化为 "amd" | "umd" | "systemjs" | "commonjs" | false,
+					'include': ['transform-es2015-arrow-functions'], // 强制开启的编译模块
+					'exclude': ['transform-es2015-spread'] // 强制禁用的编译模块
+				}],
 				exclude: /node_modules/, // 指定文件不编译指
 				cacheDirectory: true // 启用编译缓存，默认缓存到 node_modules/.cache/babel-loader
 			}

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>git</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">Git</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				Git 为版本控制工具，本文章只记录指令，不涉及原理。
+			</p>
+		</section>
+		<section>
+			<h2>连接 Github</h2>
+			<p>
+				这里本机与 Github 的连接方式使用 SSH 而不是 HTTPS，因为进行拉取与推送的时候， SSH 可以使用密钥进行加密解密，而使用 HTTPS 需要每次都输入 Github 的账号和密码。
+				<ol>
+					<li>在 Github 创建仓库</li>
+					<figure>
+						<img src="../images/git_github.jpg" alt="">
+					</figure>
+					<li>本地创建仓库</li>
+					<pre><code class="shell">
+$ mkdir 本地仓库名
+$ cd 本地仓库名
+$ git init
+					</code></pre>
+					<li>生成公钥和私钥，产生于 C:/User/计算机名/.ssh 目录下，id_rsa 是私钥，id_rsa.pub 是公钥</li>
+					<pre><code class="shell">
+$ ssh-keygen -t rsa -C "你的邮箱"
+
+$ cd ~/.ssh
+					</code></pre>
+					<li>打开 Github -> setting -> SSH and GPC keys，点击 New SSH Key，填入公钥</li>
+					<figure>
+						<img src="../images/git_github_ssh.jpg" alt="">
+					</figure>
+					<li>在本机授权 Github，第一次会询问你是否继续，确定后提示成功授权</li>
+					<pre><code class="shell">
+$ ssh -T git@github.com
+# 执行后会显示
+Hi <你的用户名>! You've successfully authenticated, but GitHub does not provide shell access.
+					</code></pre>
+					<li>配置本机上全局的 Git 用户名和邮箱，以后 push 到 Github 仓库时就会带上这些信息</li>
+					<pre><code class="shell">
+$ git config --global user.name "你的用户名"
+$ git config --global user.email "你的邮箱"
+					</code></pre>
+					<li>在本地仓库添加远程主机，以后 push 时直接使用主机名而不用一串的网址</li>
+					<pre><code class="shell">
+$ git remote add 远程主机名 git@github.com:用户名/仓库名.git
+					</code></pre>
+					<li>在本地进行各种操作</li>
+					<pre><code class="shell">
+$ git add *
+$ git commit -m "关于这次提交的描述"
+$ git push 远程主机名 本地分支名 :远程分支名
+# 默认远程分支名为 master，所以当 push 到远程的 master 分支时可以省略 ":远程分支名"
+					</code></pre>
+				</ol>
+			</p>
+		</section>
+		<section>
+			<h2>工作树</h2>
+			<p>
+				工作树即项目下的文件，增删等操作就是操作系统下的文件操作。
+				<h3>查看</h3>
+				<p>
+					查看工作树的情况。
+					<div class="command">
+						git status
+					</div>
+					之后显示如下，并给出了相应的操作提示。
+					<ul>
+						<li>被修改的文件名：索引树（index）已经存在的文件，即之前已经 add 过的文件，现在在工作区被修改了，需要再 add 一次进行更新</li>
+						<li>新增的文件名：未 add 过的文件，新创建出来的文件</li>
+						<li>已经暂存的文件：已经 add，在索引树上的文件</li>
+					</ul>
+					<pre><code class="shell">
+On branch 当前所在分支名
+Changes not staged for commit:
+  (use "git add &lt;file>..." to update what will be committed)
+  (use "git checkout -- &lt;file>..." to discard changes in working directory)
+<div style="color: #800000 !important">
+		modified:   被修改的文件名
+</div>
+Untracked files:
+  (use "git add &lt;file>..." to include in what will be committed)
+<div style="color: #800000 !important">
+		新增的文件名字
+</div>
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+<div style="color: green !important">
+		modified:   已经暂存的文件
+</div>
+					</code></pre>
+				</p>
+				<h3>添加</h3>
+				<p>
+					touch 用于创建文件，mkdir 用于创建文件夹。
+					<div class="command">
+						touch 文件名<br>
+						mkdir 文件夹名
+					</div>
+				</p>
+				<h3>删除</h3>
+				<p>
+					<h4>直接删除</h4>
+					使用 rm 命令将直接删除工作树上的文件，即我们常用的<span class="definition">右键 -> 删除</span>
+					<ul>
+						<li>rm 用于删除文件或文件夹</li>
+						<li>rmdir 用于删除空文件夹</li>
+					</ul>
+					其后可以传入参数：
+					<ul>
+						<li>r：递归删除，删除目录下所有文件和文件夹</li>
+						<li>f：强制删除文件和文件夹</li>
+					</ul>
+					<div class="command">
+						rm [-rf] 文件匹配<br>
+						rmdir [-rf] 文件匹配
+					</div>
+					<h4>恢复</h4>
+					使用 checkout -- files 可以将工作树上的文件恢复到上次 add 时的状态。
+					<div class="command">
+						git checkout -- 路径匹配
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>索引树</h2>
+			<p>
+				<h3>添加</h3>
+				<p>
+					将工作树（work tree）的文件暂存（stage）到索引树上，其遵循：
+					<ul>
+						<li><span class="definition"> . </span>和<span class="definition"> * </span>表示所有文件（常用）</li>
+						<li>写在 .gitignore 上的文件将不会被添加</li>
+					</ul>
+					<div class="command">
+						git add 路径匹配
+					</div>
+				</p>
+				<h3>删除</h3>
+				<p>
+					取消暂存，即 add 的逆操作。
+					<div class="command">
+						git reset -- 文件匹配
+					</div>
+					也可以用另一个指令。
+					<div class="command">
+						git rm --cached 文件匹配
+					</div>
+				</p>
+				<h3>隐藏</h3>
+				<p>
+					当工作中需要切换分支，但又不想马上进行提交（commit），此时就需要将工作树（work）和索引树（index）上的内容藏起来。
+					<h4>隐藏</h4>
+					使用以下指令进行隐藏，隐藏后会告诉你本次隐藏的引用 ID。
+					<div class="command">
+						git stash
+					</div>
+					<pre><code class="shell">
+$ git stash
+Saved working directory and index state WIP on master: <span class="strong">本次隐藏的 ID</span> docs(update the sidebar, add the better SE):
+					</code></pre>
+					<h4>查看</h4>
+					查看所有隐藏。
+					<div class="command">
+						git stash list
+					</div>
+					<h4>取出</h4>
+					根据 ID 取出需要的隐藏，如果不指定，则取出最晚 stash 的内容。
+					<div class="command">
+						git stash pop [隐藏名]
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>仓库</h2>
+			<p>
+				<h3>添加</h3>
+				<p>
+					将索引树（index）上的文件提交到仓库（repository）。
+					<div class="command">
+						git commit -m "关于这次提交的描述"
+					</div>
+					当想要提交（commit）但不想又写一遍描述信息的时候，可以使用以下指令来保留上次提交的信息，但覆盖上次提交的内容，最终查看 log 时也会只显示一次提交。
+					<div class="command">
+						git commit --amend
+					</div>
+				</p>
+				<h3>回退</h3>
+				<p>
+					
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>分支</h2>
+			<p>
+				
+			</p>
+		</section>
+		<section>
+			<h2>远程主机</h2>
+			<p>
+				git remote 命令用于管理远程主机（远程仓库）情况。
+				<h3>查看</h3>
+				<p>
+					直接输入 git remote 显示所有已添加的远程主机名，参数 v 表示查看更多信息（远程主机的网址）。
+					<div class="command">
+						git remote [-v]
+					</div>
+					使用 git remote show <主机名> 显示指定主机的详细信息
+					<div class="command">
+						git remote show 主机名
+					</div>
+					<pre><code class="shell">
+# 添加远程主机
+$ git remote add origin git@github:GurifYuanin/web-note.git
+
+# 查看所有远程主机
+$ git remote
+origin
+
+# 查看所有远程主机的更多信息
+$ git remote -v
+origin  git@github.com:GurifYuanin/web-note.git (fetch)
+origin  git@github.com:GurifYuanin/web-note.git (push)
+
+# 查看 origin 的详细信息
+$ git remote show origin
+* remote origin
+  Fetch URL: git@github.com:GurifYuanin/web-note.git
+  Push  URL: git@github.com:GurifYuanin/web-note.git
+  HEAD branch: master
+  Remote branch:
+    master tracked
+  Local ref configured for 'git push':
+    master pushes to master (up to date)
+
+					</code></pre>
+				</p>
+				<h3>添加</h3>
+				<p>
+					<div class="command">
+						git remote add 远程主机名 网址
+					</div>
+				</p>
+				<h3>删除</h3>
+				<p>
+					rm 是 remove 的简写，两种写法同时可行。
+					<div class="command">
+						git remote remove 远程主机名<br>
+						git remote rm 远程主机名
+					</div>
+				</p>
+				<h3>重命名</h3>
+				<p>
+					<div class="command">
+						git remote rename 原远程主机名 新远程主机名
+					</div>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] git documentation <a href="https://git-scm.com/docs/git">https://git-scm.com/docs/git</a></div>
+				<div>[2] 阮一峰 Git远程操作 <a href="http://www.ruanyifeng.com/blog/2014/06/git_remote.html">http://www.ruanyifeng.com/blog/2014/06/git_remote.html</a></div>
+				<div>[3] Scott Chacon, Ben Straub Git Pro</div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>
