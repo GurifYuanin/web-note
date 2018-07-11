@@ -136,7 +136,7 @@ $(function() {
                 var index = list.toArray().findIndex(function(element) {
                     return element.style.backgroundColor === 'rgb(239, 239, 239)';
                 });
-                index === -1 ? list.eq(0).click(): list.eq(index).click();
+                index === -1 ? list.eq(0).click() : list.eq(index).click();
                 break;
             }
             case 37: break;
@@ -144,7 +144,7 @@ $(function() {
                 if (liIndex > 0) {
                     liIndex--;
                 }
-                if (liIndex < list.length - 1) {
+                if (liIndex < list.length) {
                     list.eq(liIndex).css('background-color', '');
                 }
                 if (liIndex > 0) {
@@ -157,7 +157,7 @@ $(function() {
                 if (liIndex > 0) {
                     list.eq(liIndex - 1).css('background-color', '');
                 }
-                if (liIndex < list.length - 1) {
+                if (liIndex < list.length) {
                     list.eq(liIndex).css('background-color', '#efefef');
                     liIndex++;
                 }

@@ -107,7 +107,7 @@ dev: {
 					<img src="../images/vue_index.jpg">
 					<figcaption>访问 localhost:8081 </figcaption>
 				</figure>
-				上述页面访问的是项目根目录下的<span class="definition"> index.html </span>
+				以上页面访问的是项目根目录下的<span class="definition"> index.html </span>
 				<pre><code class="html">
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -117,7 +117,7 @@ dev: {
     &lt;title&gt;vue-demo&lt;/title&gt;
   &lt;/head&gt;
   &lt;body&gt;
-    &lt;div id="app"&gt;&lt;/div&gt;
+    <span class="strong">&lt;div id="app"&gt;&lt;/div&gt;</span>
     &lt;!-- built files will be auto injected --&gt;
   &lt;/body&gt;
 &lt;/html&gt;
@@ -264,7 +264,11 @@ resolve: {
         }
     },
 			</code></pre>
-			然后就可以愉快地使用了
+			重启项目
+      <pre><code class="shell">
+$ npm run dev
+      </code></pre>
+      然后就可以愉快地使用了
 			<figure>
 				<img src="../images/vue_normal.jpg">
 			</figure>

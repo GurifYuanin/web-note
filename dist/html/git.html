@@ -163,6 +163,11 @@ Changes to be committed:
 					<div class="command">
 						git add 路径匹配
 					</div>
+					<h4>强行添加</h4>
+					默认 add 文件会忽略掉 .gitignore 里写明的文件，如果携带参数 -f 或 --force，则会无视 .gitignore 这个文件。
+					<div class="command">
+						git add -f 路径匹配
+					</div>
 				</p>
 				<h3>删除</h3>
 				<p>
@@ -170,10 +175,54 @@ Changes to be committed:
 					<div class="command">
 						git reset -- 文件匹配
 					</div>
-					也可以用另一个指令。
+					而以下指令是直接将索引树上的文件删除。
 					<div class="command">
 						git rm --cached 文件匹配
 					</div>
+					<h4>区别</h4>
+					以上两条指令是不同的，前一条表示取消暂存，后一条表示直接删除索引树上的记录。例如原先已经添加了一个文件 hello.txt 到索引树。
+					<pre><code class="shell">
+$ vim hello.txt
+# 一通操作
+$ git add .
+					</code></pre>
+					然后在工作树将该文件进行修改后暂存。
+					<pre><code class="shell">
+$ vim hello.txt
+# 又一通操作
+$ git add .
+
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD &lt;file&gt;..." to unstage)
+<div style="color: green">
+		modified:   hello.txt
+</div>
+					</code></pre>
+					如果使用前一条指令<span class="definition"> git reset -- hello.txt </span>取消暂存的结果：
+					<pre><code class="shell">
+$ git reset -- hello.txt
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)
+<div style="color: #800000">
+		modified:   hello.txt
+</div>
+					</code></pre>
+					改用后一条指令的结果进行取消暂存的结果：
+					<pre><code class="shell">
+$ git rm --cached hello.txt
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD &lt;file&gt;..." to unstage)
+<div style="color: green">
+		deleted:    hello.txt
+</div>
+					</code></pre>
 				</p>
 				<h3>隐藏</h3>
 				<p>
@@ -214,16 +263,154 @@ Saved working directory and index state WIP on master: <span class="strong">本�
 						git commit --amend
 					</div>
 				</p>
-				<h3>回退</h3>
+				<h3>回退 / 移动指针</h3>
 				<p>
-					
+					使用 git reset 来将当前指针（HEAD）指向以前的提交（commit），回退的模式（mode）有 3 种：
+					<ul>
+						<li>--soft：移动 HEAD 指针，不动工作树和索引树的内容</li>
+						<li>--mixed（默认）：移动 HEAD 指针，重置索引树的内容，但不动工作树的内容</li>
+						<li>--hard：移动 HEAD 指针，重置工作树和索引树的内容</li>
+					</ul>
+					<h4>相对回退</h4>
+					使用相对方式向后（以前）移动一次指针：
+					<div class="command">
+						git reset 模式 HEAD~<br>
+						git reset 模式 HEAD^
+					</div>
+					一次性回退 3 个提交：
+					<div class="command">
+						git reset 模式 HEAD~3<br>
+						git reset 模式 HEAD~~~<br>
+						git reset 模式 HEAD^3<br>
+						git reset 模式 HEAD^^^
+					</div>
+					<h4>绝对方式</h4>
+					相对方式只能向后，绝对方式则可以回退到任意一个提交：
+					<div class="command">
+						git reset 模式 提交ID
+					</div>
+					<pre><code class="shell">
+$ git log --pretty=oneline
+dcf353c403e3641328dd976ddfbbb7f4261a45f9 (HEAD -> master) v2
+dac5b86399bf5d22af230a220bda4e911e105674 init
+$ git reset --hard dac5b86399bf5d22af230a220bda4e911e105674
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>日志</h2>
+			<p>
+				<h3>查看提交日志</h3>
+				<p>
+					<div class="tip">
+						以下参数可以组合使用。
+					</div>
+					<h4>全部显示</h4>
+					使用 git log 来显示所有提交，使用 --oneline 或 --pretty=oneline 让一次提交只占一行。
+					<div class="command">
+						git log [--oneline|--pretty=oneline]
+					</div>
+					<pre><code class="shell">
+$ git log
+<span style="color: rgb(191, 191, 0);">commit 提交的完整散列值(</span><span style="color: rgb(64, 255, 255)"> HEAD -> </span><span style="color: green">master</span><span style="color: rgb(191, 191, 0);">)</span>
+Author: 作者 <邮箱>
+Date:   提交时间
+
+    本次提交的描述
+
+$ git log --oneline
+<span style="color: rgb(191, 191, 0);">提交的完整散列值(</span><span style="color: rgb(64, 255, 255)"> HEAD -> </span><span style="color: green">master</span><span style="color: rgb(191, 191, 0);">)</span> 本次提交的描述
+
+$ got log --pretty=oneline
+<span style="color: rgb(191, 191, 0);">散列值前 7 位(</span><span style="color: rgb(64, 255, 255)"> HEAD -> </span><span style="color: green">master</span><span style="color: rgb(191, 191, 0);">)</span> 本次提交的描述
+					</code></pre>
+					<h4>限制显示</h4>
+					使用 -N 来只显示最近 N 条提交。
+					<div class="command">
+						git log -N
+					</div>
+					<h4>图形化显示</h4>
+					使用 --graph 来图形化显示提交。
+					<div class="command">
+						git log --graph
+					</div>
+				</p>
+				<h3>查看操作日志</h3>
+				<p>
+					git log 只能查看提交的日志，如果进行过 git reset ，被回退的提交将不会显示出来，此时就需要查看被回退了的提交。
+					<h4>全部显示</h4>
+					<div class="command">
+						git reflog
+					</div>
+					<pre><code class="shell">
+$ git reflog
+<span style="color: rgb(191, 191, 0);">dcf353c (</span><span style="color: rgb(64, 255, 255);">HEAD -></span><span style="color: green"> master</span>) HEAD@{0}: reset: moving to dcf353c
+<span style="color: rgb(191, 191, 0);">dac5b86</span><span style="color: rgb(64, 255, 255);"></span> HEAD@{1}: reset: moving to HEAD^
+<span style="color: rgb(191, 191, 0);">dcf353c (</span><span style="color: rgb(64, 255, 255);">HEAD -></span> <span style="color: green"> master</span>) HEAD@{2}: reset: moving to dcf353c
+					</code></pre>
+					<h4>限制显示</h4>
+					使用 -N 来只显示最近的 N 条记录。
+					<div class="command">
+						git reflog -N
+					</div>
+					使用 分支名@{数量.单位.ago} 来进行时间限制。
+					<div class="command">
+						git reflog HEAD@{one.day.ago}
+					</div>
 				</p>
 			</p>
 		</section>
 		<section>
 			<h2>分支</h2>
 			<p>
-				
+				<h3>查看</h3>
+				<p>
+					使用 git branch 查看分支，参数代表了：
+					<ul>
+						<li>无参数：查看本地所有分支</li>
+						<li>-r：查看远程所有分支</li>
+						<li>-a：查看本地和远程所有分支</li>
+					</ul>
+					<div class="command">
+						git branch [-r|-a]
+					</div>
+				</p>
+				<h3>创建</h3>
+				<p>
+					以当前（HEAD）指针所在提交的位置创建一个分支。
+					<div class="command">
+						git branch 分支名
+					</div>
+				</p>
+				<h3>删除</h3>
+				<p>
+					<div class="command">
+						git branch -d 分支名
+					</div>
+				</p>
+				<h3>切换</h3>
+				<p>
+					切换到指定分支。
+					<div class="command">
+						git checkout 分支名
+					</div>
+					基于当前分支，创建并切换到创建出来的分支。
+					<div class="command">
+						git checkout -b 分支名
+					</div>
+					基于指定分支，创建并切换到创建出来的分支。
+					<div class="command">
+						git checkout -b 分支名 已存在的分支
+					</div>
+				</p>
+				<h3>合并</h3>
+				<p>
+					将当前所在分支与指定分支进行合并。
+					<div class="command">
+						git merge 分支名
+					</div>
+				</p>
 			</p>
 		</section>
 		<section>
@@ -288,6 +475,46 @@ $ git remote show origin
 				</p>
 			</p>
 		</section>
+		<section>
+			<h2>远程操作</h2>
+			<p>
+				<h3>克隆</h3>
+				<p>
+					克隆相当于直接到 github 下载仓库并解压到本地。
+					<div class="command">
+						git clone 网站 仓库名
+					</div>
+					将网站上的仓库下载到本地并重命名为仓库名。
+				</p>
+				<h3>拉取</h3>
+				<p>
+					使用 git pull 来拉取远程分支合并到本地分支，当本地分支被省略时，则表示当前分支。
+					<div class="command">
+						git pull 远程主机名 远程分支名[:本地分支名]
+					</div>
+				</p>
+				<h3>推送</h3>
+				<p>
+					使用 git push 来将本地分支推送到远程分支，当远程分支名被省略时，则表示推送到和本地分支相同名字的远程分支，如果远程分支不存在，则创建远程分支。
+					<div class="command">
+						git push 远程主机名 本地分支名[:远程分支名]
+					</div>
+					<h4>推送失败</h4>
+					有时会出现远程分支比本地分支更快（more fast）的情况，远程分支上的代码已经更新过，但本地分支上的代码还没获得这些更新，通常有两种解决方案：
+					<ul>
+						<li>先 git pull，再 git push</li>
+						<pre><code class="shell">
+$ git pull 远程主机 远程分支:本地分支
+$ git push 远程主机 本地分支:远程分支
+						</code></pre>
+						<li>直接强制推送进行覆盖 git push -f</li>
+						<pre><code class="shell">
+$ git push -f 远程主机 本地分支:远程分支
+						</code></pre>
+					</ul>
+				</p>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
@@ -296,6 +523,9 @@ $ git remote show origin
 				<div>[3] Scott Chacon, Ben Straub Git Pro</div>
 			</p>
 		</section>
+		<?php
+			echo 'hello world'!;
+		?>
 	</article>
 </body>
 </html>
