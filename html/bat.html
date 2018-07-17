@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>批处理命令</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">批处理命令</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				DOS 系统批量处理命令，可以在 window 的命令行执行相应指令。
+				<figure>
+					<img src="../images/bat_cmd.jpg" alt="">
+				</figure>
+				也可以写入 .bat 文件后双击执行。
+				<pre><code class="bat">
+title cmd
+echo aaa
+pause
+				</code></pre>
+				<figure>
+					<img src="../images/bat_file.jpg" alt="加载失败">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>基本操作</h2>
+			<p>
+				<h3>打印</h3>
+				<p>
+					直接输出。
+					<div class="command">
+						echo 被输出的字符串
+					</div>
+				</p>
+				<h3>暂停执行</h3>
+				<p>
+					使用 pause 暂停执行，按任意键继续执行。
+					<div class="command">
+						pause
+					</div>
+				</p>
+				<h3>注释</h3>
+				<p>
+					使用 :: 或者 REM 进行单行注释。
+					<div class="command">
+						:: aaa<br>
+						REM aaa
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>样式</h2>
+			<p>
+				设置控制台的样式。
+				<h3>背景色和前景色</h3>
+				<p>
+					使用 color 背景色代号前景色代号 来设置。
+					<table>
+						<tr><th>代号</th><th>颜色</th></tr>
+						<tr><td>0</td><td>黑色</td></tr>
+						<tr><td>1</td><td>蓝色</td></tr>
+						<tr><td>2</td><td>绿色</td></tr>
+						<tr><td>3</td><td>浅绿色</td></tr>
+						<tr><td>4</td><td>红色</td></tr>
+						<tr><td>5</td><td>紫色</td></tr>
+						<tr><td>6</td><td>黄色</td></tr>
+						<tr><td>7</td><td>白色</td></tr>
+						<tr><td>8</td><td>灰色</td></tr>
+						<tr><td>9</td><td>淡蓝色</td></tr>
+						<tr><td>A</td><td>淡绿色</td></tr>
+						<tr><td>B</td><td>淡浅绿色</td></tr>
+						<tr><td>C</td><td>淡红色</td></tr>
+						<tr><td>D</td><td>淡紫色</td></tr>
+						<tr><td>E</td><td>淡黄色</td></tr>
+						<tr><td>F</td><td>亮白色</td></tr>
+					</table>
+					默认值为：
+					<div class="command">
+						color 07
+					</div>
+				</p>
+				<h3>标题</h3>
+				<p>
+					修改控制台标题。
+					<div class="command">
+						title 控制台标题
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>文件</h2>
+			<p>
+				<h3>切换路径</h3>
+				<p>
+					使用 磁盘号: 来切换磁盘路径。
+					<div class="command">
+						C:
+					</div>
+					使用 cd 切换路径。
+					<div class="command">
+						cd 路径
+					</div>
+				</p>
+				<h3>执行文件</h3>
+				<p>
+					直接执行一个文件。
+					<div class="command">
+						start 文件路径
+					</div>
+					使用 A 文件执行 B 文件。
+					<div class="command">
+						start A B
+					</div>
+					window 自带的文件有：
+					<ul>
+						<li>explorer：资源管理器</li>
+						<li>notepad：记事本</li>
+						<li>calc：计算器</li>
+						<li>cmd：控制台</li>
+					</ul>
+				</p>
+				<h3>查找文件的内容</h3>
+				<p>
+					查找文件内指定内容，将查找到的结果打印出来。
+					<div class="command">
+						find 标识符 "内容" 路径
+					</div>
+					标识符：
+					<ul>
+						<li>/V：反选</li>
+						<li>/C：只打印行数</li>
+						<li>/N：打印行号</li>
+						<li>/I：忽视大小写</li>
+						<li>/OFF[LINE]：不跳过具有脱机属性的文件</li>
+					</ul>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] bat命令入门与高级技巧<a href="https://www.jb51.net/article/97204.htm">https://www.jb51.net/article/97204.htm</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>
