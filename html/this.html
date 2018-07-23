@@ -26,6 +26,27 @@
 			<h1 id="title">this</h1>
 		</hgroup>
 		<section>
+			<h2>上下文对象</h2>
+			<p>
+				当调用一个函数<span class="defintion"> foo() </span>时，实际上执行的代码为：
+				<pre><code class="javscript">
+foo.call(上下文对象, 参数);
+				</code></pre>
+				在函数内使用的 this ，实际上使用的是传入的<span class="defintion"> 上下文对象 </span>
+				<pre><code class="javascript">
+function foo () {
+	console.log(this.message);
+}
+foo.call({message: 'hello world'}); // => hello world
+
+// 全局环境且非严格模式下直接调用函数
+foo();
+// 等价于 =>
+foo.call(window);
+				</code></pre>
+			</p>
+		</section>
+		<section>
 			<h2>定义</h2>
 			<p>
 				在 javscript 中，this 是一个指针，指向的对象根不同情况而有所不同，其影响因素包括：

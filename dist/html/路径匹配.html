@@ -31,13 +31,116 @@
 		<section>
 			<h2>glob</h2>
 			<p>
-				glob 语法是 shell 路径匹配的简化。
+				在 node 环境下使用 glob 包来进行文件匹配，匹配结果为符合匹配的<span class="different"> 文件名 </span>数组。
+				<h3>安装</h3>
+				<p>
+					<pre><code class="shell">
+$ npm install glob
+					</code></pre>
+				</p>
+				<h3>使用</h3>
+				<p>
+					<pre><code class="javascript">
+var glob = require('glob');
+glob(pattern, options, function(error, files){
+	// ...
+});
+					</code></pre>
+					<ul>
+						<li>pattern：匹配字符串</li>
+						<li>options：选项对象</li>
+						<li>function：匹配结束后的回调函数</li>
+						<ul>
+							<li>error：执行 glob 出错时的错误信息</li>
+							<li>files：执行后匹配到的文件名数组</li>
+						</ul>
+					</ul>
+				</p>
+				<h3>pattern 的基本语法</h3>
+				<p>
+					<table>
+						<tr>
+							<th>字符</th>
+							<th>结果</th>
+							<th>例子</th>
+						</tr>
+						<tr>
+							<td>*</td>
+							<td>0 个或 0 个以上的任意文件名字符</td>
+							<td>src/* 可以匹配 src/index.html，但不匹配 src/html/index.html</td>
+						</tr>
+						<tr>
+							<td>**</td>
+							<td>匹配 任意级的路径/任意文件名</td>
+							<td>src/** 可以匹配 src/html/index.html，但不匹配 dist/html/index.html</td>
+						</tr>
+						<tr>
+							<td>?</td>
+							<td>0 个或 1 个任意文件名字符</td>
+							<td>src/? 可以匹配 src/a，但不匹配 src/a.html</td>
+						</tr>
+						<tr>
+							<td>!</td>
+							<td>不选择被匹配到的文件</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>[]</td>
+							<td>相当于正则的 []，匹配 [] 内任意一个字符</td>
+							<td>[ab] 匹配 a 或 b ，但不匹配 ab</td>
+						</tr>
+						<tr>
+							<td>?字符</td>
+							<td>相当于正则的 字符?，匹配 0 或 1 个字符</td>
+							<td>?a 匹配 a 或者无</td>
+						</tr>
+						<tr>
+							<td>+字符</td>
+							<td>相当于正则的 字符+</td>
+							<td>+a 匹配 1 个及以上个 a</td>
+						</tr>
+						<tr>
+							<td>*字符</td>
+							<td>相当于正则的 字符*</td>
+							<td>*a 匹配任意个 a</td>
+						</tr>
+					</table>
+					<div class="tip">
+						以 . 开头的文件不会被 * 所匹配，例如 src/* 匹配不到 src/.gitignore 文件。
+					</div>
+				</p>
+				<h3>options</h3>
+				<p>
+					options 选项参数：
+					<table>
+						<tr>
+							<th>属性名</th>
+							<th>解释</th>
+							<th>默认</th>
+						</tr>
+						<tr>
+							<td>cwd</td>
+							<td>进行匹配的开始路径</td>
+							<td>process.cwd()，即执行 node xxx.js 时所在的路径</td>
+						</tr>
+						<tr>
+							<td>root</td>
+							<td>设置根路径</td>
+							<td>path.resolve(options.cwd, "/")</td>
+						</tr>
+						<tr>
+							<td>matchBase</td>
+							<td>开启后，*.后缀名 相当于 **/*.后缀名</td>
+							<td>false</td>
+						</tr>
+					</table>
+				</p>
 			</p>
 		</section>
 		<section>
 			<h2>参考文献</h2>
 			<p>
-				<div>[1]</div>
+				<div>[1] npm glob <a href="https://www.npmjs.com/package/glob">https://www.npmjs.com/package/glob</a></div>
 			</p>
 		</section>
 	</article>

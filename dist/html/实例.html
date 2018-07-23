@@ -179,7 +179,7 @@ setTimeout(function(){
 		<section>
 			<h2>computed</h2>
 			<p>
-				computed 可以是一个带有返回值的函数，此时计算属性只有 getter ，访问后获得返回值。
+				computed 可以是一个带有返回值的函数，通过访问其他数据进行运算 ，最终返回一个值。
 				<pre><code class="html">
 new Vue({
 	computed: {
@@ -189,16 +189,21 @@ new Vue({
 	}
 });
 				</code></pre>
-				计算属性也可以是一个对象，为其设置 getter 和 setter ，访问时获得 getter 的返回值，修改时调用 setter ，传入的形参为修改后的值。
+				计算属性也可以是一个对象，为其设置 getter 和 setter ，访问时获得 getter 的返回值，修改时调用 setter ，将赋予的值作为形参传入。
 				<pre><code class="javascript">
 new Vue({
+	data: {
+		name1: 'abc',
+		name2: 'def'
+	},
 	computed: {
 		计算属性名: {
-			getter: function() {
-				return ...;
+			get: function() {
+				return this.name1 + ':' + this.name2;
 			},
-			setter: function(val) {
-				...
+			set: function(val) {
+				this.name1 = val.split(':')[0];
+				this.name2 = val.split(':')[1];
 			}
 		}
 	}

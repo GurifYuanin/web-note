@@ -100,6 +100,15 @@
 						<pre><code class="javascript">
 var allCookie = document.cookie;
 						</code></pre>
+						以下情况的 cookie，使用 document.cookie 不能读取到
+						<ul>
+							<li>当前页面网址的域名与 domain 不同</li>
+							<li>当前页面网址的路径不是 path 的子路径</li>
+							<li>设置了 httpOnly 的 cookie</li>
+						</ul>
+						<div class="tip">
+							也就是说，过期了（当前时间超过 Expires/Max-Age）的 cookie 可以被 document.cookie 获取到。
+						</div>
 					</p>
 					<p>
 						<h3>设置 cookies</h3>
@@ -152,7 +161,7 @@ document.cookie = 'key=value; path=path; domain=domain; max-age=second; expires=
 					<img src="../images/cookie_fiddle.jpg">
 					<figcaption>在 fiddler 查看响应报文</figcaption>
 				</figure>
-				客户端发送的请求报文使用<span class="definition"> Cookie </span>字段传输 cookie。
+				客户端发送的请求报文使用<span class="definition"> Cookie </span>字段传输 cookie，每次请求浏览器都会自动将<span class="different"> 与接收请求网址相同 domain 和 path 子路径的 cookie </span>附带发送过去。
 				<pre><code class="http">
 Cookie: key=hello; expires=Green Time; Max-Age=second; path=path; domain=domain; secure; HttpOnly
 				</code></pre>

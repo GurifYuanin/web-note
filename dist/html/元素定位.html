@@ -90,7 +90,11 @@
 		<section>
 			<h2>absolute</h2>
 			<p>
-				<span class="definition"> absolute </span>使元素相对非<span class="definition"> static </span>定位的最近的祖先元素偏移，元素脱离文档流和文本流，即元素不再占据位置，对其他非绝对定位的元素和文本进行覆盖。
+				<span class="definition"> absolute </span>使元素相对非<span class="definition"> static </span>定位的最近的祖先元素偏移。
+				<ul>
+					<li>元素脱离文档流和文本流，即其后的文本和 static 元素会穿到该元素前面</li>
+					<li>覆盖 absolute、fixed 和浮动元素，但不覆盖 static 元素</li>
+				</ul>
 				<pre><code class="html">
 &lt;div style="
 	height: 100px;
@@ -106,6 +110,7 @@
 		position: absolute;
 		top: 50px;
 	"&gt;&lt;/div&gt;
+	<span class="strong">&lt;div style="position: static">abc&lt;/div></span>
 	<span class="strong">123456789</span>
 &lt;/div&gt;
 				</code></pre>
@@ -125,6 +130,7 @@
 							position: absolute;
 							top: 50px;
 						"></div>
+						<div style="position: static">abc</div>
 						123456789
 					</div>
 				</div>

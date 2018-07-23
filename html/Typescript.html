@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Typescript</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/sidebar.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">Typescript</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				Typescript 是 Javscript 的超集，即对 Javascript 的拓展，以 .ts 为后缀名。
+				<div class="tip">
+					由于是超集因此在 ts 里 Javascript 代码都不会报错，而是会原样编译为 js 文件。
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>安装 & 使用</h2>
+			<p>
+				<h3>npm</h3>
+				<p>
+					全局安装 typescript。
+					<pre><code class="shell">
+$ npm install -g typescript
+					</code></pre>
+				</p>
+				<h3>使用</h3>
+				<p>
+					将 ts 文件编译为 js 文件，文件名默认与 ts 文件一样。
+					<pre><code class="shell">
+$ tsc 文件名.ts
+					</code></pre>
+					监听编译，当目标文件改变时自动进行编译。
+					<pre><code class="shell">
+$ tsc -w 文件名.ts
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>类型检测</h2>
+			<p>
+				使用 ts 可以对变量类型、参数类型、函数返回值类型进行类型检测。
+				<pre><code class="typescript">
+let 变量名: 数据类型 = 值;
+
+function 函数名(形参名: 数据类型): 数据类型 {
+	// ...
+}
+				</code></pre>
+				使用<span class="definition"> :数据类型 </span>来进行检测，数据类型有：
+				<ul>
+					<li>any：不限制类型</li>
+					<li>null：即 null</li>
+					<li>undefined：即 undefined</li>
+					<li>void：对于变量表示 null 或 undefined，对于函数表示无返回值</li>
+					<li>number：浮点数字</li>
+					<li>boolean：布尔型</li>
+					<li>string：字符串</li>
+					<li>Array&lt;数据类型&gt;：所有元素都是指定数据类型的数组</li>
+					<li>[数据类型1, 数据类型2, ...]：所有元素一一对应的数组</li>
+					<li>object：一切对象</li>
+					<li>Date、RegExp 等：对应的对象实例</li>
+				</ul>
+				当不符合类型检测时将编译报错，并且只是报错，剩下的依旧乖乖编译完成。
+				<pre><code class="javscript">
+// 编译前
+const s: number = 'a'; // 类型错误
+s = 'b'; // 常量赋值
+// 编译后
+var s = 'a'; // 类型错误
+s = 'b'; // 常量赋值
+// 报错内容
+index.ts(1,7): error TS2322: Type '"a"' is not assignable to type 'number'.
+index.ts(2,1): error TS2540: Cannot assign to 's' because it is a constant or a read-only property.
+				</code></pre>
+				<h3>枚举</h3>
+				<p>
+					ts 新增了关键字 enum 用于创建枚举类型。
+					<pre><code class="typescript">
+enum 名 {键 = 值};
+// 例子
+enum e {key = 'value'};
+e.key // => value
+// 等价于
+var e = {
+	key: 'value'
+}
+					</code></pre>
+					其中<span class="definition"> 键 </span>是字符串类型，类似于 {} 的键，<span class="definition"> 值 </span>是字符串或数字，不写时默认从 0 开始递增。
+					<pre><code class="typescript">
+enum Name {Jack, Tom};
+Name.Jack // => 0
+Name.Tom // => 1
+					</code></pre>
+					当值为数值时，枚举类型其实是一种双向映射，既可以用<span class="definition"> 名.键 </span>来获取<span class="definition"> 名.值 </span>，也可以用<span class="definition"> 名[值] </span>来获取<span class="definition"> 名.键 </span>
+					<pre><code class="typescript">
+// 编译前
+enum e {key = 1};
+// 编译后
+var e;
+(function (e) {
+    e[e["key"] = 1] = "key";
+})(e || (e = {}));
+// 编译后等价于
+var e = {
+	key: 1,
+	1: 'key'
+}
+
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>类</h2>
+			<p>
+				创建、使用类和接口：
+				<ul>
+					<li>class 与 extends</li>
+					<li>interface 与 implements</li>
+				</ul>
+				新增修饰符：
+				<ul>
+					<li>private：private 成员，只允许内部访问（无法通过 实例.成员名 来访问），不会继承给子类</li>
+					<li>protected：protected 成员，只能内部访问，但会继承给子类</li>
+					<li>abstract：定义抽象类</li>
+				</ul>
+				<h3>class</h3>
+				<p>
+					ts 的类与 ES6 的类类似，且更趋近于其他高级语言，以不同语言写一个加法类（默认返回 1 + 1）。
+					<h4>Java</h4>
+					<pre><code class="java">
+class Add {
+	int a = 1;
+	int b = 1;
+	Add (int a, int b) {
+		this.a = a;
+		this.b = b;
+	}
+	int getSum () {
+		return a + b;
+	}
+}
+					</code></pre>
+					<h4>ES6</h4>
+					<pre><code class="javascript">
+class Add {
+	constructor (a = 1, b = 1) {
+		this.a = a;
+		this.a = b;
+	}
+	getSum () {
+		return this.a + this.b;
+	}
+}
+					</code></pre>
+					<h4>Typescript</h4>
+					<pre><code class="typescript">
+class Add {
+	a: number = 1;
+	b: number = 1;
+	constructor (a: number, b: number) {
+		this.a = a;
+		this.b = a;
+	}
+	getSum (): number {
+		return this.a + this.b;
+	}
+}
+					</code></pre>
+				</p>
+				<h3>接口</h3>
+				<p>
+					接口是 ES6 未具有的语法，功能与其他高级语言基本类似。
+					<h4>创建接口</h4>
+					在接口内，<span class="definition"> : </span>前添加<span class="definition"> ? </span>表示接口被实现的时候该成员可以省略，否则该成员必须被创建。
+					<pre><code class="typescript">
+interface Person {
+	name: string;
+	money?: number;
+	walk (distence: number);
+}
+					</code></pre>
+					<h4>使用接口</h4>
+					实现接口的时候最低限度（最精简）如下：
+					<pre><code class="typescript">
+class Me implements Person {
+	name;
+	walk(){}
+}
+					</code></pre>
+					完整版本应该是：
+					<pre><code class="typescript">
+class Me implements Person {
+	name: string = 'wahaha';
+	money: number = 0;
+	constructor () {}
+	walk (distence: number) {
+		console.log('你走了' + distence + '步');
+	}
+}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<div>
+				[1] TypeScript Handbook（中文版） <a href="https://www.runoob.com/manual/gitbook/TypeScript/_book/index.html">https://www.runoob.com/manual/gitbook/TypeScript/_book/index.html</a>
+			</div>
+		</section>
+	</article>
+</body>
+</html>
