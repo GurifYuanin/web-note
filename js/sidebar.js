@@ -1,3 +1,6 @@
+// 初始化语法高亮
+hljs.initHighlightingOnLoad();
+// sidebar
 $(function() {
     function surroundedByTag(source, tag) {
         if (tag === 'a') {

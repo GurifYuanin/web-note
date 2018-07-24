@@ -9,7 +9,6 @@
 	<script src="../js/jquery-3.2.1-compressed.js"></script>
 	<script src="../js/highlight.pack.js"></script>
 	<script src="../js/sidebar.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
 	<aside id="sidebar">
@@ -30,7 +29,7 @@
 			<p>
 				Typescript 是 Javscript 的超集，即对 Javascript 的拓展，以 .ts 为后缀名。
 				<div class="tip">
-					由于是超集因此在 ts 里 Javascript 代码都不会报错，而是会原样编译为 js 文件。
+					由于是超集，因此在 ts 里 Javascript 原生代码都不会报错，而是会原样编译为 js 文件。
 				</div>
 			</p>
 		</section>
@@ -46,13 +45,42 @@ $ npm install -g typescript
 				</p>
 				<h3>使用</h3>
 				<p>
-					将 ts 文件编译为 js 文件，文件名默认与 ts 文件一样。
+					将 ts 文件编译为 js 文件，文件名默认与 ts 文件一样，且编译后的 js 文件在 ts 文件同级目录下。
 					<pre><code class="shell">
-$ tsc 文件名.ts
+$ tsc 文件匹配
 					</code></pre>
 					监听编译，当目标文件改变时自动进行编译。
 					<pre><code class="shell">
-$ tsc -w 文件名.ts
+$ tsc -w 文件匹配
+					</code></pre>
+					使用配置文件所指定的进行编译，从当前目录开始向根找 tsconfig.json 文件。
+					<pre><code class="shell">
+$ tsc
+					</code></pre>
+				</p>
+				<h3>tsconfig.json</h3>
+				<p>
+					<pre><code class="json">
+{
+	"compileOnSave": true, // 文件修改时自动编译
+	"compilerOptions": {
+		"module": "commonjs",
+    	"noImplicitAny": true,
+    	"removeComments": true,
+    	"preserveConstEnums": true,
+    	"outFile": "src/js/main.js", // 编译输出的文件
+    	"sourceMap": true
+	},
+	"files": [
+		"index.ts" // 指定具体文件编译
+    ],
+    "include": [
+        "src/ts/*.ts" // 使用 glob 匹配文件编译
+    ],
+    "exclude": [
+        "node_modules" // 使用 glob 匹配文件不编译
+    ]
+}
 					</code></pre>
 				</p>
 			</p>
@@ -203,14 +231,14 @@ interface Person {
 }
 					</code></pre>
 					<h4>使用接口</h4>
-					实现接口的时候最低限度（最精简）如下：
+					实现接口的时候最低限度（最精简）如下，因为 money 变量是可选的，所以可以省略不实现。
 					<pre><code class="typescript">
 class Me implements Person {
 	name;
 	walk(){}
 }
 					</code></pre>
-					完整版本应该是：
+					最完整版本应该是：
 					<pre><code class="typescript">
 class Me implements Person {
 	name: string = 'wahaha';
@@ -218,6 +246,70 @@ class Me implements Person {
 	constructor () {}
 	walk (distence: number) {
 		console.log('你走了' + distence + '步');
+	}
+}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>函数</h2>
+			<p>
+				ts 对函数拓展了以下特性：
+				<ul>
+					<li>支持形参和返回值的类型检查</li>
+					<li>支持泛型</li>
+					<li>支持重载</li>
+				</ul>
+				<h3>类型检查</h3>
+				<p>
+					检查参数的类型和返回值的类型，声明和使用时不符合类型时将报错，并且默认不能省略。若允许省略，则在 : 前添加一个 ?，且该可选参数必须在必须参数之后。
+					<pre><code class="typescript">
+function add(a: number, b: number, c?: number): number {
+	return a + b;
+}
+
+add(1, '2');
+// '2' 是字符串而不是数字
+// error TS2345: Argument of type '"2"' is not assignable to parameter of type 'number'.
+					</code></pre>
+				</p>
+				<h3>泛型</h3>
+				<p>
+					泛型是指声明函数的时候不确定类型，先用<span class="definition"> T </span>占位，函数被调用时进行指定，此时函数在执行中才确定类型：<span class="definition"> 函数名<类型>(参数) </span>。以下的 getArr 函数返回一个长度为 10，元素类型任意，所有元素都是传入的参数的数组：
+					<pre><code class="javascript">
+function getArr&lt;T>(element: T): Array&lt;T> {
+	let arr = new Array();
+	for (let i = 0; i < 10; i++) {
+		arr.push(element);
+	}
+	return arr;
+}
+
+const arr1 = getArr(1); // => [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
+const arr2 = getArr('1'); // => [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ]
+					</code></pre>
+					这种方法不等价于 any ，因为 any 表示任意一种类型，因此可以随意使用。而 T 表示任意一种类型都有可能，但在未确定之前不能随便使用，例如写法以下会报错：
+					<pre><code class="javascript">
+function getLength&lt;T>(arr: T): number {
+	return arr.length;
+}
+// error TS2339: Property 'length' does not exist on type 'T'.
+					</code></pre>
+					arr 是泛型，但不一定是数组、字符串等这些有 length 属性的类型，所以不允许直接使用 arr.length。
+				</p>
+				<h3>重载</h3>
+				<p>
+					js 是弱类型语言，因此无法实现函数的重载。ts 实现重载需要在函数声明之前定义好参数可能传入的类型，实际声明时不对参数进行类型检测，在函数内才进行类型检查。
+					<pre><code class="typescript">
+function sum (a: Array&lt;number>, b: Array&lt;number>) :number; // 预期：当传入数组时，将所有元素求和
+function sum (a: number, b: number): number; // 预期：当传入数字时，相加后返回
+function sum (a, b) {
+	// 然而还是要自己进行类型判断
+	if (Array.isArray(a) && Array.isArray(b)) {
+		return a.reduce((a, b) => a + b) + b.reduce((a, b) => a + b);
+	} else {
+		return a + b;
 	}
 }
 					</code></pre>
