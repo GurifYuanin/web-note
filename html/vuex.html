@@ -50,13 +50,13 @@ Vue.use(Vuex);
 		<section>
 			<h2>定义</h2>
 			<p>
-				Vuex 类似创建了一个仓库，可以将所有组件都需要的数据和方法存放到这个仓库里，并提供给所有组件使用。
+				Vuex 类似创建了一个仓库，可以将所有组件都需要的数据和方法存放到这个仓库里，并提供给 <span class="different"> 所有组件 </span> 使用。
 				<pre><code class="javascript">
 // 创建 Vuex 对象
 var store = new Vuex.Store({
 	state: {}, // 存放状态
 	getter: {}, // 存放计算属性
-	mutation: {}, // 存放变更状态的方法
+	mutations: {}, // 存放变更状态的方法
 	actions: {}, // 存放异步操作的方法
 	modules: {} // 模块化 store
 });
@@ -121,12 +121,12 @@ console.log(store.getters.teerg);
 			</p>
 		</section>
 		<section>
-			<h2>mutation & action</h2>
+			<h2>mutations & actions</h2>
 			<p>
-				mutation 和 action 都是方法，mutation 用于修改 state ，action 用于提交异步操作。
-				<h3>mutation</h3>
+				mutations 和 actions 都是方法，mutations 用于修改 state ，actions 用于提交异步操作。
+				<h3>mutations</h3>
 				<ol>
-					<li>在 Vuex 中声明 mutation，自动传入 state 对象作为第一个参数，调用时可以传入第二个参数，无法传递多余参数</li>
+					<li>在 Vuex 中声明 mutations，自动传入 state 对象作为第一个参数，调用时可以传入第二个参数，无法传递多余参数</li>
 					<pre><code class="javascript">
 new Vuex.Store({
 	mutations: {
@@ -136,7 +136,7 @@ new Vuex.Store({
 	}
 })
 					</code></pre>
-					<li>调用时需要使用 commit('mutation名', 参数)</li>
+					<li>调用时需要使用 commit('mutations名', 参数)</li>
 					<pre><code class="javascript">
 export default {
 	created: function () {
@@ -145,9 +145,9 @@ export default {
 }
 					</code></pre>
 				</ol>
-				<h3>action</h3>
+				<h3>actions</h3>
 				<ol>
-					<li>在 Vuex 中声明 action，传入 context 对象作为第一个参数，调用时可以传入第二个参数，无法传递多余参数</li>
+					<li>在 Vuex 中声明 actions，传入 context 对象作为第一个参数，调用时可以传入第二个参数，无法传递多余参数</li>
 					<pre><code class="javascript">
 new Vuex.Store({
 	actions: {
@@ -160,7 +160,7 @@ new Vuex.Store({
 	}
 })
 					</code></pre>
-					<li>调用时需要使用 dispatch('action名', 参数)</li>
+					<li>调用时需要使用 dispatch('actions名', 参数)</li>
 					<pre><code class="javascript">
 export default {
 	created: function () {
@@ -194,7 +194,7 @@ new Vuex.Store({
 					return state.greet.reverse();
 				}
 			},
-			mutations: {
+			mutationss: {
 				updateGreet (state, string) {
 					// 同样，state 访问的是该模块内的 state
 					state.greet = string;
@@ -203,8 +203,8 @@ new Vuex.Store({
 			actions: {
 				asyncUpdateGreet (context, string) {
 					// 同样，context 访问的是该模块的上下文
-					// context.commit|dispatch('updateGreet', '') 访问模块内的 mutation
-					// context.commit|dispatch('updateGreet', '', {root: true}) 访问全局的 mutation
+					// context.commit|dispatch('updateGreet', '') 访问模块内的 mutations
+					// context.commit|dispatch('updateGreet', '', {root: true}) 访问全局的 mutations
 					context.commit('updateGreet', string);
 				}
 			}
@@ -225,7 +225,7 @@ export default {
 }
 				</code></pre>
 				<h3>使用：开启了 namespaced</h3>
-				开启了 namespaced 后，使用 getter 、 mutation 和 action 时需要添加前缀。
+				开启了 namespaced 后，使用 getter 、 mutation 和 actions 时需要添加前缀。
 				<pre><code class="javascript">
 export default {
 	created: function () {
@@ -236,6 +236,81 @@ export default {
 	}
 }
 				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>映射</h2>
+			<p>
+				当使用 store 时，有时候需要繁琐重复地敲 <span class="different"> store.state.xxx </span> 或 <span class="different"> this.$store.state.xxx </span>
+				<pre><code class="javascript">
+var store = new Vuex.Store({
+	state: {a: 1}
+});
+// 方式一，直接使用
+console.log(store.state.a)
+// 方式二，在 .vue 文件内
+export default {
+	store: store,
+	created: function () {
+		console.log(this.$store.state.a);
+	}
+}
+				</code></pre>
+				使用 vuex 的映射函数，配合 ES6 的对象展开符<span class="definition"> ... </span>，使得在单元文件内使用 vuex 时减少书写工作。
+				<div class="tip">下面会使用 ES6 的部分新特性：对象展开符、模块导入、箭头函数。</div>
+				<h3>state</h3>
+				<p>
+					使用 mapState 函数将 state 映射到计算属性上。
+					<ol>
+						<li>将 state.a 映射为 this.b 使用第一种写法</li>
+						<li>当想把 state.a 映射为 this.a 时可以使用第二种写法</li>
+						<li>当使用 module 时（假设为 md），使用第三种或者第四种写法</li>
+					</ol>
+					<pre><code class="javascript">
+import {mapState} from 'vuex';
+export default {
+	computed: {
+		...mapState({
+			b: state => state.a // 第一种写法
+		}),
+		...mapState('a'), // 第二种写法
+		...mapState('md', {
+			b: state => state.a // 第三种写法
+		}),
+		...mapState('md', ['a']) // 第四种写法
+	}
+}
+					</code></pre>
+					将 this.$store.state.a 映射到计算属性 this.b，上面代码相当于：
+					<pre><code class="javascript">
+export default {
+	computed: {
+		b: function () {
+			return this.$store.state.a;
+		}
+	}
+}
+					</code></pre>
+				</p>
+				<h3>actions</h3>
+				<p>
+					使用 mapActions 将 actions 映射到 methods 上，方法同理。
+					<pre><code class="javascript">
+import {mapActions} from 'vuex';
+export default {
+	methods: {
+		...mapActions({
+			b: 'a'
+		}),
+		...mapActions(['a']),
+		...mapActions('md', {
+			b: 'a'
+		}),
+		...mapActions('md', ['a'])
+	}
+}
+					</code></pre>
+				</p>
 			</p>
 		</section>
 		<section class="refer">

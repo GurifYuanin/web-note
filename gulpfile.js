@@ -22,7 +22,7 @@ gulp.task('copycss', function(){
 });
 // 监听 sass 编译
 gulp.task('sass', function () {
-    gulp.src('./scss/*.scss')
+    gulp.src(['./scss/dark.scss', './scss/bright.scss'])
         .pipe(sass({
             outputStyle: 'compressed'
         }))

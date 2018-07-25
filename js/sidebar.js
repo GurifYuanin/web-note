@@ -221,6 +221,7 @@ $(function() {
     // 绘制直线
     var lineLength = getViewport().width / 3;
     $title.after('<svg style="display: block; margin: auto; width:' + lineLength + 'px" xmlns="http://www.w3.org/2000/svg" version="1.1" height="1px"><path id="line" d="M 0 0 L ' + lineLength + ' 0" style="stroke: #000; stroke-width: 1; stroke-dasharray: ' + lineLength + '; stroke-dashoffset: ' + lineLength + '; fill: none;"/></svg>');
+    $title.attr('title', '点击切换样式');
     var $line = $('#line');
     // 文章标题事件
     $title.mouseover(function() {
@@ -243,7 +244,13 @@ $(function() {
             'stroke-dashoffset': lineLength
         }, 'fast');
     });
-
+    // 文章标题点击后变换样式
+    var isBright = true;
+    var $theme = $('#theme');
+    $title.click(function () {
+        $theme.attr('href', isBright ? '../css/dark.css' : '../css/bright.css');
+        isBright = !isBright;
+    });
     function widthAndMargin(start, end, piece, time) {
         // width: start% -> end%
         // margin: 0 4% -> 0 5%

@@ -1,0 +1,30 @@
+$imgSize: 2rem;
+
+$backgroundColor: #fefefe;
+/* 侧栏 */
+$sidebarBackgroundColor: #efefef; // 侧栏背景色
+$itemBackgroundColor: #eee; // 条目块背景色
+$itemHoverBackgroundColor: #f4f4f4; // 条目悬浮背景颜色
+$itemBorderColor: #888; // 边框颜色
+$itemHoverBorderColor: #000; // 悬浮时边框颜色
+$borderColor: #444;
+$catalogColor: #444; // 类别前景色
+
+/* 正文 */
+$contentColor: #444; // 正文字体颜色
+$titleColor: #222; // 子标题颜色
+
+$linkColor: #822; // 超链接颜色
+$linkHover: #eee; // 超链接悬浮颜色
+
+$tableDeepColor: #222; // 图表深色
+$tableShallow: #fff; // 图表浅色
+
+$subTitleToggleSize: 4rem; // 右下角四个块大小
+$blockColor: #bbb #ddd #ddd #bbb; // 四个块颜色
+$blockLength: length($blockColor); // 块数
+
+$deviceThreshold: 601px; // 侧栏隐藏阈值
+
+
+@import './sidebar.scss';

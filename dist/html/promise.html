@@ -9,7 +9,6 @@
 	<script src="../js/jquery-3.2.1-compressed.js"></script>
 	<script src="../js/highlight.pack.js"></script>
 	<script src="../js/sidebar.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
 	<aside id="sidebar">
@@ -50,6 +49,7 @@ var 实例 = new Promise(function(resolve, reject) {
 	// reject 函数
 });
 				</code></pre>
+				通俗地将，我们在<span class="different"> new Promise(function(resolve, reject) { //... }) </span>中写入代码，使用<span class="different"> resolve(data) </span>传递代码执行成功后得到的数据，使用<span class="different"> reject(error) </span>传递代码执行失败后得到的错误信息。然后使用<span class="different"> 实例对象.then(function(data) {}) </span>拿到成功时的数据，使用<span class="different"> .catch(function(error) {}) </span>拿到失败时的错误信息。
 			</p>
 		</section>
 		<section>

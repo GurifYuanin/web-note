@@ -294,6 +294,31 @@ instance.next().value.then(function(data) {
 					<img src="../images/generator_async.gif" style="border: solid 1px #444;">
 					<figcaption>控制台 3s 后输出内容</figcaption>
 				</figure>
+				这种方法其实和直接使用 promise 效果一样，但可以在 generator 函数内写多个 yield，然后使用 instance.next() 进行多次的异步操作。
+				<pre><code class="javascript">
+function* gen () {
+	yield new Promise(function(resolve, reject){
+		setTimeout(function() {
+			resolve('1s');
+		}, 1000);
+	});
+	yield new Promise(function(resolve, reject){
+		setTimeout(function() {
+			resolve('2s');
+		}, 1000);
+	});
+}
+
+var instance = gen();
+instance.next().value.then(function(data) {
+	console.log(data);
+	instance.next().value.then(function(data) {
+		console.log(data);
+});
+				</code></pre>
+				<figure>
+					<img src="../images/generator_async_2.gif" alt="">
+				</figure>
 			</p>
 		</section>
 		<section class="refer">
