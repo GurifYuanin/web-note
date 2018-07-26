@@ -205,15 +205,20 @@ $(function() {
     </aside>
     */
     // 点击类别开关子项
+    var isBright = true;
+    var arrBrightDown = '../images/slide_down.png';
+    var arrBrightUp = '../images/slide_up.png';
+    var arrDarkDown = '../images/slide_down_dark.png';
+    var arrDarkUp = '../images/slide_up_dark.png';
     var $itemHead = $('#sidebar h3');
     $itemHead.each(function(){
         var that = $(this),
             img = that.children();
         that.click(function() {
-            if (img.attr('src') === '../images/slide_down.png') {
-                img.attr('src', '../images/slide_up.png');
+            if (img.attr('src') === arrBrightDown || img.attr('src') === arrDarkDown) {
+                img.attr('src', isBright ? arrBrightUp : arrDarkUp);
             } else {
-                img.attr('src', '../images/slide_down.png');
+                img.attr('src', isBright ? arrBrightDown : arrDarkDown);
             }
             that.next().slideToggle('slow');
         });
@@ -245,12 +250,16 @@ $(function() {
         }, 'fast');
     });
     // 文章标题点击后变换样式
-    var isBright = true;
-    var $theme = $('#theme');
+    
+    var $theme = $('link').eq(2);
+    var $codeStyle = $('link').eq(1);
     $title.click(function () {
         $theme.attr('href', isBright ? '../css/dark.css' : '../css/bright.css');
+        $codeStyle.attr('href', isBright ? '../css/styles/agate.css' : '../css/styles/default.css');
+        $('#sidebar h3 img').attr('src', isBright ? arrDarkUp : arrBrightUp);
         isBright = !isBright;
     });
+    // $title.click();
     function widthAndMargin(start, end, piece, time) {
         // width: start% -> end%
         // margin: 0 4% -> 0 5%

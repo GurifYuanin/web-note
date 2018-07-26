@@ -1,30 +1,3 @@
-// $imgSize: 2rem;
-
-// /* 侧栏 */
-// $sidebarBackgroundColor: #efefef; // 侧栏背景色
-// $itemBackgroundColor: #eee; // 条目块背景色
-// $itemHoverBackgroundColor: #f4f4f4; // 条目悬浮背景颜色
-// $itemBorderColor: #888; // 边框颜色
-// $itemHoverBorderColor: #000; // 悬浮时边框颜色
-// $borderColor: #444;
-// $catalogColor: #444; // 类别前景色
-
-// /* 正文 */
-// $contentColor: #444; // 正文字体颜色
-// $titleColor: #222; // 子标题颜色
-
-// $linkColor: #822; // 超链接颜色
-// $linkHover: #eee; // 超链接悬浮颜色
-
-// $tableDeepColor: #222; // 图表深色
-// $tableShallow: #fff; // 图表浅色
-
-// $subTitleToggleSize: 4rem; // 右下角四个块大小
-// $blockColor: #bbb #ddd #ddd #bbb; // 四个块颜色
-// $blockLength: length($blockColor); // 块数
-
-// $deviceThreshold: 601px; // 侧栏隐藏阈值
-
 @mixin getFixedPosition($flag: "block") {
     position: fixed;
     left: 0;
@@ -183,6 +156,7 @@ body {
     }
     /* 类别 */
     h3 {
+        transition: color .5s;
         font-size: 1.5rem;
         font-weight: normal;
 
@@ -201,6 +175,7 @@ body {
     }
     /* 条目块*/
     div {
+        transition: all .5s;
         margin: 5% auto;
         border: solid 1px $itemBorderColor;
         border-radius: 5px;
@@ -214,16 +189,19 @@ body {
             border: solid 1px $itemHoverBorderColor;
 
             background-color: $itemHoverBackgroundColor;
+            a {
+                color: $itemDivHoverColor;
+            }
         }
         a {
             font-size: 1rem;
             text-decoration: none;
 
-            color: #444;
+            color: $itemColor;
             &:hover {
                 font-weight: bold;
 
-                color: #111;
+                color: $itemHoverColor;
             }
         }
     }
@@ -281,6 +259,7 @@ body {
     #title {
         height: 3rem;
 
+        color: $titleColor;
         font-size: 3rem;
         line-height: 3rem;
         text-align: center;
@@ -292,22 +271,32 @@ body {
 
     /* 每一节 */
     section {
+        transition: all .5s;
+
         border-bottom: solid 1px $borderColor;
 
         color: $contentColor;
+        h2, h3, h4, h5, h6 {
+            color: $headColor;
+        }
         h2:before {
+            color: $h2Color;
             content: " - ";
         }
         h3:before {
+            color: $h3Color;
             content: " - - ";
         }
         h4:before {
+            color: $h4Color;
             content: " - - - ";
         }
         h5:before {
+            color: $h5Color;
             content: " - - - - ";
         }
         h6:before {
+            color: $h6Color;
             content: " - - - - - ";
         }
     }
@@ -338,10 +327,10 @@ body {
                 display: inline-block;
                 margin: 5px;
                 padding: 5px;
-                border: dotted 1px #000;
+                border: dotted 1px $strongBorderColor;
                 border-radius: 5px;
 
-                background-color: #fff;
+                background-color: $strongBackgroundColor;
             }
         }
     }
@@ -355,11 +344,12 @@ body {
     }
     /* 提示块 */
     .tip {
-        border-left: solid 2px #222;
+        border-left: solid 2px $tipBorderColor;
         border-radius: 0 5px 5px 0;
         padding: .5rem;
 
-        background-color: #eee;
+        color: $tipColor;
+        background-color: $tipBackgroundColor;
     }
     /* 术语 */
     .definition {
@@ -369,8 +359,8 @@ body {
         margin: 0 1px;
         font-size: 1rem;
 
-        color: white;
-        background-color: rgb(170, 170, 255);
+        color: $definitionColor;
+        background-color: $definitionBackGroundColor;
     }
     /* 突出文字 */
     .different {
@@ -512,6 +502,7 @@ body {
         > li {
             cursor: pointer;
 
+            color: $SEItmeColor;
             width: inherit;
             padding: 5px 0;
 

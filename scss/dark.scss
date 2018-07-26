@@ -1,31 +1,50 @@
 $imgSize: 2rem;
 
-$backgroundColor: rgb(254, 254, 254);
+$backgroundColor: #464646; // 背景颜色
 
 /* 侧栏 */
-$sidebarBackgroundColor: #efefef; // 侧栏背景色
-$itemBackgroundColor: #eee; // 条目块背景色
+$sidebarBackgroundColor: #464646; // 侧栏背景色
+$catalogColor: #fff; // 侧栏主块类别前景色
+$itemColor: #ccc; // 条目块颜色
+$itemHoverColor: #111; // 条目块悬浮时颜色
+$itemDivHoverColor: #111; // 条目块的父块悬浮时颜色
+$itemBackgroundColor: #444; // 条目块背景色
 $itemHoverBackgroundColor: #f4f4f4; // 条目悬浮背景颜色
-$itemBorderColor: #888; // 边框颜色
-$itemHoverBorderColor: #000; // 悬浮时边框颜色
-$borderColor: #444;
-$catalogColor: #444; // 类别前景色
+$itemBorderColor: #666; // 条目边框颜色
+$itemHoverBorderColor: #fff; // 条目悬浮时边框颜色
+$SEItmeColor: black;
 
 /* 正文 */
-$contentColor: #444; // 正文字体颜色
-$titleColor: #222; // 子标题颜色
+$linkColor: #ddd; // 超链接颜色
+$linkHover: #444; // 超链接悬浮背景颜色
 
-$linkColor: #822; // 超链接颜色
-$linkHover: #eee; // 超链接悬浮颜色
-
-$tableDeepColor: #222; // 图表深色
-$tableShallow: #fff; // 图表浅色
+$tableDeepColor: #efefef; // 图表深色
+$tableShallow: #222; // 图表浅色
 
 $subTitleToggleSize: 4rem; // 右下角四个块大小
-$blockColor: #bbb #ddd #ddd #bbb; // 四个块颜色
+$blockColor: #333 #222 #222 #333; // 四个块颜色
 $blockLength: length($blockColor); // 块数
 
-$deviceThreshold: 601px; // 侧栏隐藏阈值
 
+$titleColor: #fff; // 标题颜色
+$contentColor: #fcfcfc; // 正文字体颜色
+$borderColor: #444; // 默认边框颜色
+
+$headColor: #fff;
+$h2Color: #fff;
+$h3Color: #fff;
+$h4Color: #fff;
+$h5Color: #fff;
+$h6Color: #fff;
+
+$tipColor: #efefef; // 提示框文本颜色
+$tipBackgroundColor: #181818; // 提示框背景色
+$tipBorderColor: #fefefe; // 提示框边框颜色
+$definitionColor: rgb(50, 50, 78);
+$definitionBackGroundColor: #efefef;
+$strongBackgroundColor: inherit;
+$strongBorderColor: white;
+
+$deviceThreshold: 601px; // 侧栏隐藏阈值
 
 @import './sidebar.scss';
