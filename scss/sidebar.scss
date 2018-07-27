@@ -156,7 +156,7 @@ body {
     }
     /* 类别 */
     h3 {
-        transition: color .5s;
+        transition: all .5s;
         font-size: 1.5rem;
         font-weight: normal;
 
@@ -168,7 +168,7 @@ body {
         &:hover {
             font-weight: bold;
 
-            color: #000;
+            color: $catalogHoverColor;
 
             cursor: pointer;
         }
@@ -268,7 +268,6 @@ body {
             cursor: pointer;
         }
     }
-
     /* 每一节 */
     section {
         transition: all .5s;
@@ -450,6 +449,7 @@ body {
     /* 页脚上下页 */
     #footer {
         margin: 1% 0;
+        color: $footerColor;
         .prePage {
             float: left;
 

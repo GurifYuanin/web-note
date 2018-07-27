@@ -4,7 +4,8 @@ $backgroundColor: #464646; // 背景颜色
 
 /* 侧栏 */
 $sidebarBackgroundColor: #464646; // 侧栏背景色
-$catalogColor: #fff; // 侧栏主块类别前景色
+$catalogColor: #eee; // 侧栏主块类别前景色
+$catalogHoverColor: white; // 侧栏主块悬浮前景色
 $itemColor: #ccc; // 条目块颜色
 $itemHoverColor: #111; // 条目块悬浮时颜色
 $itemDivHoverColor: #111; // 条目块的父块悬浮时颜色
@@ -31,6 +32,7 @@ $contentColor: #fcfcfc; // 正文字体颜色
 $borderColor: #444; // 默认边框颜色
 
 $headColor: #fff;
+$footerColor: white; // 页脚颜色
 $h2Color: #fff;
 $h3Color: #fff;
 $h4Color: #fff;
