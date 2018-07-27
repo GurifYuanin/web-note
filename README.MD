@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Web笔记</title>
 </head>
 <body>
     <div id="container">
