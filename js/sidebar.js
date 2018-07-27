@@ -1,5 +1,5 @@
 // 初始化语法高亮
-hljs.initHighlightingOnLoad();
+hljs && hljs.initHighlightingOnLoad();
 // sidebar
 $(function() {
     function surroundedByTag(source, tag) {
@@ -67,7 +67,7 @@ $(function() {
     var items = [
         ['meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'canvas', 'svg'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
-        ['数据类型', '数组和字符串', '循环', '作用域链', '原型链', '闭包', '事件', '同源策略', 'Class', 'JSONP', 'this', 'jquery', 'promise', 'Generator', 'Typescript'],
+        ['数据类型', '数组字符串与对象', '循环', '作用域链', '原型链', '闭包', '事件', '同源策略', 'Class', 'JSONP', 'this', 'jquery', 'promise', 'Generator', 'Typescript'],
         ['commonJS', 'package.json', 'path', 'process', 'webpack', 'plugins', 'loader'],
         ['安装', '实例', '模版', '组件', 'mixins', 'router', 'vuex'],
         ['响应式布局', 'bootstrap'],
@@ -225,7 +225,7 @@ $(function() {
     });
     // 绘制直线
     var lineLength = getViewport().width / 3;
-    $title.after('<svg style="display: block; margin: auto; width:' + lineLength + 'px" xmlns="http://www.w3.org/2000/svg" version="1.1" height="1px"><path id="line" d="M 0 0 L ' + lineLength + ' 0" style="stroke: #000; stroke-width: 1; stroke-dasharray: ' + lineLength + '; stroke-dashoffset: ' + lineLength + '; fill: none;"/></svg>');
+    $title.after('<svg style="display: block; margin: auto; width:' + lineLength + 'px" xmlns="http://www.w3.org/2000/svg" version="1.1" height="1px"><path id="line" d="M 0 0 L ' + lineLength + ' 0" style="stroke: #000; stroke-dasharray: ' + lineLength + '; stroke-dashoffset: ' + lineLength + '; fill: none;"/></svg>');
     $title.attr('title', '点击切换样式');
     var $line = $('#line');
     // 文章标题事件
@@ -250,13 +250,17 @@ $(function() {
         }, 'fast');
     });
     // 文章标题点击后变换样式
-    
     var $theme = $('link').eq(2);
     var $codeStyle = $('link').eq(1);
+    var $line = $('#line');
+    var $itemBlockImg = $('#sidebar h3 img');
+    var $hideSidebarImg = $('#hideCatalog');
     $title.click(function () {
         $theme.attr('href', isBright ? '../css/dark.css' : '../css/bright.css');
         $codeStyle.attr('href', isBright ? '../css/styles/agate.css' : '../css/styles/default.css');
-        $('#sidebar h3 img').attr('src', isBright ? arrDarkUp : arrBrightUp);
+        $itemBlockImg.attr('src', isBright ? arrDarkUp : arrBrightUp);
+        $line.css('stroke', isBright ? '#fff' : '#000');
+        $hideSidebarImg.attr('src', isBright ? '../images/catalog_dark.png' : '../images/catalog.png');
         isBright = !isBright;
     });
     // $title.click();
@@ -480,43 +484,48 @@ $(function() {
     var preTitle, nextTitle, indexX, indexY;
     var flag = false;
     var row = items.length;
-    for (var i = 0; i < row; i++) {
-        for (var j = 0; j < items[i].length; j++) {
-            if (currentTitle === items[i][j]) {
-                indexY = j;
-                flag = true;
+    if (currentTitle === 'index') {
+        preTitle = '没有了';
+        nextTitle = items[0][0];
+    } else {
+        for (var i = 0; i < row; i++) {
+            for (var j = 0; j < items[i].length; j++) {
+                if (currentTitle === items[i][j]) {
+                    indexY = j;
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag) {
+                indexX = i;
                 break;
             }
         }
-        if (flag) {
-            indexX = i;
-            break;
-        }
-    }
-    if (indexX === 0){
-        if (indexY === 0) {
-            preTitle = '没有了';
+        if (indexX === 0){
+            if (indexY === 0) {
+                preTitle = '没有了';
+            } else {
+                preTitle = items[indexX][indexY - 1];
+            }
         } else {
-            preTitle = items[indexX][indexY - 1];
+            if (indexY === 0) {
+                preTitle = items[indexX - 1][items[indexX - 1].length - 1];
+            } else {
+                preTitle = items[indexX][indexY - 1];
+            }
         }
-    } else {
-        if (indexY === 0) {
-            preTitle = items[indexX - 1][items[indexX - 1].length - 1];
+        if (indexX === row - 1){
+            if (indexY === items[indexX].length - 1) {
+                nextTitle = '没有了';
+            } else {
+                nextTitle = items[indexX][indexY + 1];
+            }
         } else {
-            preTitle = items[indexX][indexY - 1];
-        }
-    }
-    if (indexX === row - 1){
-        if (indexY === items[indexX].length - 1) {
-            nextTitle = '没有了';
-        } else {
-            nextTitle = items[indexX][indexY + 1];
-        }
-    } else {
-        if (indexY === items[indexX].length - 1) {
-            nextTitle = items[indexX + 1][0];
-        } else {
-            nextTitle = items[indexX][indexY + 1];
+            if (indexY === items[indexX].length - 1) {
+                nextTitle = items[indexX + 1][0];
+            } else {
+                nextTitle = items[indexX][indexY + 1];
+            }
         }
     }
     preTitle = wrapByA(preTitle);
@@ -531,19 +540,22 @@ $(function() {
             $itemHead.eq(index).click();
         }
     });
-    setTimeout(function() {
-        scrollTo('currentItem', $sidebar);
-        var el = $('#currentItem > a');
-        el.animate({
-            'font-size': '1.25rem',
-            'font-weight': 900
-        },1000, function() {
+    // 将当前浏览的条目展开
+    if (currentTitle !== 'index') {
+        setTimeout(function() {
+            scrollTo('currentItem', $sidebar);
+            var el = $('#currentItem > a');
             el.animate({
-                'font-size': '1rem',
-                'font-weight': 'bold'
-            },1000);
-        });
-    }, 500);
+                'font-size': '1.25rem',
+                'font-weight': 900
+            },1000, function() {
+                el.animate({
+                    'font-size': '1rem',
+                    'font-weight': 'bold'
+                },1000);
+            });
+        }, 500);
+    }
     // $('html').eq(0).css('font-size', getRootFontSize()); // 设置 html（根） 字体大小
     // 侧栏高度自适应
     // $(window).on("load resize",function(){
