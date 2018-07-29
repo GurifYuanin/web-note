@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>viewport</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/bright.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">viewport</h1>
+		</hgroup>
+		<section>
+			<h2>相关概念</h2>
+			<p>
+				<h3>设备像素 / 物理像素</h3>
+				<p>
+					设备像素（device pixel），各个显示器上显示的图像，实际上是由横纵摆放的小方格组成的，如<span class="definition"> 分辨率 1600 x 980 </span>，表示 x 轴方向切割为 1600 份，y 轴方向切割为 980 份，总共 1600 x 980 个小方格。
+					<figure>
+						<img src="../images/viewport_dp.jpg" alt="">
+					</figure>
+				</p>
+				<h3>CSS 像素 / 设备无关像素</h3>
+				<p>
+					CSS像素是一个抽象的单位，主要使用在浏览器上，用来精确的度量（确定）Web页面上的内容。<sup>[1]</sup>
+					<pre><code class="css">
+div {
+	width: 200px;
+	height: 200px;
+}
+					</code></pre>
+					上面定义了宽高都为 200 像素的 div 块，写完以上 css 样式后，会由底层系统的程序将其转换为物理像素，物理像素才是我们最终看到的内容。
+				</p>
+				<h3>设备像素比</h3>
+				<p>
+					设备像素比（device pixel ratio），指的是物理像素和设备无关像素的比例：
+					<div class="command">设备像素比 = 物理像素 / 设备无关像素</div>
+					标准的 PC 设备 DPR 为 1，即在 css 中写的像素和实际显示的像素是 1 比 1 的关系，但在移动端，存在 DPR 为 2 、 3 等情况，实际情况会进行转换。
+					<div class="show"> 比如，css 中 width 和 height 为 1px 的 div ，在 PC 端只会渲染成 1 个像素点，而在移动端(DPR 为 2)会渲染成 4 个像素点。 </div>
+					<figure>
+						<img src="../images/viewport_dpr.jpg" alt="">
+					</figure>
+				</p>
+				<h3>例子：iphone X</h3>
+				<p>
+					iphone X 的像素宽度为 1125，DPR 为 3，也就是说，在 css 中，只需要给元素设置宽度<span class="definition"> width: 375px </span> （1125 / 3 = 375）就可以占满屏幕宽度。如果你是在手机端，可以直接浏览该 demo：<a href="../demo/vw_iphone_x.html"> vm_iphone_x.html </a>。
+					<pre><code class="css">
+div {
+	width: 375px;
+	height: 200px;
+}
+					</code></pre>
+					<figure>
+						<img src="../images/viewport_iphone_x.jpg" alt="">
+						<figcaption>在 chrome dev 上调试，div 占满了宽度</figcaption>
+					</figure>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>viewport</h2>
+			<p>
+				从 <a href="./meta.html"> meta.html </a> 中知道，viewport 可以设置以下属性：
+				<ul>
+					<li>witdh & height：定义 viewport 宽高</li>
+					<li>initial-scale：屏幕的初始缩放比</li>
+					<li>minimum-scale & maximum-scale：最小 / 最大缩放比</li>
+					<li>user-scalable：是否允许手势缩放</li>
+					<li>initial-dpr：初始的 dpr</li>
+				</ul>
+				<h3>width & height</h3>
+				<p>
+					width 和 height 用于定义 viewport 的宽高，以宽度为例子，默认为 980，它可以设置为两种值：
+					<ul>
+						<li>数字</li>
+						<li>device-width</li>
+					</ul>
+					<h4>html</h4>
+					html 的宽高与 viewport 的宽高挂钩，实际上 html 的宽高是以 viewport 的宽高作为参照，html 的宽高等于 viewport 的宽高。
+					<pre><code class="html">
+&lt;meta name="viewport" content="width=350"&gt;
+					</code></pre>
+					<figure>
+						<img src="../images/viewport_html.jpg" alt="">
+						<figcaption>查看 html 标签的宽高</figcaption>
+					</figure>
+					<h4>使用 javascript 查看宽度</h4>
+					<pre><code class="javascript">
+var width = window.innerWidth || document.documentElement.clientWidth  || document.body.clientWidth;
+					</code></pre>
+					<h4>设置固定的 width</h4>
+					当给 viewport 设置了固定值的 width，从 javascript 中获得的 width 值总是前面设置的 width，并且会出现以下现象。
+					<pre><code class="html">
+&lt;meta name="viewport" content="<span class="strong">width=350</span>">
+&lt;div style="height: 400px;<span class="strong">width: 350px;</span> background: linear-gradient(90deg, #000, green, #000);"></div>
+					</code></pre>
+					<figure>
+						<img src="../images/viewport_number.gif" alt="">
+					</figure>
+					由于固定死了 viewport 的大小，当设备的宽高改变的时候，实际上改变不了 viewport 的宽高，页面会以一种缩放的形式缩放到指定 viewport 大小的情况，结合下一部分 device-width 可以更容易理解。
+					<h4>device-width</h4>
+					设置 width 为 device-width 表示 viewport 宽度跟随设备宽度，设备宽度多少 viewport 就是多少。对比固定值：
+					<figure>
+						<img src="../images/viewport_device_width.jpg" alt="">
+					</figure>
+					可以看到，设置为 device-width 后，由于宽度跟随设备，所以浏览时总是能够显示全部的页面，即使页面实际大小远大于设备宽度，也会自动缩放到合适的程度，而设置固定值表示只适配某种宽度的设备。
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 大漠 走向视网膜（Retina）的Web时代 <a href="http://www.w3cplus.com/css/towards-retina-web.html">http://www.w3cplus.com/css/towards-retina-web.html</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

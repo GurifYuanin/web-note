@@ -45,6 +45,6 @@ $definitionBackGroundColor: rgb(170, 170, 255);
 $strongBackgroundColor: #fff;
 $strongBorderColor: #000;
 
-$deviceThreshold: 601px; // 侧栏隐藏阈值
+$deviceThreshold: 801px; // 侧栏隐藏阈值
 
 @import './sidebar.scss';

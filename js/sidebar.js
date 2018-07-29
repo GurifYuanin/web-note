@@ -2,57 +2,37 @@
 hljs && hljs.initHighlightingOnLoad();
 // sidebar
 $(function() {
-    function surroundedByTag(source, tag) {
-        if (tag === 'a') {
-            return '<a href="./' + source + '.html">' + source + '</a><br>';
-        } else {
-            return '<' + tag + '>' + source + '</' + tag + '>';
-        }
+    var viewport = document.createElement('meta');
+    viewport.setAttribute('name', 'viewport');
+    viewport.setAttribute('content', 'width=device-width, initial-scale=1');
+    $('html')[0].appendChild(viewport);
+    function wrapByA(href) {
+        return '<a href="' +
+                (href === '没有了' ? 'javascript:void(0)' : ('./' + href + '.html')) +
+                '">' + href + '</a>';
+    }
+    function wrapByTag(source, tag) {
+        return tag === 'a' ?
+               wrapByA(source) :
+               '<' + tag + '>' + source + '</' + tag + '>';
     }
     // 获得视窗大小
     function getViewport(target) {
         // 使用指定窗口，默认使用当前窗口
         target = target || window;
         // 以此检查 IE8及以前-> 标准模式 -> 怪异模式
-        var width = window.innnerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        var width = window.innerWidth || document.documentElement.clientWidth  || document.body.clientWidth;
         var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
         return {
             'width': width,
             'height': height
         };
     }
-    function wrapByA(href) {
-        if (href === '没有了') {
-            return '<a href="javascript:void(0)">' + href + '</a>';
-        } else {
-            return '<a href="./' + href + '.html">' + href + '</a>';
-        }
-    }
-    // 按照视窗大小定义 html 字体大小
-    function getRootFontSize() {
-        var width = window.innnerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        if (width > 1200) {
-            return 16;
-        }
-        if (width > 800) {
-            return 14;
-        }
-        if (width > 400) {
-            return 12;
-        }
-        return 10;
-    }
     // 滚动到指定 id 的位置
     function scrollTo(name, el) {
-        if (el) {
-            el.animate({scrollTop: $('#' + name).offset().top - 100}, 500);
-            return;
-        }
-        if (name === '返回顶部') {
-            $body.animate({scrollTop: 0}, 500);
-        } else {
-            $body.animate({scrollTop: $('#' + name).offset().top}, 500);
-        }
+        if (name === '返回顶部' || !name) $body.animate({scrollTop: 0}, 500);
+        else if (el) el.animate({scrollTop: $('#' + name).offset().top - 100}, 500);
+        else $body.animate({scrollTop: $('#' + name).offset().top}, 500);
     }
     var url = window.location.href;
     var currentTitle = decodeURI(url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')));
@@ -70,7 +50,7 @@ $(function() {
         ['数据类型', '数组字符串与对象', '循环', '作用域链', '原型链', '闭包', '事件', '同源策略', 'Class', 'JSONP', 'this', 'jquery', 'promise', 'Generator', 'Typescript'],
         ['commonJS', 'package.json', 'path', 'process', 'webpack', 'plugins', 'loader'],
         ['安装', '实例', '模版', '组件', 'mixins', 'router', 'vuex'],
-        ['响应式布局', 'bootstrap'],
+        ['响应式布局', 'bootstrap', 'viewport'],
         ['抓包工具', 'chrome devtools', 'git'],
         ['HTTP'],
         ['CSRF', 'XSS'],
@@ -80,16 +60,12 @@ $(function() {
     // 插入侧栏
     var str = '';
     for (var i = 0; i < category.length; i++) {
-        str += surroundedByTag('<img src="../images/slide_down.png">' + category[i], 'h3');
+        str += wrapByTag('<img src="../images/slide_down.png">' + category[i], 'h3');
         for (var j = 0, tmp = '', insertedId = ''; j < items[i].length; j++) {
-            if (items[i][j] === currentTitle) {
-                insertedId = ' id="currentItem" ';
-            } else {
-                insertedId = '';
-            }
-            tmp += '<div' + insertedId + '>' + surroundedByTag(items[i][j], 'a') + '</div>';
+            insertedId = items[i][j] === currentTitle ? ' id="currentItem" ' : '';
+            tmp += '<div' + insertedId + '>' + wrapByA(items[i][j]) + '</div>';
         }
-        str += surroundedByTag(tmp, 'section');
+        str += wrapByTag(tmp, 'section');
     }
     $sidebar.append(str);
 
@@ -112,7 +88,7 @@ $(function() {
                     reg = eval('/' + value + '/i');
                 }
                 if (reg.test(el)) {
-                    str += surroundedByTag(el.replace(reg, '<span>' + el.match(reg) + '</span>'), 'li');
+                    str += wrapByTag(el.replace(reg, '<span>' + el.match(reg) + '</span>'), 'li');
                 }
             });
         });
@@ -130,9 +106,7 @@ $(function() {
             });
         }
         // 如果按钮为 enter 则自动跳转到第一个 li
-        if (str.trim() === '') {
-            return;
-        }
+        if (str.trim() === '') { return; }
         var list = $('#searchResult li');
         switch (event.keyCode) {
             case 13: {
@@ -205,12 +179,12 @@ $(function() {
     </aside>
     */
     // 点击类别开关子项
-    var isBright = true;
-    var arrBrightDown = '../images/slide_down.png';
-    var arrBrightUp = '../images/slide_up.png';
-    var arrDarkDown = '../images/slide_down_dark.png';
-    var arrDarkUp = '../images/slide_up_dark.png';
-    var $itemHead = $('#sidebar h3');
+    var isBright = true; // 是否处于白天模式
+    var arrBrightDown = '../images/slide_down.png'; // 白天模式下的下箭头
+    var arrBrightUp = '../images/slide_up.png'; // 白天模式下的右箭头
+    var arrDarkDown = '../images/slide_down_dark.png'; // 夜间模式下的下箭头
+    var arrDarkUp = '../images/slide_up_dark.png'; // 夜间模式下的右箭头
+    var $itemHead = $('#sidebar h3'); // catalog
     $itemHead.each(function(){
         var that = $(this),
             img = that.children();
@@ -225,16 +199,14 @@ $(function() {
     });
     // 绘制直线
     var lineLength = getViewport().width / 3;
-    $title.after('<svg style="display: block; margin: auto; width:' + lineLength + 'px" xmlns="http://www.w3.org/2000/svg" version="1.1" height="1px"><path id="line" d="M 0 0 L ' + lineLength + ' 0" style="stroke: #000; stroke-dasharray: ' + lineLength + '; stroke-dashoffset: ' + lineLength + '; fill: none;"/></svg>');
-    $title.attr('title', '点击切换样式');
+    $title.after('<svg title="点击切换样式" style="display: block; margin: auto; width:' + lineLength + 'px" xmlns="http://www.w3.org/2000/svg" version="1.1" height="1px"><path id="line" d="M 0 0 L ' + lineLength + ' 0" style="stroke: #000; stroke-dasharray: ' + lineLength + '; stroke-dashoffset: ' + lineLength + '; fill: none;"/></svg>');
     var $line = $('#line');
     // 文章标题事件
     $title.mouseover(function() {
         $title.animate({
                 'padding-top': '1%',
                 'padding-bottom': '1%'
-            },
-            'fast');
+            },'fast');
         $line.animate({
             'stroke-dashoffset': 0
         }, 'fast');
@@ -243,27 +215,33 @@ $(function() {
         $title.animate({
                 'padding-top': '0',
                 'padding-bottom': '0'
-            },
-            'fast');
+            },'fast');
         $line.animate({
             'stroke-dashoffset': lineLength
         }, 'fast');
     });
     // 文章标题点击后变换样式
-    var $theme = $('link').eq(2);
-    var $codeStyle = $('link').eq(1);
-    var $line = $('#line');
+    var $theme = $('link').eq(2); // 主题颜色
+    var $codeStyle = $('link').eq(1); // 代码颜色
     var $itemBlockImg = $('#sidebar h3 img');
     var $hideSidebarImg = $('#hideCatalog');
     $title.click(function () {
         $theme.attr('href', isBright ? '../css/dark.css' : '../css/bright.css');
         $codeStyle.attr('href', isBright ? '../css/styles/agate.css' : '../css/styles/default.css');
-        $itemBlockImg.attr('src', isBright ? arrDarkUp : arrBrightUp);
         $line.css('stroke', isBright ? '#fff' : '#000');
         $hideSidebarImg.attr('src', isBright ? '../images/catalog_dark.png' : '../images/catalog.png');
+        $itemBlockImg.each(function(index, el) {
+            var src = el.src;
+            el.src = isBright ?
+                     src.substring(0, src.lastIndexOf('.')) + '_dark.png' :
+                     src.substring(0, src.lastIndexOf('_')) + '.png';
+        });
+        $('a').each(function(index, el) {
+            el.href = isBright ? el.href + '?theme=dark' : el.href.replace('?theme=dark', '');
+        });
         isBright = !isBright;
     });
-    // $title.click();
+    if (url.indexOf('?theme=dark') >= 0) $title.click();
     function widthAndMargin(start, end, piece, time) {
         // width: start% -> end%
         // margin: 0 4% -> 0 5%
@@ -279,7 +257,7 @@ $(function() {
         	widthStart = 5;
         	widthInc = - 1 / piece;
         }
-        for (var i = start, delay = 0; i != end; i += valInc, widthStart +=  widthInc,delay += timeInc) {
+        for (var i = start, delay = 0; i !== end; i += valInc, widthStart +=  widthInc,delay += timeInc) {
             (function() {
                 var percentage = i + '%';
                 var margin = '0 ' + widthStart + '%';
@@ -319,7 +297,7 @@ $(function() {
 
     // 展开目录
     $showCatalog.attr('title', '点击显示侧栏');
-    $showCatalog.click(function(event) {
+    $showCatalog.click(function() {
         var width = getViewport().width;
         var padding;
         // 如果视窗大小小于 400 px
@@ -335,8 +313,7 @@ $(function() {
         $sidebar.animate({
                 'width': width,
                 'padding': padding
-            },
-            'slow');
+            },'slow');
 		widthAndMargin(90, 65, 20, 0.5);
     });
     $('a').not('.self').attr('target', '_blank'); // 所有链接默认新标签打开
@@ -355,19 +332,22 @@ $(function() {
     subTitleToggleString = '<div id="subTitleToggle">' + subTitleToggleString + '</div>';
 
     // 点击后子标题置顶到窗口
+    var currentH2 = decodeURI(url.substring(url.indexOf('#') + 1));
+    currentH2 = currentH2.replace(/\?theme=(dark)|(bright)/, '');
     $subTitle.each(function() {
         var name = getName(this.innerHTML);
     	// $(this).html('<a height="50%" id="' + name + '" href="#' + name + '">' + name + '</a>');
         // 子标题包裹为超链接
         $(this).wrap('<a style="height: 50%; margin: 0; padding: 0; text-decoration: none; color: #000;" id="' + name + '" href="#' + name + '"></a>');
         // 点击后滑动窗口
-        $(this).click(function(event) {
+        $(this).click(function() {
             scrollTo(name);
         });
+        if (this.innerHTML === currentH2) $(this).click();
         subTitleNav += '<div class="subTitleItem">' + this.innerHTML + '</div>';
+        // if ()
     });
     subTitleNav = '<div id="subTitleNav">' + subTitleNav + '<div class="subTitleItem">返回顶部</div></div>';
-
     // 右下角子标题导航
     // 添加 html 元素
     $('body').append(subTitleNav + subTitleToggleString);
@@ -481,52 +461,19 @@ $(function() {
     });
 
     // 追加上一篇和下一篇操作
-    var preTitle, nextTitle, indexX, indexY;
-    var flag = false;
-    var row = items.length;
+    var preTitle = '没有了', nextTitle = '没有了', index = 0;
     if (currentTitle === 'index') {
-        preTitle = '没有了';
         nextTitle = items[0][0];
     } else {
-        for (var i = 0; i < row; i++) {
-            for (var j = 0; j < items[i].length; j++) {
-                if (currentTitle === items[i][j]) {
-                    indexY = j;
-                    flag = true;
-                    break;
-                }
-            }
-            if (flag) {
-                indexX = i;
-                break;
-            }
-        }
-        if (indexX === 0){
-            if (indexY === 0) {
-                preTitle = '没有了';
-            } else {
-                preTitle = items[indexX][indexY - 1];
-            }
-        } else {
-            if (indexY === 0) {
-                preTitle = items[indexX - 1][items[indexX - 1].length - 1];
-            } else {
-                preTitle = items[indexX][indexY - 1];
-            }
-        }
-        if (indexX === row - 1){
-            if (indexY === items[indexX].length - 1) {
-                nextTitle = '没有了';
-            } else {
-                nextTitle = items[indexX][indexY + 1];
-            }
-        } else {
-            if (indexY === items[indexX].length - 1) {
-                nextTitle = items[indexX + 1][0];
-            } else {
-                nextTitle = items[indexX][indexY + 1];
-            }
-        }
+        var allItems = [];
+        items.forEach(function(el) {
+            el.forEach(function(ele) {
+                allItems.push(ele);
+            });
+        });
+        index = allItems.indexOf(currentTitle);
+        if (index !== 0) preTitle = allItems[index - 1];
+        if (index !== allItems.length - 1) nextTitle = allItems[index + 1];
     }
     preTitle = wrapByA(preTitle);
     nextTitle = wrapByA(nextTitle);
@@ -534,9 +481,7 @@ $(function() {
 
     // 将不是目前浏览的条目收起来
     items.forEach(function(item, index) {
-        if (item.findIndex(function(el) {
-            return el === currentTitle;
-        }) === -1) {
+        if (item.indexOf(currentTitle) === -1) {
             $itemHead.eq(index).click();
         }
     });
