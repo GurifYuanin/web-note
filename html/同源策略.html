@@ -313,86 +313,95 @@ document.body.appendChild(script);
 						<div>
 							<h4>CORS</h4>
 							<p>
-								CORS(Cross-Origin Resource Sharing)：跨域资源共享是W3C的一个工作草案，定义了不同源资源请求的时候浏览器和服务器如何沟通。也就是说，domain1/a.html页面如果向不同源的domain2/b.html发送ajax请求，对于支持CORS的浏览器(IE10+或其他浏览器)来说不会直接报错，而是在请求中带上发起请求的网页的一些信息，服务器再根据这些信息返回是否同意跨源请求。<br>
-								CORS是浏览器与服务器之间的工作，对于开发者来说和同源情况下使用ajax基本一样，部分情况除外：
+								<div>
+									<code>CORS(Cross-Origin Resource Sharing)：跨域资源共享是 W3C 的一个工作草案，定义了不同源资源请求的时候浏览器和服务器如何沟通。</code>
+								</div>
+								domain1/a.html 页面如果向 domain2/b.html 发送 ajax 请求，对于<span class="different">支持 CORS </span>的浏览器 ( IE10+ 或其他现代浏览器) 来说<span class="different"> 不会直接报错 </span>，而是在请求中带上发起请求的网页的一些信息，服务器再根据这些信息返回是否同意跨源请求。
+								<h5>限制</h5>
+								CORS是浏览器与服务器之间的工作，并且有以下限制：
 								<ul>
-									<li>CORS默认不发送cookie，如果要让浏览器发送cookie，需要设置XHR的withCredentials为true</li>
-									<li>CORS不能通过读取状态码来判断是否成功进行请求，原因需要了解其工作过程</li>
-									<li>CORS默认只能读取Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma这六个响应头部信息</li>
+									<li>CORS 默认不发送 cookie</li>
+									XMLHttpRequest 对象有个 withCredentials 属性，默认为 false，表示跨域时不发送认证消息（cookie、authority 等）。如果要让浏览器发送 cookie，则需要设置 XHR 的 withCredentials 为 true
+									<pre><code class="javascript">
+var xhr = new XMLHttpRequest();
+// ...
+xhr.widthCredentials = true;
+// ...
+									</code></pre>
+									<li>CORS 不能通过读取状态码来判断是否成功进行请求</li>
+									<li>CORS 默认只能读取响应头的 Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma 这六个响应头部信息（safe）</li>
 								</ul>
-								CORS将HTTP请求分为了两类：
+								CORS 将 HTTP 请求分为了两类：
 								<ul>
 									<li>简单请求</li>
 									<li>非简单请求</li>
 								</ul>
-								<div>
-									<h5>简单请求</h5>
-									<p>
-										若同时请求满足所有下述条件，则该请求可视为“简单请求”：<sup>[6]</sup>
-										<ul>
-											<li>使用以下方法之一
-												<ul>
-													<li>GET</li>
-													<li>POST</li>
-													<li>HEAD</li>
-												</ul>
-											</li>
-											<li>设置的首部字段在以下范围内
-												<ul>
-													<li>Accept</li>
-													<li>Accept-Language</li>
-													<li>Content-Language</li>
-													<li>Content-Type</li>
-													<li>DRP</li>
-													<li>Downlink</li>
-													<li>Save-Data</li>
-													<li>Viewport-Width</li>
-													<li>Width</li>
-												</ul>
-											</li>
-											<li>Content-Type的值为以下三者之一
-												<ul>
-													<li>text/plain</li>
-													<li>multipart/form-data</li>
-													<li>application/x-www-form-urlencoded</li>
-												</ul>
-											</li>
-										</ul>
-										发送简单请求的时候，浏览器会在请求头部添加一个新的头部字段：
-										<pre><code class="python">
-Origin: http://domain1/a.html # 发送请求的页面的URL
-										</code></pre>
-										服务器根据这个字段判断发送请求的网页是否可以信任，如果可以信任，则返回资源，资源的头部添加一些新的头部信息：
-										<pre><code class="python">
-Access-Control-Allow-Origin: http://domain1/a.html # 发送请求的页面的URL(必选)
-Access-Control-Allow-Credentials: true # 是否允许浏览器发送cookie给服务器(可选)
-Access-Control-Expose-Headers: Other-Field # 规定脚本除了Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma外，还可以从返回资源中读取的字段(可选)
-										</code></pre>
-										如果服务器觉得发送请求的网页不可信任，则返回的资源不包含以上头部信息，浏览器接收到后没有几个头部信息的资源后就会报错。<br>
-									</p>
-								</div>
-								<div>
-									<h5>非简单请求</h5>
-									<p>
-										如果是非简单请求，浏览器将会在发送ajax请求之前发送一次preflight(预检)请求：
-										<pre><code class="python">
-OPTIONS /path HTTP/1.1 # 使用OPTION方法进行预检
-Access-Control-Request-Method: PUT # 请求方法(必选)
-Access-Control-Request-Headers: Field1, Field2 # 设置的请求头(可选)
-										</code></pre>
-										服务器接收到预检请求后，方法与简单请求类似，可信则添加一些头部信息，不可信则不添加。如果可信，浏览器接收到带有头部信息的资源后，浏览器和服务器就可以像简单请求一样开始正常的CORS通信。
-									</p>
-								</div>
-								<div>
-									<h5>XDR</h5>
-									XDR是IE8中引入的新类型，使用方法与XHR类似，但有以下限制：
+								<h5>简单请求</h5>
+								<p>
+									若同时请求满足所有下述条件，则该请求可视为“简单请求”：<sup>[6]</sup>
 									<ul>
-										<li>既不会发送cookie，也不会返回cookie</li>
-										<li>请求头部信息只能设置Content-Type</li>
-										<li>不能读取响应头部信息</li>
-										<li>只能使用GET或POST方法</li>
+										<li>使用以下方法之一
+											<ul>
+												<li>GET</li>
+												<li>POST</li>
+												<li>HEAD</li>
+											</ul>
+										</li>
+										<li>设置的首部字段在以下范围内
+											<ul>
+												<li>Accept</li>
+												<li>Accept-Language</li>
+												<li>Content-Language</li>
+												<li>Content-Type</li>
+												<li>DRP</li>
+												<li>Downlink</li>
+												<li>Save-Data</li>
+												<li>Viewport-Width</li>
+												<li>Width</li>
+											</ul>
+										</li>
+										<li>Content-Type的值为以下三者之一
+											<ul>
+												<li>text/plain</li>
+												<li>multipart/form-data</li>
+												<li>application/x-www-form-urlencoded</li>
+											</ul>
+										</li>
 									</ul>
-									<pre><code class="javascript">
+									发送简单请求的时候，浏览器会在请求头部添加一个新的头部字段，请求报文：
+									<pre><code class="http">
+Origin: http://domain1/a.html
+									</code></pre>
+									<p><div class="tip">
+										Origin 表示发起 ajax 的页面，浏览器自动设置。如果手动设置，在 chrome 中浏览器会直接拒绝发送该 ajax。
+									</div></p>
+									服务器得到这个请求头后，判断发送请求的网页是否可以信任，如果可以信任，则返回响应资源，资源的头部添加一些新的头部信息，响应报文：
+									<pre><code class="http">
+Access-Control-Allow-Origin: http://domain1/a.html # 允许请求的页面URL，设置为 * 时表示接受所有来源的请求(必选)
+Access-Control-Allow-Credentials: true # 是否允许浏览器发送 cookie 给服务器，若为 true，↑ 这个就不能为 * (可选)
+Access-Control-Expose-Headers: Other-Field # 规定 javascript 除了 Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma 外，还可以读取的额外响应头部字段(可选)
+									</code></pre>
+									如果服务器觉得发送请求的网页不可信任，则返回的资源不包含以上头部信息，浏览器接收到后没有几个头部信息的资源后就会报错。
+								</p>
+								<h5>非简单请求</h5>
+								<p>
+									如果是非简单请求，浏览器将会在发送ajax请求之前发送一次 preflight(预检) 请求，请求报文：
+									<pre><code class="http">
+OPTIONS /path HTTP/1.1 # 使用 OPTIONS 方法进行预检
+Access-Control-Request-Method: POST # ajax 请求的方法(必选)
+Access-Control-Request-Headers: Field1, Field2 # 设置的请求头(可选)
+									</code></pre>
+									服务器接收到预检请求后，方法与简单请求类似，可信则添加一些头部信息，不可信则不添加。如果可信，浏览器接收到带有头部信息的资源后，浏览器和服务器就可以像简单请求一样开始正常的 HTTP 通信。
+								</p>
+								<h5>XDR</h5>
+								IE8、9 不支持 XHR ，取而代之的是 XDR ，使用方法与 XHR 类似，但有以下限制：
+								<ul>
+									<li>既不会发送 cookie，也不会获得 cookie</li>
+									<li>请求头部信息只能设置 Content-Type</li>
+									<li>不能读取响应头部信息</li>
+									<li>只能使用 GET 或 POST 方法</li>
+								</ul>
+								<pre><code class="javascript">
 var url = 'http://domain/path';
 var message = 'hello world';
 var xdr = new XDomainRequest(); // 创建一个XDR对象
@@ -408,8 +417,7 @@ xdr.ontimeout = function() {
 }
 xdr.open('GET', url); // 只能异步执行，所以没有第三个参数
 xdr.send(message);
-									</code></pre>
-								</div>
+								</code></pre>
 							</p>
 						</div>
 					</p>

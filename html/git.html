@@ -81,6 +81,35 @@ $ git push 远程主机名 本地分支名 :远程分支名
 			</p>
 		</section>
 		<section>
+			<h2>配置</h2>
+			<p>
+				<h3>别名</h3>
+				<p>
+					给一串指令起一个别名，以后可以直接使用 git 别名 来调用。
+					<div class="command">
+						git config --global alias.别名 '指令'
+					</div>
+					设置别名有以下局限：
+					<ul>
+						<li>无法传参给指令</li>
+						<li>无法使用 git 之外的指令，如 cd</li>
+					</ul>
+				</p>
+				<h3>查看配置</h3>
+				<p>
+					<div class="command">
+						git config --global -l
+					</div>
+				</p>
+				<h3>删除配置</h3>
+				<p>
+					<div class="command">
+						git config --global --unset 配置项名
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
 			<h2>工作树</h2>
 			<p>
 				工作树即项目下的文件，增删等操作就是操作系统下的文件操作。
