@@ -416,7 +416,12 @@ body {
     figure {
         text-aligin: center;
         img {
+            border-radius: 5px;
+            cursor: pointer;
             max-width: 100%;
+            &:hover {
+                box-shadow: 0px 0px 30px .5px #e9e9fb;
+            }
         }
         // 图片描述
         figcaption {

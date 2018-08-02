@@ -501,6 +501,40 @@ $(function() {
             });
         }, 500);
     }
+
+    // 正文内容的图片点击后预览
+    var mask = document.createElement('div');
+    var imgContainer = document.createElement('div');
+    imgContainer.style.position = 'relative';
+    mask.style.position = 'fixed';
+    imgContainer.style.top = mask.style.top = '0';
+    imgContainer.style.right = mask.style.right = '0';
+    imgContainer.style.bottom = mask.style.bottom = '0';
+    imgContainer.style.left = mask.style.left = '0';
+    mask.style.opacity = '.8';
+    mask.style.backgroundColor = '#000';
+    imgContainer.style.display = mask.style.display = 'none';
+    imgContainer.style.overflow = 'auto';
+    document.body.appendChild(mask);
+    document.body.appendChild(imgContainer);
+    $('#container figure>img').each(function() {
+        var el = $(this);
+        el.click(function() {
+            var img = document.createElement('img');
+            img.style.position = 'fixed';
+            img.style.left = '50%';
+            img.style.top = '50%';
+            img.style.transform = 'translateX(-50%) translateY(-50%)';
+            img.src = el.attr('src');
+            imgContainer.style.display = mask.style.display = 'block';
+            img.onclick = function() {
+                imgContainer.removeChild(img);
+                imgContainer.style.display = 'none';
+                mask.style.display = 'none';
+            };
+            imgContainer.appendChild(img);
+        });
+    });
     // $('html').eq(0).css('font-size', getRootFontSize()); // 设置 html（根） 字体大小
     // 侧栏高度自适应
     // $(window).on("load resize",function(){
