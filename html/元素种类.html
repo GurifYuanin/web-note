@@ -41,7 +41,7 @@
 				<h3>特点</h3>
 				<ol>
 					<li>每个元素占整一行。</li>
-					<li>高度(height)、宽度(width)、行高(line-height)以及内外边距(padding + margin)都可设置。</li>
+					<li>高度 (height) 、宽度 (width) 、行高 (line-height) 以及内外边距 (padding + margin) 都可设置。</li>
 				</ol>
 				<h3>常见元素</h3>
 				<ol>
@@ -59,12 +59,12 @@
 				</ol>
 		</section>
 		<section>
-			<h2>inline(行内)</h2>
+			<h2>inline(内联)</h2>
 			<p>
 				<h3>特点</h3>
 				<ol>
 					<li>只占领元素自身的大小，不同元素可以在同一行上。</li>
-					<li>高度(height)、宽度(width)及顶部和底部外边距(margin-top + margin-bottom)不可设置。</li>
+					<li>高度 (height) 、宽度 (width) 及顶部和底部外边距 (margin-top + margin-bottom) 不可设置。</li>
 				</ol>
 				<h3>常用元素</h3>
 				<ul>
@@ -89,25 +89,45 @@
 				<h3>特点</h3>
 				<ol>
 					<li>只占领元素自身的大小，不同元素可以在同一行上。</li>
-					<li>高度(height)、宽度(width)、行高(line-height)以及内外边距(padding + margin)都可设置。</li>
+					<li>高度 (height) 、宽度 (width) 、行高 (line-height) 以及内外边距 (padding + margin) 都可设置。</li>
 				</ol>
 			</p>
 		</section>
 		<section>
-			<h2>run-in</h2>
+			<h2>嵌套</h2>
 			<p>
-				直接翻译run-in为<span class="definition">跑进</span>，顾名思义，这种显示方式的作用就是当前元素跑进下一个元素内，成为下一个元素的行内部分。<br>
-				<h3>特点</h3>
-				<ol>
-					<li>在下一个块级元素(兄弟元素)内部显示，如果下一个元素不是块级元素，则run-in本身成为块级元素。</li>
-					<li>从原先父元素继承属性，而不从跑进后的父元素继承属性。</li>
-				</ol>
+				元素间的嵌套遵循以下：
+				<ul>
+					<li>块级元素可以包含内联元素和某些块级元素</li>
+					<li>内联元素可以包含内联元素，但不能包含块级元素</li>
+				</ul>
+				以上只是笼统的说法，实际情况复杂许多。
+				<h3>p</h3>
+				<p>
+					p 内部不能嵌套块级元素。
+					<pre><code class="html">
+&lt;p&gt;
+	&lt;div&gt;hello world&lt;/div&gt;
+&lt;/p&gt;
+&lt;!-- 实际上会被渲染为 --&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;div&gt;hello world&lt;/div&gt;
+					</code></pre>
+				</p>
+				<h3>a</h3>
+				<p>
+					a 内部可以嵌套块级元素，以下会正常渲染。
+					<pre><code class="html">
+&lt;a href="javascript:void(0)"&gt;&lt;div&gt;hello world&lt;/div&gt;&lt;/a&gt;
+					</code></pre>
+				</p>
 			</p>
 		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
 				<div>[1] Eric A.Meyer 《CSS权威指南》</div>
+				<div>[2] zpeople HTML5与ＨTML4的元素嵌套规则 <a href="https://www.jianshu.com/p/5fc78e64a415">https://www.jianshu.com/p/5fc78e64a415</a></div>
 			</p>
 		</section>
 	</article>

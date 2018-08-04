@@ -106,97 +106,104 @@ fs.open(path, flag, mode, function(err, fd) {
 		<section>
 			<h2>写文件</h2>
 			<p>
-				使用 writeFile 写文件。
-				<pre><code class="javascript">
-var fs = require('fs');
-fs.write(path, data, {
-	encoding: 'utf-8',
-	mode: 0o666,
-	flag: 'w'
-}, function(err) {
-	console.log(err);
-});
-				</code></pre>
-				<ul>
-					<li>path：写入的文件路径</li>
-					<li>data：写入的数据</li>
-					<li>encoding：数据的字符编码，默认为 utf-8</li>
-					<li>mode：文件权限，默认为 0o666</li>
-					<li>flag：写入方式标识符，默认为 w</li>
-					<li>function(err)</li>
+				<h3>写整个文件</h3>
+				<p>
+					使用 writeFile 写文件。
+					<pre><code class="javascript">
+	var fs = require('fs');
+	fs.write(path, data, {
+		encoding: 'utf-8',
+		mode: 0o666,
+		flag: 'w'
+	}, function(err) {
+		console.log(err);
+	});
+					</code></pre>
 					<ul>
-						<li>err：写入失败时的错误信息</li>
+						<li>path：写入的文件路径</li>
+						<li>data：写入的数据</li>
+						<li>encoding：数据的字符编码，默认为 utf-8</li>
+						<li>mode：文件权限，默认为 0o666</li>
+						<li>flag：写入方式标识符，默认为 w</li>
+						<li>function(err)</li>
+						<ul>
+							<li>err：写入失败时的错误信息</li>
+						</ul>
 					</ul>
-				</ul>
-				flag 的标识符有：（只列举异步方法）
-				<table>
-					<tr>
-						<th>标识符</th>
-						<th>功能</th>
-						<th>文件已存在</th>
-						<th>文件不存在</th>
-					</tr>
-					<tr>
-						<td>r</td>
-						<td>只读</td>
-						<td></td>
-						<td>出错</td>
-					</tr>
-					<tr>
-						<td>r+</td>
-						<td>写读</td>
-						<td></td>
-						<td>出错</td>
-					</tr>
-					<tr>
-						<td>w</td>
-						<td>只写</td>
-						<td>覆盖文件</td>
-						<td>创建文件</td>
-					</tr>
-					<tr>
-						<td>wx</td>
-						<td>只写</td>
-						<td>出错</td>
-						<td>创建文件</td>
-					</tr>
-					<tr>
-						<td>w+</td>
-						<td>读写</td>
-						<td>覆盖文件</td>
-						<td>创建文件</td>
-					</tr>
-					<tr>
-						<td>wx+</td>
-						<td>读写</td>
-						<td>出错</td>
-						<td>创建文件</td>
-					</tr>
-					<tr>
-						<td>a</td>
-						<td>追加</td>
-						<td></td>
-						<td>创建文件</td>
-					</tr>
-					<tr>
-						<td>ax</td>
-						<td>追加</td>
-						<td>出错</td>
-						<td>创建文件</td>
-					</tr>
-					<tr>
-						<td>a+</td>
-						<td>读取和追加</td>
-						<td></td>
-						<td>创建文件</td>
-					</tr>
-					<tr>
-						<td>ax+</td>
-						<td>读取和追加</td>
-						<td>出错</td>
-						<td>创建文件</td>
-					</tr>
-				</table>
+					flag 的标识符有：（只列举异步方法）
+					<table>
+						<tr>
+							<th>标识符</th>
+							<th>功能</th>
+							<th>文件已存在</th>
+							<th>文件不存在</th>
+						</tr>
+						<tr>
+							<td>r</td>
+							<td>只读</td>
+							<td></td>
+							<td>出错</td>
+						</tr>
+						<tr>
+							<td>r+</td>
+							<td>读写</td>
+							<td></td>
+							<td>出错</td>
+						</tr>
+						<tr>
+							<td>w</td>
+							<td>只写</td>
+							<td>覆盖文件</td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>wx</td>
+							<td>只写</td>
+							<td>出错</td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>w+</td>
+							<td>读写</td>
+							<td>覆盖文件</td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>wx+</td>
+							<td>读写</td>
+							<td>出错</td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>a</td>
+							<td>追加</td>
+							<td></td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>ax</td>
+							<td>追加</td>
+							<td>出错</td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>a+</td>
+							<td>读取和追加</td>
+							<td></td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>ax+</td>
+							<td>读取和追加</td>
+							<td>出错</td>
+							<td>创建文件</td>
+						</tr>
+					</table>
+				</p>
+				<h3>写部分文件</h3>
+				<p>
+					使用方法与 fs.read 类似，是 read 方法的反向操作。
+				</p>
 			</p>
 		</section>
 		<section>

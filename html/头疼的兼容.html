@@ -38,9 +38,40 @@
 				<p>
 					IE6 IE7 IE8(Q) 混淆了 DOM 对象的属性（property）及 HTML 标签属性（attribute）这两个概念。其对于 getAttribute 及 setAttribute 方法的实现与 HTML DOM 对象的属性的 getter 与 setter 操作等价。<sup>[1]</sup>
 					<ul>
-						<li>property：使用 element.PropertyName 读写，表示对象上的键值对，键值可能为对象、函数、字符串等类型</li>
-						<li>attribute：使用 element.getAttribute('AttributeName') 和 element.setAttribute('AttributeName', 'value') 读写，表示 HTML 标签上的键值对，键值类型是字符串</li>
+						<li>property：使用 element.PropertyName 读写，表<span class="definition"> 对象上的属性 </span>，属性值可能为对象、函数、字符串等类型</li>
+						<li>attribute：使用 element.getAttribute('AttributeName') 和 element.setAttribute('AttributeName', 'value') 读写，表示<span class="definition"> HTML 标签上的键值对 </span>，键值类型是字符串</li>
 					</ul>
+					<div class="show">
+					比如以下的 p 标签，使用 element.getAttribute('style') 获得的是<span class="defintion"> "padding: 5px;" </span>字符串，而用 element.style 获得的是一个对象。
+					<pre><code class="html">
+&lt;p id="demo-p" style="padding: 5px;"&gt;&lt;/p&gt;
+					</code></pre>
+<p id="demo-p" style="padding: 5px; height: 200px;" title="展开"></p>
+<script>
+	(function() {
+		var p = document.getElementById('demo-p');
+		var flag = true;
+		var str = 'element.getAttribute("style")：<br>&nbsp;&nbsp;&nbsp;&nbsp;"padding: 5px"<br>element.style：<br>{<br>';
+		for (var k in p.style) {
+			str += '&nbsp;&nbsp;&nbsp;&nbsp;' + k + ': ' + (p.style[k] ? p.style[k] : '""') + '<br>';
+		}
+		str += '}';
+		p.innerHTML = str;
+		p.addEventListener('click', function() {
+			p.style.height = flag ? '' : '200px';
+			p.title = flag ? '收起' : '展开';
+			flag = !flag;
+		});
+	})();
+</script>
+<style>
+#demo-p {
+	overflow: auto;
+	cursor: pointer;
+}
+</style>
+					</div>
+
 					造成的影响：
 					<ul>
 						<li>无法通过 "Element.setAttribute("class", "AttributeValue")" 设置元素的 class 属性，而需要使用 "Element.setAttribute("className", "AttributeValue")"</li>
