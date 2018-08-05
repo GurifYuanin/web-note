@@ -1,3 +1,16 @@
+// 将 rem 转化为 px
+@function px2em($px, $base-font-size: 16px) {
+    @if (unitless($px)) {
+        // 判断是否带单位，如果无单位则默认为 px
+        @warn "Assuming #{$px} to be in pixels, attempting to convert it into pixels for you";
+        @return px2em($px + 0px);
+    } @else if (unit($px) == em) {
+        // 判断单位是否为 em
+        @return $px;
+    }
+    @return ($px / $base-font-size) * 1em;
+}
+
 @mixin getFixedPosition($flag: "block") {
     position: fixed;
     left: 0;
@@ -336,7 +349,7 @@ body {
     /* 代码展示区 */
     .show {
         overflow: auto;
-        border: dotted 1px #000;
+        border: dotted 1px $showBorderColor;
         border-radius: 5px;
         padding: 2%;
         margin: 2% 0;
@@ -416,6 +429,7 @@ body {
     figure {
         text-aligin: center;
         img {
+            transition: all .5s;
             border-radius: 5px;
             cursor: pointer;
             max-width: 100%;

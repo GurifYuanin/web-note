@@ -99,7 +99,13 @@ var arr = [... new Array(5)];
 	__proto__: {}
 }
 						</code></pre>
-						<li>在想</li>
+						<li>使用循环</li>
+						<pre><code class="javascript">
+var arr = [];
+for (var i = 0; i < 5; i++) {
+	arr.push(undefined);
+}
+						</code></pre>
 					</ul>
 				</p>
 			</p>
@@ -377,6 +383,16 @@ var obj3 = Object.create(Objcet.prototype, {
 		<section>
 			<h2>对象方法</h2>
 			<p>
+				<h3>创建属性：Object.assign / .key / [key]</h3>
+				<p>
+					使用 .key 和 [key] 的方法，当对象没有该属性时创建一个。而使用 Object.assign 则是将一个对象上的所有<span class="different"> 自身的可枚举的 </span>属性直接赋值到另一个对象上，如果属性名相同，则会覆盖。
+					<pre><code class="javascript">
+var obj = {};
+obj = Object.assign({a: 1}, obj); // 方法一
+obj.b = 2; // 方法二
+obj['c'] = 3; // 方法三
+					</code></pre>
+				</p>
 				<h3>配置属性：Object.defineProperty / Object.defineProperties</h3>
 				<p>
 					两者都是用于配置属性，前者用于配置一个属性，后者用于一次性配置多个属性，当属性名不存在时则表示为对象创建一个属性，存在时则表示修改对象属性的描述符。
@@ -414,18 +430,21 @@ Object.defineProperties(obj, {
 						<tr>
 							<th>描述符</th>
 							<th>解释</th>
+							<th>使用 assign 或 .key 或 [key] 时的默认值</th>
 							<th>使用字面量时的默认值</th>
 							<th>使用 defineProperty 时的默认值</th>
 						</tr>
 						<tr>
 							<td>value</td>
 							<td>属性值 / 键值</td>
+							<td>赋值的值</td>
 							<td>字面量的值</td>
-							<td>undefined</td>
+							<td>赋值的值，若 value 则为 undefined</td>
 						</tr>
 						<tr>
 							<td>enumerable</td>
 							<td>是否可被枚举 / 遍历</td>
+							<td>true</td>
 							<td>true</td>
 							<td>false</td>
 						</tr>
@@ -433,11 +452,13 @@ Object.defineProperties(obj, {
 							<td>writable</td>
 							<td>属性值是否可写 / 修改</td>
 							<td>true</td>
+							<td>true</td>
 							<td>false</td>
 						</tr>
 						<tr>
 							<td>configurable</td>
 							<td>是否可配置，即修改描述符</td>
+							<td>true</td>
 							<td>true</td>
 							<td>false</td>
 						</tr>
@@ -446,10 +467,12 @@ Object.defineProperties(obj, {
 							<td>getter 函数，该函数的返回值便是 对象.属性名 所获得的值</td>
 							<td>无</td>
 							<td>无</td>
+							<td>无</td>
 						</tr>
 						<tr>
 							<td>set</td>
 							<td>setter 函数，当属性的值被修改时自动被调用</td>
+							<td>无</td>
 							<td>无</td>
 							<td>无</td>
 						</tr>

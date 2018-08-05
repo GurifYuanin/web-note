@@ -70,7 +70,7 @@ $(function() {
     $sidebar.append(str);
 
     // SE
-    $catalog.append('<section id="searchContainer"><input id="searchInput" type="text" placeholder="搜索文章（支持正则）"/><section id="searchResult"></section></section>');
+    $catalog.append('<section id="searchContainer"><input id="searchInput" type="text" placeholder="搜索文章"/><section id="searchResult"></section></section>');
     var $searchInput = $('#searchInput');
     var $searchResult = $('#searchResult');
     var liIndex = 0;
@@ -81,12 +81,7 @@ $(function() {
         // 遍历出匹配的 li
         items.forEach(function(item) {
             item.forEach(function(el) {
-                var reg = null;
-                if (/\/.+\/i?g?m?/.test(value)) { // 支持正则
-                    reg = eval(value);
-                } else {
-                    reg = eval('/' + value + '/i');
-                }
+                var reg = new RegExp(value, 'i');
                 if (reg.test(el)) {
                     str += wrapByTag(el.replace(reg, '<span>' + el.match(reg) + '</span>'), 'li');
                 }
@@ -241,7 +236,7 @@ $(function() {
         });
         isBright = !isBright;
     });
-    if (url.indexOf('?theme=dark') >= 0) $title.click();
+    if (url.indexOf('?theme=dark') >= 0) { $title.click(); }
     function widthAndMargin(start, end, piece, time) {
         // width: start% -> end%
         // margin: 0 4% -> 0 5%

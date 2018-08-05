@@ -58,9 +58,10 @@ div {
 					</figure>
 					这也是为什么有些手机的屏幕只有巴掌大小，但设备像素宽高却接近甚至超过 PC 端，因为在 PC 端的一个像素点，在移动端可能用 4 个或者 9 个像素来显示。比如 iphoneX 和 15.6 寸的 dell 笔记本：
 					<ul>
-						<li>iphone X：2436x1125 DPR=3</li>
-						<li>dell：1920×1080 DPR=1</li>
+						<li>iphoneX：像素宽高：1125x2436 DPR=3</li>
+						<li>Dell：像素宽高：1920×1080 DPR=1</li>
 					</ul>
+					在 Dell 中上显示 1px 宽 1px 高的 DOM 元素，在 iphoneX 需要 3x3 个像素。
 					<figure>
 						<img src="../images/viewport_dpr_iphone_dell.jpg" alt="">
 					</figure>
@@ -88,7 +89,7 @@ window.devicePixelRatio
 			<p>
 				从 <a href="./meta标签.html"> meta标签 </a> 中知道，viewport 可以设置以下属性：
 				<ul>
-					<li>witdh & height：定义 viewport 宽高</li>
+					<li>width & height：定义 viewport 宽高</li>
 					<li>initial-scale：屏幕的初始缩放比</li>
 					<li>minimum-scale & maximum-scale：最小 / 最大缩放比</li>
 					<li>user-scalable：是否允许手势缩放</li>
@@ -101,8 +102,8 @@ window.devicePixelRatio
 						<li>数字</li>
 						<li>device-width</li>
 					</ul>
-					<h4>html</h4>
-					html 的宽高与 viewport 的宽高挂钩，实际上 html 的宽高是以 viewport 的宽高作为参照，html 的宽高等于 viewport 的宽高。
+					<h4>html（根标签）</h4>
+					html 的宽高与 viewport 的宽高挂钩，实际上 html 的宽高是以 viewport 的宽高作为参照，html 的宽高等于 viewport 的宽高。使用 meta 标签写入 viewport 信息的 width，查看 html 标签，发现宽度跟 viewport 的 width 一样。
 					<pre><code class="html">
 &lt;meta name="viewport" content="width=350"&gt;
 					</code></pre>
@@ -118,18 +119,27 @@ var width = window.innerWidth || document.documentElement.clientWidth  || docume
 					当给 viewport 设置了固定值的 width，从 javascript 中获得的 width 值总是前面设置的 width，并且会出现以下现象。
 					<pre><code class="html">
 &lt;meta name="viewport" content="<span class="strong">width=350</span>">
-&lt;div style="height: 400px;<span class="strong">width: 350px;</span> background: linear-gradient(90deg, #000, green, #000);"></div>
+&lt;div style="height: 400px;<span class="strong">width: 350px;</span> background: linear-gradient(90deg, #000, green, #000);">
 					</code></pre>
 					<figure>
-						<img src="../images/viewport_number.gif" alt="">
+						<img src="../images/viewport_number.gif">
 					</figure>
 					由于固定死了 viewport 的大小，尽管设备的宽高一直在变，但浏览器始终认为 viewport （展示给用户的界面）是固定不变的，页面会以一种缩放的形式缩放到 viewport 的大小，结合下一部分 device-width 可以更容易理解。
 					<h4>device-width</h4>
 					设置 width 为 device-width 表示 viewport 宽度跟随设备宽度，设备宽度多少 viewport 的宽度就是多少。对比固定值：
 					<figure>
-						<img src="../images/viewport_device_width.jpg" alt="">
+						<img src="../images/viewport_device_width.jpg">
 					</figure>
-					可以看到，设置为 device-width 后，由于宽度跟随设备，所以浏览时总是能够显示全部的页面，即使页面实际大小远大于设备宽度，也会自动缩放到合适的程度。而设置固定值表示只适配某种宽度的设备，尽管设备只有 350px 宽，由于 width=2560 ，浏览器便认为设备上的 viewport 有 2560px 宽，1280px 宽的 web 页面最终呈现出来的效果也只能占据浏览器一半宽度。
+					<p>
+						第一种设置 width 为 device-width ，由于宽度跟随设备，所以浏览时总是能够显示全部的页面，即使页面实际大小远大于设备宽度，也会自动缩放到合适的程度。
+					</p>
+					<p>
+						第二种设置 width 为固定值（2560），表示只适配某种宽度的设备，尽管设备只有 350px 宽，由于 width=2560 ，浏览器便认为设备上的 viewport 有 2560px 宽，1280px 宽的 web 页面最终呈现出来的效果也只能占据浏览器一半宽度。
+					</p>
+				</p>
+				<h3>initial-scale</h3>
+				<p>
+					初始缩放比例。
 				</p>
 			</p>
 		</section>

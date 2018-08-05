@@ -131,6 +131,33 @@ git clone https://github.com/top-think/framework thinkphp
 			</p>
 		</section>
 		<section>
+			<h2>入口</h2>
+			<p>
+				TP5.1 采用单一入口模式进行项目部署和访问，public 为公共可访问的目录，默认有一个 index.php 作为入口地址。
+				<pre><code class="php">
+&lt;?php
+// [ 应用入口文件 ]
+namespace think;
+
+// 加载基础文件
+require __DIR__ . '/../thinkphp/base.php';
+
+// 支持事先使用静态方法设置 Request 对象和 Config 对象
+// 定义程序的地址
+define('APP_PATH', __DIR__ . <span class="strong">'/../application/'</span>);
+// 定义配置的地址
+define('CONF_PATH', __DIR__ . <span class="strong">'/../application/config/'</span>);
+
+// 执行应用并响应
+Container::get('app')->run()->send();
+				</code></pre>
+				随后访问 /public/index.php 即进入该单页面应用（SPA）。
+				<p class="tip">
+					可以修改或者创建另一个入口，设置好程序地址和配置地址即可。
+				</p>
+			</p>
+		</section>
+		<section>
 			<h2>配置</h2>
 			<p>
 				ThinkPHP遵循惯例重于配置的原则，系统会按照下面的顺序来加载配置文件（后者会覆盖前者）：<sup>[1]</sup>

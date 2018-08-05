@@ -292,6 +292,25 @@ export default {
 }
 					</code></pre>
 				</p>
+				<h3>getters</h3>
+				<p>
+					映射 getters 类似于 state。
+					<pre><code class="javascript">
+import {mapGetters} from 'vuex';
+export default {
+	computed: {
+		...mapGetters({
+			b: 'a'
+		}),
+		...mapGetters(['a']),
+		...mapGetters('md', {
+			b: 'a'
+		}),
+		...mapGetters('md', ['a'])
+	}
+}
+					</code></pre>
+				</p>
 				<h3>actions</h3>
 				<p>
 					使用 mapActions 将 actions 映射到 methods 上，方法同理。

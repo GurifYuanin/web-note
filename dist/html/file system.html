@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>file system</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/bright.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">file system</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				nodeJS 提供了一套文件操作的 API，可以用于读、写文件，并且每个功能都有同步和异步两种方法，两种方法的使用基本一样。
+				<div class="tip">
+					同步方法的方法名通常是异步方法的方法名追加 "Sync" ，以下只介绍异步方法。
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>读取文件</h2>
+			<p>
+				<h3>读取整个文件</h3>
+				<p>
+					使用 readFile 读取整个文件内容。
+					<pre><code class="javascript">
+var fs = require('fs');
+fs.readFile(path, code, function(err, data) => {
+	if (err) {
+		console.log(err);
+	} else {
+		console.log(data);
+	}
+});
+					</code></pre>
+					<ul>
+						<li>path：被读取的文件路径</li>
+						<li>code：字符编码，若省略，则读取文件 buffer</li>
+						<li>function(err, data)：读取文件后的回调函数</li>
+						<ul>
+							<li>err：读取文件出错时的错误信息</li>
+							<li>data：读取文件成功时读取到的数据</li>
+						</ul>
+					</ul>
+				</p>
+				<h3>部分读取</h3>
+				<p>
+					需要先使用 oepn 方法打开文件，获得 fd（文件描述），再通过 read 方法读取文件指定部分到缓冲区。
+					<pre><code class="javascript">
+var fs = require('fs');
+fs.open(path, flag, mode, function(err, fd) {
+	if (err) {
+		console.log(err);
+	} else {
+		var buf = new Buffer.alloc(1024);
+		fs.read(fd, buf, offset, length, position, function(err, bytes, buf) {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log(buf.toString());
+			}
+		})
+	}
+});
+					</code></pre>
+					<ul>
+						<li>path：被打开 / 读取的文件路径</li>
+						<li>flag：参见写文件的 flag 选项</li>
+						<li>mode：参见写文件的 mode 选项</li>
+						<li>function(err, fd)</li>
+						<ul>
+							<li>err</li>
+							<li>fd</li>
+						</ul>
+						<li>buf：数据写入的缓存区</li>
+						<li>offset：缓冲区偏移</li>
+						<li>length：写入缓冲区的字节数</li>
+						<li>position：文件数据偏移</li>
+						<li>function(err, bytes, buf)</li>
+						<ul>
+							<li>err</li>
+							<li>bytes：写入数据的字节数</li>
+							<li>buf：等价于前面的 buf</li>
+						</ul>
+					</ul>
+					简而言之就是，从 path 文件中 position 位置开始读取 length 个字节到 buf 缓冲区的 offset 位置。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>写文件</h2>
+			<p>
+				<h3>写整个文件</h3>
+				<p>
+					使用 writeFile 写文件。
+					<pre><code class="javascript">
+	var fs = require('fs');
+	fs.write(path, data, {
+		encoding: 'utf-8',
+		mode: 0o666,
+		flag: 'w'
+	}, function(err) {
+		console.log(err);
+	});
+					</code></pre>
+					<ul>
+						<li>path：写入的文件路径</li>
+						<li>data：写入的数据</li>
+						<li>encoding：数据的字符编码，默认为 utf-8</li>
+						<li>mode：文件权限，默认为 0o666</li>
+						<li>flag：写入方式标识符，默认为 w</li>
+						<li>function(err)</li>
+						<ul>
+							<li>err：写入失败时的错误信息</li>
+						</ul>
+					</ul>
+					flag 的标识符有：（只列举异步方法）
+					<table>
+						<tr>
+							<th>标识符</th>
+							<th>功能</th>
+							<th>文件已存在</th>
+							<th>文件不存在</th>
+						</tr>
+						<tr>
+							<td>r</td>
+							<td>只读</td>
+							<td></td>
+							<td>出错</td>
+						</tr>
+						<tr>
+							<td>r+</td>
+							<td>读写</td>
+							<td></td>
+							<td>出错</td>
+						</tr>
+						<tr>
+							<td>w</td>
+							<td>只写</td>
+							<td>覆盖文件</td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>wx</td>
+							<td>只写</td>
+							<td>出错</td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>w+</td>
+							<td>读写</td>
+							<td>覆盖文件</td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>wx+</td>
+							<td>读写</td>
+							<td>出错</td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>a</td>
+							<td>追加</td>
+							<td></td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>ax</td>
+							<td>追加</td>
+							<td>出错</td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>a+</td>
+							<td>读取和追加</td>
+							<td></td>
+							<td>创建文件</td>
+						</tr>
+						<tr>
+							<td>ax+</td>
+							<td>读取和追加</td>
+							<td>出错</td>
+							<td>创建文件</td>
+						</tr>
+					</table>
+				</p>
+				<h3>写部分文件</h3>
+				<p>
+					使用方法与 fs.read 类似，是 read 方法的反向操作。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>读取目录</h2>
+			<p>
+				使用 readdir 读取目标目录下的所有子文件、子目录。
+				<pre><code class="javascript">
+var fs = require('fs');
+fs.readdir(path, function(err, files) {
+	if (err) {
+		console.log(err);
+	} else {
+		console.log(files);
+	}
+});
+				</code></pre>
+				<ul>
+					<li>path：目录路径</li>
+					<li>function(err, files)：读取目录后的回调函数</li>
+					<ul>
+						<li>err：读取目录失败后的错误信息</li>
+						<li>files：子文件名、子目录名数组</li>
+					</ul>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>判断</h2>
+			<p>
+				使用 stat 获得目标路径的文件 / 目录的信息。
+				<pre><code class="javascript">
+var fs = require('fs');
+fs.stat(path, function(err, stats) {
+	if (err) {
+		console.log(err);
+	} else {
+		console.log(stats);
+	}
+});
+				</code></pre>
+				<ul>
+					<li>path：目标文件 / 目录路径</li>
+					<li>function(err, stats)</li>
+					<ul>
+						<li>err</li>
+						<li>stats：文件 / 目录信息</li>
+						<ul>
+							<li>isFile()：是否为文件</li>
+							<li>isDirectory()：是否为目录</li>
+							<li>isSymbolicLink()：是否为软链接</li>
+						</ul>
+					</ul>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>封装</h2>
+			<p>
+				<h3>递归遍历目录</h3>
+				<p>
+					递归遍历目标目录下的所有文件，读取内容并输出到目标文件。
+					<pre><code class="javascript">
+const fs = require("fs");
+const path = require("path");
+
+const root = path.resolve('./'); // 受遍历的目录
+const exclude = ['server']; // 受排除的文件或目录
+const output = './output'; // 输出文件
+
+// 清空文件内容
+fs.writeFileSync(output, '', {flag: 'w'}, err => {});
+// 写入文件
+function read (dir) {
+  fs.readdir(dir, (err, files) => {
+    if (err) {
+      console.log(err);
+    } else {
+      files.forEach(el => {
+        if (exclude.indexOf(el) !== -1) return;
+        el = path.resolve(dir, el);
+        fs.stat(el, (err, stats) => {
+          if (err) {
+            console.log(err);
+          } else {
+            if (stats.isFile()) {
+              fs.readFile(el, (err, data) => {
+              	// 读取文件内容，并把内容追加到 output 内
+                fs.writeFile(output, data.toString(), {flag: 'a'}, err => {});
+              });
+            } else {
+              read(el);
+            }
+          }
+        });
+      });
+    }
+  });
+}
+
+read(root);
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<p>
+				<div>[1] 菜鸟教程 Node.js 文件系统 <a href="http://www.runoob.com/nodejs/nodejs-fs.html">http://www.runoob.com/nodejs/nodejs-fs.html</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

@@ -29,7 +29,7 @@ $blockLength: length($blockColor); // 块数
 
 $titleColor: #fff; // 标题颜色
 $contentColor: #fcfcfc; // 正文字体颜色
-$borderColor: #444; // 默认边框颜色
+$borderColor: #ccc; // 默认边框颜色
 
 $headColor: #fff;
 $footerColor: white; // 页脚颜色
@@ -39,6 +39,7 @@ $h4Color: #fff;
 $h5Color: #fff;
 $h6Color: #fff;
 
+$showBorderColor: #ccc;
 $tipColor: #efefef; // 提示框文本颜色
 $tipBackgroundColor: #181818; // 提示框背景色
 $tipBorderColor: #fefefe; // 提示框边框颜色
