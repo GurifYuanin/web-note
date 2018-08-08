@@ -177,7 +177,7 @@ asyncFun([1, 2, 3].map(el => {
 // => 2（1s 后）
 // => 3（1s 后）
 					</code></pre>
-					或者改写 async 函数内代码的书写方式，方法同理，都是在 map 方法时就把开始执行耗时间的异步操作， await 指令（for...of ）的作用就只剩下等待异步操作完成然后赋值给 data 变量。
+					或者改写 async 函数内代码的书写方式，方法同理，都是在执行 map 方法时就把执行每一个耗时间的异步操作，于是 await 指令（for...of 内）的作用就只剩下等待异步操作完成然后赋值给 data 变量。
 					<pre><code class="javascript">
 async function asyncFun (arr) {
 	const newArr = arr.map(el => {
