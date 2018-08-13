@@ -1,5 +1,5 @@
 // 初始化语法高亮
-hljs && hljs.initHighlightingOnLoad();
+if (hljs && hljs.initHighlightingOnLoad) { hljs.initHighlightingOnLoad(); }
 // sidebar
 $(function() {
     var viewport = document.createElement('meta');
@@ -15,6 +15,10 @@ $(function() {
         return tag === 'a' ?
                wrapByA(source) :
                '<' + tag + '>' + source + '</' + tag + '>';
+    }
+    // 去除多余的字符
+    function filterName (str) {
+        return str.replace(/[\s$@#&;()/.'"]/g, '');
     }
     // 获得视窗大小
     function getViewport(target) {
@@ -47,12 +51,12 @@ $(function() {
     var items = [
         ['DOM', 'meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'canvas', 'svg'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
-        ['数据类型', '数组字符串与对象', '循环', '作用域链', '原型链', '闭包', '事件', '同源策略', 'Class', 'JSONP', 'this', 'jquery', 'promise', 'Generator', 'async', 'Typescript'],
+        ['数据类型', '数组字符串与对象', '循环', '作用域链', '原型链', '闭包', '事件', '复制粘贴', 'Class', 'JSONP', 'this', 'jquery', 'promise', 'Generator', 'async', 'Typescript'],
         ['commonJS', 'package.json', 'path', 'file system', 'process', 'webpack', 'plugins', 'loader'],
         ['安装', '实例', '模版', '组件', 'mixins', 'router', 'vuex'],
         ['响应式布局', 'bootstrap', 'viewport'],
         ['抓包工具', 'chrome devtools', 'git', 'sublime 插件'],
-        ['HTTP'],
+        ['HTTP', '同源策略'],
         ['CSRF', 'XSS'],
         ['Thinkphp5.1', 'htaccess'],
         ['路径匹配', '浏览器渲染', '设计策略', 'cookie', '头疼的兼容', '命名规范', '字符编码', 'bat']
@@ -215,6 +219,53 @@ $(function() {
             'stroke-dashoffset': lineLength
         }, 'fast');
     });
+
+    // 代码辅助区
+    var area = document.createElement('textarea'); // 用于临时暂存复制的代码的文本域
+    var notify = document.createElement('div'); // 用于提示信息
+    notify.setAttribute('class', 'notify');
+    notify.style.opacity = '0';
+    area.style.display = 'none';
+    document.body.appendChild(area);
+    document.body.appendChild(notify);
+    var timeout = null;
+    // 代码类型提醒
+    $('.hljs').each(function(index, el) {
+        var codeType = document.createElement('div'); // 显示代码的类型（语言）
+        var codeCopy = document.createElement('div'); // 赋值代码按钮
+        codeType.setAttribute('class', 'codeType');
+        codeCopy.setAttribute('class', 'codeCopy');
+        codeCopy.setAttribute('title', '点击复制代码');
+        var type = el.getAttribute('class').split(' ')[0]; // 取出是哪种类型的代码
+        codeType.innerText = type;
+        codeCopy.style.right = codeType.innerText.length * 8 + (10 - codeType.innerText.length) + 'px'; // 动态设置距离
+        codeCopy.onclick = function() {
+            if (window.clipboardData instanceof DataTransfer) {
+                // IE
+                window.clipboardData.setData('text', el.innerText.replace(type, ''));
+            } else {
+                // 非 IE
+                area.style.display = 'inline-block'; // 显示文本框
+                area.value = el.innerText.substring(1, el.innerText.lastIndexOf('\n'));
+                area.select(); // 选中
+                document.execCommand('copy'); // 复制
+                area.style.display = 'none'; // 隐藏文本框
+            }
+            notify.innerText = '已经复制到剪切板';
+            notify.style.opacity = '1';
+            if (timeout) { clearTimeout(timeout); }
+            timeout = setTimeout(function() {
+                $(notify).animate({ opacity: 0 },
+                    'slow', function() {
+                    notify.innerText = '';
+                });
+            }, 2000);
+        };
+        el.appendChild(codeType);
+        el.appendChild(codeCopy);
+
+    });
+
     // 文章标题点击后变换样式
     var $theme = $('link').eq(2); // 主题颜色
     var $codeStyle = $('link').eq(1); // 代码颜色
@@ -234,6 +285,7 @@ $(function() {
         $('a').each(function(index, el) {
             el.href = isBright ? el.href + '?theme=dark' : el.href.replace('?theme=dark', '');
         });
+        $('.codeCopy').toggleClass('codeDark');
         isBright = !isBright;
     });
     if (url.indexOf('?theme=dark') >= 0) { $title.click(); }
@@ -313,10 +365,6 @@ $(function() {
     });
     $('a').not('.self').attr('target', '_blank'); // 所有链接默认新标签打开
 
-    // 去除多余的字符
-    function getName (str) {
-        return str.replace(/[\s$@#&;()/.]/g, '');
-    }
     var $subTitle = $('#container>section>h2'); // 一级子标题
     var subTitleNav = ''; // 子标题导航 html 字符串
     var subTitleToggleString = ''; // 子标题导航开关
@@ -330,7 +378,7 @@ $(function() {
     var currentH2 = decodeURI(url.substring(url.indexOf('#') + 1));
     currentH2 = currentH2.replace(/\?theme=(dark)|(bright)/, '');
     $subTitle.each(function() {
-        var name = getName(this.innerHTML);
+        var name = filterName(this.innerHTML);
     	// $(this).html('<a height="50%" id="' + name + '" href="#' + name + '">' + name + '</a>');
         // 子标题包裹为超链接
         $(this).wrap('<a style="height: 50%; margin: 0; padding: 0; text-decoration: none; color: #000;" id="' + name + '" href="#' + name + '"></a>');
@@ -351,7 +399,7 @@ $(function() {
     var $subTitleToggle = $('#subTitleToggle');
     var $subTitleBlock = $('#subTitleToggle div');
     $subTitleItem.each(function(){
-        var name = getName(this.innerHTML);
+        var name = filterName(this.innerHTML);
         var that = $(this);
         that.click(function(event) {
              scrollTo(name);
@@ -514,13 +562,18 @@ $(function() {
     document.body.appendChild(imgContainer);
     $('#container figure>img').each(function() {
         var el = $(this);
+        el.attr('title', '点击放大');
         el.click(function() {
             var img = document.createElement('img');
             img.style.position = 'fixed';
             img.style.left = '50%';
             img.style.top = '50%';
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '100%';
             img.style.transform = 'translateX(-50%) translateY(-50%)';
-            img.src = el.attr('src');
+            img.style.cursor = 'pointer';
+            img.setAttribute('title', '点击关闭');
+            img.setAttribute('src', el.attr('src'));
             imgContainer.style.display = mask.style.display = 'block';
             img.onclick = function() {
                 imgContainer.removeChild(img);

@@ -109,6 +109,7 @@ function 函数名(形参名: 数据类型): 数据类型 {
 					<li>Array&lt;数据类型&gt;：所有元素都是指定数据类型的数组</li>
 					<li>[数据类型1, 数据类型2, ...]：所有元素一一对应的数组</li>
 					<li>object：一切对象</li>
+					<li>class（类）</li>
 					<li>Date、RegExp 等：对应的对象实例</li>
 				</ul>
 				如果当不符合类型检测，在编译时将报错。（只是报错，剩下的依旧乖乖编译完成）
@@ -122,6 +123,17 @@ s = 'b';
 // 报错内容
 index.ts(1,7): error TS2322: Type '"a"' is not assignable to type 'number'.
 index.ts(2,1): error TS2540: Cannot assign to 's' because it is a constant or a read-only property.
+				</code></pre>
+				可以使用类对数据进行类型检查。
+				<pre><code class="javascript">
+class Dog {
+	name: string;
+	height: number;
+}
+const aDog: Dog = {
+	name: '二狗子',
+	height: 50
+};
 				</code></pre>
 				<h3>枚举</h3>
 				<p>

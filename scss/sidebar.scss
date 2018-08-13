@@ -117,6 +117,19 @@ body {
             cursor: pointer;
         }
     }
+    // 文本提示框
+    .notify {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        background-color: #9c9797;
+        color: white;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        transform: translate(-50%, -50%);
+
+    }
 }
 
 /* 展开侧栏的块 */
@@ -327,23 +340,53 @@ body {
         }
     }
     /* 代码块 */
-    pre {
-        code {
+    .hljs {
+        position: relative;
+        border-radius: 5px;
+        margin: 0;
+        padding: 10px 10% 0 10%;
+        @media (max-device-width: $deviceThreshold) {
+            padding: 0 2%;
+        }
+        // 强调代码
+        .strong {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px;
+            border: dotted 1px $strongBorderColor;
             border-radius: 5px;
-            margin: 0;
-            padding: 0 10%;
-            @media (max-device-width: $deviceThreshold) {
-                padding: 0 2%;
-            }
-            .strong {
-                display: inline-block;
-                margin: 5px;
-                padding: 5px;
-                border: dotted 1px $strongBorderColor;
-                border-radius: 5px;
 
-                background-color: $strongBackgroundColor;
+            background-color: $strongBackgroundColor;
+        }
+        // 代码类型
+        .codeType {
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding: 10px 20px;
+
+            font-family: initial;
+            text-align: right;
+        }
+        .codeCopy {
+            position: absolute;
+            background-image: url('../images/copy_bright.svg');
+            background-repeat: no-repeat;
+            background-size: 25px 25px;
+            background-origin: content-box;
+            padding: 10px 20px;
+
+            height: 25px;
+            width: 25px;
+            top: 0;
+
+            cursor: pointer;
+            &:hover {
+                opacity: .5;
             }
+        }
+        .codeDark {
+            background-image: url('../images/copy_dark.svg') !important;
         }
     }
     /* 代码展示区 */
