@@ -167,14 +167,14 @@ arr; // => ['a', 'b', 'x', 'y', 'z', 'e']
 var arr = [];
 arr[5] = 5; // => [undefined, undefined, undefined, undefined, 5]
 				</code></pre>
-				<h3>数组遍历：forEach / filter / map / findIndex / some / every</h3>
-				六者都是对数组的遍历，传入一个函数，函数的参数完全一样
+				<h3>数组遍历：forEach / filter / map / some / every</h3>
+				五者都是对数组的遍历，传入一个函数，函数的参数完全一样
 				<ul>
 					<li>element：元素值，必须</li>
 					<li>index：元素索引，可选</li>
 					<li>array：原数组，可选</li>
 				</ul>
-				六者都不会改变原来数组，forEach 返回 undefined ，filter 和 map 返回新数组，findIndex 返回第一个执行函数返回 true 的 index 值，some 和 every 返回 boolean。
+				五者都不会改变原来数组，forEach 返回 undefined ，filter 和 map 返回新数组，some 和 every 返回 boolean。
 				<pre><code class="javascript">
 // forEach 遍历所有元素，执行函数
 数组.forEach(function(element, index, array){ ... });
@@ -200,13 +200,6 @@ arr = [1, 2, 3, 4, 5].map(function(element, index, array){
 	return element * element;
 }); // => [1, 4, 9, 16, 25]
 
-// findIndex 遍历所有元素并调用函数，当函数返回 true 时返回该元素的 index
-数组.findIndex(function(element, index, array){ return ... });
-
-index = [1, 2, 3, 4, 5].findIndex(function(element, index, array) {
-	return element >= 3;
-}); // => 2
-
 // some 遍历所有元素并将所有返回结果进行或运算，最后将这个或运算的结果返回
 bool = [1, 2, 3, 4].some(function(element, index, array) { return element > 3 }); // => true
 // 其等价于
@@ -225,6 +218,40 @@ for (var i = 0; i < arr.length; i++) {
 }
 return flag;
 				</code></pre>
+				<h3>元素查找：find / findIndex / indexOf</h3>
+				<p>
+					findIndex 返回第一个执行函数返回 true 的 index 值，find 返回第一个执行函数返回 true 的元素。
+					find 和 findIndex 的参数与元素查找一样，都是传入一个函数，函数的三个参数也是如此：
+					<ul>
+						<li>element：元素值，必须</li>
+						<li>index：元素索引，可选</li>
+						<li>array：原数组，可选</li>
+					</ul>
+					indexOf 传入任意参数，功能与 findIndex 一样，不同的是直接将参数与数组的每个元素进行比较，得到传入参数在数组内的索引。
+					<pre><code class="javascript">
+// find 遍历所有元素并调用函数，当函数返回 true 时返回该元素
+// 当找不到时，返回 undefined
+element = [{name: '二狗子'}, {name: '三狗子'}, {name: '四狗子'}].find(function(element, index, array) {
+	return element.name === '三狗子';
+}); // => {name: '三狗子'}
+
+// findIndex 遍历所有元素并调用函数，当函数返回 true 时返回该元素的 index
+// 当找不到时，返回 -1
+数组.findIndex(function(element, index, array){ return ... });
+
+index = [1, 2, 3, 4, 5].findIndex(function(element, index, array) {
+	return element >= 3;
+}); // => 2
+
+// indexOf 功能与 findIndex 一样
+// 当找不到时，返回 -1
+index = ['二狗子', '三狗子', '四狗子'].indexOf('三狗子'); // => 1
+index = [{name: '二狗子'}, {name: '三狗子'}, {name: '四狗子'}].indexOf({name: '三狗子'}); // => -1
+// 对象是引用类型，通过新建对象进行直接比较结果为 false，比如以下得到的都是 false
+{a: 1} === {a: 1}
+{a: 1} == {a: 1}
+					</code></pre>
+				</p>
 				<h3>数组计算：reduce</h3>
 				<p>
 					reduce 类似于遍历，但会将遍历后的计算结果返回，传入两个参数。
@@ -439,7 +466,7 @@ Object.defineProperties(obj, {
 							<td>属性值 / 键值</td>
 							<td>赋值的值</td>
 							<td>字面量的值</td>
-							<td>赋值的值，若 value 则为 undefined</td>
+							<td>赋值的值，使用 对象.属性名 所获得的值，若忽略 value 则为 undefined</td>
 						</tr>
 						<tr>
 							<td>enumerable</td>
@@ -464,19 +491,55 @@ Object.defineProperties(obj, {
 						</tr>
 						<tr>
 							<td>get</td>
-							<td>getter 函数，该函数的返回值便是 对象.属性名 所获得的值</td>
+							<td>getter 函数，该函数的返回值便是 对象.属性名 所获得的值，获取时触发</td>
 							<td>无</td>
 							<td>无</td>
 							<td>无</td>
 						</tr>
 						<tr>
 							<td>set</td>
-							<td>setter 函数，当属性的值被修改时自动被调用</td>
+							<td>setter 函数，当属性的值被修改时自动被调用，设置时触发</td>
 							<td>无</td>
 							<td>无</td>
 							<td>无</td>
 						</tr>
 					</table>
+					<div class="tip">
+						<ul>
+							<li>当使用诸如 对象.属性名 = 新值 时，只会触发 setter ，而不会触发 getter 。</li>
+							<li>(value 与 writable) 和 (getter 与 setter) 不能同时具有，否则会报错</li>
+						</ul>
+					</div>
+					<h5>拦截</h5>
+					getter 和 setter 更像是拦截器，原本你可能只是给对象赋一个属性。
+					<pre><code class="javascript">
+var obj = {};
+obj.a = 'hello world';
+console.log(obj.a); // => hello world
+					</code></pre>
+					但随后可能觉得不妥，不能直接让别人直接使用 obj.a 获得属性 a ，于是写了 getter。
+					<pre><code class="javascript">
+Object.defineProperty(obj, 'a', {
+	get: function() {
+		return '你不能获得 a 的值！';
+	}
+});
+console.log(obj.a); // => 你不能获得 a 的值！
+obj.a = '我就是要获得 a 的值';
+console.log(obj.a); // => 你不能获得 a 的值！
+					</code></pre>
+					这时候无论你做什么都改变不了 a 的值，每次使用 obj.a 都会获得同一个结果。
+					<pre><code class="javascript">
+console.log(obj);
+// =>
+{
+	a: "你不能获得 a 的值！",
+	get: function() {
+		return '你不能获得 a 的值！';
+	},
+	__proto__: Object
+}
+					</code></pre>
 					<h4>获得描述符：Object.getOwnPropertyDescriptor</h4>
 					<pre><code class="javascript">
 var obj = {};

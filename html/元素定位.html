@@ -140,8 +140,7 @@
 			<p>
 				<span class="definition"> fixed </span>使元素相对视窗偏移，元素脱离文档流和文本流。<br>
 				<div class="show">
-					<input id="show-fixed" type="button" value="显示fixed框">
-					<div id="fixed-info"></div>
+					<input id="show-fixed" type="button" value="显示 fixed 框">
 				</div>
 				<div id="fixed-block" style="
 					display: none;
@@ -155,15 +154,16 @@
 					top: 0;
 					right: 0;
 				">
-					fixed
+					上下滚动
 				</div>
 				<script>
 					var showFixed = document.getElementById('show-fixed');
 					var fixedBlock = document.getElementById('fixed-block');
-					var fixedInfo = document.getElementById('fixed-info');
+					var flag = true;
 					showFixed.onclick = function() {
-						fixedBlock.style.display = 'block';
-						fixedInfo.innerHTML = '请试一试上下滚动。';
+						fixedBlock.style.display = flag ? 'block' : 'none';
+						showFixed.value = flag ? '隐藏 fixed 框' : '显示 fixed 框';
+						flag = !flag;
 					};
 				</script>
 				<pre><code class="html">
@@ -184,10 +184,33 @@
 				</code></pre>
 			</p>
 		</section>
+		<section>
+			<h2>位置</h2>
+			<p>
+				如何确定一个元素的位置？关于 Y 轴的有：
+				<ul>
+					<li>style.height：元素高度</li>
+					<li>style.top：元素上方偏移量</li>
+					<li>clientTop：元素样式 border-top 的 border-width</li>
+					<li>scrollTop：元素内滚动条的偏移量 / 被隐藏的部分内容的高度</li>
+					<li>offsetTop：和父标签的距离，top + margin-top</li>
+					<li>clientHeight：可视区的高度，height + padding-top + padding-bottom</li>
+					<li>scrollHeight：内容高度 + padding-top + padding-bottom</li>
+					<li>offsetHeight：内容高度（IE、Opera、FF） / height（chrome） + padding-top + padding-bottom + border-top + border-bottom</li>
+				</ul>
+				其中 height 指的是样式上的高度，而"内容高度"指的是元素内的内容的实际高度，比如有 100 行文字，每行文字的 line-height 为 16px ，那内容高度就有 160px，而设置了 height: 100px，那 height 就为 100px。
+				<figure>
+					<img src="../images/position_box.jpg" alt="">
+					<figcaption>实际例子可查看<a href="../demo/position_demo.html">此处</a></figcaption>
+				</figure>
+				其他的 left、right、bottom、width 同理。
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
 				<div>[1] Eric A. Meyer 《CSS权威指南》</div>
+				<div>[2] 柚子君 js中的各种“位置”——“top、clientTop、scrollTop、offsetTop……”，你知道多少 <a href="https://www.cnblogs.com/youziclub/p/4811069.html">https://www.cnblogs.com/youziclub/p/4811069.html</a></div>
 			</p>
 		</section>
 	</article>

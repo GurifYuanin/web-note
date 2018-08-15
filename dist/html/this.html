@@ -29,16 +29,20 @@
 			<p>
 				当调用一个函数<span class="defintion"> foo() </span>时，实际上执行的代码为：
 				<pre><code class="javscript">
+上下文对象.foo(参数);
+// 等价于 =>
 foo.call(上下文对象, 参数);
 				</code></pre>
-				在函数内使用的 this ，实际上使用的是传入的<span class="defintion"> 上下文对象 </span>
+				在函数内使用的 this 指针，实际上是在使用传入的<span class="defintion"> 上下文对象 </span>
 				<pre><code class="javascript">
 function foo () {
 	console.log(this.message);
 }
+// 将 {message: 'hello world'} 作为上下文对象（this） 传入
 foo.call({message: 'hello world'}); // => hello world
-
-// 全局环境且非严格模式下直接调用函数
+				</code></pre>
+				非严格的全局环境下直接使用函数，传入的上下文对象是 window，而在不同情况下，默认传入的上下文对象有所不同，该文就是列举不同情况下的 this 指针。
+				<pre><code class="javascript">
 foo();
 // 等价于 =>
 foo.call(window);

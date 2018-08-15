@@ -121,11 +121,11 @@
 			</p>
 		</section>
 		<section>
-			<h2>top/right/bottom/left</h2>
+			<h2>top / right / bottom / left</h2>
 			<p>
 				<ul>
-					<li>top/bottom 相对于非 static 祖先标签的 height</li>
-					<li>left/right 相对于非 static 祖先标签的 width</li>
+					<li>top / bottom 相对于非 static 祖先标签的 height</li>
+					<li>left / right 相对于非 static 祖先标签的 width</li>
 				</ul>
 				<pre><code class="">
 &lt;div style="position: relative; height: 200px; width: 200px; border: solid 1px #000;"&gt;relative
@@ -140,6 +140,18 @@
 							<div style="position: absolute; top: 50%; left: 50%; border: solid 1px #000;">absolute</div>
 						</div>
 					</div>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>translate / translateX / translateY</h2>
+			<p>
+				xy 轴偏移，百分比相对的都是自身元素的宽高。
+				<pre><code class="html">
+&lt;div style="transform: translate(50%, 50%); width: 100px; height: 100px; background-color: yellow"&gt;&lt;/div&gt;
+				</code></pre>
+				<div class="show">
+					<div style="transform: translate(50%, 50%); width: 100px; height: 100px; background-color: yellow"></div>
 				</div>
 			</p>
 		</section>

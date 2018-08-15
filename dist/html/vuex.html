@@ -152,7 +152,7 @@ export default {
 new Vuex.Store({
 	actions: {
 		asyncUpdateGreet: function (context, string) {
-			// context 类似于 store 对象，可以通过 context 访问 store 的 state、getters、commit 等
+			// context 类似于 store 对象，可以通过 context 访问 store 的 state、getters、commit、dispatch 等
 			setTimeout(function() {
 				context.commit('updateGreet', string);
 			}, 3000);
@@ -288,6 +288,25 @@ export default {
 		b: function () {
 			return this.$store.state.a;
 		}
+	}
+}
+					</code></pre>
+				</p>
+				<h3>getters</h3>
+				<p>
+					映射 getters 类似于 state。
+					<pre><code class="javascript">
+import {mapGetters} from 'vuex';
+export default {
+	computed: {
+		...mapGetters({
+			b: 'a'
+		}),
+		...mapGetters(['a']),
+		...mapGetters('md', {
+			b: 'a'
+		}),
+		...mapGetters('md', ['a'])
 	}
 }
 					</code></pre>
