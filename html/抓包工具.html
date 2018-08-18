@@ -28,8 +28,10 @@
 			<h2>Fiddler</h2>
 			<p>
 				Fiddler 是一个 http 协议调试代理工具。<sup>[1]</sup><br>
-				Fiddler 的工作原理是在客户端和服务器之间设置一个<span class="definition"> 127.0.0.1:8888 </span>的代理，从客户端发出的请求会先经过这个代理再发送给服务器，服务器响应的数据也会经过这个代理再发送到客户端。<br>
-				<img src="../images/proxy.jpg" alt="加载失败" style="width: 100%;">
+				Fiddler 的工作原理是在客户端和服务器之间设置一个<span class="definition"> 127.0.0.1:8888 </span>的代理，从客户端发出的请求会先经过这个代理再发送给服务器，服务器响应的数据也会经过这个代理再发送到客户端。
+				<figure>
+					<img src="../images/proxy.jpg" alt="加载失败">
+				</figure>
 			</p>
 		</section>
 		<section>
@@ -46,7 +48,9 @@
 			<h2>界面</h2>
 			<p>
 				打开 Fiddler 后，打开(菜单栏 -> File ->)<span class="definition"> Capture Traffic </span>功能(默认打开)， Fiddler 就开始捕获从客户端发起的 HTTP 请求。
-				<img src="../images/Fiddler_UI.jpg" alt="加载失败" style="width: 100%;">
+				<figure>
+					<img src="../images/Fiddler_UI.jpg" alt="加载失败">
+				</figure>
 				左边是抓取到的数据，右边是对数据的查看与操作。<br>
 				可执行操作：
 				<ul>
@@ -81,11 +85,11 @@
 							<li>Cookies：查看发起请求时携带的 cookies</li>
 							<li>Raw：查看原生 HTTP 报文</li>
 							<figure>
-								<img src="../images/fidder_raw.jpg" alt="">
+								<img src="../images/fidder_raw.jpg">
 							</figure>
 							<li>JSON：将报文主体的 JSON 数据美观化</li>
 							<figure>
-								<img src="../images/fidder_json.jpg" alt="">
+								<img src="../images/fidder_json.jpg">
 								<figcaption>发送 <span class="definition">{"a": 1,"b": 2}</span>，查看时的显示</figcaption>
 							</figure>
 							<li>XML：将报文主体以 XML 格式显示</li>

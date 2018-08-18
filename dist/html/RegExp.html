@@ -25,78 +25,6 @@
 			<h1 id="title">正则表达式</h1>
 		</hgroup>
 		<section>
-			<h2>正则对象</h2>
-			<p>
-				<h3>创建</h3>
-				<p>
-					存在两种方法创建正则对象：字面量、使用 new 关键字。
-					<pre><code class="javascript">
-// 以下几种方法创建出来的正则对象都是等价的
-var exp1 = /abc/g;
-var exp2 = new RegExp('abc', 'g');
-var exp3 = new RegExp(/abc/g);
-var exp3 = new RegExp(/abc/, 'g');
-					</code></pre>
-				</p>
-				<h3>属性</h3>
-				<p>
-					正则对象有以下属性成员：
-					<table>
-						<tr>
-							<th>属性名</th>
-							<th>属性值</th>
-							<th>类型</th>
-						</tr>
-						<tr>
-							<td>lastIndex</td>
-							<td>下次匹配开始的位置，相当于执行了"被匹配字符串.substring(lastIndex)"</td>
-							<td>整型</td>
-						</tr>
-						<tr>
-							<td>global</td>
-							<td>是否有修饰符 g</td>
-							<td>布尔型</td>
-						</tr>
-						<tr>
-							<td>ignoreCase</td>
-							<td>是否使用了修饰符 i</td>
-							<td>布尔型</td>
-						</tr>
-						<tr>
-							<td>multiline</td>
-							<td>是否使用了修饰符 m</td>
-							<td>布尔型</td>
-						</tr>
-						<tr>
-							<td>unicode</td>
-							<td>是否使用了修饰符 u</td>
-							<td>布尔型</td>
-						</tr>
-						<tr>
-							<td>sticky</td>
-							<td>是否使用了修饰符 y</td>
-							<td>布尔型</td>
-						</tr>
-						<tr>
-							<td>dotAll</td>
-							<td>是否使用了修饰符 s</td>
-							<td>布尔型</td>
-						</tr>
-						<tr>
-							<td>flags</td>
-							<td>返回所有使用的修饰符</td>
-							<td>字符串</td>
-						</tr>
-						<tr>
-							<td>source</td>
-							<td>正则表达式内容，结果相当于 toString() 方法</td>
-							<td>字符串</td>
-						</tr>
-					</table>
-				</p>
-			</p>
-		</section>
-		<section>
 			<h2>组成部分</h2>
 			<p>
 				正则表达式包括两部分：
@@ -118,29 +46,19 @@ var exp3 = new RegExp(/abc/, 'g');
 							<td>匹配去掉左侧 \ 的右侧字符</td>
 						</tr>
 						<tr>
-							<td>. 或 [^\n\r\u2028\u2029]</td>
+							<td>. 或 [^\n\r]</td>
 							<td></td>
-							<td>除了 \n(换行符) 和 \r(回车符) 和 \u2028(行分隔符) 和 \u2029(段分隔符) 外的任意字符</td>
+							<td>除了换行和回车外的任意字符</td>
 						</tr>
 						<tr>
 							<td>[]</td>
 							<td></td>
-							<td>方框内任意一个字符</td>
+							<td>方框内任意一个</td>
 						</tr>
 						<tr>
 							<td>[^]</td>
 							<td></td>
-							<td>不是方框内任意一个字符的一个字符</td>
-						</tr>
-						<tr>
-							<td>|</td>
-							<td></td>
-							<td>前一个字符或者后一个字符</td>
-						</tr>
-						<tr>
-							<td>()</td>
-							<td></td>
-							<td>将若干个字符分为一个组</td>
+							<td>方框内的任意一个都不匹配</td>
 						</tr>
 						<tr>
 							<td>\w 或 [a-zA-Z]</td>
@@ -210,7 +128,7 @@ var exp3 = new RegExp(/abc/, 'g');
 						<tr>
 							<td>+? 或 *?</td>
 							<td></td>
-							<td>非贪心匹配，尽可能少匹配</td>
+							<td>贪心匹配，尽可能多匹配</td>
 						</tr>
 						<tr>
 							<td>{x}</td>
@@ -225,22 +143,12 @@ var exp3 = new RegExp(/abc/, 'g');
 						<tr>
 							<td>字符串A(?=字符串B)</td>
 							<td>positive lookahead</td>
-							<td>匹配 "字符串A字符串B" ，但字符串B不会作为匹配结果的一部分</td>
+							<td>相当于匹配 /字符串A字符串B/，但字符串B不会被作为匹配结果的一部分</td>
 						</tr>
 						<tr>
 							<td>字符串A(?!字符串B)</td>
 							<td>negative lookahead</td>
-							<td>匹配 "字符串A且后面没有字符串B" ，相当于 /字符串A/ 的结果集减去 /字符串A字符串B/ 的结果集</td>
-						</tr>
-						<tr>
-							<td>(?&lt;=字符串A)字符串B</td>
-							<td>positive lookbehind</td>
-							<td>匹配 "字符串A字符串B" ，但字符串A不会作为匹配结果的一部分</td>
-						</tr>
-						<tr>
-							<td>(?&lt;!字符串A)字符串B</td>
-							<td>negative lookahead</td>
-							<td>匹配 "字符串B且前面没有字符串A" ，相当于 /字符串B/ 的结果集减去 /字符串A字符串B/ 的结果集</td>
+							<td>相当于 /字符串A/ 的结果减去 /字符串A字符串B/ 的结果</td>
 						</tr>
 					</table>
 				</p>
@@ -270,17 +178,69 @@ var exp3 = new RegExp(/abc/, 'g');
 						<tr>
 							<td>u</td>
 							<td>unicode</td>
-							<td>unicode 模式，可以识别 unicode 编码大于 FFFF 的字符</td>
-						</tr>
-						<tr>
-							<td>s</td>
-							<td>dotAll 模式</td>
-							<td>使用后元字符 . 表示任意字符</td>
+							<td>unicode 模式</td>
 						</tr>
 						<tr>
 							<td>y</td>
 							<td>sticky</td>
-							<td>类似 g，但保证匹配结果与上次匹配结果的结束位置粘连</td>
+							<td></td>
+						</tr>
+					</table>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>正则对象</h2>
+			<p>
+				<h3>创建</h3>
+				<p>
+					存在两种方法创建正则对象：字面量、使用 new 关键字。
+					<pre><code class="javascript">
+// 以下几种方法创建出来的正则对象都是等价的
+var exp1 = /abc/g;
+var exp2 = new RegExp('abc', 'g');
+var exp3 = new RegExp(/abc/g);
+var exp3 = new RegExp(/abc/, 'g');
+					</code></pre>
+				</p>
+				<h3>属性</h3>
+				<p>
+					正则对象有以下属性成员：
+					<table>
+						<tr>
+							<th>属性名</th>
+							<th>属性值</th>
+							<th>类型</th>
+						</tr>
+						<tr>
+							<td>lastIndex</td>
+							<td>下次匹配开始的位置，相当于执行了"被匹配字符串.substring(lastIndex)"</td>
+							<td>整型</td>
+						</tr>
+						<tr>
+							<td>global</td>
+							<td>是否有标识符 g</td>
+							<td>布尔型</td>
+						</tr>
+						<tr>
+							<td>ignoreCase</td>
+							<td>是否使用了标识符 i</td>
+							<td>布尔型</td>
+						</tr>
+						<tr>
+							<td>multiline</td>
+							<td>是否使用了标识符 m</td>
+							<td>布尔型</td>
+						</tr>
+						<tr>
+							<td>flags</td>
+							<td>返回所有使用的标识符</td>
+							<td>字符串</td>
+						</tr>
+						<tr>
+							<td>source</td>
+							<td>正则表达式内容，结果相当于 toString() 方法</td>
+							<td>字符串</td>
 						</tr>
 					</table>
 				</p>
@@ -310,7 +270,7 @@ var exp3 = new RegExp(/abc/, 'g');
 		<section>
 			<h2>exec</h2>
 			<p>
-				正则对象用于获得匹配的字符串，分为两个版本，带有修饰符 g 和无修饰符 g：
+				正则对象用于获得匹配的字符串，分为两个版本，带有标识符 g 和无标识符 g：
 				<table>
 					<tr>
 						<th>版本</th>
@@ -350,35 +310,19 @@ expg.exec(str); // => ["1", index: 4, input: "1a1a1a", groups: undefined]
 				</code></pre>
 				如果匹配成功，返回值是一个数组对象，有以下成员：
 				<ul>
-					<li>0：匹配的完整结果</li>
-					<li>1：第一个分组的匹配结果</li>
-					<li>2：第二个分组的匹配结果</li>
-					<li>3：...</li>
+					<li>0：匹配的第一个结果，若无 g ，则只有一个结果</li>
+					<li>1：...</li>
 					<li>groups：所在分组</li>
 					<li>index：即正则对象的 lastIndex</li>
 					<li>input：完整的字符串</li>
 					<li>length：数组长度</li>
 				</ul>
-				<pre><code class="javascript">
-/^(1)(2)$/.exec('12');
-// =>
-[
-	0: "12"
-	1: "1"
-	2: "2"
-	groups: undefined
-	index: 0
-	input: "12"
-	length: 3
-]
-				</code></pre>
 			</p>
 		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
 				<div>[1] 菜鸟教程 正则表达式<a href="http://www.runoob.com/js/js-regexp.html">http://www.runoob.com/js/js-regexp.html</a></div>
-				<div>[2] 阮一峰 ES6入门 <a href="http://es6.ruanyifeng.com/#docs/regex#s-%E4%BF%AE%E9%A5%B0%E7%AC%A6%EF%BC%9AdotAll-%E6%A8%A1%E5%BC%8F">http://es6.ruanyifeng.com/#docs/regex#s-%E4%BF%AE%E9%A5%B0%E7%AC%A6%EF%BC%9AdotAll-%E6%A8%A1%E5%BC%8F</a></div>
 			</p>
 		</section>
 	</article>

@@ -548,39 +548,87 @@ $(function() {
     // 正文内容的图片点击后预览
     var mask = document.createElement('div');
     var imgContainer = document.createElement('div');
-    imgContainer.style.position = 'relative';
-    mask.style.position = 'fixed';
-    imgContainer.style.top = mask.style.top = '0';
-    imgContainer.style.right = mask.style.right = '0';
-    imgContainer.style.bottom = mask.style.bottom = '0';
-    imgContainer.style.left = mask.style.left = '0';
-    mask.style.opacity = '.8';
-    mask.style.backgroundColor = '#000';
-    imgContainer.style.display = mask.style.display = 'none';
-    imgContainer.style.overflow = 'auto';
+    mask.setAttribute('class', 'mask');
+    imgContainer.setAttribute('class', 'imgContainer');
+    imgContainer.onclick = bothDisapper;
+    window.addEventListener('scroll', bothDisapper);
     document.body.appendChild(mask);
     document.body.appendChild(imgContainer);
+
+    var smaller = document.createElement('div');
+    var bigger = document.createElement('div');
+    smaller.innerText = '-';
+    bigger.innerText = '+';
+    smaller.style.opacity = bigger.style.opacity = 0;
+    smaller.style.borderRadius = '5px 0 0 5px';
+    bigger.style.borderRadius = '0 5px 5px 0';
+    smaller.style.marginLeft = '-1px';
+    bigger.style.marginRight = '-1px';
+    smaller.setAttribute('class', 'scaleDiv');
+    bigger.setAttribute('class', 'scaleDiv');
+    smaller.setAttribute('title', '缩小图像');
+    bigger.setAttribute('title', '放大图像');
+    var disapearTimer = null;
+    function getIncreatement (img) {
+        return img.naturaWidth ?
+               img.naturaWidth * .2 : // 固定缩放量，IE9+ 专属
+               img.offsetWidth * .2 ; // 每次缩放为当前宽度的 20%
+    }
+    function bothDisapper () {
+        smaller.style.opacity = bigger.style.opacity = 0;
+        if (disapearTimer) { clearTimeout(disapearTimer); }
+        disapearTimer = setTimeout(function() {
+            smaller.style.display = bigger.style.display = 'none';
+        }, 1000);
+    }
+    smaller.onclick = function () {
+        var child = imgContainer.lastChild;
+        var oldWidth = child.offsetWidth || child.scrollWidth;
+        child.style.width = oldWidth - getIncreatement(child) + 'px';
+    };
+    bigger.onclick = function () {
+        var child = imgContainer.lastChild;
+        var oldWidth = child.offsetWidth || child.scrollWidth;
+        child.style.width = oldWidth + getIncreatement(child) + 'px';
+    };
+    document.body.appendChild(smaller);
+    document.body.appendChild(bigger);
     $('#container figure>img').each(function() {
         var el = $(this);
         el.attr('title', '点击放大');
         el.click(function() {
             var img = document.createElement('img');
-            img.style.position = 'fixed';
+            img.style.position = 'absolute';
             img.style.left = '50%';
             img.style.top = '50%';
-            img.style.maxWidth = '100%';
-            img.style.maxHeight = '100%';
-            img.style.transform = 'translateX(-50%) translateY(-50%)';
+            img.style.transform = 'translate(-50%, -50%)';
             img.style.cursor = 'pointer';
-            img.setAttribute('title', '点击关闭');
+            img.style.transition = 'width 1s';
+            img.setAttribute('title', '左键关闭，右键缩放菜单');
             img.setAttribute('src', el.attr('src'));
             imgContainer.style.display = mask.style.display = 'block';
+            // 按下右键弹出选项
+            img.oncontextmenu = function (e) {
+                if (disapearTimer) { clearTimeout(disapearTimer); }
+                smaller.style.display = bigger.style.display = 'block';
+                smaller.style.opacity = bigger.style.opacity = 1;
+                bigger.style.left = e.pageX + 'px';
+                smaller.style.left = e.pageX - 50 + 'px';
+                smaller.style.top = bigger.style.top = e.pageY + 'px';
+                // 取消默认事件
+                e.preventDefault(); // 非IE
+                e.returnValue = false; // IE
+                return false;
+            };
+            // 按下左键关闭图像
             img.onclick = function() {
                 imgContainer.removeChild(img);
                 imgContainer.style.display = 'none';
                 mask.style.display = 'none';
+                bothDisapper();
             };
             imgContainer.appendChild(img);
+            img.style.width = img.offsetWidth + 'px';
         });
     });
     // $('html').eq(0).css('font-size', getRootFontSize()); // 设置 html（根） 字体大小
