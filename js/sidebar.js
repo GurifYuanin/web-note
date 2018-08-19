@@ -24,7 +24,7 @@ $(function() {
     function getViewport(target) {
         // 使用指定窗口，默认使用当前窗口
         target = target || window;
-        // 以此检查 IE8及以前-> 标准模式 -> 怪异模式
+        // 以此检查 IE9+ -> 标准模式 -> 怪异模式
         var width = window.innerWidth || document.documentElement.clientWidth  || document.body.clientWidth;
         var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
         return {
@@ -548,7 +548,35 @@ $(function() {
     // 正文内容的图片点击后预览
     var mask = document.createElement('div');
     var imgContainer = document.createElement('div');
+    var closeImg = document.createElement('div');
+    var resetImg = document.createElement('div');
+    var imgOriginWidth = null;
+    closeImg.innerText = 'x';
+    closeImg.setAttribute('title', '关闭');
+    closeImg.setAttribute('class', 'closeImg');
+    closeImg.onclick = function () {
+        if (imgContainer.lastChild instanceof HTMLImageElement) {
+            imgContainer.removeChild(imgContainer.lastChild);
+            imgContainer.style.display = 'none';
+            mask.style.display = 'none';
+            bothDisapper();
+        }
+    };
+    resetImg.innerText = 'r';
+    resetImg.setAttribute('class', 'closeImg');
+    resetImg.style.right = '50px';
+    resetImg.setAttribute('title', '复原');
+    resetImg.onclick = function () {
+        if (imgContainer.lastChild instanceof HTMLImageElement) {
+            imgContainer.lastChild.style.padding = '0px';
+            if (imgOriginWidth) {
+                imgContainer.lastChild.style.width = imgOriginWidth + 'px';
+            }
+        }
+    };
     mask.setAttribute('class', 'mask');
+    imgContainer.appendChild(closeImg);
+    imgContainer.appendChild(resetImg);
     imgContainer.setAttribute('class', 'imgContainer');
     imgContainer.onclick = bothDisapper;
     window.addEventListener('scroll', bothDisapper);
@@ -569,10 +597,25 @@ $(function() {
     smaller.setAttribute('title', '缩小图像');
     bigger.setAttribute('title', '放大图像');
     var disapearTimer = null;
+    // 获得元素的宽度
+    function getWidth (el) {
+        var ret =  window.getComputedStyle ?
+                   getComputedStyle(el).width :
+                   el.currentStyle.width;
+        ret = Number.parseInt(ret);
+        return ret === 0 ?
+               el.clientWidth || el.scrollWidth || el.offsetWidth :
+               ret;
+    }
+    // 获得每次缩放的增量
     function getIncreatement (img) {
-        return img.naturaWidth ?
-               img.naturaWidth * .2 : // 固定缩放量，IE9+ 专属
-               img.offsetWidth * .2 ; // 每次缩放为当前宽度的 20%
+        if (img) {
+            return img.naturaWidth ?
+                   img.naturaWidth * .2 : // 固定缩放量，IE9+ 专属
+                   getWidth(img) * .2 ; // 每次缩放为当前宽度的 20%
+       } else {
+            return 50;
+       }
     }
     function bothDisapper () {
         smaller.style.opacity = bigger.style.opacity = 0;
@@ -581,15 +624,40 @@ $(function() {
             smaller.style.display = bigger.style.display = 'none';
         }, 1000);
     }
-    smaller.onclick = function () {
+    // 偏移图像
+    function offsetImg (e, flag) {
+        var img = imgContainer.lastChild;
+        if (img instanceof HTMLImageElement && e) {
+            var vw = getViewport();
+            var h = vw.height / 2 - e.clientY;
+            var w = vw.width / 2 - e.clientX;
+            h = flag ? h / 2 : Math.sqrt(h);
+            w = flag ? w / 2 : Math.sqrt(w);
+            var left = Number.parseInt(img.style.paddingLeft),
+                right = Number.parseInt(img.style.paddingRight),
+                top = Number.parseInt(img.style.paddingTop),
+                bottom = Number.parseInt(img.style.paddingBottom);
+            flag ? left += w - right : left -= w - right;
+            flag ? right -= w : right += w;
+            flag ? bottom += h - top : bottom -= h - top;
+            flag ? top += h : top -= h;
+            img.style.paddingLeft = Math.max(left, 0) + 'px';
+            img.style.paddingRight = Math.max(right, 0) + 'px';
+            img.style.paddingTop = Math.max(top, 0) + 'px';
+            img.style.paddingBottom = Math.max(bottom, 0) + 'px';
+        }
+    }
+    smaller.onclick = function (e) {
         var child = imgContainer.lastChild;
-        var oldWidth = child.offsetWidth || child.scrollWidth;
+        var oldWidth = getWidth(child);
         child.style.width = oldWidth - getIncreatement(child) + 'px';
+        offsetImg(e, false);
     };
-    bigger.onclick = function () {
+    bigger.onclick = function (e) {
         var child = imgContainer.lastChild;
-        var oldWidth = child.offsetWidth || child.scrollWidth;
+        var oldWidth = getWidth(child);
         child.style.width = oldWidth + getIncreatement(child) + 'px';
+        offsetImg(e, true);
     };
     document.body.appendChild(smaller);
     document.body.appendChild(bigger);
@@ -598,13 +666,8 @@ $(function() {
         el.attr('title', '点击放大');
         el.click(function() {
             var img = document.createElement('img');
-            img.style.position = 'absolute';
-            img.style.left = '50%';
-            img.style.top = '50%';
-            img.style.transform = 'translate(-50%, -50%)';
-            img.style.cursor = 'pointer';
-            img.style.transition = 'width 1s';
-            img.setAttribute('title', '左键关闭，右键缩放菜单');
+            img.setAttribute('class', 'tmpImg');
+            img.setAttribute('title', '点击右键打开缩放菜单');
             img.setAttribute('src', el.attr('src'));
             imgContainer.style.display = mask.style.display = 'block';
             // 按下右键弹出选项
@@ -620,15 +683,10 @@ $(function() {
                 e.returnValue = false; // IE
                 return false;
             };
-            // 按下左键关闭图像
-            img.onclick = function() {
-                imgContainer.removeChild(img);
-                imgContainer.style.display = 'none';
-                mask.style.display = 'none';
-                bothDisapper();
-            };
             imgContainer.appendChild(img);
-            img.style.width = img.offsetWidth + 'px';
+            imgOriginWidth = getWidth(img);
+            img.style.width = imgOriginWidth + 'px';
+            img.style.padding = '0px';
         });
     });
     // $('html').eq(0).css('font-size', getRootFontSize()); // 设置 html（根） 字体大小

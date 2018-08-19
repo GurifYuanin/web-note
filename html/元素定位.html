@@ -206,6 +206,64 @@
 				其他的 left、right、bottom、width 同理。
 			</p>
 		</section>
+		<section>
+			<h2>整体宽高</h2>
+			<p>
+				在这之前需要知道以下元素代表什么：
+				<ul>
+					<li>window.document：当前页面文档</li>
+					<li>window.document.documentElement：即 html 元素</li>
+					<pre><code class="javascript">
+window.document.documentElement === document.getElementsByTagName('html')[0] // => true
+					</code></pre>
+					<li>window.document.body：即 body 元素</li>
+					<pre><code class="javascript">
+window.document.body === document.getElementsByTagName('body')[0] // => true
+					</code></pre>
+				</ul>
+				<table>
+					<tr>
+						<th>名</th>
+						<th>值</th>
+						<th>兼容性</th>
+					</tr>
+					<tr>
+						<td>window.innerWidth / window.innerHeight</td>
+						<td>window(窗口)可视区宽高</td>
+						<td>IE9 及以上</td>
+					</tr>
+					<tr>
+						<td>window.document.documentElement.clientWidth / window.document.documentElement.clientHeight</td>
+						<td>viewport(视窗) / html 元素宽高</td>
+						<td>IE7 及以上</td>
+					</tr>
+					<tr>
+						<td>window.document.body.clientWidth / window.document.body.clientHeight</td>
+						<td>body 元素宽高</td>
+						<td>无</td>
+					</tr>
+					<tr>
+						<td>getComputedStyle(元素).width / getComputedStyle(元素).height</td>
+						<td>获得元素的最终（嵌入 + 内联 + 外联）样式宽高</td>
+						<td>IE9 及以上</td>
+					</tr>
+				</table>
+				<h3>window.innerWidth / window.innerHeight</h3>
+				<figure>
+					<img src="../images/position_inner.jpg" alt="">
+				</figure>
+				<h3>window.document.documentElement.clientWidth / window.document.documentElement.clientHeight</h3>
+				<figure>
+					<img src="../images/position_client.jpg" alt="">
+					<figcaption>参照上一节 clientWidth = width + padding-left + padding-right - 滚动条宽度</figcaption>
+				</figure>
+				<h3>window.document.documentElement.clientWidth / window.document.documentElement.clientHeight</h3>
+				<figure>
+					<img src="../images/position_body_client.jpg" alt="">
+					<figcaption>body 主体内容非 static 和 relative 元素，所以 body 高度为 0</figcaption>
+				</figure>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
