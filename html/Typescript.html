@@ -60,17 +60,21 @@ $ tsc
 				</p>
 				<h3>tsconfig.json</h3>
 				<p>
+					以下为 ts 编译的部分配置项，完整的选项查看<a href="http://www.typescriptlang.org/docs/handbook/compiler-options.html"> ts 官方文档</a>。
 					<pre><code class="json">
 {
 	"compileOnSave": true, // 文件修改时自动编译
+	// 编译选项，必需
 	"compilerOptions": {
-		"module": "commonjs",
-		"noImplicitAny": true,
+	"outFile": "src/js/main.js", // 编译后输出的 js 文件
+	"target": "es5", // 编译后的 js 版本
+		"allowJs": false, // 是否连同 js 文件也编译
+		"module": "commonjs", // 模块语法
+		"noImplicitAny": true, // 编译器无法推断出类型时是否报错
 		"removeComments": true, // 是否删除注释
-		"preserveConstEnums": true,
-		"outFile": "src/js/main.js", // 编译后输出的 js 文件
+		"preserveConstEnums": true, // 是否保留 enum
 		"sourceMap": true, // 编译后生成一个 .map 文件，用于映射 ts 和 js 文件
-		"target": "es5" // 编译后的 js 版本
+		"lib": ["es2015", "dom"] // 安装额外的库文件
 	},
 	"files": [
 		"index.ts" // 指定具体文件编译
@@ -82,6 +86,29 @@ $ tsc
 	    "node_modules" // 使用 glob 匹配文件不编译
 	]
 }
+					</code></pre>
+				</p>
+				<h3>typings files</h3>
+				<p>
+					ts 默认会按照以下路径去寻找第三方库文件（jquery、node 等）：
+					<ol>
+						<li>node_modules/@types</li>
+						<li>../node_modules/@types</li>
+						<li>../../node_modules/@types</li>
+						<li>...</li>
+					</ol>
+					你也可以在 tsconfig.json 中进行修改：
+					<pre><code class="json">
+{
+	"compilerOptions": {
+		"types": ["node"], // 方式一，按照上面路径去寻找 node 环境的库
+		"typeRoots": ["node_modules/@types"] // 方式二，寻找 node_modules/@types 下的所有库
+	}
+}
+					</code></pre>
+					然后需要做的是下载需要的库
+					<pre><code class="shell">
+npm install --save-dev @type/node
 					</code></pre>
 				</p>
 			</p>
@@ -388,9 +415,10 @@ namespace A {
 		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
-			<div>
-				[1] TypeScript Handbook（中文版） <a href="https://www.runoob.com/manual/gitbook/TypeScript/_book/index.html">https://www.runoob.com/manual/gitbook/TypeScript/_book/index.html</a>
-			</div>
+			<p>
+				<div>[1] TypeScript Handbook（中文版） <a href="https://www.runoob.com/manual/gitbook/TypeScript/_book/index.html">https://www.runoob.com/manual/gitbook/TypeScript/_book/index.html</a></div>
+				<div>[2] Typescript Wiki <a href="http://www.typescriptlang.org/docs/handbook/tsconfig-json.html">http://www.typescriptlang.org/docs/handbook/tsconfig-json.html</a></div>
+			</p>
 		</section>
 	</article>
 </body>

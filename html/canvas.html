@@ -340,6 +340,7 @@ var img1 = document.getElementById('canvas-img1').getContext('2d');
 var img2 = document.getElementById('canvas-img2').getContext('2d');
 var putin = new Image();
 putin.src = '../images/putin.jpg';
+putin.setAttribute('crossOrigin', 'anonymous');
 putin.onload = function () {
 	img1.drawImage(putin, 0, 0, 100, 100);
 	img2.drawImage(putin, 0, 0, 220, 220, 0, 0, 50, 50);

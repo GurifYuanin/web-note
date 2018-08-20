@@ -1,23 +1,27 @@
 // 初始化语法高亮
-if (hljs && hljs.initHighlightingOnLoad) { hljs.initHighlightingOnLoad(); }
+if (hljs && hljs.initHighlightingOnLoad) {
+    hljs.initHighlightingOnLoad();
+}
 // sidebar
 $(function() {
     var viewport = document.createElement('meta');
     viewport.setAttribute('name', 'viewport');
     viewport.setAttribute('content', 'width=device-width, initial-scale=1');
     $('head')[0].appendChild(viewport);
+
     function wrapByA(href) {
         return '<a href="' +
-                (href === '没有了' ? 'javascript:void(0)' : ('./' + href + '.html')) +
-                '">' + href + '</a>';
+            (href === '没有了' ? 'javascript:void(0)' : ('./' + href + '.html')) +
+            '">' + href + '</a>';
     }
+
     function wrapByTag(source, tag) {
         return tag === 'a' ?
-               wrapByA(source) :
-               '<' + tag + '>' + source + '</' + tag + '>';
+            wrapByA(source) :
+            '<' + tag + '>' + source + '</' + tag + '>';
     }
     // 去除多余的字符
-    function filterName (str) {
+    function filterName(str) {
         return str.replace(/[\s$@#&;()/.'"]/g, '');
     }
     // 获得视窗大小
@@ -25,7 +29,7 @@ $(function() {
         // 使用指定窗口，默认使用当前窗口
         target = target || window;
         // 以此检查 IE9+ -> 标准模式 -> 怪异模式
-        var width = window.innerWidth || document.documentElement.clientWidth  || document.body.clientWidth;
+        var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
         var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
         return {
             'width': width,
@@ -34,9 +38,19 @@ $(function() {
     }
     // 滚动到指定 id 的位置
     function scrollTo(name, el) {
-        if (name === '返回顶部' || !name) $body.animate({scrollTop: 0}, 500);
-        else if (el) el.animate({scrollTop: $('#' + name).offset().top - 100}, 500);
-        else $body.animate({scrollTop: $('#' + name).offset().top}, 500);
+        if (name === '返回顶部' || !name) $body.animate({
+            scrollTop: 0
+        }, 500);
+        else if (el) el.animate({
+            scrollTop: $('#' + name).offset().top - 100
+        }, 500);
+        else $body.animate({
+            scrollTop: $('#' + name).offset().top
+        }, 500);
+    }
+    // 获得文件名后缀（不含 .）
+    function getSuffix (filename) {
+        return filename.substring(filename.lastIndexOf('.') + 1);
     }
     var url = window.location.href;
     var currentTitle = decodeURI(url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')));
@@ -80,7 +94,8 @@ $(function() {
     var liIndex = 0;
     $searchResult.css('display', 'none');
     $searchInput.keyup(function(event) {
-        var value = $searchInput.val(), str = '';
+        var value = $searchInput.val(),
+            str = '';
         value = value || ' ';
         // 遍历出匹配的 li
         items.forEach(function(item) {
@@ -94,7 +109,7 @@ $(function() {
         // 将 li 插入到 html
         if (value.trim() === '' || str.trim() === '') {
             $searchResult.css('display', 'none');
-        } else if ((event.keyCode < 37 || event.keyCode > 40) && event.keyCode !== 13){
+        } else if ((event.keyCode < 37 || event.keyCode > 40) && event.keyCode !== 13) {
             $searchResult.css('display', 'block');
             $searchResult.html(str);
             // 为 li 添加点击事件
@@ -105,43 +120,51 @@ $(function() {
             });
         }
         // 如果按钮为 enter 则自动跳转到第一个 li
-        if (str.trim() === '') { return; }
+        if (str.trim() === '') {
+            return;
+        }
         var list = $('#searchResult li');
         switch (event.keyCode) {
-            case 13: {
-                var index = list.toArray().findIndex(function(element) {
-                    return element.style.backgroundColor === 'rgb(239, 239, 239)';
-                });
-                index === -1 ? list.eq(0).click() : list.eq(index).click();
+            case 13:
+                {
+                    var index = list.toArray().findIndex(function(element) {
+                        return element.style.backgroundColor === 'rgb(239, 239, 239)';
+                    });
+                    index === -1 ? list.eq(0).click() : list.eq(index).click();
+                    break;
+                }
+            case 37:
                 break;
-            }
-            case 37: break;
-            case 38: {
-                if (liIndex > 0) {
-                    liIndex--;
+            case 38:
+                {
+                    if (liIndex > 0) {
+                        liIndex--;
+                    }
+                    if (liIndex < list.length) {
+                        list.eq(liIndex).css('background-color', '');
+                    }
+                    if (liIndex > 0) {
+                        list.eq(liIndex - 1).css('background-color', '#efefef');
+                    }
+                    break;
                 }
-                if (liIndex < list.length) {
-                    list.eq(liIndex).css('background-color', '');
-                }
-                if (liIndex > 0) {
-                    list.eq(liIndex - 1).css('background-color', '#efefef');
-                }
+            case 39:
                 break;
-            }
-            case 39: break;
-            case 40: {
-                if (liIndex > 0) {
-                    list.eq(liIndex - 1).css('background-color', '');
+            case 40:
+                {
+                    if (liIndex > 0) {
+                        list.eq(liIndex - 1).css('background-color', '');
+                    }
+                    if (liIndex < list.length) {
+                        list.eq(liIndex).css('background-color', '#efefef');
+                        liIndex++;
+                    }
+                    break;
                 }
-                if (liIndex < list.length) {
-                    list.eq(liIndex).css('background-color', '#efefef');
-                    liIndex++;
+            default:
+                {
+                    liIndex = 0;
                 }
-                break;
-            }
-            default: {
-                liIndex = 0;
-            }
         }
     });
     $container.click(function() {
@@ -184,7 +207,7 @@ $(function() {
     var arrDarkDown = '../images/slide_down_dark.png'; // 夜间模式下的下箭头
     var arrDarkUp = '../images/slide_up_dark.png'; // 夜间模式下的右箭头
     var $itemHead = $('#sidebar h3'); // catalog
-    $itemHead.each(function(){
+    $itemHead.each(function() {
         var that = $(this),
             img = that.children();
         that.click(function() {
@@ -203,18 +226,18 @@ $(function() {
     // 文章标题事件
     $title.mouseover(function() {
         $title.animate({
-                'padding-top': '1%',
-                'padding-bottom': '1%'
-            },'fast');
+            'padding-top': '1%',
+            'padding-bottom': '1%'
+        }, 'fast');
         $line.animate({
             'stroke-dashoffset': 0
         }, 'fast');
     });
     $title.mouseout(function() {
         $title.animate({
-                'padding-top': '0',
-                'padding-bottom': '0'
-            },'fast');
+            'padding-top': '0',
+            'padding-bottom': '0'
+        }, 'fast');
         $line.animate({
             'stroke-dashoffset': lineLength
         }, 'fast');
@@ -253,12 +276,17 @@ $(function() {
             }
             notify.innerText = '已经复制到剪切板';
             notify.style.opacity = '1';
-            if (timeout) { clearTimeout(timeout); }
+            if (timeout) {
+                clearTimeout(timeout);
+            }
             timeout = setTimeout(function() {
-                $(notify).animate({ opacity: 0 },
-                    'slow', function() {
-                    notify.innerText = '';
-                });
+                $(notify).animate({
+                        opacity: 0
+                    },
+                    'slow',
+                    function() {
+                        notify.innerText = '';
+                    });
             }, 2000);
         };
         el.appendChild(codeType);
@@ -271,7 +299,7 @@ $(function() {
     var $codeStyle = $('link').eq(1); // 代码颜色
     var $itemBlockImg = $('#sidebar h3 img');
     var $hideSidebarImg = $('#hideCatalog');
-    $title.click(function () {
+    $title.click(function() {
         $theme.attr('href', isBright ? '../css/dark.css' : '../css/bright.css');
         $codeStyle.attr('href', isBright ? '../css/styles/agate.css' : '../css/styles/default.css');
         $line.css('stroke', isBright ? '#fff' : '#000');
@@ -279,8 +307,8 @@ $(function() {
         $itemBlockImg.each(function(index, el) {
             var src = el.src;
             el.src = isBright ?
-                     src.substring(0, src.lastIndexOf('.')) + '_dark.png' :
-                     src.substring(0, src.lastIndexOf('_')) + '.png';
+                src.substring(0, src.lastIndexOf('.')) + '_dark.png' :
+                src.substring(0, src.lastIndexOf('_')) + '.png';
         });
         $('a').each(function(index, el) {
             el.href = isBright ? el.href + '?theme=dark' : el.href.replace('?theme=dark', '');
@@ -288,7 +316,10 @@ $(function() {
         $('.codeCopy').toggleClass('codeDark');
         isBright = !isBright;
     });
-    if (url.indexOf('?theme=dark') >= 0) { $title.click(); }
+    if (url.indexOf('?theme=dark') >= 0) {
+        $title.click();
+    }
+
     function widthAndMargin(start, end, piece, time) {
         // width: start% -> end%
         // margin: 0 4% -> 0 5%
@@ -298,13 +329,13 @@ $(function() {
         var timeInc = time * 1000 / piece;
         var widthStart, widthInc;
         if (start < end) {
-        	widthStart = 4;
-        	widthInc = 1 / piece;
+            widthStart = 4;
+            widthInc = 1 / piece;
         } else {
-        	widthStart = 5;
-        	widthInc = - 1 / piece;
+            widthStart = 5;
+            widthInc = -1 / piece;
         }
-        for (var i = start, delay = 0; i !== end; i += valInc, widthStart +=  widthInc,delay += timeInc) {
+        for (var i = start, delay = 0; i !== end; i += valInc, widthStart += widthInc, delay += timeInc) {
             (function() {
                 var percentage = i + '%';
                 var margin = '0 ' + widthStart + '%';
@@ -318,7 +349,7 @@ $(function() {
         }
         // 进行最后一次更新
         setTimeout(function() {
-        	widthStart += widthInc;
+            widthStart += widthInc;
             $container.css({
                 'width': end + '%',
                 'margin': '0 ' + widthStart + '%'
@@ -358,10 +389,10 @@ $(function() {
         $sidebar.css('display', 'inline-block');
         $showCatalog.css('display', 'none');
         $sidebar.animate({
-                'width': width,
-                'padding': padding
-            },'slow');
-		widthAndMargin(90, 65, 20, 0.5);
+            'width': width,
+            'padding': padding
+        }, 'slow');
+        widthAndMargin(90, 65, 20, 0.5);
     });
     $('a').not('.self').attr('target', '_blank'); // 所有链接默认新标签打开
 
@@ -379,7 +410,7 @@ $(function() {
     currentH2 = currentH2.replace(/\?theme=(dark)|(bright)/, '');
     $subTitle.each(function() {
         var name = filterName(this.innerHTML);
-    	// $(this).html('<a height="50%" id="' + name + '" href="#' + name + '">' + name + '</a>');
+        // $(this).html('<a height="50%" id="' + name + '" href="#' + name + '">' + name + '</a>');
         // 子标题包裹为超链接
         $(this).wrap('<a style="height: 50%; margin: 0; padding: 0; text-decoration: none; color: #000;" id="' + name + '" href="#' + name + '"></a>');
         // 点击后滑动窗口
@@ -398,11 +429,11 @@ $(function() {
     var $subTitleItem = $('.subTitleItem');
     var $subTitleToggle = $('#subTitleToggle');
     var $subTitleBlock = $('#subTitleToggle div');
-    $subTitleItem.each(function(){
+    $subTitleItem.each(function() {
         var name = filterName(this.innerHTML);
         var that = $(this);
         that.click(function(event) {
-             scrollTo(name);
+            scrollTo(name);
         });
         // that.mousedown(function() {
         //     that.css({
@@ -435,7 +466,7 @@ $(function() {
             })();
         }
         // 导航项出现
-        for (i = $subTitleItem.length - 1; i >= 0 ; i--, time += itemInterval) {
+        for (i = $subTitleItem.length - 1; i >= 0; i--, time += itemInterval) {
             (function() {
                 var delay = time;
                 var j = i;
@@ -455,7 +486,7 @@ $(function() {
     function hideBlock() {
         isLeave = true; // 加锁，不让导航项出现
         // 导航项消失
-        for (var time = 0, i = 0; i < $subTitleItem.length ; i++, time += itemInterval) {
+        for (var time = 0, i = 0; i < $subTitleItem.length; i++, time += itemInterval) {
             (function() {
                 var delay = time;
                 var j = i;
@@ -485,7 +516,7 @@ $(function() {
     // $subTitleNav.mouseleave(hideBlock);
     // 滚动条到底时隐藏导航开关、隐藏子标题导航
     var showable = true; // 标志是否可以隐藏导航开关
-    $(window).scroll(function(){
+    $(window).scroll(function() {
         var scrollTop = $(this).scrollTop();
         var scrollHeight = $(document).height();
         var windowHeight = $(this).height();
@@ -504,7 +535,9 @@ $(function() {
     });
 
     // 追加上一篇和下一篇操作
-    var preTitle = '没有了', nextTitle = '没有了', index = 0;
+    var preTitle = '没有了',
+        nextTitle = '没有了',
+        index = 0;
     if (currentTitle === 'index') {
         nextTitle = items[0][0];
     } else {
@@ -536,96 +569,47 @@ $(function() {
             el.animate({
                 'font-size': '1.25rem',
                 'font-weight': 900
-            },1000, function() {
+            }, 1000, function() {
                 el.animate({
                     'font-size': '1rem',
                     'font-weight': 'bold'
-                },1000);
+                }, 1000);
             });
         }, 500);
     }
 
-    // 正文内容的图片点击后预览
-    var mask = document.createElement('div');
-    var imgContainer = document.createElement('div');
-    var closeImg = document.createElement('div');
-    var resetImg = document.createElement('div');
-    var imgOriginWidth = null;
-    closeImg.innerText = 'x';
-    closeImg.setAttribute('title', '关闭');
-    closeImg.setAttribute('class', 'closeImg');
-    closeImg.onclick = function () {
-        if (imgContainer.lastChild instanceof HTMLImageElement) {
-            imgContainer.removeChild(imgContainer.lastChild);
-            imgContainer.style.display = 'none';
-            mask.style.display = 'none';
-            bothDisapper();
-        }
-    };
-    resetImg.innerText = 'r';
-    resetImg.setAttribute('class', 'closeImg');
-    resetImg.style.right = '50px';
-    resetImg.setAttribute('title', '复原');
-    resetImg.onclick = function () {
-        if (imgContainer.lastChild instanceof HTMLImageElement) {
-            imgContainer.lastChild.style.padding = '0px';
-            if (imgOriginWidth) {
-                imgContainer.lastChild.style.width = imgOriginWidth + 'px';
-            }
-        }
-    };
-    mask.setAttribute('class', 'mask');
-    imgContainer.appendChild(closeImg);
-    imgContainer.appendChild(resetImg);
-    imgContainer.setAttribute('class', 'imgContainer');
-    imgContainer.onclick = bothDisapper;
-    window.addEventListener('scroll', bothDisapper);
-    document.body.appendChild(mask);
-    document.body.appendChild(imgContainer);
-
-    var smaller = document.createElement('div');
-    var bigger = document.createElement('div');
-    smaller.innerText = '-';
-    bigger.innerText = '+';
-    smaller.style.opacity = bigger.style.opacity = 0;
-    smaller.style.borderRadius = '5px 0 0 5px';
-    bigger.style.borderRadius = '0 5px 5px 0';
-    smaller.style.marginLeft = '-1px';
-    bigger.style.marginRight = '-1px';
-    smaller.setAttribute('class', 'scaleDiv');
-    bigger.setAttribute('class', 'scaleDiv');
-    smaller.setAttribute('title', '缩小图像');
-    bigger.setAttribute('title', '放大图像');
-    var disapearTimer = null;
     // 获得元素的宽度
-    function getWidth (el) {
-        var ret =  window.getComputedStyle ?
-                   getComputedStyle(el).width :
-                   el.currentStyle.width;
+    function getWidth(el) {
+        var ret = window.getComputedStyle ?
+            getComputedStyle(el).width :
+            el.currentStyle.width;
         ret = Number.parseInt(ret);
         return ret === 0 ?
-               el.clientWidth || el.scrollWidth || el.offsetWidth :
-               ret;
+            el.clientWidth || el.scrollWidth || el.offsetWidth || 500 :
+            ret;
     }
     // 获得每次缩放的增量
-    function getIncreatement (img) {
+    function getIncreatement(img) {
         if (img) {
             return img.naturaWidth ?
-                   img.naturaWidth * .2 : // 固定缩放量，IE9+ 专属
-                   getWidth(img) * .2 ; // 每次缩放为当前宽度的 20%
-       } else {
+                img.naturaWidth * .2 : // 固定缩放量，IE9+ 专属
+                getWidth(img) * .2; // 每次缩放为当前宽度的 20%
+        } else {
             return 50;
-       }
+        }
     }
-    function bothDisapper () {
+
+    function bothDisapper() {
         smaller.style.opacity = bigger.style.opacity = 0;
-        if (disapearTimer) { clearTimeout(disapearTimer); }
+        if (disapearTimer) {
+            clearTimeout(disapearTimer);
+        }
         disapearTimer = setTimeout(function() {
             smaller.style.display = bigger.style.display = 'none';
         }, 1000);
     }
     // 偏移图像
-    function offsetImg (e, flag) {
+    function offsetImg(e, flag) {
         var img = imgContainer.lastChild;
         if (img instanceof HTMLImageElement && e) {
             var vw = getViewport();
@@ -647,20 +631,164 @@ $(function() {
             img.style.paddingBottom = Math.max(bottom, 0) + 'px';
         }
     }
-    smaller.onclick = function (e) {
+    function enSmaller() {
         var child = imgContainer.lastChild;
         var oldWidth = getWidth(child);
         child.style.width = oldWidth - getIncreatement(child) + 'px';
-        offsetImg(e, false);
+    }
+    function changeImg (flag) {
+        if (imgContainer.lastChild instanceof HTMLImageElement) {
+            var img = imgContainer.lastChild,
+                imgs = $('#container figure>img').toArray();
+            for (var i = 0; i < imgs.length; i++) {
+                if (imgs[i].src === img.src) {
+                    if (flag && i - 1 >= 0) {
+                        img.src = imgs[i - 1].src;
+                    }
+                    if (!flag && i + 1 < imgs.length) {
+                        img.src = imgs[i + 1].src;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    // 正文内容的图片点击后预览
+    var mask = document.createElement('div');
+    var imgContainer = document.createElement('div');
+    var closeImg = document.createElement('div');
+    var resetImg = document.createElement('div');
+    var onlySmaller = document.createElement('div');
+    var onlyBigger = document.createElement('div');
+    var downloadImg = document.createElement('div');
+    var imgOriginWidth = null;
+    // download
+    downloadImg.innerText = '↓';
+    downloadImg.setAttribute('title', '下载');
+    downloadImg.setAttribute('class', 'closeImg');
+    downloadImg.style.right = '200px';
+    downloadImg.onclick = function() {
+        if (imgContainer.lastChild instanceof HTMLImageElement) {
+            var img = imgContainer.lastChild;
+            img.setAttribute("crossOrigin",'anonymous')
+            var src = img.getAttribute('src');
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            var a = document.createElement('a');
+            a.setAttribute('download', src);
+            try {
+                var dataURL = canvas.toDataURL();
+                a.setAttribute('href', 'data:image/' + getSuffix(src) + ';base64,' + dataURL);
+            } catch (e) {
+                // 本地查看
+                a.setAttribute('target', '_blank');
+                a.setAttribute('href', src);
+            }
+            a.click();
+        }
     };
-    bigger.onclick = function (e) {
+    // smaller
+    onlySmaller.innerText = '-';
+    onlySmaller.setAttribute('title', '缩小');
+    onlySmaller.setAttribute('class', 'closeImg');
+    onlySmaller.style.right = '150px';
+    onlySmaller.onclick = enSmaller;
+    // bigger
+    onlyBigger.innerText = '+';
+    onlyBigger.setAttribute('title', '放大');
+    onlyBigger.setAttribute('class', 'closeImg');
+    onlyBigger.style.right = '100px';
+    onlyBigger.onclick = enBigger;
+    // close
+    closeImg.innerText = 'x';
+    closeImg.setAttribute('title', '关闭');
+    closeImg.setAttribute('class', 'closeImg');
+    closeImg.onclick = function() {
+        if (imgContainer.lastChild instanceof HTMLImageElement) {
+            imgContainer.removeChild(imgContainer.lastChild);
+            imgContainer.style.display = 'none';
+            mask.style.display = 'none';
+            lastImg.style.display = 'none';
+            nextImg.style.display = 'none';
+            bothDisapper();
+        }
+    };
+    // reset
+    resetImg.innerText = 'r';
+    resetImg.setAttribute('class', 'closeImg');
+    resetImg.style.right = '50px';
+    resetImg.setAttribute('title', '复原');
+    resetImg.onclick = function() {
+        if (imgContainer.lastChild instanceof HTMLImageElement) {
+            imgContainer.lastChild.style.padding = '0px';
+            if (imgOriginWidth) {
+                imgContainer.lastChild.style.width = imgOriginWidth + 'px';
+            }
+        }
+    };
+    mask.setAttribute('class', 'mask');
+    imgContainer.appendChild(downloadImg);
+    imgContainer.appendChild(onlySmaller);
+    imgContainer.appendChild(onlyBigger);
+    imgContainer.appendChild(resetImg);
+    imgContainer.appendChild(closeImg);
+    imgContainer.setAttribute('class', 'imgContainer');
+    imgContainer.onclick = bothDisapper;
+    window.addEventListener('scroll', bothDisapper);
+    document.body.appendChild(mask);
+    document.body.appendChild(imgContainer);
+
+    var smaller = document.createElement('div');
+    var bigger = document.createElement('div');
+    var lastImg = document.createElement('div');
+    var nextImg = document.createElement('div');
+    smaller.innerText = '-';
+    bigger.innerText = '+';
+    smaller.style.opacity = bigger.style.opacity = 0;
+    smaller.style.borderRadius = '5px 0 0 5px';
+    bigger.style.borderRadius = '0 5px 5px 0';
+    smaller.style.marginLeft = '-1px';
+    bigger.style.marginRight = '-1px';
+    smaller.setAttribute('class', 'scaleDiv');
+    bigger.setAttribute('class', 'scaleDiv');
+    smaller.setAttribute('title', '缩小图像');
+    bigger.setAttribute('title', '放大图像');
+    lastImg.innerText = '←';
+    nextImg.innerText = '→';
+    lastImg.setAttribute('title', '上一张');
+    nextImg.setAttribute('title', '下一张');
+    lastImg.setAttribute('class', 'changeImg');
+    nextImg.setAttribute('class', 'changeImg');
+    nextImg.style.right = '0';
+    lastImg.style.display = 'none';
+    nextImg.style.display = 'none';
+    lastImg.onclick = function () {
+        changeImg(true);
+    };
+    nextImg.onclick = function () {
+        changeImg(false);
+    };
+    var disapearTimer = null;
+    function enBigger() {
         var child = imgContainer.lastChild;
         var oldWidth = getWidth(child);
         child.style.width = oldWidth + getIncreatement(child) + 'px';
+    }
+    smaller.onclick = function(e) {
+        enSmaller();
+        offsetImg(e, false);
+    };
+    bigger.onclick = function(e) {
+        enBigger();
         offsetImg(e, true);
     };
     document.body.appendChild(smaller);
     document.body.appendChild(bigger);
+    document.body.appendChild(lastImg);
+    document.body.appendChild(nextImg);
     $('#container figure>img').each(function() {
         var el = $(this);
         el.attr('title', '点击放大');
@@ -671,8 +799,10 @@ $(function() {
             img.setAttribute('src', el.attr('src'));
             imgContainer.style.display = mask.style.display = 'block';
             // 按下右键弹出选项
-            img.oncontextmenu = function (e) {
-                if (disapearTimer) { clearTimeout(disapearTimer); }
+            img.oncontextmenu = function(e) {
+                if (disapearTimer) {
+                    clearTimeout(disapearTimer);
+                }
                 smaller.style.display = bigger.style.display = 'block';
                 smaller.style.opacity = bigger.style.opacity = 1;
                 bigger.style.left = e.pageX + 'px';
@@ -683,9 +813,13 @@ $(function() {
                 e.returnValue = false; // IE
                 return false;
             };
+            lastImg.style.display = '';
+            nextImg.style.display = '';
             imgContainer.appendChild(img);
-            imgOriginWidth = getWidth(img);
-            img.style.width = imgOriginWidth + 'px';
+            setTimeout(function() {
+                imgOriginWidth = getWidth(img);
+                img.style.width = imgOriginWidth + 'px';
+            }, 0);
             img.style.padding = '0px';
         });
     });

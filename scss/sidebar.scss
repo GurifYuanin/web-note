@@ -209,6 +209,32 @@ body {
             background-color: #8686fd;
         }
     }
+    // 切换上下张图片
+    .changeImg {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+
+        width: 25px;
+        height: 40px;
+        padding: 0 2.5px;
+        margin: 0 10px;
+
+        line-height: 40px;
+        font-size: 25px;
+        opacity: .5;
+        color: white;
+        background-color: black;
+
+        transition: all .5s;
+        cursor: pointer;
+        &:hover {
+            opacity: .4;
+        }
+        &:active {
+            opacity: .7;
+        }
+    }
 }
 
 /* 展开侧栏的块 */

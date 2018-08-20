@@ -5,41 +5,52 @@
 	<title>元素定位 demo</title>
 </head>
 <body>
-	<div id="container" style="">
+	<style>
+		.label {
+			display: inline-block;
+			width: 150px;
+		}
+	</style>
+	<div id="container">
 		<div>
-			padding:<input id="padding" type="number" min="0" value="100">
+			<span class="label">padding:</span>
+			<input id="padding" type="number" min="0" value="100">
 			<button class="grow">-10</button>
 			<button class="grow">+10</button>
 		</div>
 		<div>
-			border-width:<input id="border" type="number" min="0" value="20">
+			<span class="label">border-width:</span>
+			<input id="border" type="number" min="0" value="20">
 			<button class="grow">-10</button>
 			<button class="grow">+10</button>
 		</div>
 		<div>
-			margin:<input id="margin" type="number" min="0" value="100">
+			<span class="label">margin:</span>
+			<input id="margin" type="number" min="0" value="100">
 			<button class="grow">-10</button>
 			<button class="grow">+10</button>
 		</div>
 		<div>
-			top:<input id="topStyle" type="number" value="100">
+			<span class="label">top:</span>
+			<input id="topStyle" type="number" value="100">
 			<button class="grow">-10</button>
 			<button class="grow">+10</button>
 		</div>
 		<div>
-			height:<input id="height" type="number" min="0" value="100">
+			<span class="label">height:</span>
+			<input id="height" type="number" min="0" value="100">
 			<button class="grow">-10</button>
 			<button class="grow">+10</button>
 		</div>
-		<div>clientTop: <span id="client-top"></span>（边框宽度 = border-width）</div>
+		<div>clientTop: <span id="client-top"></span>（边框宽度 = border-width = <span id="client-top-number"></span>）</div>
 		<div>scrollTop: <span id="scroll-top"></span>（被隐藏内容高度）</div>
-		<div>offsetTop: <span id="offset-top"></span>（与父标签距离 = top + margin-top）</div>
-		<div>clientHeight: <span id="client-height"></span>（可视区的高度 = height + padding-top + padding-bottom）</div>
-		<div>scrollHeight: <span id="scroll-height"></span>（内容高度 + padding-top + padding-bottom）</div>
-		<div>offsetHeight: <span id="offset-height"></span>（内容高度（IE、Opera、FF） / height（chrome） + padding-top + padding-bottom + border-top + border-bottom）</div>
+		<div>offsetTop: <span id="offset-top"></span>（与父标签距离 = top + margin-top = <span id="offset-top-number"></span>）</div>
+		<div>clientHeight: <span id="client-height"></span>（可视区的高度 = height + padding-top + padding-bottom - 滚动条宽度 = <span id="client-height-number"></span> - 滚动条宽度）</div>
+		<div>scrollHeight: <span id="scroll-height"></span>（内容高度 + padding-top + padding-bottom = 内容高度 + <span id="scroll-height-top"></span>）</div>
+		<div>offsetHeight: <span id="offset-height"></span>（内容高度（IE、Opera、FF） / height（chrome） + padding-top + padding-bottom + border-top + border-bottom = <span id="offset-height-number"></span>）</div>
 		<div style="display: inline-block; font-size: .8rem; background-color: #bbffbb; color: green; border: solid gray .5px; padding: 5px; margin: 5px; border-radius: 5px;">javscript 操作刷新可能存在局限，无法及时更新数据，需要时请手动滚动元素的滚动条来刷新</div>
 	</div>
-	<div style="position: relative; border: solid 1px black; height: 1000px;">
+	<div style="position: absolute; border: solid 1px black; height: 1000px; width: 50%;">
 		<div id="block" style="
 		position: absolute;
 		top: 100px;
@@ -51,7 +62,10 @@
 		border: solid 20px black;
 		background-color: gray;
 		transition: all .5s;
-		">
+		"></div>
+	</div>
+	<div style="position: absolute;  left: 50.7%; width: 49.3%; overflow: hidden;">
+		<textarea id="content" style="height: 997px; width: 100%;" cols="30" rows="10" placeholder="此处输入内容">
 			<div>placeholderplaceholderplaceholder</div>
 			<div>placeholderplaceholderplaceholder</div>
 			<div>placeholderplaceholderplaceholder</div>
@@ -84,9 +98,10 @@
 			<div>placeholderplaceholderplaceholder</div>
 			<div>placeholderplaceholderplaceholder</div>
 			<div>placeholderplaceholderplaceholder</div>
-		</div>
+		</textarea>
 	</div>
 	<script>
+		var content = document.getElementById('content');
 		var el = document.getElementById('block');
 		var padding = document.getElementById('padding');
 		var margin = document.getElementById('margin');
@@ -95,18 +110,28 @@
 		var height = document.getElementById('height');
 		var grows = document.getElementsByClassName('grow');
 		var clientTop = document.getElementById('client-top');
+		var clientTopNumber = document.getElementById('client-top-number');
 		var scrollTop = document.getElementById('scroll-top');
 		var offsetTop = document.getElementById('offset-top');
+		var offsetTopNumber = document.getElementById('offset-top-number');
 		var clientHeight = document.getElementById('client-height');
+		var clientHeightNumber = document.getElementById('client-height-number');
 		var scrollHeight = document.getElementById('scroll-height');
+		var scrollHeightNumber = document.getElementById('scroll-height-top');
 		var offsetHeight = document.getElementById('offset-height');
+		var offsetHeightNumber = document.getElementById('offset-height-number');
 		function scrollEvent () {
 			clientTop.innerText = el.clientTop + 'px';
+			clientTopNumber.innerText = el.style.borderWidth;
 			scrollTop.innerText = el.scrollTop + 'px';
 			offsetTop.innerText = el.offsetTop + 'px';
+			offsetTopNumber.innerText = el.style.height + ' + ' + el.style.marginTop;
 			clientHeight.innerText = el.clientHeight + 'px';
+			clientHeightNumber.innerText = el.style.height + ' + ' + el.style.paddingTop + ' + ' + el.style.paddingBottom;
 			scrollHeight.innerText = el.scrollHeight + 'px';
+			scrollHeightNumber.innerText = el.style.paddingTop + ' + ' + el.style.paddingBottom;
 			offsetHeight.innerText = el.offsetHeight + 'px';
+			offsetHeightNumber.innerText = el.style.height + ' + ' + el.style.paddingTop + ' + ' + el.style.paddingBottom + ' + ' + el.style.borderWidth + ' + ' + el.style.borderWidth;
 		}
 		function paddingChange () {
 			el.style.padding = Math.abs(padding.value) + 'px';
@@ -128,6 +153,10 @@
 			el.style.height = Math.abs(height.value) + 'px';
 			scrollEvent();
 		}
+		function inputChange () {
+			el.innerHTML = content.value;
+			scrollEvent();
+		}
 		padding.onchange = paddingChange;
 		margin.onchange = marginChange;
 		border.onchange = borderChange;
@@ -144,7 +173,9 @@
 		grows[8].onclick = function () { height.value = Number.parseInt(height.value) - 10; heightChange(); };
 		grows[9].onclick = function () { height.value = Number.parseInt(height.value) + 10; heightChange(); };
 		el.onscroll = scrollEvent;
+		content.oninput = inputChange;
 		scrollEvent();
+		inputChange();
 	</script>
 </body>
 </html>

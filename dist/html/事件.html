@@ -33,6 +33,7 @@
 					<li>焦点事件</li>
 					<li>鼠标事件</li>
 					<li>键盘事件</li>
+					<li>拖放事件</li>
 				</ul>
 				相关概念：
 				<ul>
@@ -257,20 +258,29 @@
 					<li>focusout：当元素失去焦点时触发（会冒泡）</li>
 					<li>focusin：当元素获得焦点时触发（会冒泡）</li>
 				</ul>
-				<input type="text"  id="focus" placeholder="点击后按 F12 ">
+				<div class="show">
+					<input type="text" id="focus">
+					<button id="focus-clear">清除</button>
+					<div id="focus-container"></div>
+				</div>
 				<script type="text/javascript">
 					var focus = document.getElementById('focus');
+					var focusContainer = document.getElementById('focus-container');
+					document.getElementById('focus-clear').onclick = function () {
+						focusContainer.innerHTML = '';
+					}
 					focus.onblur = function() {
-						console.log('blur');
+						focusContainer.innerHTML += 'blur<br>';
 					};
 					focus.onfocus = function() {
+						focusContainer.innerHTML += 'focus<br>';
 						console.log('focus');
 					};
 					focus.onfocusout = function() {
-						console.log('focusout');
+						focusContainer.innerHTML += 'focusout<br>';
 					};
 					focus.onfocusin = function() {
-						console.log('focusin');
+						focusContainer.innerHTML += 'focusin<br>';
 					};
 				</script>
 			</p>
@@ -498,6 +508,12 @@
 						codeContainer.innerHTML += 'keyCode=' + e.keyCode + ' which=' + e.which + '<br>';
 					});
 				</script>
+			</p>
+		</section>
+		<section>
+			<h2>拖放事件</h2>
+			<p>
+				
 			</p>
 		</section>
 		<section class="refer">

@@ -102,7 +102,7 @@
 				unicode 实际上做的是给每个字符一个唯一的编号，比如空字符（null）为 0x0，数字 0 为 0x30，字母 A 为 0x41。
 				<h3>javascript 中的 unicode</h3>
 				<p>
-					javascript 支持 unicode 编码，可以直接使用 '\uxxxx' 或 '\uxxxxxxxx' 来查 unicode 表中相应的字符，返回的是对于字符的字符串。（需要注意，xxxx 表示的是 16 进制的数，而不是 10 进制的数）
+					javascript 支持 unicode 编码，可以直接使用 '\uxxxx' 或 '\uxxxx\uxxxx' 来查 unicode 表中相应的字符，返回的是对于字符的字符串。（需要注意，xxxx 是 16 进制的数，而不是 10 进制的数）
 					<pre><code class="javascript">
 '\u0000' === '\0' // => true
 '\u0030' === '0' // => true
