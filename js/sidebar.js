@@ -5,10 +5,14 @@ if (hljs && hljs.initHighlightingOnLoad) {
 // sidebar
 $(function() {
     var viewport = document.createElement('meta');
+    var icon = document.createElement('link');
+    icon.setAttribute('rel', 'shortcut icon');
+    icon.setAttribute('href', '../images/web-note.ico');
+    icon.setAttribute('type', 'image/vnd.microsoft.icon');
     viewport.setAttribute('name', 'viewport');
     viewport.setAttribute('content', 'width=device-width, initial-scale=1');
-    $('head')[0].appendChild(viewport);
-
+    document.head.appendChild(viewport);
+    document.head.appendChild(icon);
     function wrapByA(href) {
         return '<a href="' +
             (href === '没有了' ? 'javascript:void(0)' : ('./' + href + '.html')) +
@@ -61,7 +65,7 @@ $(function() {
     var $title = $('#title'); // 文章标题
     var $container = $('#container'); // 文章内容
     var $body = $('html, body');
-    var category = ['HTML', 'CSS', 'Javascript', 'NodeJS', 'VueJS', '移动Web', '工具', '协议', '安全', '后端', '其他']; // 目录分类
+    var category = ['HTML', 'CSS', 'Javascript', 'NodeJS', 'VueJS', '移动Web', '工具', '协议', '安全', '测试', '后端', '其他']; // 目录分类
     var items = [
         ['DOM', 'meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'canvas', 'svg'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
@@ -72,6 +76,7 @@ $(function() {
         ['抓包工具', 'chrome devtools', 'git', 'sublime 插件'],
         ['HTTP', '同源策略'],
         ['CSRF', 'XSS'],
+        ['karma'],
         ['Thinkphp5.1', 'htaccess'],
         ['路径匹配', '浏览器渲染', '设计策略', 'cookie', '头疼的兼容', '命名规范', '字符编码', '算法规范', 'bat']
     ];
@@ -125,18 +130,15 @@ $(function() {
         }
         var list = $('#searchResult li');
         switch (event.keyCode) {
-            case 13:
-                {
+            case 13: {
                     var index = list.toArray().findIndex(function(element) {
                         return element.style.backgroundColor === 'rgb(239, 239, 239)';
                     });
                     index === -1 ? list.eq(0).click() : list.eq(index).click();
                     break;
-                }
-            case 37:
-                break;
-            case 38:
-                {
+                };
+            case 37: break;
+            case 38: {
                     if (liIndex > 0) {
                         liIndex--;
                     }
@@ -147,11 +149,9 @@ $(function() {
                         list.eq(liIndex - 1).css('background-color', '#efefef');
                     }
                     break;
-                }
-            case 39:
-                break;
-            case 40:
-                {
+                };
+            case 39:  break;
+            case 40: {
                     if (liIndex > 0) {
                         list.eq(liIndex - 1).css('background-color', '');
                     }
@@ -160,16 +160,11 @@ $(function() {
                         liIndex++;
                     }
                     break;
-                }
-            default:
-                {
-                    liIndex = 0;
-                }
+                };
+            default: liIndex = 0;
         }
     });
-    $container.click(function() {
-        $searchResult.css('display', 'none');
-    });
+    $container.click(function() { $searchResult.css('display', 'none'); });
     /*
     侧栏结构：
     <aside id="sidebar">
@@ -242,16 +237,33 @@ $(function() {
             'stroke-dashoffset': lineLength
         }, 'fast');
     });
-
+    // 弹窗提示
+    function $Notify () {
+        this.win = document.createElement('div');
+        this.win.setAttribute('class', 'notify');
+        this.win.style.opacity = '0';
+        this.win.style.zIndex = '3';
+        document.body.appendChild(this.win);
+        this.timeout = null;
+    }
+    $Notify.prototype.info = function (message, duration) {
+        duration = duration || 2000;
+        var win = this.win;
+        win.innerText = message;
+        win.style.opacity = '1';
+        win.style.transition = 'all 1s';
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
+        this.timeout = setTimeout(function() {
+            win.style.opacity = '0';
+        }, duration);
+    };
+    var notify = new $Notify();
     // 代码辅助区
     var area = document.createElement('textarea'); // 用于临时暂存复制的代码的文本域
-    var notify = document.createElement('div'); // 用于提示信息
-    notify.setAttribute('class', 'notify');
-    notify.style.opacity = '0';
     area.style.display = 'none';
     document.body.appendChild(area);
-    document.body.appendChild(notify);
-    var timeout = null;
     // 代码类型提醒
     $('.hljs').each(function(index, el) {
         var codeType = document.createElement('div'); // 显示代码的类型（语言）
@@ -263,7 +275,7 @@ $(function() {
         codeType.innerText = type;
         codeCopy.style.right = codeType.innerText.length * 8 + (10 - codeType.innerText.length) + 'px'; // 动态设置距离
         codeCopy.onclick = function() {
-            if (window.clipboardData instanceof DataTransfer) {
+            if (DataTransfer && window.clipboardData instanceof DataTransfer) {
                 // IE
                 window.clipboardData.setData('text', el.innerText.replace(type, ''));
             } else {
@@ -274,20 +286,7 @@ $(function() {
                 document.execCommand('copy'); // 复制
                 area.style.display = 'none'; // 隐藏文本框
             }
-            notify.innerText = '已经复制到剪切板';
-            notify.style.opacity = '1';
-            if (timeout) {
-                clearTimeout(timeout);
-            }
-            timeout = setTimeout(function() {
-                $(notify).animate({
-                        opacity: 0
-                    },
-                    'slow',
-                    function() {
-                        notify.innerText = '';
-                    });
-            }, 2000);
+            notify.info('已经复制到剪切板');
         };
         el.appendChild(codeType);
         el.appendChild(codeCopy);
@@ -304,13 +303,13 @@ $(function() {
         $codeStyle.attr('href', isBright ? '../css/styles/agate.css' : '../css/styles/default.css');
         $line.css('stroke', isBright ? '#fff' : '#000');
         $hideSidebarImg.attr('src', isBright ? '../images/catalog_dark.png' : '../images/catalog.png');
-        $itemBlockImg.each(function(index, el) {
+        $itemBlockImg.each(function(i, el) {
             var src = el.src;
             el.src = isBright ?
                 src.substring(0, src.lastIndexOf('.')) + '_dark.png' :
                 src.substring(0, src.lastIndexOf('_')) + '.png';
         });
-        $('a').each(function(index, el) {
+        $('a').each(function(i, el) {
             el.href = isBright ? el.href + '?theme=dark' : el.href.replace('?theme=dark', '');
         });
         $('.codeCopy').toggleClass('codeDark');
@@ -562,7 +561,7 @@ $(function() {
         }
     });
     // 将当前浏览的条目展开
-    if (currentTitle !== 'index') {
+    if (currentTitle !== 'index' && !/.+\/html\/$/.test(currentTitle)) {
         setTimeout(function() {
             scrollTo('currentItem', $sidebar);
             var el = $('#currentItem > a');
@@ -601,9 +600,7 @@ $(function() {
 
     function bothDisapper() {
         smaller.style.opacity = bigger.style.opacity = 0;
-        if (disapearTimer) {
-            clearTimeout(disapearTimer);
-        }
+        if (disapearTimer) { clearTimeout(disapearTimer); }
         disapearTimer = setTimeout(function() {
             smaller.style.display = bigger.style.display = 'none';
         }, 1000);
@@ -642,11 +639,14 @@ $(function() {
                 imgs = $('#container figure>img').toArray();
             for (var i = 0; i < imgs.length; i++) {
                 if (imgs[i].src === img.src) {
-                    if (flag && i - 1 >= 0) {
-                        img.src = imgs[i - 1].src;
-                    }
-                    if (!flag && i + 1 < imgs.length) {
-                        img.src = imgs[i + 1].src;
+                    if (flag) {
+                        // 上一张
+                        if (i - 1 >= 0) { img.src = imgs[i - 1].src; }
+                        else { notify.info('已经是第一张了'); }
+                    } else {
+                        // 下一张
+                        if (i + 1 < imgs.length) {img.src = imgs[i + 1].src; }
+                        else { notify.info('已经是最后一张了'); }
                     }
                     break;
                 }
@@ -654,6 +654,9 @@ $(function() {
         }
     }
     // 正文内容的图片点击后预览
+    var disapearTimer = null; // bothDdiv 消失的定时器
+    var smallerTimer = null;
+    var biggerTimer = null;
     var mask = document.createElement('div');
     var imgContainer = document.createElement('div');
     var closeImg = document.createElement('div');
@@ -669,24 +672,11 @@ $(function() {
     downloadImg.style.right = '200px';
     downloadImg.onclick = function() {
         if (imgContainer.lastChild instanceof HTMLImageElement) {
-            var img = imgContainer.lastChild;
-            img.setAttribute("crossOrigin",'anonymous')
-            var src = img.getAttribute('src');
-            var canvas = document.createElement("canvas");
-            canvas.width = img.width;
-            canvas.height = img.height;
-            var ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            var src = imgContainer.lastChild.src;
             var a = document.createElement('a');
             a.setAttribute('download', src);
-            try {
-                var dataURL = canvas.toDataURL();
-                a.setAttribute('href', 'data:image/' + getSuffix(src) + ';base64,' + dataURL);
-            } catch (e) {
-                // 本地查看
-                a.setAttribute('target', '_blank');
-                a.setAttribute('href', src);
-            }
+            a.setAttribute('href', src);
+            a.setAttribute('target', '_blank');
             a.click();
         }
     };
@@ -695,13 +685,27 @@ $(function() {
     onlySmaller.setAttribute('title', '缩小');
     onlySmaller.setAttribute('class', 'closeImg');
     onlySmaller.style.right = '150px';
-    onlySmaller.onclick = enSmaller;
+    onlySmaller.onmousedown = function () {
+        enSmaller();
+        if (smallerTimer) { clearInterval(smallerTimer); }
+        smallerTimer = setInterval(enSmaller, 200);
+    };
+    onlySmaller.onmouseup = function () {
+        if (smallerTimer) { clearInterval(smallerTimer); }
+    };
     // bigger
     onlyBigger.innerText = '+';
     onlyBigger.setAttribute('title', '放大');
     onlyBigger.setAttribute('class', 'closeImg');
     onlyBigger.style.right = '100px';
-    onlyBigger.onclick = enBigger;
+    onlyBigger.onmousedown = function () {
+        enBigger();
+        if (biggerTimer) { clearInterval(biggerTimer); }
+        biggerTimer = setInterval(enBigger, 200);
+    };
+    onlyBigger.onmouseup = function () {
+        if (biggerTimer) { clearInterval(biggerTimer); }
+    };
     // close
     closeImg.innerText = 'x';
     closeImg.setAttribute('title', '关闭');
@@ -771,7 +775,6 @@ $(function() {
     nextImg.onclick = function () {
         changeImg(false);
     };
-    var disapearTimer = null;
     function enBigger() {
         var child = imgContainer.lastChild;
         var oldWidth = getWidth(child);
@@ -800,9 +803,7 @@ $(function() {
             imgContainer.style.display = mask.style.display = 'block';
             // 按下右键弹出选项
             img.oncontextmenu = function(e) {
-                if (disapearTimer) {
-                    clearTimeout(disapearTimer);
-                }
+                if (disapearTimer) { clearTimeout(disapearTimer); }
                 smaller.style.display = bigger.style.display = 'block';
                 smaller.style.opacity = bigger.style.opacity = 1;
                 bigger.style.left = e.pageX + 'px';

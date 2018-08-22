@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>karma</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/bright.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">karma</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				使用 jasmine 编写测试代码（也可以使用其他测试框架），对项目的文件进行单元测试，然后使用 karma 来让 jasmine <span class="definition">自动化</span>执行（监听文件变化），实现在命令行下测试代码，并将测试结果打印到控制台界面上或浏览器。
+			</p>
+		</section>
+		<section>
+			<h2>安装</h2>
+			<p>
+				以下部分基本翻译自 karma 官方文档 <a href="http://karma-runner.github.io/2.0/intro/installation.html">http://karma-runner.github.io/2.0/intro/installation.html</a>，最终结果为在项目内安装并运行 karma 。
+				<h3>安装 karma</h3>
+				<p>
+					使用 npm 安装 karma 以及拓展依赖文件。
+					<pre><code class="shell">
+$ npm install karma --save-dev
+$ npm install karma-jasmine karma-chrome-launcher jasmine-core --save-dev
+					</code></pre>
+				</p>
+				<h3>配置</h3>
+				<p>
+					启动 karma 前最好写好配置文件，启动时 karma 后才可以根据该配置文件进行更方便的测试，使用 karma init 自动生成一个配置文件，只需要按照提示选择选项。此处翻译一下提示内容：
+					<pre><code class="shell">
+$ karma init 配置文件名.js
+Which testing framework do you want to use ?
+Press tab to list possible options. Enter to move to the next question.
+# 选择哪个测试框架？
+# 按 tab 键切换选项，按回车确认选项
+> jasmine
+
+Do you want to use Require.js ?
+This will add Require.js plugin.
+Press tab to list possible options. Enter to move to the next question.
+# 是否使用 require.js
+# 如果确定将会添加 require 插件
+# 按 tab 键切换选项，按回车确认选项
+> no
+
+Do you want to capture any browsers automatically ?
+Press tab to list possible options. Enter empty string to move to the next question.
+# 是否想要在浏览器中自动测试
+# 按 tab 键切换选项，按回车确认选项，当选项为空时跳到下一个问题
+> Chrome
+> IE
+>
+
+What is the location of your source and test files ?
+You can use glob patterns, eg. "js/*.js" or "test/**/*Spec.js".
+Enter empty string to move to the next question.
+# 哪个位置是测试文件与被测试文件，支持 glob 语法
+# 按回车确认选项，当选项为空时跳到下一个问题
+> js/*.js
+> test/**/*.js
+>
+
+Should any of the files included by the previous patterns be excluded ?
+You can use glob patterns, eg. "**/*.swp".
+Enter empty string to move to the next question.
+# 在已选择的测试文件中移除哪些文件，支持 glob 语法
+# 按回车确认选项，当选项为空时跳到下一个问题
+> *.config.js
+>
+
+Do you want Karma to watch all the files and run the tests on change ?
+Press tab to list possible options.
+# 是否每当测试文件改变时就进行测试
+# 按 tab 键切换选项，按回车确认选项
+> yes
+
+
+Config file generated at "配置文件路径/配置文件名.js".
+					</code></pre>
+					完成后将在当前位置创建一个配置文件。
+					<pre><code class="json">
+module.exports = function(config) {
+  config.set({
+
+    // base path that will be used to resolve all patterns (eg. files, exclude)
+    // 文件的根路径
+    basePath: '',
+
+    // frameworks to use
+    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+    // 使用的测试框架
+    frameworks: ['jasmine'],
+
+    // list of files / patterns to load in the browser
+    // 测试与被测试文件
+    files: [
+      'js/*.js',
+      'test/**/*.js'
+    ],
+
+    // list of files / patterns to exclude
+    // 不被测试的文件
+    exclude: [
+        '*.config.js'
+    ],
+
+    // preprocess matching files before serving them to the browser
+    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+    preprocessors: {
+    },
+
+    // test results reporter to use
+    // possible values: 'dots', 'progress'
+    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+    reporters: ['progress'],
+
+
+    // web server port
+    // 服务器端口
+    port: 9876,
+
+    // enable / disable colors in the output (reporters and logs)
+    // 控制台输出是否为彩色
+    colors: true,
+
+    // level of logging
+    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+    // 测试日期等级
+    logLevel: config.LOG_INFO,
+
+    // enable / disable watching file and executing tests whenever any file changes
+    // 是否当文件变更时自动进行测试
+    autoWatch: true,
+
+    // start these browsers
+    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+    // 测试开始时自动打开的浏览器
+    browsers: ['Chrome'],
+
+    // Continuous Integration mode
+    // if true, Karma captures browsers, runs the tests and exits
+    singleRun: false,
+
+    // Concurrency level
+    // how many browser should be started simultaneous
+    concurrency: Infinity
+  })
+}
+					</code></pre>
+				</p>
+				<h3>启动</h3>
+				<p>
+					根据配置文件，使用命令启动一个测试服务器，默认为 localhost:9876
+					<pre><code class="shell">
+$ karma start 配置文件名.js
+					</code></pre>
+					<figure>
+						<img src="../images/karma_chrome.jpg" alt="">
+					</figure>
+					你也可以使用命令行方式在执行 karma start 传入参数。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>编写被测试文件</h2>
+			<p>
+				被测试的文件，也就是项目中的业务代码。在 karma 配置文件中的<span class="definition"> files </span>属性写明，比如写一个函数 ./js/add.js，功能为进行加法运算。
+				<pre><code class="javascript">
+function add (num1, num2) {
+	return num1 + num2;
+}
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>编写测试文件</h2>
+			<p>
+				测试文件，用于测试被测试的文件是否正确执行。在 karma 配置文件中的<span class="definition"> files </span>属性写明。
+				<pre><code class="json">
+// karma 配置文件
+module.exports = {
+	// ...
+	files: [
+		'js/*.js',
+		'test/**/*.js'
+	]
+	// ...
+}
+				</code></pre>
+				这里使用的是 jasmine 进行测试，需要按照 jasmine 语法来编写测试文件，比如写一个测试文件 ./test/test.js 来测试前面的加法函数是否正确。
+				<pre><code class="javascript">
+describe("basic functions", function() {
+    it('get two number add', function() {
+    	expect(2).toEqual(add(1, 1));
+    });
+});
+				</code></pre>
+				之前已经在配置文件中配置好 files 字段，于是 karma 会知道哪些文件需要进行测试，karma 开启的小型服务器在代码文件发生变更时就会自动进行测试。
+
+				<figure>
+					<img src="../images/karma_add_demo.jpg" alt="">
+					<figcaption>控制台输出测试结果</figcaption>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>jasmine 基本语法</h2>
+			<p>
+				<h3>describe：一组测试</h3>
+				<p>
+					describe 方法用于定义一组有关联的测试，方法传入两个参数：
+					<table>
+						<tr>
+							<th>参数</th>
+							<th>解释</th>
+							<th>类型</th>
+							<th>可选</th>
+						</tr>
+						<tr>
+							<td>description</td>
+							<td>简述这组测试的信息</td>
+							<td>String</td>
+							<td>必须</td>
+						</tr>
+						<tr>
+							<td>specDefinitions</td>
+							<td>被调用的函数</td>
+							<td>Function</td>
+							<td>必须</td>
+						</tr>
+					</table>
+					<pre><code class="javascript">
+descript('simple test', function() {
+	// ...
+});
+					</code></pre>
+				</p>
+				<h3>xdescribe：无视我</h3>
+				<p>
+					xdescribe 与 describe 一样，但在 xdescribe 中的代码不会被执行，而会被无视跳过。
+				</p>
+				<h3>it：规格</h3>
+				<p>
+					it 是测试中的全局函数，用来定义一次规格（spec），其后在规格中再继续进行断言测试。
+					<table>
+						<tr>
+							<th>参数</th>
+							<th>解释</th>
+							<th>类型</th>
+							<th>可选</th>
+						</tr>
+						<tr>
+							<td>description</td>
+							<td>简述这次规格的信息</td>
+							<td>String</td>
+							<td>必须</td>
+						</tr>
+						<tr>
+							<td>testFunction</td>
+							<td>被调用的函数</td>
+							<td>Function</td>
+							<td>必须</td>
+						</tr>
+						<tr>
+							<td>timeout</td>
+							<td>超时时间，单位为毫秒</td>
+							<td>Integer</td>
+							<td>可选</td>
+						</tr>
+					</table>
+					<pre><code class="javascript">
+descript('simple test', function() {
+	it('simple spec', function() {
+		// ...
+	});
+});
+					</code></pre>
+				</p>
+				<h3>xit：无视我</h3>
+				<p>
+					xit 与 it 用法一样，但在 xit 内的代码不会被执行。
+					<pre><code class="javascript">
+xdescribe("no1", function() {
+	it('no1', function() {
+		console.log('no1');
+	});
+});
+
+describe('no2', function() {
+	xit('no2', function() {
+		console.log('no2');
+	});
+});
+					</code></pre>
+					<figure>
+						<img src="../images/karma_x.jpg">
+					</figure>
+					<span class="definition"> Executed 0 of 2 (skipped 2) </span>表示有两个规格（spec），第一个因为是 xdescribe 所以被跳过，第二个因为是 xit 所以也被跳过。
+				</p>
+				<h3>expect：断言</h3>
+				<p>
+					使用 expect 写下一句断言，断言的写法是链式的，结果为布尔值。其基本写法为：认为(expect) XX 不 (not) 等于(toEqual) / 是(toBe) / ... XX。
+					<pre><code class="javascript">
+descript('simple test', function() {
+	it('simple spec', function() {
+		// 认为 1 等于 1
+		expect(1).toEqual(1);
+	});
+});
+					</code></pre>
+				</p>
+				<h3>钩子</h3>
+				<p>
+					jasmine 提供了规格（spec）执行的过程中的四个钩子：
+					<table>
+						<tr>
+							<th>钩子名</th>
+							<th>触发</th>
+						</tr>
+						<tr>
+							<td>beforeEach</td>
+							<td>describe 内每个规格（spec）执行开始前</td>
+						</tr>
+						<tr>
+							<td>beforeAll</td>
+							<td>describe 内所有规格（spec）执行之前</td>
+						</tr>
+						<tr>
+							<td>afterEach</td>
+							<td>describe 内每个规格（spec）执行开始后</td>
+						</tr>
+						<tr>
+							<td>afterAll</td>
+							<td>describe 内所有规格（spec）执行之后</td>
+						</tr>
+					</table>
+					<pre><code class="javascript">
+describe("A suite of basic functions", function() {
+    it('test1', function() {
+    	expect(1).toEqual(1);
+    });
+    it('test2', function() {
+    	expect(1).toEqual(1);
+    });
+    beforeEach(function() {
+    	console.log('beforeEach');
+    });
+    afterEach(function() {
+    	console.log('afterEach');
+    });
+    beforeAll(function() {
+    	console.log('beforeAll');
+    });
+    afterAll(function() {
+    	console.log('afterAll');
+    });
+});
+					</code></pre>
+					<figure>
+						<img src="../images/karma_hook.jpg">
+					</figure>
+				</p>
+				<h3>fail：主动失败</h3>
+				<p>
+					在规格（spec）中使用 fail 方法主动失败。
+					<pre><code class="javascript">
+describe("A suite of basic functions", function() {
+    it('test1', function() {
+    	fail('sorry');
+    });
+});
+					</code></pre>
+					<figure>
+						<img src="../images/karma_fail.jpg">
+					</figure>
+				</p>
+
+			</p>
+		</section>
+		<section>
+			<h2>断言判断</h2>
+			<p>
+				<h3>toEqual：等于</h3>
+				<p>
+					使用 toEqual 实际上是进行一次 === 操作，判断值是否等于 toEqual 内的参数。
+					<pre><code class="javascript">
+describe('test', function() {
+	it('test it', function() {
+		expect(1).toEqual(1);
+	});
+});
+					</code></pre>
+				</p>
+				<h3>toHaveBeenCalled：函数调用相关判断</h3>
+				<p>
+					需要先在 beforeEach 或 规格（spec）中开启对某个函数的监听，<span class="definition"> 开启监听后 </span>（意思是指开启前的操作不会被记录，也无法使用相关的判断方法）可以测试函数被调用的次数、函数被调用的参数等，最后在每个规格（spec）执行完成后自动被移除。
+					<pre><code class="javascript">
+describe('spy', function() {
+	var obj = {
+		say: function() {
+			console.log('hello world');
+		}
+	}
+	beforeEach(function() {
+		spyOn(obj, 'say'); // 开启监听
+		obj.say(); // 调用一次 obj.say 函数
+	});
+	it('test', function() {
+		expect(obj.say).toHaveBeenCalled(); // obj.say 是否被调用过
+	});
+});
+					</code></pre>
+					开启监听后可以对断言执行的判断方法：
+					<table>
+						<tr>
+							<th>判断名</th>
+							<th>解释</th>
+						</tr>
+						<tr>
+							<td>toHaveBeenCalled()</td>
+							<td>函数被调用过（一次及以上）</td>
+						</tr>
+						<tr>
+							<td>toHaveBeenCalledTimes(n)</td>
+							<td>函数被调用过 n 次</td>
+						</tr>
+						<tr>
+							<td>toHaveBeenCalledWith(param...)</td>
+							<td>执行过 函数名(param...) </td>
+						</tr>
+					</table>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>自定义数据</h2>
+			<p>
+				<h3>jasmine.any(type)：一种类型的任意值</h3>
+				<p>
+					使用 jasmine.any 生成指定类型的任意数据，生成的数据可以代表该类型的任意一个值。
+					<pre><code class="javascript">
+describe('test', function() {
+	it('test it', function() {
+		expect(1).toEqual(jasmine.any(Number));
+	});
+});
+					</code></pre>
+				</p>
+				<h3>jasmine.anything()：非 null 和 undefined 的任意值</h3>
+				<p>
+					jasmine.anything() 等于（toEqual） 非 null 和 undefined 的任意值。
+				</p>
+				<h3>jasmine.objectContaining({key: value})：提取对
+				象部分键值对</h3>
+				<p>
+					使用 jasmine.objectContaining 提取对象部分键值对，代表包含该部分键值对的任意对象。当被测试的对象包含该部分键值对时为 true ，反之则为 false 。
+					<pre><code class="javascript">
+describe("test", function() {
+    var obj = {
+        a: 1,
+        b: 2
+      };
+    it("test arrayContaining", function() {
+      expect(obj).toEqual(jasmine.objectContaining({ a: 1})); // => true
+      expect(obj).toEqual(jasmine.objectContaining({ a: 2 })); // => false
+    });
+});
+					</code></pre>
+				</p>
+				<h3>jasmine.arrayCotaining([element])：提取数组部分元素</h3>
+				<p>
+					jasmine.arrayCotaining 类似于 jasmine.objectContaining ，代表包含该部分元素的任意数组。当被测试的数组包含该部分的元素时为 ture，反之为 false 。
+					<pre><code class="javascript">
+describe("test", function() {
+    var arr = [1, 2, 3];
+    it("test arrayContaining", function() {
+      expect(arr).toEqual(jasmine.arrayContaining([1, 2])); // => true
+      expect(arr).toEqual(jasmine.arrayContaining([1, 4])); // => false
+    });
+});
+					</code></pre>
+				</p>
+				<h3>jasmine.stringMatching(RegExp|String)：部分字符串</h3>
+				<p>
+					同理，jasmine.stringMatching 生成的是包含指定字符串的任意字符串，既可以传入字符串作为参数，也可以传入正则表达式作为参数。
+					<pre><code class="javascript">
+describe("test", function() {
+    var string = 'hello world';
+    it("test stringMatching", function() {
+      expect(string).toEqual(jasmine.stringMatching('hello')); // => true
+      expect(string).toEqual(jasmine.stringMatching(/^hello$/)); // => false
+    });
+});
+					</code></pre>
+				</p>
+				<h3>asymmetricMatch：自定义对象判断方法</h3>
+				<p>
+					修改与一个对象的比较方法，原先为直接进行<span class="definition"> === </span>判断，通过向对象添加一个 asymmetricMatch 属性来自定义这种判断方式。
+					<pre><code class="javascript">
+describe("test", function() {
+    var obj = {
+    	a: 1,
+    	asymmetricMatch: function(number) {
+    		return number === 0;
+    	}
+    };
+    it('test asymmetricMatch', function(){
+    	expect(0).toEqual(obj);
+    });
+});
+					</code></pre>
+					测试结果为真，它将 0 作为参数传入 obj.asymmetricMatch，执行的返回结果为 true，因此认为 0 equal obj 。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>同步异步</h2>
+			<p>
+				<h3>jasmine.clock：掌握时间</h3>
+				<p>
+					使用以下三个方法来对代码执行的时间进行控制：
+					<ul>
+						<li>jasmine.clock.install()：开始控制</li>
+						<li>jasmine.clock().tick(n)：时间流逝 n 毫秒</li>
+						<li>jasmine.clock.uninstall()：结束控制</li>
+					</ul>
+					<pre><code class="javascript">
+describe("test", function() {
+    it('test clock', function() {
+    	jasmine.clock().install();
+
+    	setTimeout(function() {
+	      console.log('已经 1000 了');
+	    }, 1000);
+    	jasmine.clock().tick(1000);
+    	console.log('已经 999 了');
+
+    	jasmine.clock().uninstall();
+    });
+});
+					</code></pre>
+					<figure>
+						<img src="../images/karma_clock.jpg" alt="">
+					</figure>
+					上面代码使用 jasmine.clock().tick(1000) 直接跳到 1000ms ，执行 console.log('已经 1000 了') ，之后再执行 console.log('已经 999 了') 。
+				</p>
+				<h3>jasmine.clock().mockDate：修改当前时间</h3>
+				<p>
+					修改当前时间，使得使用 new Date() 获得的时间是修改后的时间。
+					<pre><code class="javascript">
+describe("test", function() {
+    it('test clock', function() {
+    	jasmine.clock().install();
+
+    	jasmine.clock().mockDate(new Date(2000, 0, 1));
+    	console.log(new Date());
+
+    	jasmine.clock().uninstall();
+    });
+});
+					</code></pre>
+					<figure>
+						<img src="../images/karma_clock_date.jpg" alt="">
+					</figure>
+				</p>
+				<h3>同步执行</h3>
+				<p>
+					<h4>方法一：done 回调函数</h4>
+					钩子、规范（spec）调用的函数会传入一个 done 函数作为参数，若在测试代码内执行 done 函数，则表示测试代码同步执行。
+					<pre><code class="javascript">
+describe("test", function() {
+    beforeEach(function(done) {
+        setTimeout(function() {
+            done();
+        }, <span class="strong">4999</span>);
+    });
+    it("test async", function(done) {
+        console.log('hello world');
+        done();
+    });
+});
+					</code></pre>
+					<figure>
+						<img src="../images/karma_async_done.jpg">
+					</figure>
+					需要留意的是，done 函数必须在 5s 内执行，否则将会直接出错。
+					<figure>
+						<img src="../images/karma_async_done_error.jpg" alt="">
+						<figcaption>同一份代码，将时间 4999 修改为 5000 的结果</figcaption>
+					</figure>
+					<h4>方法二：promise</h4>
+					让钩子、规范（spec）返回一个 promise 对象，只有当 promise 对象状态为 resolved 或 rejected 时才会执行后面的代码，实现同步执行。
+					<pre><code class="javascript">
+// 官方例子
+describe("Using promises", function() {
+    if (!browserHasPromises()) {
+        return;
+    }
+    beforeEach(function() {
+        return soon().then(function() {
+            value = 0;
+        });
+    });
+    it("should support async execution of test preparation and expectations", function() {
+        return soon().then(function() {
+            value++;
+            expect(value).toBeGreaterThan(0);
+        });
+    });
+});
+					</code></pre>
+					<h4>方法三：async 函数</h4>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] karma Installation <a href="http://karma-runner.github.io/2.0/intro/installation.html">http://karma-runner.github.io/2.0/intro/installation.html</a></div>
+				<div>[2] jasmine Your first suite <a href="https://jasmine.github.io/tutorials/your_first_suite">https://jasmine.github.io/tutorials/your_first_suite</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>
