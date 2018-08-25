@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vue Test Utils</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/default.css">
+	<link rel="stylesheet" href="../css/bright.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">Vue Test Utils</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				Vue Test Utils 是 Vue.js 官方的单元测试实用工具库。<sup>[1]</sup>其作用为，实现更方便与简易的方式测试 vue 组件，这里配合<a href="./karma.html"> karma + jasmine </a>实现自动化测试。
+			</p>
+		</section>
+		<section>
+			<h2>下载 & 配置</h2>
+			<p>
+				<h3>下载</h3>
+				<p>
+					下载 npm 包。
+					<pre><code class="shell">
+$ npm install --save-dev @vue/test-utils karma karma-jasmine karma-chrome-launcher jasmine-core
+					</code></pre>
+					后续配置与 jasmine 使用方法可以查看<a href="./karma.html"> karma.html </a>，此处额外配合 webpack + babel，实现 ES6 语法以及支持 .vue 文件，所以还需要额外下载 karma-webpack、webpack 和需要的 loader（按需下载，可查看<a href="./webpack.html"> webpack </a>和<a href="./loader.html"> loader </a>）。
+					<pre><code class="javascript">
+# 下载 webpack
+$ npm install --save-dev webpack
+# 下载 karma-webpack
+$ npm install --save-dev karma-webpack
+# 按需下载 loader
+$ npm install vue-loader css-loader vue-template-compiler --save-dev
+					</code></pre>
+				</p>
+				<h3>配置</h3>
+				<p>
+					生成 karma 配置文件，方法与<a href="./karma.html"> karma.html </a>相同。
+					<pre><code class="shell">
+$ karma init
+					</code></pre>
+					在生成的配置文件中需要新增以下属性：
+					<pre><code class="javascript">
+module.exports = function(config) {
+	config.set({
+		// 前略 ...
+		preprocessors: {
+			'test/*.spec.js': ['webpack'] // 需要被打包的测试文件
+		},
+		webpack: {
+			// webpack 的配置项
+		},
+		// 后略 ...
+	})
+}
+					</code></pre>
+					webpack 属性就是 webpack 配置项，此处可以添加 loader、resolve 等选项。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>使用</h2>
+			<p>
+				<h3>引入组件</h3>
+				<p>
+					如果组件是 .vue 的单文件格式，那么就需要在配置 webpack 时加入 vue-loader ，否则无法 import 单文件。
+					<pre><code class="javascript">
+import MyComponent1 from 'my-component.vue';
+import MyComponent2 from 'my-component.js';
+					</code></pre>
+				</p>
+				<h3>挂载组件</h3>
+				<p>
+					挂载组件，获得一个有生命周期的组件。
+					<pre><code class="javascript">
+import {mount} from '@vue/test-utils';
+const wrapper = mount(MyComponent);
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Vue Test Utils <a href="https://vue-test-utils.vuejs.org/zh/">https://vue-test-utils.vuejs.org/zh/</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

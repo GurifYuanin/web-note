@@ -27,7 +27,7 @@
 		<section>
 			<h2>定义</h2>
 			<p>
-				使用 jasmine 编写测试代码（也可以使用其他测试框架），对项目的文件进行单元测试，然后使用 karma 来让 jasmine <span class="definition">自动化</span>执行（监听文件变化），实现在命令行下测试代码，并将测试结果打印到控制台界面上或浏览器。
+				karma 是一个测试运行器。使用 jasmine 编写测试代码（也可以使用其他断言库），对项目的文件进行单元测试，然后使用 karma 来让 jasmine <span class="definition">自动化</span>执行（监听文件变化），实现在命令行下测试代码，并将测试结果打印到控制台界面上或浏览器。
 			</p>
 		</section>
 		<section>
@@ -398,14 +398,110 @@ describe("A suite of basic functions", function() {
 		<section>
 			<h2>断言判断</h2>
 			<p>
-				<h3>toEqual：等于</h3>
+				<h3>toEqual：递归等于</h3>
 				<p>
-					使用 toEqual 实际上是进行一次 === 操作，判断值是否等于 toEqual 内的参数。
+					使用 toEqual 实际上是进行递归的 === 操作，判断值是否等于 toEqual 内的参数。
 					<pre><code class="javascript">
-describe('test', function() {
-	it('test it', function() {
-		expect(1).toEqual(1);
-	});
+describe("Using equal", function() {
+    var obj1 = {a: 1};
+    var obj2 = {a: 1};
+    it('test toEqual', function() {
+        expect(obj1).toEqual(obj2); // => true
+    });
+});
+					</code></pre>
+					它不是简单的进行 obj1 === obj2，而是递归取出 obj1 和 obj2 的每个键值对进行比较。
+				</p>
+				<h3>toBe：精确等于</h3>
+				<p>
+					toBe 就是简单地执行 === 操作。
+					<pre><code class="javascript">
+describe("Using equal", function() {
+    var obj1 = {a: 1};
+    var obj2 = {a: 1};
+    it('test toEqual', function() {
+        expect(obj1).toBe(obj2); // => false
+    });
+});
+					</code></pre>
+				</p>
+				<h3>toBeGreaterThan & toBeLessThan & toBeGreaterThanOrEqual & toBeLessThanOrEqual：大小判断</h3>
+				<p>
+					<ul>
+						<li>toBeGreaterThan：></li>
+						<li>toBeLessThan：<</li>
+						<li>toBeGreaterThanOrEqual：>=</li>
+						<li>toBeLessThanOrEqual：<=</li>
+					</ul>
+					<pre><code class="javascript">
+describe("Using toBeGreaterThan", function() {
+    it('test toBeGreaterThan', function() {
+        expect(null).toBeGreaterThan(-1); // => true
+    });
+});
+					</code></pre>
+					null 被转为了数字 0 ， 0 > -1 为 true 。
+				</p>
+				<h3>toBeCloseTo：约等于</h3>
+				<p>
+					用 toBeCloseTo(number, n) 来只判断到小数点后 n 位，numbder 的小数点后 n 位忽视不计。
+					<pre><code class="javascript">
+describe("Using toBeCloseTo", function() {
+    it('test toBeCloseTo', function() {
+        expect(1.23456789).toBeCloseTo(1.239, 2); // => true
+    });
+});
+					</code></pre>
+					其实就相当于以下函数：
+					<pre><code class="javascript">
+function getCloseNumber (num, n) {
+	var sum = Math.pow(10, n);
+	return Number.parseInt(num * sum) / sum;
+}
+console.log(getCloseNumber(1.23456789, 2) === getCloseNumber(1.239, 2)); // => true
+					</code></pre>
+				</p>
+				<h3>toBeDefined & toBeUndefined & toBeNull & toBeNaN & toBeNegativeInfinity & toBePositiveInfinity：值判断</h3>
+				<p>
+					<ul>
+						<li>toBeDefined：!== undefined</li>
+						<li>toBeUndefined：=== undefined</li>
+						<li>toBeNull：=== null</li>
+						<li>toBeNaN：Number.isNaN</li>
+						<li>toBeNegativeInfinity：=== Infinity</li>
+						<li>toBePositiveInfinity：=== -Infinity</li>
+					</ul>
+					<pre><code class="javascript">
+describe("Using toBeDefined", function() {
+    it('test toBeDefined', function() {
+        expect(null).toBeDefined(); // => true
+        expect(undefined).toBeDefined(); // => false
+    });
+});
+					</code></pre>
+				</p>
+				<h3>toBeFalsy & toBeTruthy：真假判断</h3>
+				<p>
+					toBeFalsy 相当于丢进 if() 进行判断，看被测试的值能否转为 false ，toBeTruthy 同理。
+					<pre><code class="javascript">
+describe("Using toBeFalsy", function() {
+    it('test toBeFalsy', function() {
+        expect(null).toBeFalsy(); // => true
+        expect(undefined).toBeFalsy(); // => true
+        expect(NaN).toBeFalsy(); // => true
+    });
+});
+					</code></pre>
+				</p>
+				<h3>toContain：包含</h3>
+				<p>
+					类似于 indexOf(element) !== -1，既可以用在数组表示是否包含该元素，也可以用在字符串表示包含该字符串。
+					<pre><code class="javascript">
+describe("Using toContain", function() {
+    it('test toContain', function() {
+        expect('123').toContain(1); // => true
+        expect([1, 2, 3]).toContain(1); // => true
+    });
 });
 					</code></pre>
 				</p>
@@ -513,7 +609,7 @@ describe("test", function() {
 				</p>
 				<h3>asymmetricMatch：自定义对象判断方法</h3>
 				<p>
-					修改与一个对象的比较方法，原先为直接进行<span class="definition"> === </span>判断，通过向对象添加一个 asymmetricMatch 属性来自定义这种判断方式。
+					修改与一个对象的比较方法，通过向对象添加一个 asymmetricMatch 属性来自定义这种判断方式。
 					<pre><code class="javascript">
 describe("test", function() {
     var obj = {

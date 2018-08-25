@@ -76,7 +76,7 @@ $(function() {
         ['抓包工具', 'chrome devtools', 'git', 'sublime 插件'],
         ['HTTP', '同源策略'],
         ['CSRF', 'XSS'],
-        ['karma'],
+        ['karma', 'Vue Test Utils'],
         ['Thinkphp5.1', 'htaccess'],
         ['路径匹配', '浏览器渲染', '设计策略', 'cookie', '头疼的兼容', '命名规范', '字符编码', '算法规范', 'bat']
     ];
