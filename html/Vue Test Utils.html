@@ -87,10 +87,100 @@ import MyComponent2 from 'my-component.js';
 				</p>
 				<h3>挂载组件</h3>
 				<p>
+					<h4>挂载组件</h4>
 					挂载组件，获得一个有生命周期的组件。
 					<pre><code class="javascript">
 import {mount} from '@vue/test-utils';
 const wrapper = mount(MyComponent);
+					</code></pre>
+					<h4>仿造数据</h4>
+					挂载时，可以传入第二个参数作为仿造的数据。
+					<pre><code class="javascript">
+const wrapper = mount(MyComponent, {
+	propsData: { // 假装有 props 传入
+		count: 1
+	},
+	mocks: { // 注入到 vue 实例的属性
+		foo: 1
+	}
+});
+					</code></pre>
+					<h4>挂载后</h4>
+					挂载后可直接获得以下属性与方法：
+					<ul>
+						<li>vm：即 vue 实例对象</li>
+						<li>element：template 的根元素</li>
+						<li>html()：即 template，字符串</li>
+						<li>text()：获得文本内容</li>
+						<li>classes()：获得根元素上的所有类名所组成的数组</li>
+						<li>name()：获得标签名或组件名</li>
+						<li>props()：获得组件的 props 对象</li>
+					</ul>
+				</p>
+				<h3>查找元素</h3>
+				<p>
+					<h4>判断</h4>
+					使用 contains 方法查找 template 中是否存在某个标签或组件。
+					<pre><code class="javascript">
+expect(wrapper.contains('div')).toBe(true);
+					</code></pre>
+					<h4>获得首个元素</h4>
+					使用 find 方法获得 template 中的第一个标签元素或组件。
+					<pre><code class="javascript">
+expect(wrapper.find('div').is('div')).toBe(true);
+					</code></pre>
+					<h4>获得所有元素</h4>
+					使用 findAll 方法类似于 $()，获得所有符合条件的元素。
+					<pre><code class="javascript">
+expect(wrapper.findAll('div').at(0).is('div')).toBe(true);
+					</code></pre>
+				</p>
+				<h3>判断</h3>
+				<p>
+					<h4>判断标签名</h4>
+					用 is 方法判断元素是否为指定标签名或组件。
+					<pre><code class="javascript">
+expect(wrapper.is('div')).toBe(true);
+					</code></pre>
+					<h4>判断子节点</h4>
+					用 isEmpty 方法判断是否包含子节点。
+					<pre><code class="javascript">
+expect(wrapper.isEmpty()).toBe(true);
+					</code></pre>
+				</p>
+				<h3>事件交互</h3>
+				<p>
+					<h4>手动触发事件</h4>
+					使用 trigger(type, options) 手动触发事件，type 为事件名，options 对象的键值对会被附加到事件处理程序的参数 event 对象上。
+					<pre><code class="javascript">
+wrapper.trigger('click');
+					</code></pre>
+				</p>
+				<h3>表单交换</h3>
+				<p>
+					通过以下方法对表单进行操作：
+					<ul>
+						<li>setChecked(checked)：选中或取消选中单选 / 复选框</li>
+						<li>at(n).setSelected()：设置 select 元素选中第 n 个 option</li>
+						<li>setValue(value)：设置文本框或 select 的值为 value</li>
+					</ul>
+				</p>
+				<h3>手动设置</h3>
+				<p>
+					<h4>data</h4>
+					使用 setData 传入对象设置组件的 data。
+					<pre><code class="javascript">
+wrapper.setData({count: 1});
+					</code></pre>
+					<h4>methods</h4>
+					同理，设置 methods 。
+					<pre><code class="javascript">
+wrapper.setMethods({count () { console.log(123); }});
+					</code></pre>
+					<h4>props</h4>
+					同理，设置 props 。
+					<pre><code class="javascript">
+wrapper.setProps({count: 1});
 					</code></pre>
 				</p>
 			</p>
