@@ -232,7 +232,7 @@ X-Ua-Compatible: IE=Edge,chrome=1
 Content-Type: media-type; charset=字符编码; boundary=一串字符
 					</code></pre>
 					<h4>media-type</h4>
-					media-type 用于指定数据类型，常用的有如下
+					media-type 表示数据的类型，常用的有如下
 					<ul>
 						<li>application/x-www-form-urlencoded：表单数据，即键值对</li>
 						<li>multipart/form-data：混合表单，即既有键值对，也有文件等数据</li>
@@ -240,8 +240,13 @@ Content-Type: media-type; charset=字符编码; boundary=一串字符
 						<li>text/plain：字符串</li>
 						<li>text/html：html 文件</li>
 					</ul>
+					比如一个请求，主体格式为 json，则以下首部字段，用于表示发送的报文的报文主体的格式为 json 。
+					<pre><code class="http">
+Content-Type: application/json
+					</code></pre>
+					下面解释几个常用的数据格式。
 					<h5>application/x-www-form-urlencoded</h5>
-					我们知道，当使用 GET 请求时，提交的表单数据跟在 URL 后，在 PHP 中通过 $_GET 变量来读取。
+					application/x-www-form-urlencoded 表示请求类型为表单类型，当使用 GET 请求时，提交的表单数据跟在 URL 后，在 PHP 中通过 $_GET 变量来读取。
 					<pre><code class="php">
 // 在浏览器上输入该 URL 发起请求，username=123456&password=123456 为携带的请求参数
 http://isempty.site?username=123456&password=123456
@@ -273,8 +278,8 @@ username=123456&password=123456
 	echo $_POST['password']; // => 123456
 &lt;/php&gt;
 					</code></pre>
-					<h4>application/json</h4>
-					json 数据需要存放在报文主体内，实际上是 json 格式的字符串。
+					<h5>application/json</h5>
+					application/json 表示数据格式为 json ，并且数据只能存放在报文主体内。
 					<pre><code class="php">
 // 请求报文
 POST http://isempty.site/ HTTP/1.1
@@ -289,7 +294,13 @@ Content-Length: 37
 	$json = json_decode($json); // 解码，将字符串解码为 json 对象
 &lt;/php&gt;
 
-// 响应报文同理
+// 在 PHP 中返回 json 格式的响应报文
+&lt;?php
+	$data = array(
+		"key" => "value"
+	);
+	echo json_encode($data); // 将 php 数组编码为 json
+?&gt;
 
 // 在 javascript 中，通常是 ajax 请求后获得 json 字符串
 axios('http://isempty.site')

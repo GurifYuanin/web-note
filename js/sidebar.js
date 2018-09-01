@@ -1,11 +1,88 @@
 // 初始化语法高亮
-if (hljs && hljs.initHighlightingOnLoad) {
-    hljs.initHighlightingOnLoad();
+hljs && hljs.initHighlightingOnLoad ?
+    hljs.initHighlightingOnLoad() :
+    $(function() {
+        hljs && hljs.initHighlightingOnLoad();
+    });
+
+function wrapByA(href, text, target) {
+    return '<a ' +
+            (target ? 'target=' + target + ' ' : '') +
+            'href="' + (href === '没有了' ? 'javascript:void(0)' : ('./' + href + '.html')) +
+            '">' +
+            (text || href) +
+            '</a>';
 }
+
+function wrapByTag(source, tag) {
+    return tag.toLowerCase() === 'a' ?
+           wrapByA(source) :
+           '<' + tag + '>' + source + '</' + tag + '>';
+}
+// 去除多余的字符
+function filterName(str) {
+    return str.replace(/[\s$@#&;()/.'"]/g, '');
+}
+// 获得视窗大小
+function getViewport(target) {
+    // 使用指定窗口，默认使用当前窗口
+    target = target || window;
+    // 以此检查 IE9+ -> 标准模式 -> 怪异模式
+    return {
+        'width': target.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+        'height': target.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+    };
+}
+// 滚动到指定 id 的位置
+function scrollTo(name, el) {
+    if (name === '返回顶部' || !name) {
+        $('html, body').animate({
+            scrollTop: 0
+        }, 500);
+    } else if (el) {
+        el.animate({
+            scrollTop: $('#' + name).offset().top - 100
+        }, 500);
+    } else {
+        $('html, body').animate({
+            scrollTop: $('#' + name).offset().top
+        }, 500);
+    }
+}
+// 获得文件名后缀（不含 .）
+function getSuffix(filename) {
+    return filename.substring(filename.lastIndexOf('.') + 1);
+}
+
+// notify 框
+function $Notify() {
+    this.win = document.createElement('div');
+    this.win.setAttribute('class', 'notify');
+    this.win.style.opacity = '0';
+    this.win.style.zIndex = '3';
+    document.body.appendChild(this.win);
+    this.timeout = null;
+}
+$Notify.prototype.info = function(message, duration) {
+    duration = duration || 2000;
+    var win = this.win;
+    win.innerText = message;
+    win.style.opacity = '1';
+    win.style.transition = 'all 1s';
+    if (this.timeout) {
+        clearTimeout(this.timeout);
+    }
+    this.timeout = setTimeout(function() {
+        win.style.opacity = '0';
+    }, duration);
+};
+
 // sidebar
 $(function() {
     var viewport = document.createElement('meta');
     var icon = document.createElement('link');
+    var autopush = document.createElement('script');
+    autopush.setAttribute('src', '/static/js/auto-push-to-baidu.js');
     icon.setAttribute('rel', 'shortcut icon');
     icon.setAttribute('href', '../images/web-note.ico');
     icon.setAttribute('type', 'image/vnd.microsoft.icon');
@@ -13,49 +90,8 @@ $(function() {
     viewport.setAttribute('content', 'width=device-width, initial-scale=1');
     document.head.appendChild(viewport);
     document.head.appendChild(icon);
-    function wrapByA(href) {
-        return '<a href="' +
-            (href === '没有了' ? 'javascript:void(0)' : ('./' + href + '.html')) +
-            '">' + href + '</a>';
-    }
+    document.head.appendChild(autopush);
 
-    function wrapByTag(source, tag) {
-        return tag === 'a' ?
-            wrapByA(source) :
-            '<' + tag + '>' + source + '</' + tag + '>';
-    }
-    // 去除多余的字符
-    function filterName(str) {
-        return str.replace(/[\s$@#&;()/.'"]/g, '');
-    }
-    // 获得视窗大小
-    function getViewport(target) {
-        // 使用指定窗口，默认使用当前窗口
-        target = target || window;
-        // 以此检查 IE9+ -> 标准模式 -> 怪异模式
-        var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-        return {
-            'width': width,
-            'height': height
-        };
-    }
-    // 滚动到指定 id 的位置
-    function scrollTo(name, el) {
-        if (name === '返回顶部' || !name) $body.animate({
-            scrollTop: 0
-        }, 500);
-        else if (el) el.animate({
-            scrollTop: $('#' + name).offset().top - 100
-        }, 500);
-        else $body.animate({
-            scrollTop: $('#' + name).offset().top
-        }, 500);
-    }
-    // 获得文件名后缀（不含 .）
-    function getSuffix (filename) {
-        return filename.substring(filename.lastIndexOf('.') + 1);
-    }
     var url = window.location.href;
     var currentTitle = decodeURI(url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')));
     var $sidebar = $('#sidebar'); // 导航条
@@ -64,18 +100,17 @@ $(function() {
     var $catalog = $('#catalog'); // 隐藏侧栏按钮
     var $title = $('#title'); // 文章标题
     var $container = $('#container'); // 文章内容
-    var $body = $('html, body');
     var category = ['HTML', 'CSS', 'Javascript', 'NodeJS', 'VueJS', '移动Web', '工具', '协议', '安全', '测试', '后端', '其他']; // 目录分类
     var items = [
         ['DOM', 'meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'canvas', 'svg'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
-        ['数据类型', '数组字符串与对象', '循环', '作用域链', '原型链', '闭包', '事件', '复制粘贴', 'RegExp', 'Class', 'JSONP', 'this', 'jquery', 'promise', 'Generator', 'async', 'Typescript'],
+        ['数据类型', '数组字符串与对象', '循环', '作用域链', '原型链', '闭包', '事件', '复制粘贴', 'RegExp', 'XMLHttpRequest', 'Class', 'JSONP', 'this', 'jquery', 'promise', 'Generator', 'async', 'Typescript'],
         ['commonJS', 'package.json', 'path', 'file system', 'process', 'webpack', 'plugins', 'loader'],
         ['安装', '实例', '模版', '组件', 'mixins', 'router', 'vuex'],
         ['响应式布局', 'bootstrap', 'viewport'],
         ['抓包工具', 'chrome devtools', 'git', 'sublime 插件'],
-        ['HTTP', '同源策略'],
-        ['CSRF', 'XSS'],
+        ['HTTP'],
+        ['CSRF', 'XSS', '同源策略'],
         ['karma', 'Vue Test Utils'],
         ['Thinkphp5.1', 'htaccess'],
         ['路径匹配', '浏览器渲染', '设计策略', 'cookie', '头疼的兼容', '命名规范', '字符编码', '算法规范', 'bat']
@@ -103,11 +138,17 @@ $(function() {
             str = '';
         value = value || ' ';
         // 遍历出匹配的 li
-        items.forEach(function(item) {
+        items.forEach(function(item, groupIndex) {
             item.forEach(function(el) {
                 var reg = new RegExp(value, 'i');
                 if (reg.test(el)) {
-                    str += wrapByTag(el.replace(reg, '<span>' + el.match(reg) + '</span>'), 'li');
+                    str += wrapByTag(
+                               wrapByA(
+                                    el,
+                                    el.replace(reg, '<span class="filteredHightLight">' + el.match(reg) + '</span>') + ' <span class="filteredCategory">(' + category[groupIndex] + ')</span>',
+                                    '_blank'),
+                                'li'
+                            );
                 }
             });
         });
@@ -117,12 +158,6 @@ $(function() {
         } else if ((event.keyCode < 37 || event.keyCode > 40) && event.keyCode !== 13) {
             $searchResult.css('display', 'block');
             $searchResult.html(str);
-            // 为 li 添加点击事件
-            $('#searchResult li').each(function() {
-                $(this).click(function() {
-                    window.open('./' + this.innerText + '.html');
-                });
-            });
         }
         // 如果按钮为 enter 则自动跳转到第一个 li
         if (str.trim() === '') {
@@ -130,15 +165,21 @@ $(function() {
         }
         var list = $('#searchResult li');
         switch (event.keyCode) {
-            case 13: {
+            case 13:
+                // 回车键
+                {
                     var index = list.toArray().findIndex(function(element) {
                         return element.style.backgroundColor === 'rgb(239, 239, 239)';
                     });
-                    index === -1 ? list.eq(0).click() : list.eq(index).click();
+                    index = index === -1 ? 0 : index;
+                    window.open('./' + list.eq(index)[0].innerText.replace(/\s\(.+\)$/, '') + '.html');
+                    // index === -1 ? list.eq(0).click() : list.eq(index).click();
                     break;
                 };
-            case 37: break;
-            case 38: {
+            case 37:
+                break;
+            case 38:
+                {
                     if (liIndex > 0) {
                         liIndex--;
                     }
@@ -150,8 +191,10 @@ $(function() {
                     }
                     break;
                 };
-            case 39:  break;
-            case 40: {
+            case 39:
+                break;
+            case 40:
+                {
                     if (liIndex > 0) {
                         list.eq(liIndex - 1).css('background-color', '');
                     }
@@ -161,10 +204,13 @@ $(function() {
                     }
                     break;
                 };
-            default: liIndex = 0;
+            default:
+                liIndex = 0;
         }
     });
-    $container.click(function() { $searchResult.css('display', 'none'); });
+    $container.click(function() {
+        $searchResult.css('display', 'none');
+    });
     /*
     侧栏结构：
     <aside id="sidebar">
@@ -238,27 +284,7 @@ $(function() {
         }, 'fast');
     });
     // 弹窗提示
-    function $Notify () {
-        this.win = document.createElement('div');
-        this.win.setAttribute('class', 'notify');
-        this.win.style.opacity = '0';
-        this.win.style.zIndex = '3';
-        document.body.appendChild(this.win);
-        this.timeout = null;
-    }
-    $Notify.prototype.info = function (message, duration) {
-        duration = duration || 2000;
-        var win = this.win;
-        win.innerText = message;
-        win.style.opacity = '1';
-        win.style.transition = 'all 1s';
-        if (this.timeout) {
-            clearTimeout(this.timeout);
-        }
-        this.timeout = setTimeout(function() {
-            win.style.opacity = '0';
-        }, duration);
-    };
+
     var notify = new $Notify();
     // 代码辅助区
     var area = document.createElement('textarea'); // 用于临时暂存复制的代码的文本域
@@ -290,7 +316,6 @@ $(function() {
         };
         el.appendChild(codeType);
         el.appendChild(codeCopy);
-
     });
 
     // 文章标题点击后变换样式
@@ -589,18 +614,16 @@ $(function() {
     }
     // 获得每次缩放的增量
     function getIncreatement(img) {
-        if (img) {
-            return img.naturaWidth ?
-                img.naturaWidth * .2 : // 固定缩放量，IE9+ 专属
-                getWidth(img) * .2; // 每次缩放为当前宽度的 20%
-        } else {
-            return 50;
-        }
+        return img ?
+            img.naturaWidth ? img.naturaWidth * .2 : getWidth(img) * .2 :
+            50;
     }
 
     function bothDisapper() {
         smaller.style.opacity = bigger.style.opacity = 0;
-        if (disapearTimer) { clearTimeout(disapearTimer); }
+        if (disapearTimer) {
+            clearTimeout(disapearTimer);
+        }
         disapearTimer = setTimeout(function() {
             smaller.style.display = bigger.style.display = 'none';
         }, 1000);
@@ -628,12 +651,14 @@ $(function() {
             img.style.paddingBottom = Math.max(bottom, 0) + 'px';
         }
     }
+
     function enSmaller() {
         var child = imgContainer.lastChild;
         var oldWidth = getWidth(child);
         child.style.width = oldWidth - getIncreatement(child) + 'px';
     }
-    function changeImg (flag) {
+
+    function changeImg(flag) {
         if (imgContainer.lastChild instanceof HTMLImageElement) {
             var img = imgContainer.lastChild,
                 imgs = $('#container figure>img').toArray();
@@ -641,12 +666,18 @@ $(function() {
                 if (imgs[i].src === img.src) {
                     if (flag) {
                         // 上一张
-                        if (i - 1 >= 0) { img.src = imgs[i - 1].src; }
-                        else { notify.info('已经是第一张了'); }
+                        if (i - 1 >= 0) {
+                            img.src = imgs[i - 1].src;
+                        } else {
+                            notify.info('已经是第一张了');
+                        }
                     } else {
                         // 下一张
-                        if (i + 1 < imgs.length) {img.src = imgs[i + 1].src; }
-                        else { notify.info('已经是最后一张了'); }
+                        if (i + 1 < imgs.length) {
+                            img.src = imgs[i + 1].src;
+                        } else {
+                            notify.info('已经是最后一张了');
+                        }
                     }
                     break;
                 }
@@ -685,26 +716,34 @@ $(function() {
     onlySmaller.setAttribute('title', '缩小');
     onlySmaller.setAttribute('class', 'closeImg');
     onlySmaller.style.right = '150px';
-    onlySmaller.onmousedown = function () {
+    onlySmaller.onmousedown = function() {
         enSmaller();
-        if (smallerTimer) { clearInterval(smallerTimer); }
+        if (smallerTimer) {
+            clearInterval(smallerTimer);
+        }
         smallerTimer = setInterval(enSmaller, 200);
     };
-    onlySmaller.onmouseup = function () {
-        if (smallerTimer) { clearInterval(smallerTimer); }
+    onlySmaller.onmouseup = function() {
+        if (smallerTimer) {
+            clearInterval(smallerTimer);
+        }
     };
     // bigger
     onlyBigger.innerText = '+';
     onlyBigger.setAttribute('title', '放大');
     onlyBigger.setAttribute('class', 'closeImg');
     onlyBigger.style.right = '100px';
-    onlyBigger.onmousedown = function () {
+    onlyBigger.onmousedown = function() {
         enBigger();
-        if (biggerTimer) { clearInterval(biggerTimer); }
+        if (biggerTimer) {
+            clearInterval(biggerTimer);
+        }
         biggerTimer = setInterval(enBigger, 200);
     };
-    onlyBigger.onmouseup = function () {
-        if (biggerTimer) { clearInterval(biggerTimer); }
+    onlyBigger.onmouseup = function() {
+        if (biggerTimer) {
+            clearInterval(biggerTimer);
+        }
     };
     // close
     closeImg.innerText = 'x';
@@ -769,12 +808,13 @@ $(function() {
     nextImg.style.right = '0';
     lastImg.style.display = 'none';
     nextImg.style.display = 'none';
-    lastImg.onclick = function () {
+    lastImg.onclick = function() {
         changeImg(true);
     };
-    nextImg.onclick = function () {
+    nextImg.onclick = function() {
         changeImg(false);
     };
+
     function enBigger() {
         var child = imgContainer.lastChild;
         var oldWidth = getWidth(child);
@@ -803,7 +843,9 @@ $(function() {
             imgContainer.style.display = mask.style.display = 'block';
             // 按下右键弹出选项
             img.oncontextmenu = function(e) {
-                if (disapearTimer) { clearTimeout(disapearTimer); }
+                if (disapearTimer) {
+                    clearTimeout(disapearTimer);
+                }
                 smaller.style.display = bigger.style.display = 'block';
                 smaller.style.opacity = bigger.style.opacity = 1;
                 bigger.style.left = e.pageX + 'px';
@@ -836,20 +878,24 @@ $(function() {
     //     img
     //     div
     // 点击后 slideUp 和 slideDown
-    var dir = $('#catalogFrame img');
-    dir.click(function() {
-        var brother = $(this).next().next();
-        console.dir(brother);
-        if (typeof brother !== 'undefined' && brother.prop('tagName') === 'DIV') {
-            brother.toggle(500);
-        }
-    });
-    $('table').attr({
-        'border': 1,
-        'cellpadding': 1,
-        'cellspacing': 0
-    });
-    $('table').each(function() {
-        $(this).parent().css('overflow', 'auto');
-    });
+    var $dir = $('#catalogFrame img');
+    if ($dir.length) {
+        $dir.click(function() {
+            var brother = $(this).next().next();
+            if (typeof brother !== 'undefined' && brother.prop('tagName').toUpperCase() === 'DIV') {
+                brother.toggle(500);
+            }
+        });
+    }
+    var $table = $('table');
+    if ($table.length) {
+        $table.attr({
+            'border': 1,
+            'cellpadding': 1,
+            'cellspacing': 0
+        });
+        $table.each(function() {
+            $(this).parent().css('overflow', 'auto');
+        });
+    }
 });

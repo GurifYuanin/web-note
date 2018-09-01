@@ -666,7 +666,7 @@ body {
 
         border: solid 1px #444;
         border-top: none;
-        > li {
+        li {
             cursor: pointer;
 
             color: $SEItmeColor;
@@ -683,8 +683,19 @@ body {
                 background-color: #efefef;
                 color: black;
             }
-            span {
+            .filteredHightLight {
                 background-color: yellow;
+            }
+            .filteredCategory {
+                font-size: 12px;
+                color: gray;
+            }
+            a {
+                text-decoration: none;
+                color: #444;
+                &:hover {
+                    color: black;
+                }
             }
         }
     }
