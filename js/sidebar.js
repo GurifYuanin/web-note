@@ -4,7 +4,30 @@ hljs && hljs.initHighlightingOnLoad ?
     $(function() {
         hljs && hljs.initHighlightingOnLoad();
     });
-
+function formatDate (date) {
+    date = date || new Date();
+    if (date instanceof Date) {
+      // 如果是 Date 对象
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      month = month < 10 ? '0' + month : month;
+      let day = date.getDate();
+      day = day < 10 ? '0' + day : day;
+      let hour = date.getHours();
+      hour = hour < 10 ? '0' + hour : hour;
+      let minute = date.getMinutes();
+      minute = minute < 10 ? '0' + minute : minute;
+      let second = date.getSeconds();
+      second = second < 10 ? '0' + second : second;
+      return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+    } else if (/^\d+$/.test(date)) {
+      // 如果是时间戳
+      return formatDate(new Date(Number.parseInt(date)));
+    } else {
+      // 否则，还给你！
+      return date;
+    }
+};
 function wrapByA(href, text, target) {
     return '<a ' +
             (target ? 'target=' + target + ' ' : '') +
@@ -63,10 +86,10 @@ function $Notify() {
     document.body.appendChild(this.win);
     this.timeout = null;
 }
-$Notify.prototype.info = function(message, duration) {
-    duration = duration || 2000;
+$Notify.prototype.info = function(options) {
+    options.duration = options.duration || 2000;
     var win = this.win;
-    win.innerText = message;
+    win.innerText = options.content;
     win.style.opacity = '1';
     win.style.transition = 'all 1s';
     if (this.timeout) {
@@ -74,7 +97,7 @@ $Notify.prototype.info = function(message, duration) {
     }
     this.timeout = setTimeout(function() {
         win.style.opacity = '0';
-    }, duration);
+    }, options.duration);
 };
 
 // sidebar
@@ -131,81 +154,112 @@ $(function() {
     $catalog.append('<section id="searchContainer"><input id="searchInput" type="text" placeholder="搜索文章"/><section id="searchResult"></section></section>');
     var $searchInput = $('#searchInput');
     var $searchResult = $('#searchResult');
+    var selectedBackgroundColor = 'rgb(239, 239, 239)';
     var liIndex = 0;
-    $searchResult.css('display', 'none');
-    $searchInput.keyup(function(event) {
-        var value = $searchInput.val(),
-            str = '';
-        value = value || ' ';
-        // 遍历出匹配的 li
+    // 根据关键字获得搜索结果列表
+    function getSearchResult (keyword) {
+        var res = '';
         items.forEach(function(item, groupIndex) {
             item.forEach(function(el) {
-                var reg = new RegExp(value, 'i');
-                if (reg.test(el)) {
-                    str += wrapByTag(
-                               wrapByA(
-                                    el,
-                                    el.replace(reg, '<span class="filteredHightLight">' + el.match(reg) + '</span>') + ' <span class="filteredCategory">(' + category[groupIndex] + ')</span>',
-                                    '_blank'),
-                                'li'
-                            );
-                }
+                try {
+                    var reg = new RegExp(keyword, 'i');
+                    if (reg.test(el)) {
+                        res += wrapByTag(
+                                   wrapByA(
+                                        el,
+                                        el.replace(reg, '<span class="filteredHightLight">' + el.match(reg) + '</span>') + ' <span class="filteredCategory">(' + category[groupIndex] + ')</span>',
+                                        '_blank'),
+                                    'li'
+                                );
+                    }
+                } catch (e) {}
             });
         });
-        // 将 li 插入到 html
-        if (value.trim() === '' || str.trim() === '') {
-            $searchResult.css('display', 'none');
-        } else if ((event.keyCode < 37 || event.keyCode > 40) && event.keyCode !== 13) {
-            $searchResult.css('display', 'block');
-            $searchResult.html(str);
+        return res;
+    }
+    // 数组去重
+    function filterRepeat (arr) {
+        var result = [];
+        if (window.Set) {
+            result = [...new Set(arr)];
+        } else {
+            var repeat = [];
+            for (var i = 0; i < arr.length; i++) {
+                var flag = true;
+                for (var j = 0; j < arr.length; j++) {
+                    if (arr[i] === arr[j] && i !== j) {
+                        if (repeat.indexOf(arr[i]) === -1) {
+                            repeat.push(arr[i]);
+                            result.push(arr[i]);
+                        }
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) result.push(arr[i]);
+            }
         }
-        // 如果按钮为 enter 则自动跳转到第一个 li
+        return result;
+    }
+    $searchResult.css('display', 'none');
+    $searchInput.keyup(function(event) {
+        var keyword = $searchInput.val() || '';
+        var str = keyword.trim() === '' ? '' : getSearchResult(keyword);
         if (str.trim() === '') {
-            return;
+            // 没有键入或者搜索结果为空，搜索结果框隐藏
+            $searchResult.slideUp();
+            if (keyword.trim() === '') { return; } else {
+                // 没有搜索到结果，拆分搜索条件重新尝试
+                var arr = keyword.split('');
+                arr = filterRepeat(arr);
+                var tmp = [];
+                for (var i = 0; i < arr.length; i++) {
+                    tmp = getSearchResult(arr[i]);
+                    str = tmp.length > str.length ? tmp : str; // 保留搜索结果最多的
+                }
+                if (str === '') { return; }
+            }
         }
+        if ((event.keyCode < 37 || event.keyCode > 40) && event.keyCode !== 13) {
+            // 有搜素结果
+            $searchResult.html(str);
+            $searchResult.stop(true, true).slideDown();
+            // $searchResult.css('display', 'block');
+        }
+        // 根据不同的特殊键，响应不同的样式
         var list = $('#searchResult li');
         switch (event.keyCode) {
-            case 13:
-                // 回车键
-                {
-                    var index = list.toArray().findIndex(function(element) {
-                        return element.style.backgroundColor === 'rgb(239, 239, 239)';
-                    });
-                    index = index === -1 ? 0 : index;
-                    window.open('./' + list.eq(index)[0].innerText.replace(/\s\(.+\)$/, '') + '.html');
-                    // index === -1 ? list.eq(0).click() : list.eq(index).click();
-                    break;
-                };
-            case 37:
+            case 13: // 回车键，打开新窗口
+                var index = list.toArray().findIndex(function(element) {
+                    return element.style.backgroundColor === selectedBackgroundColor;
+                });
+                index = index === -1 ? 0 : index;
+                window.open('./' + list.eq(index)[0].innerText.replace(/\s\(.+\)$/, '') + '.html');
+                // index === -1 ? list.eq(0).click() : list.eq(index).click();
                 break;
-            case 38:
-                {
-                    if (liIndex > 0) {
-                        liIndex--;
-                    }
-                    if (liIndex < list.length) {
-                        list.eq(liIndex).css('background-color', '');
-                    }
-                    if (liIndex > 0) {
-                        list.eq(liIndex - 1).css('background-color', '#efefef');
-                    }
-                    break;
-                };
-            case 39:
+            case 37: break; // 左箭头，无视
+            case 38: // 上箭头
+                if (liIndex > 0) {
+                    liIndex--;
+                }
+                if (liIndex < list.length) {
+                    list.eq(liIndex).css('background-color', '');
+                }
+                if (liIndex > 0) {
+                    list.eq(liIndex - 1).css('background-color', selectedBackgroundColor);
+                }
                 break;
+            case 39: break; // 右箭头，无视
             case 40:
-                {
-                    if (liIndex > 0) {
-                        list.eq(liIndex - 1).css('background-color', '');
-                    }
-                    if (liIndex < list.length) {
-                        list.eq(liIndex).css('background-color', '#efefef');
-                        liIndex++;
-                    }
-                    break;
-                };
-            default:
-                liIndex = 0;
+                if (liIndex > 0) {
+                    list.eq(liIndex - 1).css('background-color', '');
+                }
+                if (liIndex < list.length) {
+                    list.eq(liIndex).css('background-color', selectedBackgroundColor);
+                    liIndex++;
+                }
+                break;
+            default: liIndex = 0;
         }
     });
     $container.click(function() {
@@ -262,7 +316,11 @@ $(function() {
     });
     // 绘制直线
     var lineLength = getViewport().width / 3;
-    $title.after('<svg title="点击切换样式" style="display: block; margin: auto; width:' + lineLength + 'px" xmlns="http://www.w3.org/2000/svg" version="1.1" height="1px"><path id="line" d="M 0 0 L ' + lineLength + ' 0" style="stroke: #000; stroke-dasharray: ' + lineLength + '; stroke-dashoffset: ' + lineLength + '; fill: none;"/></svg>');
+    $title.after('<svg title="点击切换样式" style="display: block; margin: auto; width:' +
+                lineLength + 'px" xmlns="http://www.w3.org/2000/svg" version="1.1" height="1px"><path id="line" d="M 0 0 L ' +
+                lineLength + ' 0" style="stroke: #000; stroke-dasharray: ' +
+                lineLength + '; stroke-dashoffset: ' +
+                lineLength + '; fill: none;"/></svg>');
     var $line = $('#line');
     // 文章标题事件
     $title.mouseover(function() {
@@ -312,7 +370,7 @@ $(function() {
                 document.execCommand('copy'); // 复制
                 area.style.display = 'none'; // 隐藏文本框
             }
-            notify.info('已经复制到剪切板');
+            notify.info({content: '已经复制到剪切板'});
         };
         el.appendChild(codeType);
         el.appendChild(codeCopy);
@@ -664,21 +722,9 @@ $(function() {
                 imgs = $('#container figure>img').toArray();
             for (var i = 0; i < imgs.length; i++) {
                 if (imgs[i].src === img.src) {
-                    if (flag) {
-                        // 上一张
-                        if (i - 1 >= 0) {
-                            img.src = imgs[i - 1].src;
-                        } else {
-                            notify.info('已经是第一张了');
-                        }
-                    } else {
-                        // 下一张
-                        if (i + 1 < imgs.length) {
-                            img.src = imgs[i + 1].src;
-                        } else {
-                            notify.info('已经是最后一张了');
-                        }
-                    }
+                    flag ?
+                    i - 1 >= 0 ? img.src = imgs[i - 1].src : notify.info({content: '已经是第一张了'}) : // 上一张
+                    i + 1 < imgs.length ? img.src = imgs[i + 1].src : notify.info({content: '已经是最后一张了'}); // 下一张
                     break;
                 }
             }
@@ -877,25 +923,137 @@ $(function() {
     // div#catalogFrame
     //     img
     //     div
-    // 点击后 slideUp 和 slideDown
-    var $dir = $('#catalogFrame img');
-    if ($dir.length) {
-        $dir.click(function() {
-            var brother = $(this).next().next();
-            if (typeof brother !== 'undefined' && brother.prop('tagName').toUpperCase() === 'DIV') {
-                brother.toggle(500);
-            }
-        });
+
+    (function() {
+        // 点击后 slideUp 和 slideDown
+        var $dir = $('#catalogFrame img');
+        if ($dir.length) {
+            $dir.click(function() {
+                var brother = $(this).next().next();
+                if (typeof brother !== 'undefined' && brother.prop('tagName').toUpperCase() === 'DIV') {
+                    brother.toggle(500);
+                }
+            });
+        }
+        // 设置表格默认样式
+        var $table = $('table');
+        if ($table.length) {
+            $table.attr({
+                'border': 1,
+                'cellpadding': 1,
+                'cellspacing': 0
+            });
+            $table.each(function() {
+                $(this).parent().css('overflow', 'auto');
+            });
+        }
+    })();
+
+
+
+    // 添加评论区
+    // 添加一条评论
+    function addOneComment (el) {
+        var oneComment = document.createElement('div');
+        oneComment.setAttribute('class', 'oneComment');
+        var headSection = document.createElement('div');
+        var username = document.createElement('div');
+        var time = document.createElement('div');
+        var contentSection = document.createElement('div');
+        username.innerText = el.username || '匿名';
+        username.setAttribute('class', 'commentUsername');
+        time.innerText = el.create_time + ' #' + el.floor;
+        time.setAttribute('class', 'commentTime');
+        contentSection.innerText = el.comment_content;
+        contentSection.setAttribute('class', 'commentSection');
+        headSection.appendChild(username);
+        headSection.appendChild(time) || formatDate(new Date());
+        oneComment.appendChild(headSection);
+        oneComment.appendChild(contentSection);
+        nowComment.appendChild(oneComment);
     }
-    var $table = $('table');
-    if ($table.length) {
-        $table.attr({
-            'border': 1,
-            'cellpadding': 1,
-            'cellspacing': 0
-        });
-        $table.each(function() {
-            $(this).parent().css('overflow', 'auto');
-        });
+    function updateListNumber () { nowCommentNumber.innerText = '共 ' + commentListNumber + ' 条评论'; }
+    var commentListNumber = 0;
+    var nowCommentNumber = document.createElement('div');
+    nowCommentNumber.style.margin = '10px 0';
+    nowCommentNumber.style.fontWeight = 'bold';
+    nowCommentNumber.style.textAlign = 'center';
+    updateListNumber(commentListNumber);
+    $container.append(nowCommentNumber);
+
+    var nowComment = document.createElement('div'); // 当前已有评论
+    $container.append(nowComment);
+
+    var appendComment = document.createElement('div'); // 追加评论
+    appendComment.setAttribute('class', 'oneComment');
+    var appendCommentHead = document.createElement('div'); // 评论头
+    var appendCommentText = document.createElement('textarea'); // 评论文本域
+    var appendCommentButtonGroup = document.createElement('div');
+    var appendCommentSubmit = document.createElement('button'); // 评论
+    var appendCommentClear = document.createElement('button'); // 清空
+    var appendCommentUsername = document.createElement('input'); // 用户姓名
+    appendCommentUsername.setAttribute('type', 'text');
+    appendCommentUsername.setAttribute('placeholder', '若为空，则表示匿名评论');
+    appendCommentUsername.setAttribute('class', 'appendCommentUsername');
+    appendCommentHead.setAttribute('class', 'commentSection');
+    appendCommentHead.innerText = '用户名：';
+    appendCommentHead.appendChild(appendCommentUsername);
+    appendCommentText.style.width = '100%';
+    appendCommentText.style.borderRadius = '5px';
+    appendCommentText.setAttribute('rows', '10');
+    appendCommentButtonGroup.style.textAlign = 'center';
+    appendCommentSubmit.innerText = '评论';
+    appendCommentSubmit.setAttribute('class', 'button button-primary');
+    appendCommentSubmit.onclick = function () {
+        // 追加一条评论
+        if (appendCommentText.value.trim() === '') {
+            notify.info({content: '请选择填写内容再评论'});
+        } else {
+            $.ajax({
+                type: 'POSt',
+                url: '/index.php/note/Comment/addComment',
+                dataType: 'json',
+                data: {
+                    article: currentTitle,
+                    username: appendCommentUsername.value,
+                    content: appendCommentText.value
+                },
+                success: function (data) {
+                    if (data.status) {
+                        // 添加评论成功
+                        addOneComment(data.comment);
+                        appendCommentText.value =  '';
+                        notify.info({content: '添加评论成功！'});
+                        commentListNumber++;
+                        updateListNumber();
+                    } else { notify.info({content: data.message || '添加评论失败'}); }
+                }
+            });
+        }
+
     }
+    appendCommentClear.innerText = '清空';
+    appendCommentClear.onclick = function () { appendCommentText.value = ''; }
+    appendCommentClear.setAttribute('class', 'button');
+
+    appendCommentButtonGroup.appendChild(appendCommentSubmit);
+    appendCommentButtonGroup.appendChild(appendCommentClear);
+    appendComment.appendChild(appendCommentHead);
+    appendComment.appendChild(appendCommentText);
+    appendComment.appendChild(appendCommentButtonGroup);
+    $container.append(appendComment);
+    $.ajax({
+        type: 'GET',
+        url: '/index.php/note/Comment/getCommentList',
+        data: {
+            article: currentTitle
+        },
+        dataType: 'json',
+        success: function (data) {
+            data.forEach(addOneComment);
+            commentListNumber = data.length;
+            updateListNumber();
+        },
+    });
+
 });

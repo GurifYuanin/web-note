@@ -37,7 +37,7 @@
 					<p>
 						可以使用以下三种方式打开 chrome devtools 。
 						<figure>
-							<img style="width: 100%;" src="../images/chrome_devtools_open.jpg" alt="加载失败">
+							<img src="../images/chrome_devtools_open.jpg" alt="加载失败">
 						</figure>
 					</p>
 					<h3>功能</h3>
@@ -127,8 +127,8 @@
 						<h4>可视化数据结构</h4>
 							table() 用于可视化数据结构，可以将参数按照表格的方式显示出来。
 							<pre><code class="javascrpt">
-			console.table([{a:1, b:2, c:3}, {d:4, e:5, f:6}]);
-			console.table({a: 1, b: 2, c: 3});
+console.table([{a:1, b:2, c:3}, {d:4, e:5, f:6}]);
+console.table({a: 1, b: 2, c: 3});
 							</code></pre>
 							<figure>
 								<img src="../images/chrome_devtools_console_table.jpg" alt="加载失败">
@@ -175,31 +175,91 @@
 		<section>
 			<h2>Sources</h2>
 			<p>
-				Sources 面板查看页面所有资源，同时允许对 CSS 和 javascript 文件进行编辑，修改后，页面即时渲染。
-				<figure>
-					<img style="width: 100%;" src="../images/chrome_devtools_console_sources.gif" alt="加载失败">
-				</figure>
-				利用断点功能，可以更高效地进行调试（debug）。
-				<figure>
-					<img src="../images/chrome_devtools_source_debug.jpg" alt="加载失败">
-				</figure>
-				同时，snippet 功能可以对反复使用的代码进行保存，第二次使用时可以直接运行脚本（Ctrl + S 保存 snippet， Ctrl + Enter 运行 snippet）。
-				<figure>
-					<img style="width: 100%;" src="../images/chrome_devtools_console_snippet.gif" alt="加载失败">
-				</figure>
-
+				<h3>Page</h3>
+				<p>
+					Sources 面板的 page 部分可以直接查看站点获取到的所有资源，同时允许对 CSS 和 javascript 文件进行编辑，修改后，页面即时渲染。
+					<figure>
+						<img src="../images/chrome_devtools_console_sources.gif" alt="加载失败">
+					</figure>
+					你可以直接查看到源代码，并利用断点功能，在代码左侧点击一下，代码执行到此处的时候将暂时中断，实现更高效地进行调试（debug）。
+					<figure>
+						<img src="../images/chrome_devtools_source_debug.jpg" alt="加载失败">
+					</figure>
+				</p>
+				<h3>snippet</h3>
+				<p>
+					snippet 功能可以对反复使用的代码进行保存，第二次使用时可以直接运行脚本（Ctrl + S 保存 snippet， Ctrl + Enter 运行 snippet）。
+					<figure>
+						<img src="../images/chrome_devtools_console_snippet.gif" alt="加载失败">
+					</figure>
+					snippet 是永久保存的，除非手动删除（右键 -> remove），你可以在其他网页中按 Ctrl + Enter 直接执行。
+				</p>
+				<h3>chrome 脚本</h3>
+				<p>
+					有时候 snippet 不够过瘾，因为需要打开控制台然后手动按快捷键 Ctrl + Enter，我们可以直接开发 chrome 扩展插件，即 js 脚本，脚本可以直接控制页面的 DOM 。开发一个脚本插件有以下步骤：
+					<ol>
+						<li>创建脚本文件夹，文件夹名任意，该文件夹用于存放脚本所需的文件</li>
+						<pre><code class="shell">
+$ mkdir my-chrome-plugin
+$ cd my-chrome-plugin
+						</code></pre>
+						<li>创建 manifest.json 文件，该文件类似一个配置文件，用于说明你的脚本的一些信息</li>
+						<pre><code class="json">
+{
+  "name": "my-chrome-plugin", // 脚本的名字
+  "manifest_version": 2, // manifest.json 的版本
+  "version": "1.0", // 脚本的版本
+  "description": "我的脚本", // 脚本的描述
+  "browser_action": {
+    "default_icon": "./icon.png" // 脚本的图标
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.baidu.com/*"], // 匹配网页，符合匹配的网页自动运行该脚本
+      "js": ["./index.js"] // 脚本文件的路径
+    }
+  ]
+}
+						</code></pre>
+						<li>写脚本文件，即 content_scripts 的 js 所指向的文件，当网页 URL 符合 matches 时自动执行脚本</li>
+						<pre><code class="javascript">
+// 写需要执行的脚本，可以直接获取 DOM
+window.addEventListener('load', function() {
+	alert('hello world');
+});
+						</code></pre>
+						<li>补充需要的资源，这里指向了一个 ./icon.png 的图标，你需要补充图标文件</li>
+						<li>加载到 chrome 作为拓展脚本</li>
+						<figure>
+							<img src="../images/chrome_extend_script.jpg" alt="">
+							<figcaption>打开拓展程序</figcaption>
+						</figure>
+						<figure>
+							<img src="../images/chrome_extend_script_save.jpg" alt="">
+							<figcaption>导入脚本</figcaption>
+						</figure>
+					</ol>
+				</p>
 			</p>
 		</section>
 		<section>
 			<h2>Network</h2>
 			<p>
-				Network 面板用于记录页面资源的加载情况，按照时间线（Timeline）的形式呈现出来。<br>
-				打开 Network 面板后，按 F5 刷新页面后，开始捕捉页面资源加载情况。
-				<figure>
-					<img src="../images/chrome_devtools_console_network.jpg" alt="加载失败">
-				</figure>
-				<li>选择不同快照时，将会显示该快照当时的资源加载情况</li>
-				<li>悬停 waterfall 下的方框可查看详细的加载情况</li>
+				<h3>查看时间线</h3>
+				<p>
+					Network 面板用于记录页面资源的加载情况，按照时间线（Timeline）的形式呈现出来。<br>
+					打开 Network 面板后，按 F5 刷新页面后，开始捕捉页面资源加载情况。
+					<figure>
+						<img src="../images/chrome_devtools_console_network.jpg" alt="加载失败">
+					</figure>
+				</p>
+				<h3>检查单个请求</h3>
+				<p>
+					点击某个请求后，network 可以让我们直接查看单个请求的详细信息，如请求头、响应头、响应主体等。
+					<figure>
+						<img src="../images/chrome_network.jpg" alt="">
+					</figure>
+				</p>
 			</p>
 		</section>
 		<section>
@@ -226,8 +286,7 @@
 				</figure>
 				<figure>
 					<img src="../images/chrome_devtools_application_demo.jpg" alt="加载失败">
-					<br>
-					<a style="margin-left: 20%;" target="_blank" href="../demo/chrome_devtools_application.html"> localStroage 样例</a>
+					<figcaption><a target="_blank" href="../demo/chrome_devtools_application.html"> localStroage 样例</a>(该页面设置了一个 key=value 的 session)</figcaption>
 				</figure>
 			</p>
 		</section>

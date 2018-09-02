@@ -235,6 +235,58 @@ body {
             opacity: .7;
         }
     }
+    // 进行评论用户名文本框
+    .appendCommentUsername {
+        min-width: 50%;
+        padding: 2.5px;
+        border-radius: 2px;
+        border: solid .5px gray;
+    }
+    // 一条评论
+    .oneComment {
+        border-top: solid 1px gray;
+        padding: 5px 0;
+        .commentSection {
+            margin: 5px 0;
+        }
+        .commentUsername {
+            display: inline-block;
+            width: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .commentTime {
+            display: inline-block;
+            width: 49%;
+            font-size: .5rem;
+            color: gray;
+            text-align: right;
+        }
+    }
+    // 按钮默认样式
+    .button {
+        cursor: pointer;
+        background-color: #f5f5f5;
+        color: #363636;
+        border: none;
+        padding: 5px 10px;
+        margin: 0 5px;
+        border-radius: 5px;
+        &:hover {
+            background-color: rgb(232, 232, 232);
+        }
+        :active {
+            box-shadow: 1px 2px 5px -3px #222 inset;
+            outline: none;
+        }
+    }
+    .button-primary {
+        background-color: #3d80da;
+        color: white;
+        &:hover {
+            background-color: #2673db;
+        }
+    }
 }
 
 /* 展开侧栏的块 */
@@ -615,6 +667,7 @@ body {
     }
     /* 页脚上下页 */
     #footer {
+        overflow: hidden; // BFC
         margin: 1% 0;
         color: $footerColor;
         .prePage {

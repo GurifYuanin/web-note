@@ -3,8 +3,9 @@ var gulp = require('gulp'),
        autoprefixer = require('gulp-autoprefixer'), // css 前缀自动补全
        minifycss = require('gulp-minify-css'), // css 压缩
        minifyimg = require('gulp-imagemin'), // 图片压缩
-       minifyjs = require('gulp-uglify'); // js 压缩
-
+       // minifyjs = require('gulp-uglify'), // js 压缩
+       uglify = require('gulp-uglify-es').default, // js 压缩
+       gutil = require('gulp-util');
 // 复制 html 文件（不压缩因为文档中一些地方需要空白）
 gulp.task('copyhtml', function() {
     gulp.src(['./html/*.html']).pipe(gulp.dest('./dist/html'));
@@ -32,6 +33,7 @@ gulp.task('sass', function () {
             remove: true, // 是否删除过时前缀
             flexbox: false // 是否为 flexbox 添加前缀
         }))
+        .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
         .pipe(gulp.dest('css'));
     gulp.src('./css/*.css').pipe(gulp.dest('./dist/css'));
     gulp.src('./css/*.css').pipe(gulp.dest('G:/web/site/public/other/web-note/css'));
@@ -46,10 +48,11 @@ gulp.task('minifyimg', function() {
 // 压缩 js 文件
 gulp.task('minifyjs', function() {
     gulp.src('./js/*.js')
-             .pipe(minifyjs({
+             .pipe(uglify({
                 mangle: true, // 是否修改变量名
                 compress: true // 是否完全压缩
-        }))
+             }))
+             .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
              .pipe(gulp.dest('./dist/js'));
     gulp.src('./dist/js').pipe(gulp.dest('G:/web/site/public/other/web-note/js'));
 });
