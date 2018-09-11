@@ -28,14 +28,19 @@
 			<h2>创建数组</h2>
 			<p>
 				<pre><code class="javascript">
-// 方法一
-var arr1 = [1, 2, 3];
-// 方法二
-var arr2 = new Array(3);
+// 方法二，创建数组对象
+var arr1 = new Array(3);
+console.log(typeof arr1); // => object
+console.log(arr1 instanceof Array); // => true
+
+// 方法一，创建数组字面量
+var arr2 = [1, 2, 3];
+console.log(typeof arr2); // => object
+console.log(arr2 instanceof Array); // => true
 				</code></pre>
 				<h3>Array(length)</h3>
 				<p>
-					使用方法二创建出来的数组其实不是完整的数组，正常的数组应该是：
+					使用方法一创建出来的数组其实不是完整的数组，正常的数组应该是：
 					<pre><code class="javascript">
 [1, 2, 3]
 // ->
@@ -47,7 +52,7 @@ var arr2 = new Array(3);
 	__proto__: {}
 }
 					</code></pre>
-					而方法二创建出来的数组为：
+					而方法一创建出来的数组为：
 					<pre><code class="javascript">
 new Array(3);
 // ->
@@ -58,11 +63,10 @@ new Array(3);
 					</code></pre>
 					该方法类似于直接对数组 length 进行修改。
 					<pre><code class="javascript">
-var arr = [1];
+var arr = [];
 arr.length = 3;
 // ->
 {
-	0: 1,
 	length: 3,
 	__proto__: {}
 }
@@ -218,16 +222,16 @@ for (var i = 0; i < arr.length; i++) {
 }
 return flag;
 				</code></pre>
-				<h3>元素查找：find / findIndex / indexOf</h3>
+				<h3>元素查找：find / findIndex / indexOf / includes</h3>
 				<p>
-					findIndex 返回第一个执行函数返回 true 的 index 值，find 返回第一个执行函数返回 true 的元素。
+					findIndex 返回第一个执行函数返回 true 的 index 值；find 返回第一个执行函数返回 true 的元素。
 					find 和 findIndex 的参数与元素查找一样，都是传入一个函数，函数的三个参数也是如此：
 					<ul>
 						<li>element：元素值，必须</li>
 						<li>index：元素索引，可选</li>
 						<li>array：原数组，可选</li>
 					</ul>
-					indexOf 传入任意参数，功能与 findIndex 一样，不同的是直接将参数与数组的每个元素进行比较，得到传入参数在数组内的索引。
+					indexOf 和 includes 传入任意参数，功能与 findIndex 一样，不同的是直接将参数与数组的每个元素进行比较，indexOf 得到传入参数在数组内的索引(int)，includes 得到是否查找得到(boolean)。
 					<pre><code class="javascript">
 // find 遍历所有元素并调用函数，当函数返回 true 时返回该元素
 // 当找不到时，返回 undefined
@@ -250,6 +254,9 @@ index = [{name: '二狗子'}, {name: '三狗子'}, {name: '四狗子'}].indexOf(
 // 对象是引用类型，通过新建对象进行直接比较结果为 false，比如以下得到的都是 false
 {a: 1} === {a: 1}
 {a: 1} == {a: 1}
+
+// includes 只是判断数组中是否有该元素
+['二狗子', '三狗子'].includes('二狗子'); // => true
 					</code></pre>
 				</p>
 				<h3>数组计算：reduce</h3>
@@ -305,10 +312,21 @@ arr; // => [5, 4, 3, 2, 1]
 			<h2>创建字符串</h2>
 			<p>
 				<pre><code class="javascript">
-// 方法一
+// 方法一，创建字符串对象
 var str1 = new String('hello world');
-// 方法二
+console.log(typeof str1); // => object
+console.log(str1 instanceof String); // => true
+
+// 方法二，创建字符串字面量
 var str2 = 'hello world';
+console.log(typeof str2); // => string
+console.log(str2 instanceof String); // => false
+				</code></pre>
+				由于上面的诡异现象，因此判断变量是否为字符串应该使用以下方法：
+				<pre><code class="javascript">
+function isString (obj) {
+	return Object.prototype.toString.call(obj).toLowerCase() === '[object string]';
+}
 				</code></pre>
 			</p>
 		</section>
@@ -326,13 +344,15 @@ var str2 = 'hello world';
 // split 切割字符串为数组，传入字符串或正则表达式
 'a.b.c.d.e.f'.split('.'); // => ['a', 'b', 'c', 'd', 'e', 'f']
 'a.b.c.d.e.f'.split(/\./); // => ['a', 'b', 'c', 'd', 'e', 'f']
+'abcdef'.split(''); // => ['a', 'b', 'c', 'd', 'e', 'f']
 				</code></pre>
-				<h3>查找：[index] / charAt / charCodeAt / match / indexOf / lastIndexOf / search</h3>
+				<h3>查找：[index] / charAt / charCodeAt / match / indexOf / lastIndexOf / search / includes</h3>
 				<ul>
 					<li>[index] / charAt(index) / charCodeAt(index)：查找索引 index 的字符 / Unicode 编码</li>
 					<li>match(reg)：查找符合正则表达式的字符串（无 g）或数组（有 g）</li>
 					<li>indexOf / lastIndexOf(string) ：从头 / 尾查找第一次出现 string 的 index</li>
 					<li>search(string|reg)：查找符合表达式或 string 的 index</li>
+					<li>includes(string)：查找是否包含 string，相当于进行 indexOf(string) === -1 判断</li>
 				</ul>
 				<pre><code class="javascript">
 // 查找字符
@@ -353,6 +373,11 @@ string.lastIndexOf('a'); // => 5
 string.search('a'); // => 0
 string.search(/^a\w+$/); // => 0
 string.indexOf('d'); // => -1
+
+// 判断
+var string = 'abcdef';
+string.includes('a'); // => true
+string.includes('g'); // => false
 				</code></pre>
 				<h3>取子串：substr / substring / slice</h3>
 				<ul>
@@ -365,12 +390,13 @@ string.substr(1, 2); // => '23'
 string.substring(1, 3); // => '23'
 string.slice(1, 3); // => '23'
 				</code></pre>
-				<h3>其他：trim / toLowerCase / toUpperCase / replace</h3>
+				<h3>其他：trim / toLowerCase / toUpperCase / replace / repeat</h3>
 				<ul>
 					<li>trim：裁切两边空白字符</li>
 					<li>toLowerCase：全部小写</li>
 					<li>toUpperCase：全部大写</li>
 					<li>replace：根据正则替换第一个（无 g）或者替换全部（有 g）</li>
+					<li>repeat：重复字符串 n 次</li>
 				</ul>
 				<pre><code class="javascript">
 ' abcdef '.trim(); // => 'abcdef'
@@ -378,6 +404,7 @@ string.slice(1, 3); // => '23'
 'abcdef'.toUpperCase(); // => 'ABCDEF'
 'abcabc'.replace(/a/, ''); // => 'bcabc'
 'abcabc'.replace(/a/g, ''); // => 'bcbc'
+'abcabc'.repeat(2); // => 'abcabcabcabc'
 				</code></pre>
 			</p>
 		</section>

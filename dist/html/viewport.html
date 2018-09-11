@@ -263,6 +263,32 @@ div {
 				</p>
 			</p>
 		</section>
+		<section>
+			<h2>vw & vh & vmin & vmax</h2>
+			<p>
+				vw 将 viewport 的宽度分为 100 份，1vw 就等于 1% viewport 的宽度，当 viewport 变化时也会自动变化。简而言之，相当于：
+				<pre><code class="javascript">
+1vw = window.innerWidth / 100 + 'px';
+				</code></pre>
+				<ul>
+					<li>vw：1% viewport 宽度</li>
+					<li>vh：1% viewport 高度</li>
+					<li>vmin：Math.min(vw, vh)</li>
+					<li>vmax：Math.max(vw, vh)</li>
+				</ul>
+				<h3>兼容性</h3>
+				<p>
+					<figure>
+						<iframe
+							src="http://caniuse.mojijs.com/Home/Html/item/key/viewport-units/index.html"
+							frameborder="0"
+							style="width: 100%; height: 1000px;"
+						/>
+						<figcaption>http://caniuse.mojijs.com/Home/Html/item/key/viewport-units/index.html</figcaption>
+					</figure>
+				</p>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>

@@ -122,9 +122,16 @@ function $Notify() {
 $Notify.prototype.info = function(options) {
     options.duration = options.duration || 2000;
     var win = this.win;
+    var color = '#2db7f5';
     win.innerText = options.content;
     win.style.opacity = '1';
     win.style.transition = 'all 1s';
+    switch (options.type) {
+        case 'error': color = '#ed4014'; break;
+        case 'success': color = '#19be6b'; break;
+        case 'warning': color = '#ff9900'; break;
+    }
+    win.style.backgroundColor = color;
     if (this.timeout) {
         clearTimeout(this.timeout);
     }
@@ -1009,7 +1016,7 @@ $(function() {
     appendCommentSubmit.onclick = function () {
         // 追加一条评论
         if (appendCommentText.value.trim() === '') {
-            notify.info({content: '请选择填写内容再评论'});
+            notify.info({content: '请选择填写内容再评论', type: 'warning'});
         } else {
             $.ajax({
                 type: 'POSt',
@@ -1028,10 +1035,10 @@ $(function() {
                         notify.info({content: '添加评论成功！'});
                         commentListNumber++;
                         updateListNumber();
-                    } else { notify.info({content: data.message || '添加评论失败'}); }
+                    } else { notify.info({content: data.message || '添加评论失败', type: 'error'}); }
                 },
                 error (err) {
-                    notify.info({content: '无法进行评论'});
+                    notify.info({content: '无法进行评论', type: 'error'});
                 }
             });
         }

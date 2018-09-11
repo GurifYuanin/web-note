@@ -52,7 +52,7 @@ var xhr = new XHRHttpRequest();
 						<th>例子</th>
 					</tr>
 					<tr>
-						<td>方法</td>
+						<td>http方法</td>
 						<td>http 请求方法</td>
 						<td>String</td>
 						<td>否</td>
@@ -138,7 +138,7 @@ my-key: my-value
 				</p>
 				<h3>设置响应数据类型</h3>
 				<p>
-					XMLHttpRequest 2 支持以下响应数据类型：
+					XMLHttpRequest level2 支持以下响应数据类型：
 					<ul>
 						<li>空（默认)：文本字符串</li>
 						<li>text：文本字符串</li>
@@ -206,11 +206,11 @@ xhr.widthCredentials = true;
 							<td>响应主体已经完全接受到</td>
 						</tr>
 					</table>
-					可以使用 onreadystatechange 钩子来监听变化，这也是 XMLHttpRequest 1 就支持的钩子（唯一）。
+					可以使用 onreadystatechange 钩子来监听 readyState 的变化，这也是 XMLHttpRequest level1 就支持的钩子（唯一）。
 					<pre><code class="javascript">
 xhr.onreadystatechange = function (event) {
 	if (xhr.readyState === 4 && xhr.status === 200) {
-		// ...
+		// 响应主体已经完全接受到，并且响应状态码为 200
 	}
 }
 					</code></pre>
@@ -221,7 +221,7 @@ xhr.onreadystatechange = function (event) {
 					XMLHttpRequest level2 新增了三个关于加载的钩子：
 					<ul>
 						<li>onloadstart：使用 send 方法后触发</li>
-						<li>onload：响应主体接收后触发，即 readyState 等于 4 时触发（无论状态码是什么）</li>
+						<li>onload：响应主体接收后触发，即 readyState 等于 4 时触发（无论状态码 status 是什么）</li>
 						<li>onloadend：请求结束后触发</li>
 					</ul>
 					<pre><code class="javascript">
@@ -272,10 +272,10 @@ xhr.onabort = function (e) {
 		<section>
 			<h2>发送请求</h2>
 			<p>
-				使用 send 方法发送 http 请求，传入参数作为请求体的内容，默认为 null 。
-				<div class="tip">send 方法的参数是请求体内容，所以当请求方法为 GET 或 HEAD 时，传入任何参数都会被设置为 null（GET 和 HEAD 方法不发送报文体）。</div>
+				看完前面一堆后（根据需求配置钩子），终于可以使用 send 方法发送 http 请求，传入参数作为请求体的内容，默认为 null 。
+				<div class="tip">send 方法的参数是请求体内容，所以当请求方法为 GET 或 HEAD 时，无论传入什么参数，都会被设置为 null（因为 GET 和 HEAD 方法没有报文体）。</div>
 				<pre><code class="javascript">
-xhr.send();
+xhr.send('hello world'); // 报文主体为 hello world
 				</code></pre>
 			</p>
 		</section>
@@ -296,7 +296,7 @@ xhr.onload = function (e) {
 					</code></pre>
 					<figure>
 						<img src="../images/xhr_response_type_error_text.jpg" alt="">
-						<figcaption>响应数据是 json 而不是字符串</figcaption>
+						<figcaption>这里设置响应数据为 json 格式，强行读取 responseText 导致出错</figcaption>
 					</figure>
 				</p>
 				<h3>responseXML</h3>
@@ -354,7 +354,7 @@ xhr.abort();
 						<input type="reset" value="重置">
 					</form>
 				</div>
-				使用 xhr 进行异步请求，可以不需要用户点击"提交按钮"就发送请求，以下实现和点击"提交按钮"是等价的：
+				使用 xhr 进行异步请求，可以不需要用户点击<span class="definition"> 提交按钮 </span>就发送请求，以下实现和上面的点击<span class="definition"> 提交按钮 </span>是等价的：
 				<pre><code class="javascript">
 &lt;script&gt;
 	var formData = new FormData(); // 创建一个表单对象

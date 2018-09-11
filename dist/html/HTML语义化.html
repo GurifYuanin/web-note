@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<title>html语义化</title>
 	<link rel="stylesheet" href="../css/normalize.css">
 	<link rel="stylesheet" href="../css/styles/default.css">
 	<link rel="stylesheet" href="../css/bright.css">
 	<script src="../js/jquery-3.2.1-compressed.js"></script>
 	<script src="../js/highlight.pack.js"></script>
 	<script src="../js/sidebar.js"></script>
-	<title>html语义化</title>
 </head>
 <body>
 	<aside id="sidebar">
@@ -21,9 +21,9 @@
 		<img src="../images/arrow.png">
 	</div>
 	<article id="container">
-		<header>
+		<hgroup>
 			<h1 id="title">html语义化</h1>
-		</header>
+		</hgroup>
 		<section>
 			<h2>定义及作用</h2>
 			<p>
@@ -61,83 +61,65 @@
 		<section>
 			<h2>使用</h2>
 			<p>
-				<div>
-					<h3>strong / b / font-weight:bold (粗体)</h3>
-					<p>
-						三者显示效果都是粗体，但代表的意义不同。<br>
-						<span class="definition">strong</span>表示<span class="definition">重要/强调</span>，HTML5 中描述为“strong importance for its contents”，强调内容的重要性。<br>
-						<span class="definition">b</span>(bold)表示<span class="definition">加粗</span>，没什么特别意义，根据 HTML5 规范，在没有其他合适标签更合适时，才应该把<span class="definition">b</span>标签作为最后的选项。<br>
-						<span class="definition">font-weight</span>是CSS样式的一个属性，用来设置字体的加粗，可以更精细地设置加粗程度：normal(默认/400)、bold(700)、bolder、lighter、100~900、inherit<br>
-					</p>
-				</div>
-				<div>
-					<h3>em / i / cite /font-style:italic (斜体)</h3>
-					<p>
-						四者的显示效果都是斜体，但代表的意义不同。<br>
-						<span class="definition">em</span>(emphasize)表示<span class="definition">强调</span>，指这部分内容是重要的。<br>
-						<span class="definition">i</span>(italic)表示<span class="definition">不同</span>，指这部分内容因为一些原因(专业术语、外语短语等)和其他内容是不同。<sup>[2]</sup><br>
-						<span class="definition">cite</span>表示<span class="definition">引用</span>，通常表示它所包含的文本对某个参考文献的引用。<br>
-						<span class="definition">font-style</span>是CSS样式的一个属性，用来设置字体的风格：normal(默认/正常)、italic、oblique、inherit。<br>
-					</p>
-				</div>
-				<div>
-					<h3>header / hgroup</h3>
-					<p>
-						两者都跟文档头有关，但使用场景不同。<br>
-						header是 HTML5 新增的标签。<br>
-						<span class="definition">header</span>表示一组<span class="definition">介绍/导航</span>，可以装h1~h6、hgroup、nav、表格内容、logo等。<br>
-						<span class="definition">hgroup</span>表示一组<span class="definition">标题</span>，可以装h1~h6(当有多级标题时)。<br>
-					</p>
-				</div>
-				<div>
-					<h3>footer</h3>
-					<span class="definition">footer</span>表示<span class="definition">页脚</span>，用于作为<span class="definition">section/document</span>的页脚。
-				</div>
-				<div>
-					<h3>div / section / article</h3>
-					<p>
-						三者都用来搭建块级内容，语义逐渐增强。<br>
-						section 和 article 是 HTML5 新增的标签。<br>
-						<span class="definition">div</span>没有任何意义，只是一个块级元素。<br>
-						<span class="definition">section</span>表示文档中的<span class="definition">一节</span>，例如文章的一章、标签对话框中的标签页、网页的介绍部分。<br>
-						<span class="definition">article</span>表示独立完整的<span class="definition">内容块</span>，例如一篇文章、用户评论区、一个用户交互小部件。
-					</p>
-				</div>
-				<div>
-					<h3>nav</h3>
-					<p>
-						nav 是 HTML5 新增的标签。<br>
-						<span class="definition">nav</span>(navigation)表示<span class="definition">导航</span>，用来定义网页导航部分。<br>
-					</p>
-				</div>
-				<div>
-					<h3>aside / detail / summary</h3>
-					<p>
-						aside、detail 和 summary 是 HTML5 新增的标签。<br>
-						<span class="definition">aside</span>表示<span class="definition">article之外</span>，用来对<span class="definition">article</span>进行补充，也可以作为文章的侧栏。<br>
-						<span class="definition">detail</span>表示<span class="definition">详细描述</span>，用于对某部分内容的细节进行详细描述。<br>
-						<span class="definition">summary</span>标签包含 details 元素的标题。
-					</p>
-				</div>
-				<div>
-					<h3>figure / figcaption</h3>
-					<p>
-						figure 和 figcaption 是 HTML5 新增的标签。<br>
-						<span class="definition">figure</span>表示<span class="definition">独立的内容</span>，
-						用来装规定独立的流内容（图像、图表、照片、代码等等）。<br>
-						<span class="definition">figcaption</span>表示<span class="definition">fugure的标题</span>。<br>
-					</p>
-				</div>
-				<div>
-					<h3>command / dialog / progress / time</h3>
-					<p>
-						command、dialog、progress、time 是 HTML5 新增的标签。<br>
-						<span class="definition">command</span>，用于定义命令按钮，比如单选按钮、复选框或按钮。<br>
-						<span class="definition">dialog</span>，定义对话框，比如提示框。<br>
-						<span class="definition">progress</span>，定义任何类型的任务的进度。。<br>
-						<span class="definition">time</span>，定义日期或时间。<br>
-					</p>
-				</div>
+				<h3>strong / b / font-weight:bold (粗体)</h3>
+				<p>
+					三者显示效果都是粗体，但代表的意义不同。<br>
+					<span class="definition">strong</span>表示<span class="definition">重要/强调</span>，HTML5 中描述为“strong importance for its contents”，强调内容的重要性。<br>
+					<span class="definition">b</span>(bold)表示<span class="definition">加粗</span>，没什么特别意义，根据 HTML5 规范，在没有其他合适标签更合适时，才应该把<span class="definition">b</span>标签作为最后的选项。<br>
+					<span class="definition">font-weight</span>是CSS样式的一个属性，用来设置字体的加粗，可以更精细地设置加粗程度：normal(默认/400)、bold(700)、bolder、lighter、100~900、inherit<br>
+				</p>
+				<h3>em / i / cite /font-style:italic (斜体)</h3>
+				<p>
+					四者的显示效果都是斜体，但代表的意义不同。<br>
+					<span class="definition">em</span>(emphasize)表示<span class="definition">强调</span>，指这部分内容是重要的。<br>
+					<span class="definition">i</span>(italic)表示<span class="definition">不同</span>，指这部分内容因为一些原因(专业术语、外语短语等)和其他内容是不同。<sup>[2]</sup><br>
+					<span class="definition">cite</span>表示<span class="definition">引用</span>，通常表示它所包含的文本对某个参考文献的引用。<br>
+					<span class="definition">font-style</span>是CSS样式的一个属性，用来设置字体的风格：normal(默认/正常)、italic、oblique、inherit。<br>
+				</p>
+				<h3>header / hgroup</h3>
+				<p>
+					两者都跟文档头有关，但使用场景不同。<br>
+					header是 HTML5 新增的标签。<br>
+					<span class="definition">header</span>表示一组<span class="definition">介绍/导航</span>，可以装h1~h6、hgroup、nav、表格内容、logo等。<br>
+					<span class="definition">hgroup</span>表示一组<span class="definition">标题</span>，可以装h1~h6(当有多级标题时)。<br>
+				</p>
+				<h3>footer</h3>
+				<span class="definition">footer</span>表示<span class="definition">页脚</span>，用于作为<span class="definition">section/document</span>的页脚。
+				<h3>div / section / article</h3>
+				<p>
+					三者都用来搭建块级内容，语义逐渐增强。<br>
+					section 和 article 是 HTML5 新增的标签。<br>
+					<span class="definition">div</span>没有任何意义，只是一个块级元素。<br>
+					<span class="definition">section</span>表示文档中的<span class="definition">一节</span>，例如文章的一章、标签对话框中的标签页、网页的介绍部分。<br>
+					<span class="definition">article</span>表示独立完整的<span class="definition">内容块</span>，例如一篇文章、用户评论区、一个用户交互小部件。
+				</p>
+				<h3>nav</h3>
+				<p>
+					nav 是 HTML5 新增的标签。<br>
+					<span class="definition">nav</span>(navigation)表示<span class="definition">导航</span>，用来定义网页导航部分。<br>
+				</p>
+				<h3>aside / detail / summary</h3>
+				<p>
+					aside、detail 和 summary 是 HTML5 新增的标签。<br>
+					<span class="definition">aside</span>表示<span class="definition">article之外</span>，用来对<span class="definition">article</span>进行补充，也可以作为文章的侧栏。<br>
+					<span class="definition">detail</span>表示<span class="definition">详细描述</span>，用于对某部分内容的细节进行详细描述。<br>
+					<span class="definition">summary</span>标签包含 details 元素的标题。
+				</p>
+				<h3>figure / figcaption</h3>
+				<p>
+					figure 和 figcaption 是 HTML5 新增的标签。<br>
+					<span class="definition">figure</span>表示<span class="definition">独立的内容</span>，
+					用来装规定独立的流内容（图像、图表、照片、代码等等）。<br>
+					<span class="definition">figcaption</span>表示<span class="definition">fugure的标题</span>。<br>
+				</p>
+				<h3>command / dialog / progress / time</h3>
+				<p>
+					command、dialog、progress、time 是 HTML5 新增的标签。<br>
+					<span class="definition">command</span>，用于定义命令按钮，比如单选按钮、复选框或按钮。<br>
+					<span class="definition">dialog</span>，定义对话框，比如提示框。<br>
+					<span class="definition">progress</span>，定义任何类型的任务的进度。。<br>
+					<span class="definition">time</span>，定义日期或时间。<br>
+				</p>
 			</p>
 		</section>
 		<section class="refer">
