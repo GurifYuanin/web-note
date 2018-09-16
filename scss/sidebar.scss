@@ -631,7 +631,7 @@ body {
         img {
             transition: all .5s;
             border-radius: 5px;
-            cursor: pointer;
+            cursor: zoom-in;
             max-width: 100%;
             &:hover {
                 box-shadow: 0px 0px 30px .5px #e9e9fb;
