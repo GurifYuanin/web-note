@@ -370,11 +370,107 @@ putin.onload = function () {
 				</div>
 			</p>
 		</section>
+		<section>
+			<h2>保存为图片</h2>
+			<p>
+				使用 toDataURL 方法，可以将 canvas 画布上的内容直接转化为 Data URI 字符串，该方法接受两个参数。
+				<table>
+					<tr>
+						<th>参数</th>
+						<th>解释</th>
+						<th>类型</th>
+						<th>是否可选</th>
+						<th>默认值</th>
+						<th>可选项</th>
+					</tr>
+					<tr>
+						<td>type</td>
+						<td>格式</td>
+						<td>String</td>
+						<td>可选</td>
+						<td>image/png</td>
+						<td>图片格式的 mime-type</td>
+					</tr>
+					<tr>
+						<td>encoderOptions</td>
+						<td>图片格式为 image/jpeg 或 image/webp的情况下的图片质量</td>
+						<td>Number</td>
+						<td>可选</td>
+						<td>0.92</td>
+						<td>0 - 1</td>
+					</tr>
+				</table>
+				<div class="show">
+					<div>
+						画布内容：
+						<canvas id="canvas-todatauri" width="20" height="20" style="border: solid 1px black;"></canvas>
+					</div>
+					<div>
+						选择输出类型：
+						<select id="canvas-todatauri-select">
+							<option value="image/png">image/png</option>
+							<option value="image/jpeg">image/jpeg</option>
+							<option value="image/webp">image/webp</option>
+						</select>
+					</div>
+					<div>
+						图片质量：
+						<input id="canvas-todatauri-range" value="0.92" type="range" min="0" max="1" step="0.01">
+						<span id="canvas-range-container"></span>
+					</div>
+					<div>
+						输出结果：
+						<span id="canvas-todatauri-container" style="word-break: break-all;"></span>
+					</div>
+					<script>
+						(function() {
+							var canvas = document.getElementById('canvas-todatauri');
+							var ctx = canvas.getContext('2d');
+							ctx.fillRect(0, 0, 10, 10);
+							var container = document.getElementById('canvas-todatauri-container');
+							var select = document.getElementById('canvas-todatauri-select');
+							var range = document.getElementById('canvas-todatauri-range');
+							var rangeContainer = document.getElementById('canvas-range-container');
+							function update () {
+								rangeContainer.innerText = range.value;
+								container.innerText = canvas.toDataURL(select.value, Number(range.value));
+							}
+							update();
+							select.onchange = update;
+							range.onchange = update;
+						})();
+					</script>
+				</div>
+				<div class="tip">你可以直接将输出结果复制到浏览器来查看图片。</div>
+				<h3>下载到本地</h3>
+				<p>
+					写一个方法实现将 canvas 画布的内容下载到本地。
+					<pre><code class="javascript">
+/**
+ * [downloadCanvas 将 canvas 元素上的画布内容保存并弹出图片下载]
+ * @param  {[HTMLCanvasElement]} canvasEl [canvas 元素]
+ * @param  {[String]} type     [图片类型]
+ * @param  {[String]} filename [图片文件名]
+ */
+function downloadCanvas(canvasEl, type, filename) {
+	var data = canvasEl.toDataURL(type); // 获得 Data URI
+	var a = document.createElement('a'); // 创建一个 a 元素
+  	var event = document.createEvent('MouseEvents'); // 创建点击事件
+  	event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+  	a.download = filename; // 设置图片文件的名字
+  	a.href = data;
+  	a.dispatchEvent(event); // 触发点击事件
+}
+					</code></pre>
+				</p>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
 				<div>[1] MDN canvas <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes">https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes</a></div>
 				<div>[2] 菜鸟教程 canvas <a href="http://www.runoob.com/html/html5-canvas.html">http://www.runoob.com/html/html5-canvas.html</a></div>
+				<div>[3] MDN HTMLCanvasElement.toDataURL() <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLCanvasElement/toDataURL">https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLCanvasElement/toDataURL</a></div>
 			</p>
 		</section>
 	</article>

@@ -220,9 +220,54 @@ X-Ua-Compatible: IE=Edge,chrome=1
 						HTTP 1.0 默认短连接，HTTP 1.1 默认长连接。
 					</div>
 				</p>
+				<h3>Expires & Cache-Control</h3>
+				<p>
+					客户端向服务器请求资源，浏览器会帮我们将资源缓存下来（到本地磁盘某个地方），expires 用于告诉浏览器资源可以缓存到什么时候。
+					<pre><code class="http">
+Expires: Sun Sep 16 2018 22:58:49 GMT
+					</code></pre>
+					Cache-Control 则是对缓存机制的控制，它可以配置为以下值：
+					<ul>
+						<li>public：默认，响应会被缓存，并且在多用户间共享（允许代理缓存）</li>
+						<li>private：响应只作为私有的缓存，不能在用户间共享（只许客户端缓存）</li>
+						<li>max-age=xxx：缓存有效时间，单位为 s(秒)，若有则覆盖 Expires 设置的时间</li>
+						<li>s-maxage=xxx：同理 max-age，不过规定的是代理缓存而不是客户端缓存</li>
+						<li>no-cache：缓存前向服务器确认资源是否被更改，若无修改则缓存</li>
+						<li>no-store：绝对禁用缓存</li>
+						<li>must-revalidate: 如果页面过期，则去服务器进行获取</li>
+					</ul>
+				</p>
+				<h3>Last-Modified</h3>
+				<p>
+					客户端向服务器请求资源，服务器返回的报文会带有 Last-Modified 头部信息，表示该资源最后修改时间。
+					<pre><code class="http">
+Last-Modified: Sun Sep 16 2018 22:58:49 GMT
+					</code></pre>
+					客户端再次请求该资源的时候，浏览器会自动在请求头上携带 If-Modified-Since 字段，用于告诉服务器上次拿到的资源是什么时间的。
+					<pre><code class="http">
+If-Modified-Since: Sun Sep 16 2018 22:58:49 GMT
+					</code></pre>
+					服务器对比这个 If-Modified-Since 和文件的最后修改时间，如果一致，则返回状态码 304 ，否则返回资源。
+				</p>
+				<h3>ETag</h3>
+				<p>
+					Entity Tag，服务器返回的资源携带该头信息，由服务器自己决定值为多少（通过某种方式将资源转化散列值），分为强验证和弱验证。
+					<pre><code class="http">
+# 强验证器
+ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"
+# 弱验证器
+ETag: W/"0815"
+					</code></pre>
+					然后浏览器会将客户端发起的请求携带 If-Match 头信息（值为之前收到的 ETag）：
+					<pre><code class="http">
+If-Match: "33a64df551425fcc55e4d42a148795d9f25f89d4"
+					</code></pre>
+					服务器端就可以通过 If-Match 的值来判断服务器端的资源是否已经改变（弱验证器进行的是模糊匹配），返回资源或者 304。
+				</p>
+				<h3></h3>
 			</p>
 		</section>
-				<section>
+		<section>
 			<h2>通用首部字段</h2>
 			<p>
 				<h3>Content-Type</h3>
@@ -466,7 +511,7 @@ Content-Type: application/json; charset=utf-8
 					<h3>500</h3>
 					<p>
 						<img class="http-version-img" src="../images/http_1.0.png">
-						500 表示服务器端执行时发生了错误。（服务器内部错误)）
+						500 表示服务器端执行时发生了错误。（服务器内部错误）
 					</p>
 					<h3>503</h3>
 					<p>
@@ -490,6 +535,8 @@ Content-Type: application/json; charset=utf-8
 				<div>[1] Fielding, Roy T.; Gettys, James; Mogul, Jeffrey C.; Nielsen, Henrik Frystyk; Masinter, Larry; Leach, Paul J.; Berners-Lee, Tim. Hypertext Transfer Protocol – HTTP/1.1. IETF. June 1999. RFC 2616. </div>
 				<div>[2] W3C School HTTP 方法：GET 对比 POST <a href="http://www.w3school.com.cn/tags/html_ref_httpmethods.asp">http://www.w3school.com.cn/tags/html_ref_httpmethods.asp</a></div>
 				<div>[3] 上野宣 图解HTTP </div>
+				<div>[4] MDN ETag <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/ETag">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/ETag</a></div>
+				<div>[5] 彻底理解浏览器缓存机制 <a href="https://www.cnblogs.com/shixiaomiao1122/p/7591556.html">https://www.cnblogs.com/shixiaomiao1122/p/7591556.html</a></div>
 			</p>
 		</section>
 	</article>

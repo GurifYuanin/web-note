@@ -92,40 +92,75 @@
 			<h2>Javascript</h2>
 			<p>
 				通过 Javascript 在客户端读取和设置 cookies 。
-				<div>
-					<p>
-						<h3>读取 cookies </h3>
-						通过 document.cookie 读取所有可以访问的 cookie 的键值对（字符串），中间用<span class="definition"> ; </span>（分号）隔开。
-						<pre><code class="javascript">
+				<h3>读取 cookies </h3>
+				通过 document.cookie 读取所有可以访问的 cookie 的键值对（字符串），中间用<span class="definition"> ; </span>（分号）隔开。
+				<pre><code class="javascript">
 var allCookie = document.cookie;
-						</code></pre>
-						以下情况的 cookie，使用 document.cookie 不能读取到
-						<ul>
-							<li>当前页面网址的域名与 domain 不同</li>
-							<li>当前页面网址的路径不是 path 的子路径</li>
-							<li>设置了 httpOnly 的 cookie</li>
-						</ul>
-						<div class="tip">
-							也就是说，过期了（当前时间超过 Expires/Max-Age）的 cookie 可以被 document.cookie 获取到。
-						</div>
-					</p>
-					<p>
-						<h3>设置 cookies</h3>
-						通过给 document.cookie 赋值来设置新的 cookie 。（单次只能设置一个 cookie ）
-						<pre><code class="javascript">
-document.cookie = 'key=value; path=path; domain=domain; max-age=second; expires=Wdy, DD-Mon-YYYY HH:MM:SS GMT; secure';
-						</code></pre>
-						<ul>
-							<li>key：键名</li>
-							<li>value：键值，设置时应使用<span class="definition"> encodeURIComponent() </span>函数来保证其不带有分号、逗号和空格</li>
-							<li>path：该路径及其子路径下 cookie 生效，默认当前文档所在路径</li>
-							<li>domain：该域名及其子域名 cookie 生效，默认为当前文档所在域名 </li>
-							<li>max-age：从此刻开始，该 cookie 将存活的秒数</li>
-							<li>expires：该 cookie 的过期时间，设置时应使用<span class="definition"> (new Date(year, month, day, hour, minutes, seconds, milliseconds)).toUTCString()  </span>方法对日期进行格式化</li>
-							<li>secure：是否仅仅通过安全的 HTTPS 连接传给客户端</li>
-						</ul>
-					</p>
+				</code></pre>
+				以下情况的 cookie，使用 document.cookie 不能读取到
+				<ul>
+					<li>当前页面网址的域名与 domain 不同</li>
+					<li>当前页面网址的路径不是 path 的子路径</li>
+					<li>设置了 httpOnly 的 cookie</li>
+				</ul>
+				<div class="tip">
+					也就是说，过期了（当前时间超过 Expires/Max-Age）的 cookie 可以被 document.cookie 获取到。
 				</div>
+				<h3>设置 cookies</h3>
+				通过给 document.cookie 赋值来设置新的 cookie 。（单次只能设置一个 cookie ）
+				<pre><code class="javascript">
+document.cookie = 'key=value; path=path; domain=domain; max-age=second; expires=Wdy, DD-Mon-YYYY HH:MM:SS GMT; secure';
+				</code></pre>
+				<ul>
+					<li>key：键名</li>
+					<li>value：键值，设置时应使用<span class="definition"> encodeURIComponent() </span>函数来保证其不带有分号、逗号和空格</li>
+					<li>path：该路径及其子路径下 cookie 生效，默认当前文档所在路径</li>
+					<li>domain：该域名及其子域名 cookie 生效，默认为当前文档所在域名 </li>
+					<li>max-age：从此刻开始，该 cookie 将存活的秒数</li>
+					<li>expires：该 cookie 的过期时间，设置时应使用<span class="definition"> (new Date(year, month, day, hour, minutes, seconds, milliseconds)).toUTCString()  </span>方法对日期进行格式化</li>
+					<li>secure：是否仅仅通过安全的 HTTPS 连接传给客户端</li>
+				</ul>
+				<h3>增删查改</h3>
+				由于 cookie 的读写比较容易，这里自己写了一个操作 cookie 的库，有以下功能：
+				<ul>
+					<li>has：通过 key 判断是否有某个 cookie</li>
+					<li>get：通过 key 读取某个 cookie</li>
+					<li>set：写 / 修改 cookie</li>
+					<li>del：通过 key 删除某个 cookie</li>
+				</ul>
+				<pre><code class="javascript">
+const cookies = {
+  has (key) {
+    return document.cookie.includes(key);
+  },
+  get (key) {
+    if (this.has(key)) {
+      const arr = document.cookie.split(/;\s?/);
+      for (let i = 0; i < arr.length; i++) {
+        let kv = arr[i].split('=');
+        if (kv.length !== 2) continue;
+        if (kv[0] === key) {
+          return decodeURIComponent(kv[1]);
+        }
+      }
+    }
+    return false;
+  },
+  set (key, value, path = '/', domain = '', maxAge = 3600) {
+    value = Object.prototype.toString.call(value).toLowerCase() === '[object string]' ?
+            encodeURIComponent(value) :
+            encodeURIComponent(JSON.stringify(value));
+    if (domain) domain = 'domain=' + domain + ';';
+    document.cookie = `${key}=${value};${domain}path=${path};max-age=${maxAge}`;
+  },
+  del (key) {
+    this.has(key) ?
+    document.cookie = `${key}=;max-age=0` :
+    console.log(`找不到 cookie：${key}，无需删除。`);
+  }
+};
+				</code></pre>
+				需要注意的是这里使用了 ES6 的语法。
 			</p>
 		</section>
 		<section>

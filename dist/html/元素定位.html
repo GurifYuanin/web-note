@@ -185,6 +185,43 @@
 			</p>
 		</section>
 		<section>
+			<h2>浮动</h2>
+			<p>
+				<h3>影响</h3>
+				<p>
+					<pre><code class="html">
+&lt;div style="border: solid 1px black">
+	&lt;div style="
+	height: 36px;
+	font-size: 36px;
+	line-height: 36px;
+	background-color: #000;
+	color: #ccc;
+	float: left;">左浮动元素&lt;/div>
+	&lt;div style="background-color: #ccc;">普通元素&lt;/div>
+&lt;/div>
+					</code></pre>
+					<div class="show">
+						<div style="border: solid 1px black">
+							<div style="
+							height: 36px;
+							font-size: 36px;
+							line-height: 36px;
+							background-color: #000;
+							color: #ccc;
+							float: left;">左浮动元素</div>
+							<div style="background-color: #ccc;">普通元素</div>
+						</div>
+					</div>
+					浮动元素会造成以下影响：
+					<ol>
+						<li>没有高度，造成父元素<a href="./CSS怪异现象.html">高度坍塌</a></li>
+						<li>影响标准流的位置</li>
+					</ol>
+				</p>
+			</p>
+		</section>
+		<section>
 			<h2>位置</h2>
 			<p>
 				如何确定一个元素的位置？关于 Y 轴的有：

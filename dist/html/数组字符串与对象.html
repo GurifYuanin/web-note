@@ -544,7 +544,7 @@ var obj = {};
 obj.a = 'hello world';
 console.log(obj.a); // => hello world
 					</code></pre>
-					但随后可能觉得不妥，不能直接让别人直接使用 obj.a 获得属性 a ，于是写了 getter。
+					但随后可能觉得不妥，不能让别人轻而易举地直接使用 obj.a 或者 obj['a'] 获得属性 a 的值，于是写了 getter。
 					<pre><code class="javascript">
 Object.defineProperty(obj, 'a', {
 	get: function() {
@@ -555,7 +555,7 @@ console.log(obj.a); // => 你不能获得 a 的值！
 obj.a = '我就是要获得 a 的值';
 console.log(obj.a); // => 你不能获得 a 的值！
 					</code></pre>
-					这时候无论你做什么都改变不了 a 的值，每次使用 obj.a 都会获得同一个结果。
+					这时候无论你做什么都改变不了 a 的值，每次使用 obj.a 都会获得 getter 函数的返回值。
 					<pre><code class="javascript">
 console.log(obj);
 // =>
@@ -567,6 +567,31 @@ console.log(obj);
 	__proto__: Object
 }
 					</code></pre>
+					setter 也是同理，setter 函数传入的参数是要赋值的值。本来通过 "obj.a = 值" 或 "obj['a'] = 值" 就可以直接对属性 a 赋值，但是设置了 setter 以后将无法进行赋值。
+					<pre><code class="javascript">
+var obj = {a: '我是 a'};
+Object.defineProperty(obj, 'a', {
+	get: function () { return '你改变不了 obj.a 的!'; },
+	set: function (val) {
+		console.log('你试图将 obj.a 赋值为:' + val);
+	}
+});
+obj.a = '我不是 a'; // => 你试图将 obj.a 赋值为:我不是 a
+obj.a // => "你改变不了 obj.a 的!"
+					</code></pre>
+					<h6>留意不要写成死递归</h6>
+					设置 getter 和 setter 容易写成死递归，比如：
+					<pre><code class="javascript">
+Object.defineProperty(obj, 'a', {
+	get: function () {
+		return obj.a;
+	},
+	set: function (val) {
+		obj.a = val;
+	}
+});
+					</code></pre>
+					以上无论是调用 getter 获得值还是对 obj.a 进行赋值，都会进入死递归。调用 getter 时，进入函数，返回 obj.a ，但 obj.a 又调用了 getter ，无限循环导致栈溢出。 setter 也是同理。
 					<h4>获得描述符：Object.getOwnPropertyDescriptor</h4>
 					<pre><code class="javascript">
 var obj = {};

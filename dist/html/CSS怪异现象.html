@@ -80,36 +80,57 @@
 					</div>
 				</div>
 				<div style="clear: left;">
-					解决方法一：使父元素创建<span class="definition"> BFC </span>，在<span class="definition"> BFC </span>中的块级元素可以把浮动元素包含进来，父元素的高度就可以被撑开了。开启<span class="definition"> BFC </span>的方式参见<a href="./格式化上下文.html"> 此处 </a>。<br>
-					不同开启<span class="definition"> BFC </span>的方法有不同影响，此处使用的是设置 overflow 为 hidden 。
-					<pre><code class="html">
-&lt;div style="
-	background-color: #ddd;
-	border: solid 1px #000;
-	overflow: hidden;
-"&gt;
-	&lt;div style="
-		background-color: #ff0;
-		width: 50px;
-		height: 50px;
-		float: left;
-	"&gt;子元素&lt;/div&gt;
-&lt;/div&gt;
-					</code></pre>
-					<div class="show">
-						<div style="
-							background-color: #ddd;
-							border: solid 1px #000;
-							overflow: hidden;
-						">
+					解决方法一：使父元素创建<span class="definition"> BFC </span>，在<span class="definition"> BFC </span>中的块级元素可以把浮动元素包含进来，父元素的高度就可以被撑开了。开启<span class="definition"> BFC </span>的方式参见<a href="./格式化上下文.html"> 此处 </a>。
+					<ul>
+						<li>overflow: hidden / scroll / auto</li>
+						<li>float: left / right</li>
+						<li>position: absolute / fixed</li>
+					</ul>
+					不同开启<span class="definition"> BFC </span>的方法有不同影响.
+					<ul>
+						<li>overflow 为 hidden</li>
+						<div class="show">
 							<div style="
-								background-color: #ff0;
-								width: 50px;
-								height: 50px;
-								float: left;
-							">子元素</div>
+								background-color: #ddd;
+								border: solid 1px #000;
+								overflow: hidden;">
+								<div style="
+									background-color: #ff0;
+									width: 50px;
+									height: 50px;
+									float: left;
+								">子元素</div>
+							</div>
 						</div>
-					</div>
+						<li>父元素一起浮动</li>
+						<div class="show">
+							<div style="
+								background-color: #ddd;
+								border: solid 1px #000;
+								float: left;">
+								<div style="
+									background-color: #ff0;
+									width: 50px;
+									height: 50px;
+									float: left;
+								">子元素</div>
+							</div>
+						</div>
+						<li>父元素绝对定位</li>
+						<div class="show" style="height: 50px;">
+							<div style="
+								background-color: #ddd;
+								border: solid 1px #000;
+								position: absolute;">
+								<div style="
+									background-color: #ff0;
+									width: 50px;
+									height: 50px;
+									float: left;
+								">子元素</div>
+							</div>
+						</div>
+					</ul>
 					解决方法二：在父元素内追加一个 clear : left / both 的块级元素，实现的方法有两种：
 					<ul>
 						<li>直接添加该元素</li>
