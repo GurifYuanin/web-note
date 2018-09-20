@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>three</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/agate.css">
+	<link rel="stylesheet" href="../css/dark.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script src="../js/three.min.js"></script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">three</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				Three.js 是一个跨浏览器的脚本，使用 JavaScript 函数库或 API 来在网页浏览器中创建和展示动画的三维计算机图形。Three.js 使用 WebGL。<sup>[1]</sup>
+			</p>
+		</section>
+		<section>
+			<h2>下载</h2>
+			<p>
+				<h3>script</h3>
+				<p>
+				从<a href="https://github.com/mrdoob/three.js">github 仓库</a>下载源码，然后引入。
+				<pre><code class="html">
+&lt;script src="three.min.js">&lt;/script>
+				</code></pre>
+				</p>
+				<h3>npm</h3>
+				<p>
+					使用 npm 下载 three 。
+					<pre><code class="git">
+$ npm install three --save-dev
+					</code></pre>
+					然后引入进行使用。
+					<pre><code class="javascript">
+var THREE = require('three');
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>步骤</h2>
+			<p>
+				<pre><code class="javascript">
+// 创建场景
+var scene = new THREE.Scene();
+
+// 创建与配置摄像机
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.x = 0;
+camera.position.y = 0;
+camera.position.z = 5;
+
+// 创建与配置渲染器
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight); // 渲染区域大小
+document.body.appendChild(renderer.domElement); // 将渲染器的 canvas 挂到 body 下
+
+// 创建与配置灯光
+var light = new THREE.AmbientLight(0xffffff);
+light.position.set(100, 100, 100);
+
+// 创建几何体
+var geometry = new THREE.CubeGeometry(1, 1, 1);
+// 创建材质
+var material = new THREE.MeshLambertMaterial({color: 0x08fcc1});
+
+// 让材质作用于几何体，得到一个物体
+var cube = new THREE.Mesh(geometry, material);
+
+// 将物体和灯光加入到场景中
+scene.add(cube);
+scene.add(light);
+
+// 循环渲染
+(function render() {
+	// 旋转物体
+	cube.rotateY(0.01);
+
+	// 重新渲染
+    renderer.render(scene, camera);
+
+    // 下一帧再执行这个渲染函数
+	requestAnimationFrame(render);
+})();
+				</code></pre>
+				<div class="show">
+					<div id="canvas" style="height: 500px; width: 500px;"></div>
+				</div>
+				<script>
+					window.addEventListener('load', function() {
+						var scene = new THREE.Scene();
+						var camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+						camera.position.x = 0;
+						camera.position.y = 1;
+						camera.position.z = 5;
+						var renderer = new THREE.WebGLRenderer();
+						renderer.setSize(500, 500);
+						document.getElementById('canvas').appendChild(renderer.domElement);
+						var light = new THREE.AmbientLight(0xffffff);
+						light.position.set(100, 100, 100);
+						var geometry = new THREE.CubeGeometry(1, 1, 1);
+						var material = new THREE.MeshLambertMaterial({color: 0x08fcc1});
+						var cube = new THREE.Mesh(geometry, material);
+						scene.add(cube);
+						scene.add(light);
+						scene.autoUpdate = true;
+						(function render() {
+							cube.rotateY(0.01);
+						    
+						    requestAnimationFrame(render);
+						})();
+						renderer.render(scene, camera);
+					});
+				</script>
+			</p>
+		</section>
+		<section>
+			<h2 class="refer">参考文献</h2>
+			<p>
+				<div>[1] 维基百科 three.js <a href="https://zh.wikipedia.org/wiki/Three.js">https://zh.wikipedia.org/wiki/Three.js</a></div>
+				<div>[2] three doc <a href="https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene">https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

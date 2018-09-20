@@ -20,7 +20,7 @@ function formatDate (date) {
       minute = minute < 10 ? '0' + minute : minute;
       let second = date.getSeconds();
       second = second < 10 ? '0' + second : second;
-      return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+      return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
     } else if (/^\d+$/.test(date)) {
       // 如果是时间戳
       return formatDate(new Date(Number.parseInt(date)));
@@ -111,7 +111,7 @@ function getChineseName () {
     return lastName[Math.floor(Math.random() * lastName.length)] +
            firstName[Math.floor(Math.random() * firstName.length)].substr(Math.floor(Math.random() * 3), Math.ceil(Math.random() * 2));
 }
-function $Notify() {
+function Notify() {
     this.win = document.createElement('div');
     this.win.setAttribute('class', 'notify');
     this.win.style.opacity = '0';
@@ -119,7 +119,7 @@ function $Notify() {
     document.body.appendChild(this.win);
     this.timeout = null;
 }
-$Notify.prototype.info = function(options) {
+Notify.prototype.info = function(options) {
     options.duration = options.duration || 2000;
     var win = this.win;
     var color = '#2db7f5';
@@ -164,11 +164,26 @@ $(function() {
     var $catalog = $('#catalog'); // 隐藏侧栏按钮
     var $title = $('#title'); // 文章标题
     var $container = $('#container'); // 文章内容
-    var category = ['HTML', 'CSS', 'Javascript', 'NodeJS', 'VueJS', '移动Web', '工具', '协议', '安全', '测试', '后端', '其他']; // 目录分类
+    var category = [
+                    'HTML',
+                    'CSS',
+                    'Javascript',
+                    'Three',
+                    'NodeJS',
+                    'VueJS',
+                    '移动Web',
+                    '工具',
+                    '协议',
+                    '安全',
+                    '测试',
+                    '后端',
+                    '其他'
+                    ]; // 目录分类
     var items = [
         ['DOM', 'meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'canvas', 'svg'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
         ['数据类型', '数组字符串与对象', '循环', '作用域链', '原型链', '闭包', '事件', '复制粘贴', 'Javascript进程', 'RegExp', 'XMLHttpRequest', 'Class', 'JSONP', 'this', 'jquery', 'promise', 'Generator', 'async', 'Typescript'],
+        ['three', 'scene'],
         ['commonJS', 'package.json', 'path', 'file system', 'process', 'webpack', 'plugins', 'loader'],
         ['安装', '实例', '模版', '组件', 'mixins', 'router', 'vuex'],
         ['响应式布局', 'bootstrap', 'viewport'],
@@ -181,8 +196,9 @@ $(function() {
     ];
     // 插入侧栏
     var str = '';
+    var isBright = false;
     for (var i = 0; i < category.length; i++) {
-        str += wrapByTag('<img src="../images/slide_down.png">' + category[i], 'h3');
+        str += wrapByTag('<img src="../images/slide_down' + (isBright ? '' : '_dark') + '.png">' + category[i], 'h3');
         for (var j = 0, tmp = '', insertedId = ''; j < items[i].length; j++) {
             insertedId = items[i][j] === currentTitle ? ' id="currentItem" ' : '';
             tmp += '<div' + insertedId + '>' + wrapByA(items[i][j]) + '</div>';
@@ -314,7 +330,6 @@ $(function() {
     </aside>
     */
     // 点击类别开关子项
-    var isBright = true; // 是否处于白天模式
     var arrBrightDown = '../images/slide_down.png'; // 白天模式下的下箭头
     var arrBrightUp = '../images/slide_up.png'; // 白天模式下的右箭头
     var arrDarkDown = '../images/slide_down_dark.png'; // 夜间模式下的下箭头
@@ -334,40 +349,47 @@ $(function() {
     });
     // 绘制直线
     var lineLength = getViewport().width / 3;
-    $title.after('<svg title="点击切换样式" style="display: block; margin: auto; width:' +
-                lineLength + 'px" xmlns="http://www.w3.org/2000/svg" version="1.1" height="1px"><path id="line" d="M 0 0 L ' +
-                lineLength + ' 0" style="stroke: #000; stroke-dasharray: ' +
-                lineLength + '; stroke-dashoffset: ' +
-                lineLength + '; fill: none;"/></svg>');
+    // '<svg title="点击切换样式" style="display: block; margin: auto; width:' +
+    //             lineLength + 'px" xmlns="http://www.w3.org/2000/svg" version="1.1" height="1px"><path id="line" d="M 0 0 L ' +
+    //             lineLength + ' 0" style="stroke: #000; stroke-dasharray: ' +
+    //             lineLength + '; stroke-dashoffset: ' +
+    //             lineLength + '; fill: none;"/></svg>' +
+    $title.after('<div class="lastModify"><img style="height: 25px;" src="../images/modify.svg"></div>' + '<div class="lastModify">' + document.lastModified + '</div>' +
+                '<div class="switch">' +
+                    '<input id="toggle" type="checkbox" title="切换主题">' +
+                    '<label for="toggle"><i></i></label>' +
+                    '<span></span>' +
+                '</div>');
+    $('#toggle').click(toggleTheme);
     var $line = $('#line');
     // 文章标题事件
-    $title.mouseover(function() {
-        $title.animate({
-            'padding-top': '1%',
-            'padding-bottom': '1%'
-        }, 'fast');
-        $line.animate({
-            'stroke-dashoffset': 0
-        }, 'fast');
-    });
-    $title.mouseout(function() {
-        $title.animate({
-            'padding-top': '0',
-            'padding-bottom': '0'
-        }, 'fast');
-        $line.animate({
-            'stroke-dashoffset': lineLength
-        }, 'fast');
-    });
+    // $title.mouseover(function() {
+    //     $title.animate({
+    //         'padding-top': '1%',
+    //         'padding-bottom': '1%'
+    //     }, 'fast');
+    //     $line.animate({
+    //         'stroke-dashoffset': 0
+    //     }, 'fast');
+    // });
+    // $title.mouseout(function() {
+    //     $title.animate({
+    //         'padding-top': '0',
+    //         'padding-bottom': '0'
+    //     }, 'fast');
+    //     $line.animate({
+    //         'stroke-dashoffset': lineLength
+    //     }, 'fast');
+    // });
     // 弹窗提示
 
-    var notify = new $Notify();
+    var notify = new Notify();
     // 代码类型提醒
     $('.hljs').each(function(index, el) {
         var codeType = document.createElement('div'); // 显示代码的类型（语言）
         var codeCopy = document.createElement('div'); // 赋值代码按钮
         codeType.setAttribute('class', 'codeType');
-        codeCopy.setAttribute('class', 'codeCopy');
+        codeCopy.setAttribute('class', 'codeCopy codeDark');
         codeCopy.setAttribute('title', '点击复制代码');
         var type = el.getAttribute('class').split(' ')[0]; // 取出是哪种类型的代码
         codeType.innerText = type;
@@ -384,12 +406,11 @@ $(function() {
     var $theme = $('link').eq(2); // 主题颜色
     var $codeStyle = $('link').eq(1); // 代码颜色
     var $itemBlockImg = $('#sidebar h3 img');
-    var $hideSidebarImg = $('#hideCatalog');
-    $title.click(function() {
+    function toggleTheme() {
         $theme.attr('href', isBright ? '../css/dark.css' : '../css/bright.css');
         $codeStyle.attr('href', isBright ? '../css/styles/agate.css' : '../css/styles/default.css');
-        $line.css('stroke', isBright ? '#fff' : '#000');
-        $hideSidebarImg.attr('src', isBright ? '../images/catalog_dark.png' : '../images/catalog.png');
+        // $line.css('stroke', isBright ? '#fff' : '#000');
+        $hideCatalog.attr('src', isBright ? '../images/catalog_dark.png' : '../images/catalog.png');
         $itemBlockImg.each(function(i, el) {
             var src = el.src;
             el.src = isBright ?
@@ -401,9 +422,9 @@ $(function() {
         });
         $('.codeCopy').toggleClass('codeDark');
         isBright = !isBright;
-    });
-    if (url.indexOf('?theme=dark') >= 0) {
-        $title.click();
+    }
+    if (url.indexOf('?theme=bright') >= 0) {
+        toggleTheme();
     }
 
     function widthAndMargin(start, end, piece, time) {
@@ -443,7 +464,10 @@ $(function() {
         }, time * 1000);
     }
     // 折叠目录
-    $hideCatalog.attr('title', '点击隐藏侧栏');
+    $hideCatalog.attr({
+        'title': '点击隐藏侧栏',
+        'src': isBright ? '../images/catalog.png' : '../images/catalog_dark.png'
+    });
     $hideCatalog.click(function(event) {
         $sidebar.animate({ // 侧栏隐藏
             'width': '0',
@@ -979,9 +1003,7 @@ $(function() {
     function updateListNumber () { nowCommentNumber.innerText = '共 ' + commentListNumber + ' 条评论'; }
     var commentListNumber = 0;
     var nowCommentNumber = document.createElement('div');
-    nowCommentNumber.style.margin = '10px 0';
-    nowCommentNumber.style.fontWeight = 'bold';
-    nowCommentNumber.style.textAlign = 'center';
+    nowCommentNumber.setAttribute('class', 'commentListLength');
     updateListNumber(commentListNumber);
     $container.append(nowCommentNumber);
 

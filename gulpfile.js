@@ -59,11 +59,9 @@ gulp.task('minifyjs', function() {
 
 // 监听常用文件夹
 gulp.task('default', function() {
-    gulp.watch('./html/*.html',  ['copyhtml']);
-    gulp.watch('./demo/*.html', ['copydemo']);
     gulp.watch('./scss/*.scss', ['sass']);
-    gulp.watch('./images/*', ['minifyimg']);
-    gulp.watch('./js/*.js', ['minifyjs']);
+    // gulp.watch('./images/*', ['minifyimg']);
+    // gulp.watch('./js/*.js', ['minifyjs']);
 });
 
 
