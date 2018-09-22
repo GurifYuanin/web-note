@@ -865,6 +865,26 @@ body {
         font-size: 1rem;
         text-align: center;
     }
+    #searchClear {
+        width: 24px;
+        margin: 0 .2rem 0 0;
+        padding: .2rem 0;
+
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        background-color: transparent;
+        border: none;
+
+        text-align: right;
+        font-size: 24px;
+        cursor: pointer;
+
+        &:hover {
+            color: #666;
+        }
+    }
     #searchResult {
         width: 100%;
         position: absolute;

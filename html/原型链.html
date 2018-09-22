@@ -46,22 +46,22 @@ function createObject () {
 	object.function = function () {};
 	return object;
 }
-			var instance = createObject(); // 调用函数创建对象
+var instance = createObject(); // 调用函数创建对象
 				</code></pre>
 			</p>
 		</section>
 		<section>
 			<h2>构造函数</h2>
 			<p>
-				构造函数本质依旧是函数，使用了 new 运算符创建新对象，该对象被赋予构造函数的作用域，然后执行一遍构造函数里的代码，最终自动返回该新对象。
+				构造函数本质依旧是函数，使用了 new 运算符创建新对象，该对象被赋予构造函数的作用域，然后执行一遍构造函数里的代码，执行过程中 this 指针指向最终被创建的新对象。
 				<pre><code class="javascript">
 function Obj () {
 	this.property = value;
 	this.function = function() {};
 }
-			var instance = new Obj(); // 使用 new 创建新对象
+var instance = new Obj(); // 使用 new 创建新对象
 				</code></pre>
-				仅使用构造函数的方法存在一个缺点，每个通过 new 创建出的对象是相互独立的，每个对象里面的属性都需要创建一遍，但有时我们需要不同实例拥有同一个属性。例如
+				使用构造函数的方法的特点，每个通过 new 创建出的对象是相互独立的，每个对象里面的属性都需要创建一遍。但有时我们需要不同实例拥有同一个属性。例如
 				<pre><code class="javascript">
 function Person () {
 	this.say = function () {
@@ -74,7 +74,7 @@ person1.say();
 person2.say();
 alert(person1.say === person2.say); // => false
 				</code></pre>
-				对于 person1 和 person2 ，两者执行的都是同一件事，即弹出<span class="definition"> hello world </span>，但 person1 和 person2 的 say 方法各被创建了一遍，此时我们更希望它们能共同拥有同一个函数来节省开销。原型模式则可以解决这个问题。
+				对于 person1 和 person2 ，两者执行的都是同一件事，即弹出<span class="definition"> hello world </span>，但 person1 和 person2 的 say 方法各被创建了一遍，此时我们更希望它们能共同拥有同一个函数。原型模式则可以解决这个问题。
 			</p>
 		</section>
 		<section>

@@ -31,7 +31,113 @@
 			</p>
 		</section>
 		<section>
-			
+			<h2>场景对象</h2>
+			<p>
+				创建一个场景。
+				<pre><code class="javascript">
+var scene = new THREE.Scene();
+				</code></pre>
+				<figure>
+					<img src="../images/three_scene_instance.jpg">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>属性</h2>
+			<p>
+				<h3>uuid</h3>
+				<p>
+					uuid：Universally Unique Identifier，通用唯一识别码，表示表示所有对象的唯一 id 。 Three 源码有一个<a href="https://github.com/mrdoob/three.js/blob/dev/src/math/Math.js"> Math.js 文件 </a>，里面的 _Math 对象有一个属性为 generateUUID ，用于生成唯一的 uuid ，其源代码为(以下解释是基于 Math.js 最后修改时间为 2018年3月)：
+					<pre><code class="javascript">
+generateUUID: ( function () {
+
+	// http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript/21963136#21963136
+
+	var lut = [];
+
+	for ( var i = 0; i < 256; i ++ ) {
+
+		lut[ i ] = ( i < 16 ? '0' : '' ) + ( i ).toString( 16 );
+
+	}
+
+	return function generateUUID() {
+
+		var d0 = Math.random() * 0xffffffff | 0;
+		var d1 = Math.random() * 0xffffffff | 0;
+		var d2 = Math.random() * 0xffffffff | 0;
+		var d3 = Math.random() * 0xffffffff | 0;
+		var uuid = lut[ d0 & 0xff ] + lut[ d0 >> 8 & 0xff ] + lut[ d0 >> 16 & 0xff ] + lut[ d0 >> 24 & 0xff ] + '-' +
+			lut[ d1 & 0xff ] + lut[ d1 >> 8 & 0xff ] + '-' + lut[ d1 >> 16 & 0x0f | 0x40 ] + lut[ d1 >> 24 & 0xff ] + '-' +
+			lut[ d2 & 0x3f | 0x80 ] + lut[ d2 >> 8 & 0xff ] + '-' + lut[ d2 >> 16 & 0xff ] + lut[ d2 >> 24 & 0xff ] +
+			lut[ d3 & 0xff ] + lut[ d3 >> 8 & 0xff ] + lut[ d3 >> 16 & 0xff ] + lut[ d3 >> 24 & 0xff ];
+
+		// .toUpperCase() here flattens concatenated strings to save heap memory space.
+		return uuid.toUpperCase();
+
+	};
+
+} )(),
+					</code></pre>
+					拙劣地分析一下源代码，第一步生成了一个 lut (look up table，查找表)，存放规范的十六进制字符串，下标和元素相对应。
+					<figure>
+						<img src="../images/three_scene_lut.jpg">
+						<figcaption>数组下标 0 对应 '00' ，下标 1 对应 '01' ... 下标 15 对应 '0f' ... 下标 255 对应 'ff' </figcaption>
+					</figure>
+					<div class="tip">
+						突然发现 javascript 有一点十分诡异的地方，数字变量是可以使用 toString 方法来转化为字符串的，比如 i.toString() 。但是字面量数字使用 toString 方法会报错，比如 1.toString() 会报错，提示 "Uncaught SyntaxError: Invalid or unexpected token"，然后你在 1 外面包裹一个小括号就又不报错了：(1).toString() 。
+					</div>
+					然后使用<span class="definition"> Math.random() * 0xffffffff </span>生成四个 [0 , 0xffffffff) 的随机数，后面的<span class="definition"> | 0 </span>是和 0 进行按位或运算，但只和整数部分进行，所以小数部分会被舍弃，等价于进行了一次 Number.parseInt 操作。
+					<pre><code class="javascript">
+Math.random() * 0xffffffff | 0;
+// 等价于 =>
+Number.parseInt(Math.random() * 0xffffffff);
+// 等价于 =>
+Math.floor(Math.random() * 0xffffffff);
+					</code></pre>
+					对于 d0 ，将 d0 拆分成 4 个部分，比如生成的是 0x12345678 就会拆分为 0x12, 0x34, 0x56, 0x78，实现方法是将生成的随机数分别按位右移 0 位，8 位，16 位，24 位，然后和 0xff（相当于二进制的 11111111）进行按位与运算，得到最低的 8 位作为 lut 的下标（高位全部被置为 0），映射成规范的 16 进制字符串。
+					<pre><code class="javascript">
+lut[ d0 & 0xff ] + lut[ d0 >> 8 & 0xff ] + lut[ d0 >> 16 & 0xff ] + lut[ d0 >> 24 & 0xff ] + '-'
+// 生成 =>
+XXXXXXXX-
+					</code></pre>
+					对于 d1 ，还是以 0x12345678 为例子，0x5678 部分和 0x12 部分还是按照前面的做法，生成 XXXX ，0x34 部分则略有不同，按位右移 16 位后是和 0x0f 进行与运算，也就是实际上取出来的是 0x04 而不是 0x34 ，然后在和 0x40（也就是 01000000）进行或运算，作用是将第七位置为 1 。
+					<pre><code class="javascript">
+lut[ d1 & 0xff ] + lut[ d1 >> 8 & 0xff ] + '-' + lut[ d1 >> 16 & 0x0f | 0x40 ] + lut[ d1 >> 24 & 0xff ] + '-'
+// => 生成
+XXXX-XXXX-
+					</code></pre>
+					剩下的略有变化，但基本没有大的改变，最终的生成结果为：
+					<pre><code class="javascript">
+XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+					</code></pre>
+					最后一步是将所有字符转为大写然后返回。
+				</p>
+				<h3>id</h3>
+				<p>
+					id 是一个自增的数字，每创建一个对象， id 为上一个对象的 id 加一（对象不单单指的是 Scene ，还包括 THREE 的其他对象）。
+					<figure>
+						<img src="../images/three_scene_id.jpg">
+					</figure>
+				</p>
+				<h3>children</h3>
+				<p>
+					
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>方法</h2>
+			<p>
+				<h3>add</h3>
+				<p>
+					
+				</p>
+				<h3>remove</h3>
+				<p>
+					
+				</p>
+			</p>
 		</section>
 		<section>
 			<h2 class="refer">参考文献</h2>

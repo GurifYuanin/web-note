@@ -103,6 +103,10 @@ var arr = [... new Array(5)];
 	__proto__: {}
 }
 						</code></pre>
+						<li>使用 ES6 的 Array.from 将类数组转化为数组</li>
+						<pre><code class="javascript">
+var arr = Array.from(document.getElementsByTagName('div'));
+						</code></pre>
 						<li>使用循环</li>
 						<pre><code class="javascript">
 var arr = [];
@@ -170,6 +174,15 @@ arr; // => ['a', 'b', 'x', 'y', 'z', 'e']
 
 var arr = [];
 arr[5] = 5; // => [undefined, undefined, undefined, undefined, 5]
+				</code></pre>
+				<h3>取子数组：slice</h3>
+				slice(start, end) 取出下标从 [start, end) 的元素组成的数组。
+				<pre><code class="javascript">
+[1, 2, 3].slice(0, 2); // => [1, 2]
+// 相当于
+[1, 2, 3].filter(function(element, index) {
+	return index >= 0 && index < 2;
+});
 				</code></pre>
 				<h3>数组遍历：forEach / filter / map / some / every</h3>
 				五者都是对数组的遍历，传入一个函数，函数的参数完全一样
@@ -258,6 +271,19 @@ index = [{name: '二狗子'}, {name: '三狗子'}, {name: '四狗子'}].indexOf(
 // includes 只是判断数组中是否有该元素
 ['二狗子', '三狗子'].includes('二狗子'); // => true
 					</code></pre>
+					需要注意，find 等方法在查找对象时，判断条件是对象指针（所在内存首地址），而不是对象本身，因此会出现：
+					<pre><code class="javascript">
+var obj1 = {
+	a: 1
+};
+var obj2 = {
+	a: 1
+};
+var arr = [obj1];
+arr.includes(obj2); // => false
+arr.includes(obj1); // => true
+					</code></pre>
+					即使 obj1 和 obj2 长得完全一样，但实际上因为两个对象是保存在不同首地址的数据，因此 arr 找不到 obj2 。
 				</p>
 				<h3>数组计算：reduce</h3>
 				<p>
@@ -281,7 +307,7 @@ console.log(result); // => 15
 					</code></pre>
 					其上的运算过程为：
 					<ol>
-						<li>初始值 0，作为当前的 sum</li>
+						<li>初始值(sum) 为 0，arr[0] 为 1</li>
 						<li>遍历数组第一个元素，返回 sum + arr[0]，所以 sum = 0 + 1</li>
 						<li>遍历数组第二个元素，返回 sum + arr[1]，所以 sum = 1 + 2</li>
 						<li>...</li>
@@ -305,6 +331,16 @@ arr; // => [1, 2, 3, 4, 5]
 var arr = [1, 2, 3, 4, 5];
 arr.reverse(); // => [5, 4, 3, 2, 1]
 arr; // => [5, 4, 3, 2, 1]
+				</code></pre>
+				<h3>数组转换：Array.from</h3>
+				Array.from方法用于将两类对象转为真正的数组：类似数组的对象（array-like object）和可遍历（iterable）的对象。<sup>[3]</sup>
+				<pre><code class="javascript">
+var obj = {
+	'0': 1,
+	'1': 2,
+	length: 2
+};
+var arr = Array.from(obj); // => [1, 2]
 				</code></pre>
 			</p>
 		</section>
@@ -346,13 +382,15 @@ function isString (obj) {
 'a.b.c.d.e.f'.split(/\./); // => ['a', 'b', 'c', 'd', 'e', 'f']
 'abcdef'.split(''); // => ['a', 'b', 'c', 'd', 'e', 'f']
 				</code></pre>
-				<h3>查找：[index] / charAt / charCodeAt / match / indexOf / lastIndexOf / search / includes</h3>
+				<h3>查找：[index] / charAt / charCodeAt / match / indexOf / lastIndexOf / search / includes / startsWidth / endsWidth</h3>
 				<ul>
 					<li>[index] / charAt(index) / charCodeAt(index)：查找索引 index 的字符 / Unicode 编码</li>
 					<li>match(reg)：查找符合正则表达式的字符串（无 g）或数组（有 g）</li>
 					<li>indexOf / lastIndexOf(string) ：从头 / 尾查找第一次出现 string 的 index</li>
 					<li>search(string|reg)：查找符合表达式或 string 的 index</li>
-					<li>includes(string)：查找是否包含 string，相当于进行 indexOf(string) === -1 判断</li>
+					<li>includes(string, start)：从 start 开始查找是否包含 string，相当于进行 indexOf(string, start) === -1 判断</li>
+					<li>startsWidth(string, start)：从 start 开始判断是否以 string 开头，类似于 /^string/.test()</li>
+					<li>endsWidth(string, length)：取前 length 个字符判断是否以 string 结尾，类似于 /string$/.test()</li>
 				</ul>
 				<pre><code class="javascript">
 // 查找字符
@@ -390,13 +428,23 @@ string.substr(1, 2); // => '23'
 string.substring(1, 3); // => '23'
 string.slice(1, 3); // => '23'
 				</code></pre>
+				<h3>字符串生成：repeat / padStart / padEnd</h3>
+				<ul>
+					<li>repeat(n)：重复字符串 n 次</li>
+					<li>padStart(length, string)：若字符串长度不足 length，则在前面重复补充 string 直到长度不超过 length ，默认补空格</li>
+					<li>padEnd(length, string)：若字符串长度不足 length，则在后面重复补充 string 直到长度不超过 length，默认补空格</li>
+				</ul>
+				<pre><code class="javascript">
+'abcabc'.repeat(2); // => 'abcabcabcabc'
+'18-01-01'.padStart(10, '2018-10-01'); // '2018-01-01'
+'998'.padEnd(10, '0'); // => '9980000000'
+				</code></pre>
 				<h3>其他：trim / toLowerCase / toUpperCase / replace / repeat</h3>
 				<ul>
 					<li>trim：裁切两边空白字符</li>
 					<li>toLowerCase：全部小写</li>
 					<li>toUpperCase：全部大写</li>
 					<li>replace：根据正则替换第一个（无 g）或者替换全部（有 g）</li>
-					<li>repeat：重复字符串 n 次</li>
 				</ul>
 				<pre><code class="javascript">
 ' abcdef '.trim(); // => 'abcdef'
@@ -404,7 +452,7 @@ string.slice(1, 3); // => '23'
 'abcdef'.toUpperCase(); // => 'ABCDEF'
 'abcabc'.replace(/a/, ''); // => 'bcabc'
 'abcabc'.replace(/a/g, ''); // => 'bcbc'
-'abcabc'.repeat(2); // => 'abcabcabcabc'
+
 				</code></pre>
 			</p>
 		</section>
@@ -592,6 +640,26 @@ Object.defineProperty(obj, 'a', {
 });
 					</code></pre>
 					以上无论是调用 getter 获得值还是对 obj.a 进行赋值，都会进入死递归。调用 getter 时，进入函数，返回 obj.a ，但 obj.a 又调用了 getter ，无限循环导致栈溢出。 setter 也是同理。
+					<h5>proxy 代理</h5>
+					ES6 的 proxy 提供了又一层拦截，比如使用以下：
+					<pre><code class="javascript">
+var obj = {};
+Object.defineProperty(obj, 'a', {
+	get: function () {
+		return 1;
+	},
+	set: function (val) {
+		console.log(val);
+	}
+});
+var proxy = new Proxy(obj, {
+	get: function (target, key, receiver) {
+		return target.a + 1;
+	}
+});
+proxy.a; // => 2
+					</code></pre>
+					通过 proxy 代理对象访问 a ，先过一层代理，得到 target.a + 1 ，其中 target 就是 obj 。然后再过一层 obj 的 getter 得到 obj.a 为 1 ，因此最终结果为 obj.a + 1 = 1 + 1 = 2 。
 					<h4>获得描述符：Object.getOwnPropertyDescriptor</h4>
 					<pre><code class="javascript">
 var obj = {};
@@ -673,6 +741,7 @@ console.log(obj2.a); // => undefined
 			<p>
 				<div>[1] 菜鸟笔记 String对象 <a href="http://www.runoob.com/jsref/jsref-obj-string.html">http://www.runoob.com/jsref/jsref-obj-string.html</a></div>
 				<div>[2] MDN Object.defineProperty <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty</a></div>
+				<div>[3] 阮一峰 ECMA6入门 <a href="http://es6.ruanyifeng.com/#docs/array">http://es6.ruanyifeng.com/#docs/array</a></div>
 			</p>
 		</section>
 	</article>

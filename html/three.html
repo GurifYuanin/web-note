@@ -120,13 +120,11 @@ scene.add(light);
 						var cube = new THREE.Mesh(geometry, material);
 						scene.add(cube);
 						scene.add(light);
-						scene.autoUpdate = true;
 						(function render() {
 							cube.rotateY(0.01);
-						    
+						    renderer.render(scene, camera);
 						    requestAnimationFrame(render);
 						})();
-						renderer.render(scene, camera);
 					});
 				</script>
 			</p>
