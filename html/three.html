@@ -55,7 +55,7 @@ var THREE = require('three');
 			</p>
 		</section>
 		<section>
-			<h2>步骤</h2>
+			<h2>使用范例</h2>
 			<p>
 				<pre><code class="javascript">
 // 创建场景
@@ -109,7 +109,7 @@ scene.add(light);
 						var camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
 						camera.position.x = 0;
 						camera.position.y = 1;
-						camera.position.z = 5;
+						camera.position.z = 4;
 						var renderer = new THREE.WebGLRenderer();
 						renderer.setSize(500, 500);
 						document.getElementById('canvas').appendChild(renderer.domElement);
@@ -127,6 +127,438 @@ scene.add(light);
 						})();
 					});
 				</script>
+			</p>
+		</section>
+		<section>
+			<h2>坐标系统</h2>
+			<p>
+				<figure>
+					<img src="../images/three_coordinate_system.jpg">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>Object3D</h2>
+			<p>
+				Object3D 是大多数对象的基本类，提供了一些属性和方法在 3D 世界中操作对象。
+				<pre>This is the base class for most objects in three.js and provides a set of properties and methods for manipulating objects in 3D space.<sup>[2]</sup></pre>
+				比如查看<a href="https://github.com/mrdoob/three.js/blob/dev/src/cameras/Camera.js"> src/cameras/Camera.js </a>的源码，如下：
+				<pre><code class="javascript">
+...
+import { Object3D } from '../core/Object3D.js';
+...
+
+function Camera() {
+
+	<span class="strong">Object3D.call( this );</span>
+
+	this.type = 'Camera';
+
+	this.matrixWorldInverse = new Matrix4();
+
+	this.projectionMatrix = new Matrix4();
+	this.projectionMatrixInverse = new Matrix4();
+
+}
+...
+				</code></pre>
+				构造函数的第一行执行了<span class="definition"> Object3D.call( this ) </span>，而 src/core/Object3D 构造函数的源码为：
+				<pre><code class="javascript">
+var object3DId = 0;
+
+function Object3D() {
+
+	Object.defineProperty( this, 'id', { value: object3DId ++ } );
+
+	this.uuid = _Math.generateUUID();
+
+	this.name = '';
+	this.type = 'Object3D';
+
+	this.parent = null;
+	this.children = [];
+
+	this.up = Object3D.DefaultUp.clone();
+
+	var position = new Vector3();
+	var rotation = new Euler();
+	var quaternion = new Quaternion();
+	var scale = new Vector3( 1, 1, 1 );
+
+	function onRotationChange() {
+
+		quaternion.setFromEuler( rotation, false );
+
+	}
+
+	function onQuaternionChange() {
+
+		rotation.setFromQuaternion( quaternion, undefined, false );
+
+	}
+
+	rotation.onChange( onRotationChange );
+	quaternion.onChange( onQuaternionChange );
+
+	Object.defineProperties( this, {
+		position: {
+			enumerable: true,
+			value: position
+		},
+		rotation: {
+			enumerable: true,
+			value: rotation
+		},
+		quaternion: {
+			enumerable: true,
+			value: quaternion
+		},
+		scale: {
+			enumerable: true,
+			value: scale
+		},
+		modelViewMatrix: {
+			value: new Matrix4()
+		},
+		normalMatrix: {
+			value: new Matrix3()
+		}
+	} );
+
+	this.matrix = new Matrix4();
+	this.matrixWorld = new Matrix4();
+
+	this.matrixAutoUpdate = Object3D.DefaultMatrixAutoUpdate;
+	this.matrixWorldNeedsUpdate = false;
+
+	this.layers = new Layers();
+	this.visible = true;
+
+	this.castShadow = false;
+	this.receiveShadow = false;
+
+	this.frustumCulled = true;
+	this.renderOrder = 0;
+
+	this.userData = {};
+
+}
+				</code></pre>
+				由源码可知，继承自 Object3D 的构造函数所创建出来的实例会拥有以下属性和方法。
+				<h3>uuid</h3>
+				<p>
+					uuid：Universally Unique Identifier，通用唯一识别码，表示所有对象的唯一 id 。 Three 源码有一个<a href="https://github.com/mrdoob/three.js/blob/dev/src/math/Math.js"> Math.js 文件 </a>，里面的 _Math 对象有一个属性为 generateUUID ，用于生成唯一的 uuid ，其源代码为(以下解释是基于 Math.js 最后修改时间为 2018年3月)：
+					<pre><code class="javascript">
+generateUUID: ( function () {
+
+	// http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript/21963136#21963136
+
+	var lut = [];
+
+	for ( var i = 0; i < 256; i ++ ) {
+
+		lut[ i ] = ( i < 16 ? '0' : '' ) + ( i ).toString( 16 );
+
+	}
+
+	return function generateUUID() {
+
+		var d0 = Math.random() * 0xffffffff | 0;
+		var d1 = Math.random() * 0xffffffff | 0;
+		var d2 = Math.random() * 0xffffffff | 0;
+		var d3 = Math.random() * 0xffffffff | 0;
+		var uuid = lut[ d0 & 0xff ] + lut[ d0 >> 8 & 0xff ] + lut[ d0 >> 16 & 0xff ] + lut[ d0 >> 24 & 0xff ] + '-' +
+			lut[ d1 & 0xff ] + lut[ d1 >> 8 & 0xff ] + '-' + lut[ d1 >> 16 & 0x0f | 0x40 ] + lut[ d1 >> 24 & 0xff ] + '-' +
+			lut[ d2 & 0x3f | 0x80 ] + lut[ d2 >> 8 & 0xff ] + '-' + lut[ d2 >> 16 & 0xff ] + lut[ d2 >> 24 & 0xff ] +
+			lut[ d3 & 0xff ] + lut[ d3 >> 8 & 0xff ] + lut[ d3 >> 16 & 0xff ] + lut[ d3 >> 24 & 0xff ];
+
+		// .toUpperCase() here flattens concatenated strings to save heap memory space.
+		return uuid.toUpperCase();
+
+	};
+
+} )(),
+					</code></pre>
+					拙劣地分析一下源代码，第一步生成了一个 lut (look up table，查找表)，存放规范的十六进制字符串，下标和元素相对应。
+					<figure>
+						<img src="../images/three_scene_lut.jpg">
+						<figcaption>数组下标 0 对应 '00' ，下标 1 对应 '01' ... 下标 15 对应 '0f' ... 下标 255 对应 'ff' </figcaption>
+					</figure>
+					<div class="tip">
+						突然发现 javascript 有一点十分诡异的地方，数字变量是可以使用 toString 方法来转化为字符串的，比如 i.toString() 。但是字面量数字使用 toString 方法会报错，比如 1.toString() 会报错，提示 "Uncaught SyntaxError: Invalid or unexpected token"，然后你在 1 外面包裹一个小括号就又不报错了：(1).toString() 。
+					</div>
+					然后使用<span class="definition"> Math.random() * 0xffffffff </span>生成四个 [0 , 0xffffffff) 的随机数，后面的<span class="definition"> | 0 </span>是和 0 进行按位或运算，但只和整数部分进行，所以小数部分会被舍弃，等价于进行了一次 Number.parseInt 操作。
+					<pre><code class="javascript">
+Math.random() * 0xffffffff | 0;
+// 等价于 =>
+Number.parseInt(Math.random() * 0xffffffff);
+// 等价于 =>
+Math.floor(Math.random() * 0xffffffff);
+					</code></pre>
+					对于 d0 ，将 d0 拆分成 4 个部分，比如生成的是 0x12345678 就会拆分为 0x12, 0x34, 0x56, 0x78，实现方法是将生成的随机数分别按位右移 0 位，8 位，16 位，24 位，然后和 0xff（相当于二进制的 11111111）进行按位与运算，得到最低的 8 位作为 lut 的下标（高位全部被置为 0），映射成规范的 16 进制字符串。
+					<pre><code class="javascript">
+lut[ d0 & 0xff ] + lut[ d0 >> 8 & 0xff ] + lut[ d0 >> 16 & 0xff ] + lut[ d0 >> 24 & 0xff ] + '-'
+// 生成 =>
+XXXXXXXX-
+					</code></pre>
+					对于 d1 ，还是以 0x12345678 为例子，0x5678 部分和 0x12 部分还是按照前面的做法，生成 XXXX ，0x34 部分则略有不同，按位右移 16 位后是和 0x0f 进行与运算，也就是实际上取出来的是 0x04 而不是 0x34 ，然后在和 0x40（也就是 01000000）进行或运算，作用是将第七位置为 1 。
+					<pre><code class="javascript">
+lut[ d1 & 0xff ] + lut[ d1 >> 8 & 0xff ] + '-' + lut[ d1 >> 16 & 0x0f | 0x40 ] + lut[ d1 >> 24 & 0xff ] + '-'
+// => 生成
+XXXX-XXXX-
+					</code></pre>
+					剩下的略有变化，但基本没有大的改变，最终的生成结果为：
+					<pre><code class="javascript">
+XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+					</code></pre>
+					最后一步是将所有字符转为大写然后返回。
+				</p>
+				<h3>id</h3>
+				<p>
+					id 是一个自增的数字，每创建一个对象， id 为上一个对象的 id 加一。
+					<figure>
+						<img src="../images/three_scene_id.jpg">
+					</figure>
+				</p>
+				<h3>name</h3>
+				<p>
+					对象的名字，在创建对象可以进行赋值，初始时为空字符串。
+					<pre><code class="javascript">
+var scene = new THREE.Scene();
+console.log(scene.name); // => ""
+
+scene.name = 'my scene';
+console.log(scene.name); // => "my scene"
+					</code></pre>
+				</p>
+				<h3>position & scale</h3>
+				<p>
+					position 是该对象所在的位置，是一个 Vector3 对象，对象有 3 个属性：x ，y ，z 。分别代表各个轴的坐标。默认为 (0, 0, 0)。而 scale 也是一个 Vector3 对象，代表三个坐标的缩放比，默认为 (1, 1, 1)。
+					<h4>移动</h4>
+					可以直接操作对象的 position 来修改物体在坐标系统里的位置。
+					<pre><code class="javascript">
+var camera = new THREE.Camera();
+camera.position.x = 10;
+					</code></pre>
+					也可以通过对象上的 translateOnAxis(axis, distance) 或 translateX(distence) 等来进行偏移。
+					<pre><code class="javascript">
+camera.translateX(10);
+					</code></pre>
+					两者是不同的，前者将物体直接放在坐标系里的某个位置，后者根据自己的坐标系（初始时跟坐标系统一样，之后可能通过旋转进行改变）进行相对偏移。
+				</p>
+				<h3>rotation & quaternion</h3>
+				<p>
+					描述对象的 x，y，z 轴旋转情况，rotation 是一个 Euler (欧拉)对象，构造函数为：
+					<pre><code class="javascript">
+function Euler( x, y, z, order ) {
+
+	this._x = x || 0;
+	this._y = y || 0;
+	this._z = z || 0;
+	this._order = order || Euler.DefaultOrder;
+
+}
+					</code></pre>
+					x，y，z 分别代表对应轴的旋转的弧度（比如 3.1415... = Math.PI = 180°），order 表示前面三个参数对应哪个轴，比如 "XYZ" (默认)则表示 x 对应 X 轴，y 对应 Y 轴，z对应 Z 轴。比如 object.rotation.y = Math.PI ，那么物体将沿着 y 轴旋转 180° 。
+					<pre><a href="http://v.youku.com/v_show/id_XNzkyOTIyMTI=.html">关于欧拉角和万向节死锁的讲解视频</a></pre>
+					quaternion 四元数是用来形容物体旋转的另一种方法，提供四个参数：x，y，z，w：
+					<pre><code class="javascript">
+function Quaternion( x, y, z, w ) {
+
+	this._x = x || 0;
+	this._y = y || 0;
+	this._z = z || 0;
+	this._w = ( w !== undefined ) ? w : 1;
+
+}
+					</code></pre>
+					然后我就看不懂了，跳过。
+					<h4>钩子</h4>
+					当 x，y，z 的值修改时，都会触发 onChangeCallback 回调。
+					<pre><code class="javascript">
+Object.defineProperties( Euler.prototype, {
+
+	x: {
+
+		get: function () {
+
+			return this._x;
+
+		},
+
+		set: function ( value ) {
+
+			this._x = value;
+			<span class="strong">this.onChangeCallback();</span>
+
+		}
+
+	},
+...
+					</code></pre>
+					比如我们修改对象的 x ，将会触发 x 的 setter ，将值赋给对象的 _x，然后执行回调函数。
+				</p>
+				<h3>children</h3>
+				<p>
+					获得所有添加到该对象的子对象，即进行 add 操作添加进来的对象所组成的数组，初始时为空数组。
+				</p>
+				<h3>parent</h3>
+				<p>
+					该对象的父对象，比如 A.add(B) ，那么 B.parent 便是 A 。
+				</p>
+				<h3>add</h3>
+				<p>
+					添加子对象。
+				</p>
+				<h3>remove</h3>
+				<p>
+					移除子对象。
+				</p>
+				<h3>getObjectByName & getObjectById</h3>
+				<p>
+					getObjectByName(name)：从子对象数组中通过名字获得一个子对象，当有存在多个子对象名字相同时，只得到第一个，差不多相当于：
+					<pre><code class="javascript">
+object.children.find(function(el) {
+	return el.name === 传入的名字;
+});
+					</code></pre>
+					getObjectById(id)：同理，通过 id 获得子对象。
+					<pre><code class="javascript">
+object.children.find(function(el) {
+	return el.name === 传入的id;
+});
+					</code></pre>
+				</p>
+				<h3>visible</h3>
+				<p>
+					visible 表示该对象是否可见，即会不会被渲染出来。默认为 true 。
+				</p>
+				<h3>up & lookAt</h3>
+				<p>
+					up 是一个 Vector3 实例对象，表示头顶的朝向，默认为 (0, 1, 0)，即头顶的方向为 y 轴正方向，以一个相机为例子，相当于：
+					<figure>
+						<img src="../images/three_camera_up.jpg">
+					</figure>
+					当设置为 (0, -1, 0) 时就相当于相机倒过来，设置为 (1, 0, 0) 时头顶的方向就变成了 x 轴正方向。如果设置为不正常的情况，比如 (0, 0, 0) ，就会采取默认值 (0, 1, 0) 。该属性跟 lookAt 方法有关系。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>Helper</h2>
+			<p>
+				为了帮助理解和学习，THREE 提供了各种 helper 类，通过构建辅助线来帮助理解开发。
+				<h3>GridHelper</h3>
+				<p>
+					生成一个二维网格，接受四个可选参数。
+					<table>
+						<tr>
+							<th>参数</th>
+							<th>解释</th>
+							<th>是否可选</th>
+							<th>默认值</th>
+							<th>类型</th>
+						</tr>
+						<tr>
+							<td>size</td>
+							<td>网格的尺寸，网格为一个方形，size 可以理解为边长</td>
+							<td>可选</td>
+							<td>10</td>
+							<td>Number</td>
+						</tr>
+						<tr>
+							<td>divisions</td>
+							<td>网格切分数，比如为 10 ，那么将被切成 10 x 10 的网格</td>
+							<td>可选</td>
+							<td>10</td>
+							<td>Number</td>
+						</tr>
+						<tr>
+							<td>colorCenterLine</td>
+							<td>中心线的颜色，即中心的十字线的颜色</td>
+							<td>可选</td>
+							<td>0x444444 <div style="display: inline-block; width: 10px; height: 10px; background-color: #444; border: white 1px dotted;"></div></td>
+							<td>既可以是 THREE.Color 的实例，也可以是十六进制颜色 0xXXXXXX，也可以是 css 颜色名称（black, white, yellow 等这些）</td>
+						</tr>
+						<tr>
+							<td>colorGrid</td>
+							<td>其他网格线的颜色</td>
+							<td>可选</td>
+							<td>0x888888 <div style="display: inline-block; width: 10px; height: 10px; background-color: #888; border: white 1px dotted;"></div></td>
+							<td>同上</td>
+						</tr>
+					</table>
+					<pre><code class="javascript">
+var girdHelper = new THREE.GridHelper(10, 10, 0x00ffff, 0x0000ff)
+					</code></pre>
+					<div class="show">
+						<div id="grid-helper"></div>
+						<div>摄像机位置：</div>
+						<div>
+							x 轴：
+							<input id="grid-helper-x" type="range" value="0" min="-10" max="10" step="0.1">
+							<span id="grid-help-x-text">0</span>
+						</div>
+						<div>
+							y 轴：
+							<input id="grid-helper-y" type="range" value="1" min="-10" max="10" step="0.1">
+							<span id="grid-help-y-text">1</span>
+						</div>
+						<div>
+							z 轴：
+							<input id="grid-helper-z" type="range" value="5" min="-10" max="10" step="0.1">
+							<span id="grid-help-z-text">5</span>
+						</div>
+						<script>
+							(function(){
+								var position = {
+									_x: 0,
+									_y: 1,
+									_z: 5
+								};
+								Object.defineProperties(position, {
+									x: {
+										get: function() { return this._x },
+										set: function(val) { this._x = val; render(); }
+									},
+									y: {
+										get: function() { return this._y },
+										set: function(val) { this._y = val; render(); }
+									},
+									z: {
+										get: function() { return this._z },
+										set: function(val) { this._z = val; render(); }
+									},
+								});
+								var renderer = new THREE.WebGLRenderer();
+								document.getElementById('grid-helper').appendChild(renderer.domElement);
+								var camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+								var scene = new THREE.Scene();
+								var gridHelper = new THREE.GridHelper(10, 10, 0x00ffff, 0x0000ff);
+								scene.add(gridHelper);
+								function render() {
+									camera.position.set(position.x, position.y, position.z);
+									renderer.render(scene, camera);
+								}
+								render();
+								var xText = document.getElementById('grid-help-x-text'),
+									yText = document.getElementById('grid-help-y-text'),
+									zText = document.getElementById('grid-help-z-text');
+								document.getElementById('grid-helper-x').onchange = function () {
+									xText.innerText = this.value;
+									position.x = Number(this.value);
+								}
+								document.getElementById('grid-helper-y').onchange = function () {
+									yText.innerText = this.value;
+									position.y = Number(this.value);
+								}
+								document.getElementById('grid-helper-z').onchange = function () {
+									zText.innerText = this.value;
+									position.z = Number(this.value);
+								}
+							})();
+						</script>
+					</div>
+				</p>
 			</p>
 		</section>
 		<section>

@@ -632,14 +632,30 @@ obj.a // => "你改变不了 obj.a 的!"
 					<pre><code class="javascript">
 Object.defineProperty(obj, 'a', {
 	get: function () {
-		return obj.a;
+		return this.a;
 	},
 	set: function (val) {
-		obj.a = val;
+		this.a = val;
 	}
 });
 					</code></pre>
-					以上无论是调用 getter 获得值还是对 obj.a 进行赋值，都会进入死递归。调用 getter 时，进入函数，返回 obj.a ，但 obj.a 又调用了 getter ，无限循环导致栈溢出。 setter 也是同理。
+					以上无论是调用 getter 获得值还是对 obj.a 进行赋值，都会进入死递归。调用 getter 时，进入函数，返回 obj.a ，但 obj.a 又调用了 getter ，无限循环导致栈溢出。 setter 也是同理。如果要实现部分拦截，或者要实现拦截并修改原来的值并进行返回，可以这样写：
+					<pre><code class="javascriot">
+obj._a = null;
+Object.defineProperty(obj, 'a', {
+	get: function () {
+		return this._a;
+	},
+	set: function (val) {
+		if (val) {
+			this._a = val;
+		} else {
+			console.error('请设置有效的值');
+		}
+	}
+})
+					</code></pre>
+					上面的代码定义后如果将 obj.a 进行读写， getter 和 setter 会拦截读写，将其操作作用到 obj._a 上，并且如果写值的时候传入的是 falsy 的值，那么将无法赋值。
 					<h5>proxy 代理</h5>
 					ES6 的 proxy 提供了又一层拦截，比如使用以下：
 					<pre><code class="javascript">
