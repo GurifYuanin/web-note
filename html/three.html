@@ -313,16 +313,13 @@ XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 					</code></pre>
 					最后一步是将所有字符转为大写然后返回。
 				</p>
-				<h3>id</h3>
+				<h3>id & name</h3>
 				<p>
 					id 是一个自增的数字，每创建一个对象， id 为上一个对象的 id 加一。
 					<figure>
 						<img src="../images/three_scene_id.jpg">
 					</figure>
-				</p>
-				<h3>name</h3>
-				<p>
-					对象的名字，在创建对象可以进行赋值，初始时为空字符串。
+					name 为对象的名字，在创建对象可以进行赋值，初始时为空字符串。
 					<pre><code class="javascript">
 var scene = new THREE.Scene();
 console.log(scene.name); // => ""
@@ -359,7 +356,7 @@ function Euler( x, y, z, order ) {
 
 }
 					</code></pre>
-					x，y，z 分别代表对应轴的旋转的弧度（比如 3.1415... = Math.PI = 180°），order 表示前面三个参数对应哪个轴，比如 "XYZ" (默认)则表示 x 对应 X 轴，y 对应 Y 轴，z对应 Z 轴。比如 object.rotation.y = Math.PI ，那么物体将沿着 y 轴旋转 180° 。
+					x，y，z 分别代表对应轴的旋转的弧度值（比如 3.1415... = Math.PI = 180°），order 表示前面三个参数对应哪个轴，比如 "XYZ" (默认)则表示 x 对应 X 轴，y 对应 Y 轴，z对应 Z 轴。比如 object.rotation.y = Math.PI ，那么物体将沿着 y 轴旋转 180° 。
 					<pre><a href="http://v.youku.com/v_show/id_XNzkyOTIyMTI=.html">关于欧拉角和万向节死锁的讲解视频</a></pre>
 					quaternion 四元数是用来形容物体旋转的另一种方法，提供四个参数：x，y，z，w：
 					<pre><code class="javascript">
@@ -397,37 +394,36 @@ Object.defineProperties( Euler.prototype, {
 ...
 					</code></pre>
 					比如我们修改对象的 x ，将会触发 x 的 setter ，将值赋给对象的 _x，然后执行回调函数。
+					<h4>进行旋转</h4>
+					有多种方法可以让对象进行旋转：
+					<ul>
+						<li>rotateX / rotateY / rotateZ：沿对象自身的 X / Y / Z 轴旋转弧度（radians，不是角度 degree）</li>
+						<li>rotateOnAxis(new THREE.Vector3(), radians)：沿着自身某个轴旋弧度</li>
+						<li>rotateOnWorldAxis(new THREE.Vector3, radians)：同上，但参考为世界坐标系</li>
+						<li>setRotationFromAxisAngle / setRotationFromEuler / setRotationFromMatrix / setRotationFromQuaternion：各种方式设置 rotation 属性</li>
+					</ul>
 				</p>
-				<h3>children</h3>
+				<h3>children & parent</h3>
 				<p>
-					获得所有添加到该对象的子对象，即进行 add 操作添加进来的对象所组成的数组，初始时为空数组。
+					<ul>
+						<li>获得所有添加到该对象的子对象，即进行 add 操作添加进来的对象所组成的数组，初始时为空数组。</li>
+						<li>该对象的父对象，比如 A.add(B) ，那么 B.parent 便是 A 。</li>
+					</ul>
 				</p>
-				<h3>parent</h3>
+				<h3>add & remove</h3>
 				<p>
-					该对象的父对象，比如 A.add(B) ，那么 B.parent 便是 A 。
+					<ul>
+						<li>添加任意多个子对象。如果被添加的子对象已经有父对象，那么会将原先的父对象移除，再添加到当前对象作为子对象。</li>
+						<li>移除任意多个子对象。</li>
+					</ul>
 				</p>
-				<h3>add</h3>
+				<h3>getObjectByName & getObjectById & getObjectByProperty</h3>
 				<p>
-					添加子对象。
-				</p>
-				<h3>remove</h3>
-				<p>
-					移除子对象。
-				</p>
-				<h3>getObjectByName & getObjectById</h3>
-				<p>
-					getObjectByName(name)：从子对象数组中通过名字获得一个子对象，当有存在多个子对象名字相同时，只得到第一个，差不多相当于：
-					<pre><code class="javascript">
-object.children.find(function(el) {
-	return el.name === 传入的名字;
-});
-					</code></pre>
-					getObjectById(id)：同理，通过 id 获得子对象。
-					<pre><code class="javascript">
-object.children.find(function(el) {
-	return el.name === 传入的id;
-});
-					</code></pre>
+					<ul>
+						<li>getObjectByName(name)：从子对象数组中通过名字获得一个子对象，当有存在多个子对象名字相同时，只得到第一个</li>
+						<li>getObjectById(id)：同理，通过 id 获得子对象。</li>
+						<li>getObjectByProperty(name, value)：前两个方法实际上是调用了该方法，前者是 getObjectByProperty('name', name)，后者是 getObjectByProperty('id', id) 。</li>
+					</ul>
 				</p>
 				<h3>visible</h3>
 				<p>
@@ -440,6 +436,21 @@ object.children.find(function(el) {
 						<img src="../images/three_camera_up.jpg">
 					</figure>
 					当设置为 (0, -1, 0) 时就相当于相机倒过来，设置为 (1, 0, 0) 时头顶的方向就变成了 x 轴正方向。如果设置为不正常的情况，比如 (0, 0, 0) ，就会采取默认值 (0, 1, 0) 。该属性跟 lookAt 方法有关系。
+				</p>
+				<h3>matrix & worldMatrix & matrixAutoUpdate</h3>
+				<p>
+					<div>matrix 是 localMatrix，当前节点的局部矩阵。它会在局部空间的原点对自己和子节点进行转换操作。<sup>[3]</sup>进行渲染时，它记录了以对象本身为参照，对象的位置、旋转、缩放。</div>
+					<div>worldMatrix: 将当前结点的局部空间的变换转换到场景图根节点所在的空间。 换句话说它将节点放在了世界空间中。<sup>[3]</sup>，它记录了以对象所在世界作为参照下，对象的位置、旋转、缩放。</div>
+					通过局部矩阵和世界矩阵实现父子级运动关系。
+					<pre>具体原理参照文章<a href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-scene-graph.html">WebGL场景图</a></pre>
+					matrixAutoUpdate 默认为 true ，表示当对象进行移动、旋转、旋转操作后，渲染时会自动对 matrix 进行计算。若设置为 false ，就得需要自己计算 matrix 。
+				</p>
+				<h3>castShadow & receiveShadow</h3>
+				<p>
+					<ul>
+						<li>castShadow 表示当有灯光的时候时候产生投影，默认为 false 。</li>
+						<li>receiveShadow 表示是否自身材料接受投影，默认为 false 。</li>
+					</ul>
 				</p>
 			</p>
 		</section>
@@ -566,6 +577,7 @@ var girdHelper = new THREE.GridHelper(10, 10, 0x00ffff, 0x0000ff)
 			<p>
 				<div>[1] 维基百科 three.js <a href="https://zh.wikipedia.org/wiki/Three.js">https://zh.wikipedia.org/wiki/Three.js</a></div>
 				<div>[2] three doc <a href="https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene">https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene</a></div>
+				<div>[3] 场景图 <a href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-scene-graph.html">https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-scene-graph.html</a></div>
 			</p>
 		</section>
 	</article>
