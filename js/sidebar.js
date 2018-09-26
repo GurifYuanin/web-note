@@ -183,7 +183,7 @@ $(function() {
         ['DOM', 'meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'canvas', 'svg'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
         ['数据类型', '数组字符串与对象', '循环', '作用域链', '原型链', '闭包', '事件', '复制粘贴', 'Javascript进程', 'RegExp', 'XMLHttpRequest', 'Class', 'JSONP', 'this', 'jquery', 'promise', 'Generator', 'async', 'Typescript'],
-        ['three', 'scene'],
+        ['three', 'scene', 'camera'],
         ['commonJS', 'package.json', 'path', 'file system', 'process', 'webpack', 'plugins', 'loader'],
         ['安装', '实例', '模版', '组件', 'mixins', 'router', 'vuex'],
         ['响应式布局', 'bootstrap', 'viewport'],
@@ -444,7 +444,7 @@ $(function() {
         }, time * 1000);
     }
     // 折叠目录
-    function hideCatalog () {
+    function hideCatalog (cb) {
         $sidebar.animate({ // 侧栏隐藏
             'width': '0',
             'padding': '0'
@@ -452,6 +452,7 @@ $(function() {
             $sidebar.css('display', 'none');
             // 允许重新展开侧栏
             $showCatalog.css('display', 'block');
+            if (cb) cb();
         });
 
         widthAndMargin(65, 90, 25, 1);
@@ -460,8 +461,8 @@ $(function() {
     function showCatalog () {
         var width = getViewport().width;
         var padding;
-        // 如果视窗大小小于 400 px
-        if (width < 400) {
+        // 如果视窗大小小于 600 px
+        if (width < 600) {
             width = '100%';
             padding = '0';
         } else {
@@ -474,7 +475,7 @@ $(function() {
             'width': width,
             'padding': padding
         }, 'slow');
-        widthAndMargin(90, 65, 20, 0.5);
+        if (getViewport().width > 600) { widthAndMargin(90, 65, 20, 0.5); }
     }
     $hideCatalog.attr({
         'title': '点击隐藏侧栏',
@@ -484,8 +485,11 @@ $(function() {
     $hideCatalog.click(hideCatalog);
     $showCatalog.click(showCatalog);
     window.addEventListener('resize', function () {
-        if (getViewport().width < 1000 && $sidebar.css('display') !== 'none') {
+        var width = getViewport().width;
+        if (width < 1000 && $sidebar.css('display') !== 'none' && $sidebar[0].style.width !== '100%') {
             hideCatalog();
+        } else if (width >= 1000 &&  $sidebar[0].style.width === '100%') {
+            hideCatalog(showCatalog);
         }
     });
     $('a').not('.self').attr('target', '_blank'); // 所有链接默认新标签打开

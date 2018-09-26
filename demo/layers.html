@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>three</title>
+	<script src="../js/three.min.js"></script>
+	<style>
+		#range-area {
+			position: absolute;
+			color: white
+		}
+		#range-area > div > span:first-child {
+			display: inline-block;
+			width: 80px;
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+	<div id="range-area">
+		<div id="line1">
+			<span>左侧矩形：</span>
+		</div>
+		<div id="line2">
+			<span>右侧矩形：</span>
+		</div>
+		<div id="camera">
+			<span>摄像机：</span>
+		</div>
+	</div>
+</body>
+<script>
+	var scene = new THREE.Scene();  // 场景
+	var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // 透视相机
+	var renderer = new THREE.WebGLRenderer(); // 渲染器
+	renderer.setSize(window.innerWidth, window.innerHeight); // 设置渲染器的大小为窗口的内宽度，也就是内容区的宽度
+	document.body.appendChild(renderer.domElement);
+
+
+	var helper = new THREE.GridHelper( 1000, 50 );
+	helper.setColors( 0x0000ff, 0x808080 );
+	scene.add( helper );
+
+	var light = new THREE.AmbientLight('white');
+    light.position.set(100, 100, 200);
+    scene.add(light);
+
+    var material = new THREE.MeshBasicMaterial({color: 'blue'});
+
+    // 线1
+	var geometry = new THREE.PlaneGeometry(10,100);
+    var mesh = new THREE.Mesh(geometry,material);
+    mesh.translateX(-50);
+
+    // 线2
+    var geometry2 = new THREE.PlaneGeometry(10,100);
+    var mesh2 = new THREE.Mesh(geometry2,material);
+    mesh2.translateX(50);
+
+    scene.add(mesh2);
+	scene.add(mesh);
+	scene.add(mesh2);
+
+	camera.position.x = 0;
+	camera.position.y = 20;
+	camera.position.z = 100;
+	(function render() {
+	    renderer.render(scene, camera);
+	    requestAnimationFrame(render);
+	})();
+
+
+	function renderDOM (el, obj) {
+		for (let i = 0; i < 32; i++) {
+			var span = document.createElement('span');
+			var check = document.createElement('input');
+			check.setAttribute('type', 'checkbox');
+			if (i === 0) check.checked = 'true';
+			check.onchange = function() { obj.layers.toggle(i); }
+			span.innerText = i;
+			span.appendChild(check);
+			el.appendChild(span);
+		}
+	}
+	renderDOM(document.getElementById('line1'), mesh);
+	renderDOM(document.getElementById('line2'), mesh2);
+	renderDOM(document.getElementById('camera'), camera);
+
+</script>
+</html>

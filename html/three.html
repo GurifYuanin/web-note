@@ -342,6 +342,20 @@ camera.position.x = 10;
 camera.translateX(10);
 					</code></pre>
 					两者是不同的，前者将物体直接放在坐标系里的某个位置，后者根据自己的坐标系（初始时跟坐标系统一样，之后可能通过旋转进行改变）进行相对偏移。
+					<h4>进行移动</h4>
+					<ul>
+						<li>translateX / translateY / translateZ：以自身坐标系为参照，在 X / Y / Z 轴偏移一段距离</li>
+						<li>translateOnAxis(new THREE.Vector3, distance)：以自身坐标系为向偏移在指定轴偏移一段距离</li>
+						<li>对 object.position 进行修改，直接移动到世界坐标系的某个位置</li>
+					</ul>
+					<h4>进行缩放</h4>
+					<ul>
+						缩放操作只能直接修改对象上的 scale 对象。
+						<pre><code class="javascript">
+// 整个缩放两倍
+object.scale.set(2, 2, 2);
+						</code></pre>
+					</ul>
 				</p>
 				<h3>rotation & quaternion</h3>
 				<p>
@@ -429,6 +443,13 @@ Object.defineProperties( Euler.prototype, {
 				<p>
 					visible 表示该对象是否可见，即会不会被渲染出来。默认为 true 。
 				</p>
+				<h3>castShadow & receiveShadow</h3>
+				<p>
+					<ul>
+						<li>castShadow 表示当有灯光的时候时候产生投影，默认为 false 。</li>
+						<li>receiveShadow 表示是否自身材料接受投影，默认为 false 。</li>
+					</ul>
+				</p>
 				<h3>up & lookAt</h3>
 				<p>
 					up 是一个 Vector3 实例对象，表示头顶的朝向，默认为 (0, 1, 0)，即头顶的方向为 y 轴正方向，以一个相机为例子，相当于：
@@ -436,6 +457,11 @@ Object.defineProperties( Euler.prototype, {
 						<img src="../images/three_camera_up.jpg">
 					</figure>
 					当设置为 (0, -1, 0) 时就相当于相机倒过来，设置为 (1, 0, 0) 时头顶的方向就变成了 x 轴正方向。如果设置为不正常的情况，比如 (0, 0, 0) ，就会采取默认值 (0, 1, 0) 。该属性跟 lookAt 方法有关系。
+					<ul>
+						<li>lookAt(new THREE.Vector3(x, y, ))</li>
+						<li>lookAt(x, y, z)</li>
+					</ul>
+					有了 up 之后就可以使用 lookAt 让物体看向世界坐标下的某一个点。
 				</p>
 				<h3>matrix & worldMatrix & matrixAutoUpdate</h3>
 				<p>
@@ -445,11 +471,11 @@ Object.defineProperties( Euler.prototype, {
 					<pre>具体原理参照文章<a href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-scene-graph.html">WebGL场景图</a></pre>
 					matrixAutoUpdate 默认为 true ，表示当对象进行移动、旋转、旋转操作后，渲染时会自动对 matrix 进行计算。若设置为 false ，就得需要自己计算 matrix 。
 				</p>
-				<h3>castShadow & receiveShadow</h3>
+				<h3>clone & copy</h3>
 				<p>
 					<ul>
-						<li>castShadow 表示当有灯光的时候时候产生投影，默认为 false 。</li>
-						<li>receiveShadow 表示是否自身材料接受投影，默认为 false 。</li>
+						<li>clone(recursive)：克隆（深拷贝）出一个与当前对象一样的对象出来并返回，recursive 表示是否递归克隆所有子对象</li>
+						<li>copy(object, recursive)：clone 实际上是调用了 copy 。 copy 将传入的 object 克隆一份出来并返回。</li>
 					</ul>
 				</p>
 			</p>
