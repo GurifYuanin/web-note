@@ -346,7 +346,7 @@ if ('WebSocket' in window) {
 
 						};
 						// 对象刚拖进目标时触发的事件
-						destination.ondragenter = function(event) {
+						source.ondragenter = destination.ondragenter = function(event) {
 
 						};
 						// 对象悬浮在目标时触发的事件
@@ -393,7 +393,7 @@ if ('WebSocket' in window) {
 
 	};
 	// 对象刚拖进目标时触发的事件
-	destination.ondragenter = function(event) {
+	source.ondragenter = destination.ondragenter = function(event) {
 
 	};
 	// 对象悬浮在目标时触发的事件

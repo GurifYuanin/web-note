@@ -54,13 +54,13 @@ html {
     //     // < 1200px
     //     font-size: 16px;
     // }
-    // @media (max-device-width:800px) {
-    //     // < 800px
-    //     font-size: 20px;
-    // }
+    @media (max-device-width:800px) {
+        // < 800px
+        font-size: 12px;
+    }
     // @media (max-device-width:400px) {
     //     // < 400px
-    //     font-size: 28px;
+    //     font-size: 12px;
     // }
 }
 @mixin scrollStyle() {
@@ -619,26 +619,26 @@ body {
         h2, h3, h4, h5, h6 {
             color: $headColor;
         }
-        h2:before {
-            color: $h2Color;
-            content: " - ";
-        }
-        h3:before {
-            color: $h3Color;
-            content: " - - ";
-        }
-        h4:before {
-            color: $h4Color;
-            content: " - - - ";
-        }
-        h5:before {
-            color: $h5Color;
-            content: " - - - - ";
-        }
-        h6:before {
-            color: $h6Color;
-            content: " - - - - - ";
-        }
+        // h2:before {
+        //     color: $h2Color;
+        //     content: " - ";
+        // }
+        // h3:before {
+        //     color: $h3Color;
+        //     content: " - - ";
+        // }
+        // h4:before {
+        //     color: $h4Color;
+        //     content: " - - - ";
+        // }
+        // h5:before {
+        //     color: $h5Color;
+        //     content: " - - - - ";
+        // }
+        // h6:before {
+        //     color: $h6Color;
+        //     content: " - - - - - ";
+        // }
     }
     /* 正文链接样式 */
     a {
@@ -734,12 +734,17 @@ body {
     }
     /* 突出文字 */
     .different {
-        font-size: 1rem;
-        border: dotted 1px #000;
-        // background-color: rgb(170, 170, 255);
+        padding: 2px 4px;
+        margin: 0 2px;
+
+        color: white;
+        background-color: #00a4ba;
         border-radius: .2rem;
-        padding: 1px;
-        margin: 0 1px;
+
+        cursor: help;
+        &:hover {
+            background-color: #00889b;
+        }
     }
     /* 指令 */
     .command {
@@ -878,7 +883,7 @@ body {
         border: none;
 
         text-align: right;
-        font-size: 24px;
+        font-size: 1.5rem;
         cursor: pointer;
 
         &:hover {

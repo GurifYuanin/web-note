@@ -403,7 +403,7 @@ putin.onload = function () {
 				<div class="show">
 					<div>
 						画布内容：
-						<canvas id="canvas-todatauri" width="20" height="20" style="border: solid 1px black;"></canvas>
+						<canvas id="canvas-todatauri" width="40" height="40" style="border: solid 1px #00ccff;"></canvas>
 					</div>
 					<div>
 						选择输出类型：
@@ -423,25 +423,33 @@ putin.onload = function () {
 						<span id="canvas-todatauri-container" style="word-break: break-all;"></span>
 					</div>
 					<script>
-						(function() {
+						window.addEventListener('load', function() {
 							var canvas = document.getElementById('canvas-todatauri');
 							var ctx = canvas.getContext('2d');
-							ctx.fillRect(0, 0, 10, 10);
+							ctx.fillStyle = '#00ccff';
+							ctx.fillRect(0, 0, 20, 20);
+							ctx.font = '1rem Arial';
+							ctx.fillText('hello', 0, 40);
 							var container = document.getElementById('canvas-todatauri-container');
 							var select = document.getElementById('canvas-todatauri-select');
 							var range = document.getElementById('canvas-todatauri-range');
 							var rangeContainer = document.getElementById('canvas-range-container');
 							function update () {
 								rangeContainer.innerText = range.value;
-								container.innerText = canvas.toDataURL(select.value, Number(range.value));
+								var dataURI = canvas.toDataURL(select.value, Number(range.value));
+								document.getElementById('oepn-canvas-datauri').href = dataURI;
+								container.innerText = dataURI;
 							}
 							update();
 							select.onchange = update;
 							range.onchange = update;
-						})();
+						});
 					</script>
 				</div>
-				<div class="tip">你可以直接将输出结果复制到浏览器来查看图片。</div>
+				<div class="tip">
+					你可以直接将输出结果复制到浏览器来查看图片：
+					<a id="oepn-canvas-datauri" href="javascript:void(0);" target="_blank" title="你可能无法从该锚点打开链接，因为 chrome 60 开始为了安全考虑禁止直接跳转到 dataURI 地址。你可以使用右键的方式在新窗口打开链接。">打开新窗口</a>
+				</div>
 				<h3>下载到本地</h3>
 				<p>
 					写一个方法实现将 canvas 画布的内容下载到本地。

@@ -452,7 +452,7 @@ $(function() {
             $sidebar.css('display', 'none');
             // 允许重新展开侧栏
             $showCatalog.css('display', 'block');
-            if (cb) cb();
+            if (cb && typeof cb === 'function') cb();
         });
 
         widthAndMargin(65, 90, 25, 1);

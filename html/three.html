@@ -138,6 +138,80 @@ scene.add(light);
 			</p>
 		</section>
 		<section>
+			<h2>Vector3</h2>
+			<p>
+				Vector3 创建一个三维坐标里的矢量，也可以认为是点 (x, y, z) ，默认为坐标原点 (0, 0, 0) 。
+				<pre><code class="javascript">
+var vector = new THREE.Vector3();
+				</code></pre>
+				<h3>add / sub / multiply / divide</h3>
+				<p>
+					将两个点的 xyz 进行加减乘除。
+					<pre><code class="javascript">
+vector.add(new THREE.Vector3(1, 2, 3));
+					</code></pre>
+				</p>
+				<h3>set</h3>
+				<p>
+					直接为 xyz 进行赋值。
+					<pre><code class="javascript">
+vector.set(1, 2, 3);
+					</code></pre>
+				</p>
+				<h3>applyEuler / applyQuaternion / applyMatrix3 / applyMatrix4</h3>
+				<p>
+					应用各种角度、矩阵。
+				</p>
+				<h3>clamp</h3>
+				<p>
+					通常 clamp(min, max, num) 函数的意义是，将 num 限制（clamp 的意思为钳）在 min 和 max 之间，比如：
+					<pre><code class="javascript">
+function clamp(min, max, num) {
+	if (num < min) return min;
+	if (num > max) return max;
+	return num;
+}
+// 或者这样写
+function clamp(min, max, num) {
+	return Math.max(min, Math.min(num, max));
+}
+					</code></pre>
+					Vector3 的 clamp 方法则是传入两个矢量，对 xyz 都进行了以上操作。
+					<pre><code class="javascript">
+// https://github.com/mrdoob/three.js/blob/master/src/math/Vector3.js
+clamp: function ( min, max ) {
+
+	// assumes min < max, componentwise
+
+	this.x = Math.max( min.x, Math.min( max.x, this.x ) );
+	this.y = Math.max( min.y, Math.min( max.y, this.y ) );
+	this.z = Math.max( min.z, Math.min( max.z, this.z ) );
+
+	return this;
+
+},
+					</code></pre>
+					<h3>distenceTo</h3>
+					<p>
+						计算两点之间的距离，即进行以下运算：
+						<pre><code class="javascript">
+Math.sqrt(
+		Math.pow(x2 - x1, 2),
+		Math.pow(y2 - y1, 2),
+		Math.pow(z2 - z1, 2)
+	);
+						</code></pre>
+					</p>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>Face3</h2>
+			<p>
+				Face3 表示一个三角形。
+			</p>
+		</section>
+		<section>
 			<h2>Object3D</h2>
 			<p>
 				Object3D 是大多数对象的基本类，提供了一些属性和方法在 3D 世界中操作对象。

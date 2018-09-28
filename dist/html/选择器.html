@@ -127,10 +127,76 @@ selector[attr*="value"] {} /* 选择属性值包含 value 的元素 */
 		<section>
 			<h2>兄弟选择器</h2>
 			<p>
-				兄弟选择器指基于已选择元素，在其兄弟节点中选出元素。中间用<span class="definition">~</span>隔开。
-				<pre><code class="css">
-selector1 ~ selector2 {}
+				兄弟选择器有两种。
+				<h3>其后兄弟 ~</h3>
+				~ 兄弟选择器指基于已选择元素，在<span class="different">其后</span>兄弟节点中选出元素。中间用<span class="different">~</span>隔开。
+				<pre><code class="html">
+&lt;style>
+	#brother-all-main ~ .brother-all {
+		color: red;
+	}
+&lt;/style>
+&lt;div class="brother-all">兄弟&lt;/div>
+&lt;div id="brother-all-main">主&lt;/div>
+&lt;div class="brother-all">兄弟&lt;/div>
+&lt;div class="brother-all">兄弟&lt;/div>
 				</code></pre>
+				<div class="show">
+					<style>
+						#brother-all-main ~ .brother-all {
+							color: red;
+						}
+					</style>
+					<div class="brother-all">兄弟</div>
+					<div id="brother-all-main">主</div>
+					<div class="brother-all">兄弟</div>
+					<div class="brother-all">兄弟</div>
+				</div>
+				<h3>相邻兄弟 +</h3>
+				+ 兄弟选择器选择<span class="different">紧紧相邻</span>的兄弟元素。
+				<pre><code class="html">
+&lt;style>
+	#brother-only-main ~ .brother-only {
+		color: red;
+	}
+&lt;/style>
+&lt;div class="brother-only">兄弟&lt;/div>
+&lt;div id="brother-only-main">主&lt;/div>
+&lt;div class="brother-only">兄弟&lt;/div>
+&lt;div class="brother-only">兄弟&lt;/div>
+				</code></pre>
+				<div class="show">
+					<style>
+						#brother-only-main + .brother-only {
+							color: red;
+						}
+					</style>
+					<div class="brother-only">兄弟</div>
+					<div id="brother-only-main">主</div>
+					<div class="brother-only">兄弟</div>
+					<div class="brother-only">兄弟</div>
+				</div>
+				如果我在<span class="different">主</span>和其后的<span class="different">兄弟</span>插入一个元素，+ 选择器就会选不到兄弟。
+				<pre><code class="html">
+&lt;style>
+	#brother-chaos-main + .brother-chaos {
+		color: red;
+	}
+&lt;/style>
+&lt;div id="brother-chaos-main">主要&lt;/div>
+&lt;div>干扰项&lt;/div>
+&lt;div class="brother-chaos">兄弟&lt;/div>
+				</code></pre>
+				<div class="show">
+					<style>
+						#brother-chaos-main + .brother-chaos {
+							color: red;
+						}
+					</style>
+					<div id="brother-chaos-main">主要</div>
+					<div>干扰项</div>
+					<div class="brother-chaos">兄弟</div>
+				</div>
 			</p>
 		</section>
 		<section>

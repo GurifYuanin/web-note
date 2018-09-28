@@ -98,16 +98,18 @@
 							<button id="capture-clear">清除</button>
 						</div>
 						<script>
-							var capContainer = document.getElementById('capture-container');
-							document.getElementById('capture-clear').addEventListener('click', function() {
-								capContainer.innerHTML = '';
-							}, true);
-							document.getElementById('outer').addEventListener('click', function() {
-								capContainer.innerHTML += 'outer<br>';
-							}, true);
-							document.getElementById('inner').addEventListener('click', function() {
-								capContainer.innerHTML += 'inner<br>';
-							}, true);
+							(function() {
+								var capContainer = document.getElementById('capture-container');
+								document.getElementById('capture-clear').addEventListener('click', function() {
+									capContainer.innerHTML = '';
+								}, true);
+								document.getElementById('outer').addEventListener('click', function() {
+									capContainer.innerHTML += 'outer<br>';
+								}, true);
+								document.getElementById('inner').addEventListener('click', function() {
+									capContainer.innerHTML += 'inner<br>';
+								}, true);
+							})();
 						</script>
 						document 会先接收到事件输出<span class="definition"> document </span>，之后 id 为 outer 的 div 元素也接收到事件输出<span class="definition"> outer </span>，最后 id 为 inner 的 div 元素才输出<span class="definition"> inner </span>。
 						<figure>
@@ -126,16 +128,18 @@
 							<button id="bubble-clear">清除</button>
 						</div>
 						<script type="text/javascript">
-							var bubContainer = document.getElementById('bubble-container');
-							document.getElementById('bubble-clear').addEventListener('click', function() {
-								bubContainer.innerHTML = '';
-							});
-							document.getElementById('out').addEventListener('click', function(){
-								bubContainer.innerHTML += 'out<br>';
-							}, false);
-							document.getElementById('in').addEventListener('click', function(){
-								bubContainer.innerHTML += 'in<br>';
-							}, false);
+							(function() {
+								var bubContainer = document.getElementById('bubble-container');
+								document.getElementById('bubble-clear').addEventListener('click', function() {
+									bubContainer.innerHTML = '';
+								});
+								document.getElementById('out').addEventListener('click', function(){
+									bubContainer.innerHTML += 'out<br>';
+								}, false);
+								document.getElementById('in').addEventListener('click', function(){
+									bubContainer.innerHTML += 'in<br>';
+								}, false);
+							})();
 						</script>
 						<figure>
 							<img src="../images/event_bubble.jpg">
@@ -181,24 +185,26 @@
 							<button id="d-clear">清除</button>
 						</div>
 						<script type="text/javascript">
-							var dContainer = document.getElementById('d-container');
-							var d1 = document.getElementById('d1');
-							var d2 = document.getElementById('d2');
-							document.getElementById('d-clear').addEventListener('click', function() {
-								dContainer.innerHTML = '';
-							});
-							d1.addEventListener('click', function(){
-								dContainer.innerHTML += 'd1 捕获<br>';
-							}, true);
-							d1.addEventListener('click', function(){
-								dContainer.innerHTML += 'd1 冒泡<br>';
-							}, false);
-							d2.addEventListener('click', function(){
-								dContainer.innerHTML += 'd2 捕获<br>';
-							}, true);
-							d2.addEventListener('click', function(){
-								dContainer.innerHTML += 'd2 冒泡<br>';
-							}, false);
+							(function() {
+								var dContainer = document.getElementById('d-container');
+								var d1 = document.getElementById('d1');
+								var d2 = document.getElementById('d2');
+								document.getElementById('d-clear').addEventListener('click', function() {
+									dContainer.innerHTML = '';
+								});
+								d1.addEventListener('click', function(){
+									dContainer.innerHTML += 'd1 捕获<br>';
+								}, true);
+								d1.addEventListener('click', function(){
+									dContainer.innerHTML += 'd1 冒泡<br>';
+								}, false);
+								d2.addEventListener('click', function(){
+									dContainer.innerHTML += 'd2 捕获<br>';
+								}, true);
+								d2.addEventListener('click', function(){
+									dContainer.innerHTML += 'd2 冒泡<br>';
+								}, false);
+							})();
 						</script>
 						<figure  style="text-align: center;">
 							<img src="../images/event_dom2.jpg">
@@ -264,24 +270,25 @@
 					<div id="focus-container"></div>
 				</div>
 				<script type="text/javascript">
-					var focus = document.getElementById('focus');
-					var focusContainer = document.getElementById('focus-container');
-					document.getElementById('focus-clear').onclick = function () {
-						focusContainer.innerHTML = '';
-					}
-					focus.onblur = function() {
-						focusContainer.innerHTML += 'blur<br>';
-					};
-					focus.onfocus = function() {
-						focusContainer.innerHTML += 'focus<br>';
-						console.log('focus');
-					};
-					focus.onfocusout = function() {
-						focusContainer.innerHTML += 'focusout<br>';
-					};
-					focus.onfocusin = function() {
-						focusContainer.innerHTML += 'focusin<br>';
-					};
+					(function() {
+						var focus = document.getElementById('focus');
+						var focusContainer = document.getElementById('focus-container');
+						document.getElementById('focus-clear').onclick = function () {
+							focusContainer.innerHTML = '';
+						}
+						focus.onblur = function() {
+							focusContainer.innerHTML += 'blur<br>';
+						};
+						focus.onfocus = function() {
+							focusContainer.innerHTML += 'focus<br>';
+						};
+						focus.onfocusout = function() {
+							focusContainer.innerHTML += 'focusout<br>';
+						};
+						focus.onfocusin = function() {
+							focusContainer.innerHTML += 'focusin<br>';
+						};
+					})();
 				</script>
 			</p>
 		</section>
@@ -322,18 +329,20 @@
 					}
 				</style>
 				<script type="text/javascript">
-					var mosContainer = document.getElementById('mouse-container');
-					var mouse = document.getElementById('mouse');
-					document.getElementById('mouse-clear').onclick = function() { mosContainer.innerHTML = ''; };
-					mouse.onclick = function() { mosContainer.innerHTML += 'click<br>'; };
-					mouse.ondblclick = function() { mosContainer.innerHTML += 'dblclick<br>'; };
-					mouse.onmousedown = function() { mosContainer.innerHTML += 'mousedown<br>'; };
-					mouse.onmouseup = function() { mosContainer.innerHTML += 'mouseup<br>'; };
-					mouse.onmouseenter = function() { mosContainer.innerHTML += 'mouseenter<br>'; };
-					mouse.onmouseover = function() { mosContainer.innerHTML += 'mouseover<br>'; };
-					mouse.onmouseleave = function() { mosContainer.innerHTML += 'mouseleave<br>'; };
-					mouse.onmouseout = function() { mosContainer.innerHTML += 'mouseout<br>'; };
-					mouse.onmousemove = function() { mosContainer.innerHTML += 'mousemove<br>'; };
+					(function() {
+						var mosContainer = document.getElementById('mouse-container');
+						var mouse = document.getElementById('mouse');
+						document.getElementById('mouse-clear').onclick = function() { mosContainer.innerHTML = ''; };
+						mouse.onclick = function() { mosContainer.innerHTML += 'click<br>'; };
+						mouse.ondblclick = function() { mosContainer.innerHTML += 'dblclick<br>'; };
+						mouse.onmousedown = function() { mosContainer.innerHTML += 'mousedown<br>'; };
+						mouse.onmouseup = function() { mosContainer.innerHTML += 'mouseup<br>'; };
+						mouse.onmouseenter = function() { mosContainer.innerHTML += 'mouseenter<br>'; };
+						mouse.onmouseover = function() { mosContainer.innerHTML += 'mouseover<br>'; };
+						mouse.onmouseleave = function() { mosContainer.innerHTML += 'mouseleave<br>'; };
+						mouse.onmouseout = function() { mosContainer.innerHTML += 'mouseout<br>'; };
+						mouse.onmousemove = function() { mosContainer.innerHTML += 'mousemove<br>'; };
+					})();
 				</script>
 				鼠标事件对象特有几个属性可以查看点击位置坐标：
 				<ul>
@@ -380,57 +389,58 @@
 					}
 				</style>
 				<script type="text/javascript">
-					var xyContainer = document.getElementById('xy-container');
-					var xyFlag = true;
-					var xyEvent = function(event) {
-						var str = '';
-						str += '相对于视窗（viewport）：<br>';
-						str += "clientX = " + event.clientX + '<br>';
-						str += "clientY = " + event.clientY + '<br><br>';
-						str += '相对于文档（document），视窗 + 滚轮：<br>';
-						str += "pageX = " + event.pageX + '<br>';
-						str += "pageY = " + event.pageY + '<br><br>';
-						str += '相对于屏幕（screen）：<br>';
-						str += "screenX= " + event.screenX + '<br>';
-						str += "screenY = " + event.screenY + '<br>';
-						xyContainer.innerHTML = str;
+					(function(){
+						var xyContainer = document.getElementById('xy-container');
+						var xyFlag = true;
+						var xyEvent = function(event) {
+							var str = '';
+							str += '相对于视窗（viewport）：<br>';
+							str += "clientX = " + event.clientX + '<br>';
+							str += "clientY = " + event.clientY + '<br><br>';
+							str += '相对于文档（document），视窗 + 滚轮：<br>';
+							str += "pageX = " + event.pageX + '<br>';
+							str += "pageY = " + event.pageY + '<br><br>';
+							str += '相对于屏幕（screen）：<br>';
+							str += "screenX= " + event.screenX + '<br>';
+							str += "screenY = " + event.screenY + '<br>';
+							xyContainer.innerHTML = str;
 
-						// 添加元素
-						var el = document.createElement('span');
-						var time = 1000;
-						el.setAttribute('class', 'xy-star');
-						el.style.position = 'absolute';
-						el.style.left = event.pageX - 10 + 'px';
-						el.style.top = event.pageY - 10 + 'px';
-						document.body.appendChild(el);
-						for (var i = 0; i < time; i += 10) {
-							(function() {
-								var j = i;
-								setTimeout(function() {
-									var offset  = Number.parseFloat(j) / time * 5;
-									el.style.opacity = 1 - offset;
-									el.style.width = 5 + offset + 'px';
-									el.style.height = 5 + offset + 'px';
-								}, j);
-							})();
-						}
-						setTimeout(function() {
-							document.body.removeChild(el);
-						}, time);
-					};
-					document.getElementById('xy-toggale').addEventListener('click', function(event) {
-						if (xyFlag) {
-							xyFlag = !xyFlag;
-							this.value = '关闭';
-							document.addEventListener('click', xyEvent);
-						} else {
-							xyFlag = !xyFlag;
-							this.value = '打开';
-							xyContainer.innerHTML = '';
-							document.removeEventListener('click', xyEvent);
-						}
-					});
-
+							// 添加元素
+							var el = document.createElement('span');
+							var time = 1000;
+							el.setAttribute('class', 'xy-star');
+							el.style.position = 'absolute';
+							el.style.left = event.pageX - 10 + 'px';
+							el.style.top = event.pageY - 10 + 'px';
+							document.body.appendChild(el);
+							for (var i = 0; i < time; i += 10) {
+								(function() {
+									var j = i;
+									setTimeout(function() {
+										var offset  = Number.parseFloat(j) / time * 5;
+										el.style.opacity = 1 - offset;
+										el.style.width = 5 + offset + 'px';
+										el.style.height = 5 + offset + 'px';
+									}, j);
+								})();
+							}
+							setTimeout(function() {
+								document.body.removeChild(el);
+							}, time);
+						};
+						document.getElementById('xy-toggale').addEventListener('click', function(event) {
+							if (xyFlag) {
+								xyFlag = !xyFlag;
+								this.value = '关闭';
+								document.addEventListener('click', xyEvent);
+							} else {
+								xyFlag = !xyFlag;
+								this.value = '打开';
+								xyContainer.innerHTML = '';
+								document.removeEventListener('click', xyEvent);
+							}
+						});
+					})();
 				</script>
 				<figure>
 					<img src="../images/event_xy.jpg">
@@ -456,21 +466,23 @@
 					</div>
 				</div>
 				<script type="text/javascript">
-					var key = document.getElementById('key');
-					var keyContainer = document.getElementById('key-container');
-					document.getElementById('key-clear').addEventListener('click', function() {
-						keyContainer.innerHTML = '';
-						key.value = '';
-					});
-					key.addEventListener('keydown', function() {
-						keyContainer.innerHTML += 'keydown<br>';
-					});
-					key.addEventListener('keypress', function() {
-						keyContainer.innerHTML += 'keypress<br>';
-					});
-					key.addEventListener('keyup', function() {
-						keyContainer.innerHTML += 'keyup<br>';
-					});
+					(function() {
+						var key = document.getElementById('key');
+						var keyContainer = document.getElementById('key-container');
+						document.getElementById('key-clear').addEventListener('click', function() {
+							keyContainer.innerHTML = '';
+							key.value = '';
+						});
+						key.addEventListener('keydown', function() {
+							keyContainer.innerHTML += 'keydown<br>';
+						});
+						key.addEventListener('keypress', function() {
+							keyContainer.innerHTML += 'keypress<br>';
+						});
+						key.addEventListener('keyup', function() {
+							keyContainer.innerHTML += 'keyup<br>';
+						});
+					})();
 				</script>
 				<ul>
 					<li>
@@ -499,27 +511,64 @@
 					<div id="code-container"></div>
 				</div>
 				<script>
-					var codeContainer = document.getElementById('code-container');
-					document.getElementById('code-clear').addEventListener('click', function() {
-						document.getElementById('code').value = '';
-						codeContainer.innerHTML = '';
-					});
-					document.getElementById('code').addEventListener('keydown', function(e) {
-						codeContainer.innerHTML += 'keyCode=' + e.keyCode + ' which=' + e.which + '<br>';
-					});
+					(function() {
+						var codeContainer = document.getElementById('code-container');
+						document.getElementById('code-clear').addEventListener('click', function() {
+							document.getElementById('code').value = '';
+							codeContainer.innerHTML = '';
+						});
+						document.getElementById('code').addEventListener('keydown', function(e) {
+							codeContainer.innerHTML += 'keyCode=' + e.keyCode + ' which=' + e.which + '<br>';
+						});
+					})();
 				</script>
 			</p>
 		</section>
 		<section>
 			<h2>表单事件</h2>
 			<p>
-				
+				<ul>
+					<li>input：表单 value 发生变化后触发</li>
+					<li>change：表单 value 发生变化且表单失去焦点时触发</li>
+					<li>select：文本框 / 域里的文本被选择时触发</li>
+					<li>submit：type 为 submit 的按钮按下时触发</li>
+				</ul>
+				<div class="show">
+					<input type="text" id="change-input">
+					<button id="change-input-clear">清空</button>
+					<div id="change-input=container"></div>
+					<script>
+						(function(){
+							var el = document.getElementById('change-input');
+							var container = document.getElementById('change-input=container');
+							document.getElementById('change-input-clear').onclick = function() { container.innerHTML = ''; el.value = ''; }
+							el.oninput = function() {
+								container.innerHTML += 'input<br>';
+							}
+							el.onchange = function() {
+								container.innerHTML += 'change<br>';
+							}
+							el.onselect = function(e) {
+								container.innerHTML += 'select<br>';
+							}
+						})();
+					</script>
+				</div>
 			</p>
 		</section>
 		<section>
 			<h2>拖放事件</h2>
 			<p>
-				
+				HTML 新增了拖拽事件，使用方法参见<a href="./HTML5.html"> HTML5 </a>。
+				<ul>
+					<li>ondragstart：添加在被拖动元素上，刚开始被拖动时触发</li>
+					<li>ondrag：添加在被拖动元素上，在被拖动时重复触发</li>
+					<li>ondragend：添加在被拖动元素上，刚结束被拖动时触发</li>
+					<li>ondragenter：添加在任意元素上，被拖动元素进入该元素上方时触发</li>
+					<li>ondragover：添加在任意元素上，被拖动元素悬浮在该袁尚上方时触发</li>
+					<li>ondragleave：添加在任意元素上，被拖动元素离开该元素上方时触发</li>
+					<li>ondrop：添加在任意元素上，被拖动元素被放下（松开鼠标左键)落在该元素上时触发</li>
+				</ul>
 			</p>
 		</section>
 		<section class="refer">

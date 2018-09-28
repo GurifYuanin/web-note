@@ -71,7 +71,7 @@ module.exports = {
 	// 出口文件
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'buundle.js'
+		filename: 'bundle.js'
 	},
 	// 模块
 	module: {
@@ -275,7 +275,7 @@ require demo from '../module/demo.js';
 				<h3>devServer</h3>
 				<p>
 					使用 webpack 的提供的小型服务器，修改资源时可以实现重新加载(live reloading)。
-					<pre><code class="shell">
+					<pre><code class="javascript">
 # 安装 npm 包
 npm install --save-dev webpack-dev-server
 # 配置 webpack.conf.js

@@ -175,6 +175,20 @@
 document.createElement('div');
 					</code></pre>
 				</p>
+				<h3>创建文本节点 & 注释节点</h3>
+				<p>
+					使用 document.createTextNode 创建文本节点，传入一个参数作为文本值。
+					<pre><code class="javascript">
+document.createTextNode('hello world');
+					</code></pre>
+					使用 document.createComment 创建注释节点，传入一个参数作为注释文字。
+					<pre><code class="javascript">
+document.createComment('hello world');
+					</code></pre>
+					<figure>
+						<img src="../images/dom_comment_text.jpg">
+					</figure>
+				</p>
 				<h3>追加节点</h3>
 				<p>
 					<h4>添加到末位</h4>
