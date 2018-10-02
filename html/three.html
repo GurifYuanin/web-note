@@ -208,7 +208,86 @@ Math.sqrt(
 		<section>
 			<h2>Face3</h2>
 			<p>
-				Face3 表示一个三角形。
+				Face3 表示一个三角形，其构造函数有六个参数：
+				<table>
+					<tr>
+						<th>参数</th>
+						<th>解释</th>
+						<th>是否可选</th>
+						<th>类型</th>
+					</tr>
+					<tr>
+						<td>a</td>
+						<td>a 点的索引</td>
+						<td>必须</td>
+						<td>Number</td>
+					</tr>
+					<tr>
+						<td>b</td>
+						<td>b 点的索引</td>
+						<td>必须</td>
+						<td>Number</td>
+					</tr>
+					<tr>
+						<td>c</td>
+						<td>c 点的索引</td>
+						<td>必须</td>
+						<td>Number</td>
+					</tr>
+					<tr>
+						<td>normal</td>
+						<td>该面的法线 或 法线数组</td>
+						<td>可选，默认为 new THREE.Vector3(0, 0, 0)</td>
+						<td>THREE.Vector3</td>
+					</tr>
+					<tr>
+						<td>color</td>
+						<td>该面的颜色 或 顶点颜色数组</td>
+						<td>可选</td>
+						<td>THREE.Color / THREE.Color[]</td>
+					</tr>
+					<tr>
+						<td>materialIndex</td>
+						<td>材质索引</td>
+						<td>可选，默认为 0</td>
+						<td>Number</td>
+					</tr>
+				</table>
+				一个 Face3 不是直接存储三个点的坐标，而是存储了点所在的下标。比如创建一个几何体（geometry），该几何体有 4 个点组成一个顶点数组作为 vertices 属性。
+				<pre><code class="javascript">
+// for demo
+var geometry = new THREE.Geometry();
+geometry.vertices = [
+	new THREE.Vector3(0, 1, 2),
+	new THREE.Vector3(0, 2, 2),
+	new THREE.Vector3(0, 1, 0),
+	new THREE.Vector3(0, 1, 2)
+];
+				</code></pre>
+				创建一个 Face3 实例并将其添加到几何体的面数组 faces：
+				<pre><code class="javascript">
+var face = new THREE.Face3(0, 1, 2);
+geometry.faces.push(face);
+				</code></pre>
+				那么面的 a 点对应 vertices[0] 即 new THREE.Vector3(0, 1, 2) ，b 点对应 vertices[1] 即 new THREE.Vector3(0, 2, 2) ，c 点对应 vertices[2] 即 new THREE.Vector3(0, 1, 0) 。
+				<h3>color & vertexColors</h3>
+				<p>
+					color 表示该面的颜色，vertexColors 是一个长度为 3 的数组，表示该面的三个点各自的颜色。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>Color</h2>
+			<p>
+				通过多种方式创建一个颜色：
+				<pre><code class="javascript">
+var color = new THREE.Color(); // 默认为白色
+				</code></pre>
+				<ul>
+					<li>十六进制：传入 0xXXXXXX ，相当于 css 的 #XXXXXX</li>
+					<li>RGB：传入三个 0 ~ 1 的Number ，分别对应红绿蓝通道</li>
+					<li>颜色字符串：即 'red', 'yellow', 'blue' 等 css 预设颜色</li>
+				</ul>
 			</p>
 		</section>
 		<section>
@@ -549,7 +628,7 @@ Object.defineProperties( Euler.prototype, {
 				<p>
 					<ul>
 						<li>clone(recursive)：克隆（深拷贝）出一个与当前对象一样的对象出来并返回，recursive 表示是否递归克隆所有子对象</li>
-						<li>copy(object, recursive)：clone 实际上是调用了 copy 。 copy 将传入的 object 克隆一份出来并返回。</li>
+						<li>copy(object, recursive)：clone 实际上是调用了 copy 。 copy 将传入的 object 的各个参数赋值给 this 并返回最终的 this 。</li>
 					</ul>
 				</p>
 			</p>

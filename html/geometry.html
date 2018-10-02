@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>geometry</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/agate.css">
+	<link rel="stylesheet" href="../css/dark.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script src="../js/three.min.js"></script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">geometry</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				geometry 用来创建任意的一个几何体，一个几何体由若干个点（vertices）和若干个面（faces）组成。
+				<pre><code class="javascript">
+...
+
+var geometry = new THREE.Geometry();
+geometry.vertices.push(
+	new THREE.Vector3( 0, 10, 0 ),
+	new THREE.Vector3( 0, 0, 0 ),
+	new THREE.Vector3( 10, 0, 0 )
+);
+geometry.faces.push(new THREE.Face3(0, 1, 2));
+
+...
+				</code></pre>
+				<div class="show">
+					<div id="geometry-container"></div>
+					<script>
+						(function() {
+							var renderer = new THREE.WebGLRenderer();
+							renderer.setSize(200, 200)
+							document.getElementById('geometry-container').appendChild(renderer.domElement);
+							var scene = new THREE.Scene();
+							var camera = new THREE.PerspectiveCamera(60, 1);
+							var cameraParent = new THREE.Object3D();
+							cameraParent.add(camera);
+							camera.position.set(0, 10, 10);
+							var geometry = new THREE.Geometry();
+							geometry.vertices.push(
+								new THREE.Vector3( 0, 10, 0 ),
+								new THREE.Vector3( 0, 0, 0 ),
+								new THREE.Vector3( 10, 0, 0 )
+							);
+							geometry.faces.push( new THREE.Face3( 0, 1, 2 ) );
+							geometry.computeBoundingSphere();
+							var material = new THREE.MeshLambertMaterial({color: 0x08fcc1});
+							var mesh = new THREE.Mesh(geometry, material);
+
+							var light = new THREE.AmbientLight(0xffffff);
+							light.position.set(100, 100, 100);
+
+							scene.add(mesh, light, cameraParent);
+							renderer.render(scene, camera);
+
+						})();
+					</script>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>vertices & faces & colors</h2>
+			<p>
+				vertices 保存该几何体的所有点（THREE.Vector3），但渲染的时候并不是把所有点都渲染出来，而是类似于建立了一个索引表，vertices 是一个数组，数组的每个元素根据数组索引检索。
+				<pre><code class="javascript">
+var geometry = new THREE.Geometry();
+
+geometry.vertices.push(new THREE.Vector3(0, 1, 2));
+geometry.vertices.push(new THREE.Vector3(1, 2, 3));
+...
+				</code></pre>
+				faces 为面（THREE.Face3）数组，每个面保存 3 个索引，渲染时根据索引从 vertices 取出对应的点。
+				<pre><code class="javascript">
+geomtry.faces.push(new THREE.Face3(0, 1, 2));
+				</code></pre>
+				colors 为颜色数组，对应各个顶点的颜色（比如 colors[0] 对应 vertices[0]），当 geomtry 和 material（材质）合成为 Points（点集） 或 Line（线段）或其他继承这两个类的物体（不包括 Meshes）时候，如果材质的选项 vertexColors 为 THREE.VertexColors 且不设置材质的参数 color 就会生效，geomtry 的顶点和颜色实现一一映射。
+				<pre><code class="javascript">
+geometry.vertices.push(new THREE.Vector3( -10, 10, 0 ), new THREE.Vector3( 10, 10, 0 ));
+geometry.colors.push(new THREE.Color(<span class="strong">0xffff00</span>), new THREE.Color(<span class="strong">0xff00ff</span>));
+var material = new THREE.LineBasicMaterial({
+	vertexColors: THREE.VertexColors
+});
+				</code></pre>
+				<div class="show">
+					<div id="colors-container"></div>
+					<script>
+						(function() {
+							var renderer = new THREE.WebGLRenderer();
+							renderer.setSize(200, 200);
+							renderer.setClearColor(0xFFFFFF, 1.0);
+							document.getElementById('colors-container').appendChild(renderer.domElement);
+							var camera = new THREE.PerspectiveCamera(60, 1);
+							camera.position.set(0, 10, 5);
+							var scene = new THREE.Scene();
+							var geometry = new THREE.Geometry();
+							geometry.vertices.push(
+								new THREE.Vector3( -10, 10, 0 ),
+								new THREE.Vector3( 10, 10, 0 )
+							);
+							geometry.colors.push(new THREE.Color(0xffff00), new THREE.Color(0xff00ff));
+							var material = new THREE.LineBasicMaterial({
+								vertexColors: THREE.VertexColors
+							});
+							var line = new THREE.Line( geometry, material );
+							scene.add(line);
+							renderer.render(scene, camera);
+						})();
+					</script>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>Box3</h2>
+			<p>
+				Box3 是一个长方体，只是一般长方体是通过八个点来表示，而 Box3 只需要两个点，一个是右上前点，另一个是左下后点（对角线上的点）。盒子的上下面平行于 xoz 面，前后面平行于 xoy 面，左右面平行于 yoz 面。
+				<figcaption>
+					<img src="../images/three_geometry_box3.jpg">
+				</figcaption>
+				以下是通过 BoxHelper 绘制的长方体框，通过正交摄像机（OrthographicCamera）进行观察。
+				<div class="show">
+					<div id="box-container"></div>
+					<script>
+						(function() {
+							var renderer = new THREE.WebGLRenderer();
+							document.getElementById('box-container').appendChild(renderer.domElement);
+							renderer.setSize(200, 200)
+							// var camera = new THREE.PerspectiveCamera( 80, 1 );
+							var camera = new THREE.OrthographicCamera( -5, 5, 5, -5 );
+							var cameraParent = new THREE.Object3D();
+							cameraParent.add(camera);
+							camera.position.set(0, 4, 3);
+							camera.rotateX(-.5);
+							var scene = new THREE.Scene();
+							var box = new THREE.Box3();
+							box.setFromCenterAndSize( new THREE.Vector3( 0, 2, 0 ), new THREE.Vector3( 2, 3, 3 ) );
+
+							var helper = new THREE.Box3Helper( box, 0xffff00 );
+							scene.add( helper, cameraParent );
+							(function render(){
+								cameraParent.rotateY(.01);
+								renderer.render(scene, camera);
+								requestAnimationFrame(render);
+							})();
+						})();
+					</script>
+				</div>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] three doc Geometry <a href="https://threejs.org/docs/index.html#api/en/core/Geometry">https://threejs.org/docs/index.html#api/en/core/Geometry</a></div>
+				<div>[2] WebGL 中文网 <a href="http://www.hewebgl.com/article/getarticle/56">http://www.hewebgl.com/article/getarticle/56</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>
