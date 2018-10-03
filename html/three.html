@@ -235,13 +235,13 @@ Math.sqrt(
 						<td>Number</td>
 					</tr>
 					<tr>
-						<td>normal</td>
-						<td>该面的法线 或 法线数组</td>
+						<td>normal / vertexNormals</td>
+						<td>该面的法线 或 顶点法线数组</td>
 						<td>可选，默认为 new THREE.Vector3(0, 0, 0)</td>
-						<td>THREE.Vector3</td>
+						<td>THREE.Vector3 / THREE.Vector3[]</td>
 					</tr>
 					<tr>
-						<td>color</td>
+						<td>color / vertexColors</td>
 						<td>该面的颜色 或 顶点颜色数组</td>
 						<td>可选</td>
 						<td>THREE.Color / THREE.Color[]</td>
@@ -253,9 +253,8 @@ Math.sqrt(
 						<td>Number</td>
 					</tr>
 				</table>
-				一个 Face3 不是直接存储三个点的坐标，而是存储了点所在的下标。比如创建一个几何体（geometry），该几何体有 4 个点组成一个顶点数组作为 vertices 属性。
+				一个 Face3 不是直接存储三个点的坐标，而是存储了点所在的下标。比如创建一个几何体（geometry），该几何体有一个属性 vertices ，表示所有点组成的数组。
 				<pre><code class="javascript">
-// for demo
 var geometry = new THREE.Geometry();
 geometry.vertices = [
 	new THREE.Vector3(0, 1, 2),
@@ -264,7 +263,7 @@ geometry.vertices = [
 	new THREE.Vector3(0, 1, 2)
 ];
 				</code></pre>
-				创建一个 Face3 实例并将其添加到几何体的面数组 faces：
+				创建一个 Face3 实例并将其添加到几何体的面数组 faces （几何体的面数组）：
 				<pre><code class="javascript">
 var face = new THREE.Face3(0, 1, 2);
 geometry.faces.push(face);
@@ -272,14 +271,25 @@ geometry.faces.push(face);
 				那么面的 a 点对应 vertices[0] 即 new THREE.Vector3(0, 1, 2) ，b 点对应 vertices[1] 即 new THREE.Vector3(0, 2, 2) ，c 点对应 vertices[2] 即 new THREE.Vector3(0, 1, 0) 。
 				<h3>color & vertexColors</h3>
 				<p>
-					color 表示该面的颜色，vertexColors 是一个长度为 3 的数组，表示该面的三个点各自的颜色。
+					<ul>
+						<li>color 表示该面的颜色，当材质选项 vertexColors 设置为 THREE.FaceColors 时生效，为该面着此颜色（纯色）</li>
+						<li>vertexColors 是一个长度为 3 的数组，表示该面的三个点各自的颜色，当材质选项 vertexColors 设置为 THREE.VertexColors 时生效</li>
+					</ul>
+				</p>
+				<h3>normal & vertexNormals</h3>
+				<p>
+					法线，垂直于该面的单位向量，它是通过取面的两条边进行 × 运算（如下图），再进行单位化（矢量长度等于 1）得到。
+					<figure>
+						<img src="../images/three_cross.png" style="background-color: white;">
+						<figcaption>× 运算<sup>[4]</sup></figcaption>
+					</figure>
 				</p>
 			</p>
 		</section>
 		<section>
 			<h2>Color</h2>
 			<p>
-				通过多种方式创建一个颜色：
+				threejs 允许通过多种方式创建一个颜色：
 				<pre><code class="javascript">
 var color = new THREE.Color(); // 默认为白色
 				</code></pre>
@@ -288,6 +298,12 @@ var color = new THREE.Color(); // 默认为白色
 					<li>RGB：传入三个 0 ~ 1 的Number ，分别对应红绿蓝通道</li>
 					<li>颜色字符串：即 'red', 'yellow', 'blue' 等 css 预设颜色</li>
 				</ul>
+				<pre><code class="javascript">
+var color1 = new THREE.Color(0x000000);
+var color2 = new THREE.Color(0, 0, 0);
+var color3 = new THREE.Color('black');
+// 省略了一些方法，比如可以传入 'rgb(0,0,0)' 的操作
+				</code></pre>
 			</p>
 		</section>
 		<section>
@@ -295,7 +311,7 @@ var color = new THREE.Color(); // 默认为白色
 			<p>
 				Object3D 是大多数对象的基本类，提供了一些属性和方法在 3D 世界中操作对象。
 				<pre>This is the base class for most objects in three.js and provides a set of properties and methods for manipulating objects in 3D space.<sup>[2]</sup></pre>
-				比如查看<a href="https://github.com/mrdoob/three.js/blob/dev/src/cameras/Camera.js"> src/cameras/Camera.js </a>的源码，如下：
+				比如查看<a href="https://github.com/mrdoob/three.js/blob/dev/src/cameras/Camera.js"> src/cameras/Camera.js </a>摄像机类的源码，如下：
 				<pre><code class="javascript">
 ...
 import { Object3D } from '../core/Object3D.js';
@@ -566,7 +582,7 @@ Object.defineProperties( Euler.prototype, {
 					<ul>
 						<li>rotateX / rotateY / rotateZ：沿对象自身的 X / Y / Z 轴旋转弧度（radians，不是角度 degree）</li>
 						<li>rotateOnAxis(new THREE.Vector3(), radians)：沿着自身某个轴旋弧度</li>
-						<li>rotateOnWorldAxis(new THREE.Vector3, radians)：同上，但参考为世界坐标系</li>
+						<li>rotateOnWorldAxis(new THREE.Vector3, radians)：旋转世界坐标</li>
 						<li>setRotationFromAxisAngle / setRotationFromEuler / setRotationFromMatrix / setRotationFromQuaternion：各种方式设置 rotation 属性</li>
 					</ul>
 				</p>
@@ -757,6 +773,7 @@ var girdHelper = new THREE.GridHelper(10, 10, 0x00ffff, 0x0000ff)
 				<div>[1] 维基百科 three.js <a href="https://zh.wikipedia.org/wiki/Three.js">https://zh.wikipedia.org/wiki/Three.js</a></div>
 				<div>[2] three doc <a href="https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene">https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene</a></div>
 				<div>[3] 场景图 <a href="https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-scene-graph.html">https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-scene-graph.html</a></div>
+				<div>[4] 维基百科 cross product <a href="https://en.wikipedia.org/wiki/Cross_product#/media/File:Right_hand_rule_cross_product.svg">https://en.wikipedia.org/wiki/Cross_product#/media/File:Right_hand_rule_cross_product.svg</a></div>
 			</p>
 		</section>
 	</article>

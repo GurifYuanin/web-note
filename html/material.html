@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>material</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/agate.css">
+	<link rel="stylesheet" href="../css/dark.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script src="../js/three.min.js"></script>
+	<script src="../js/three-init.js"></script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">material</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				material，材质，在计算机图形学中用于描述物体的外貌。
+			</p>
+		</section>
+		<section>
+			<h2>Material 抽象类</h2>
+			<p>
+				所有属于材质的类都会继承 Material 类，用于该类的所有成员和方法。
+				<h3>transparent & ooacity</h3>
+				<p>
+					<ul>
+						<li>transparent 是一个布尔值，默认为 false，表示材质不是透明的，即不透明度为 1 。当设置为 true 时，材质才可能是透明的，opacity 属性才会生效。</li>
+						<li>opacity 表示材质的透明度，默认为 1 ，表示不透明，设置为 0 时表示完全透明。</li>
+					</ul>
+				</p>
+				<h3>vertexColors</h3>
+				<p>
+					vertexColors 可以赋为三个值：
+					<ul>
+						<li>THREE.NoColors：默认，表示直接使用材质的颜色为整个物体着色（纯色）</li>
+						<li>THREE.FaceColors：为每个面（Face3）着其 color 属性所表示的颜色</li>
+						<li>THREE.VertexColors：为每个面（Face3）按照 vertexColors 三个颜色值进行渐变着色</li>
+					</ul>
+				</p>
+				<h3>shadowSide & side</h3>
+				<p>
+					side 定义物体的哪个面（Face3）会被渲染出来：
+					<ul>
+						<li>THREE.FrontSide：默认，前面</li>
+						<li>THREE.BackSide：后面</li>
+						<li>THREE.DoubleSide：前后面</li>
+					</ul>
+					shadowSide 定义投影的方向，可赋的值与以上相同，默认为 null，即看 side 的脸色行事。
+				</p>
+				<h3>混合</h3>
+				<p>
+					<h4>blending</h4>
+					blending 设置混合方式：
+					<ul>
+						<li>THREE.NoBlending：不混合</li>
+						<li>THREE.NormalBlending：默认，正常混合模式，上层颜色直接覆盖下层颜色</li>
+						<li>THREE.AdditiveBlending：加色模式，上层颜色和下层颜色相加，最终效果变亮</li>
+						<li>THREE.SubtractiveBlending：减色模式，上层颜色和下层颜色相减，最终效果变暗</li>
+						<li>THREE.MultiplyBlending：乘法，上层颜色和下层颜色相乘</li>
+						<li>THREE.CustomBlending：自定义模式，可以自己写表达式计算混合后的颜色</li>
+					</ul>
+					设置为自定义混合模式后，可以自己写混合方式，关于混合的讲解：<sup>[2]</sup>
+					<div class="show">
+						<div>所谓混合就是在绘制时，不是直接把新的颜色覆盖在原来旧的颜色上，而是将新的颜色与旧的颜色经过一定的运算，获得最终的混合颜色。</div>
+						<div>其中新的颜色被称为源颜色，旧的颜色称为目标颜色。传统意义上的混合，是将源颜色乘以源因子，目标颜色乘以目标因子，然后相加。</div>
+						<div>源因子和目标因子设置的不同直接导致混合结果的不同。</div>
+						<div>下面用数学公式来表达一下这个运算方式。假设源颜色的四个分量（指红色，绿色，蓝色，alpha值）是(Rs, Gs, Bs, As)，目标颜色的四个分量是(Rd, Gd, Bd, Ad)，</div>
+						<div>又设源因子为(Sr, Sg, Sb, Sa)，目标因子为(Dr, Dg, Db, Da)。则混合产生的新颜色可以表示为：</div>
+						<pre><code class="javascript">
+(Rs * Sr + Rd * Dr, // R
+ Gs * Sg + Gd * Dg, // G
+ Bs * Sb + Bd * Db, // B
+ As * Sa + Ad * Da) // Alpha
+						</code></pre>
+						<div>如果颜色的某一分量超过了1.0，则它会被自动截取为1.0，不应出现越界。</div>
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>MeshBasicMaterial</h2>
+			<p>
+				
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Three doc Material <a href="https://threejs.org/docs/index.html#api/en/materials/Material">https://threejs.org/docs/index.html#api/en/materials/Material</a></div>
+				<div>[2] three在线中文文档 <a href="http://techbrood.com/threejs/docs/#参考手册/常量(Constants)/自定义混合方程(CustomBlendingEquation)">http://techbrood.com/threejs/docs/#参考手册/常量(Constants)/自定义混合方程(CustomBlendingEquation)</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>
