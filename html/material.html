@@ -11,6 +11,7 @@
 	<script src="../js/sidebar.js"></script>
 	<script src="../js/three.min.js"></script>
 	<script src="../js/three-init.js"></script>
+	<script src="../js/OrbitControls.js"></script>
 </head>
 <body>
 	<aside id="sidebar">
@@ -35,7 +36,7 @@
 		<section>
 			<h2>Material 抽象类</h2>
 			<p>
-				所有属于材质的类都会继承 Material 类，用于该类的所有成员和方法。
+				所有属于材质的类都会继承 Material 类，拥有该类的所有成员和方法。
 				<h3>transparent & ooacity</h3>
 				<p>
 					<ul>
@@ -45,12 +46,144 @@
 				</p>
 				<h3>vertexColors</h3>
 				<p>
-					vertexColors 可以赋为三个值：
+					vertexColors 控制被着色物体的各个面的颜色，可以赋为三个值：
 					<ul>
-						<li>THREE.NoColors：默认，表示直接使用材质的颜色为整个物体着色（纯色）</li>
-						<li>THREE.FaceColors：为每个面（Face3）着其 color 属性所表示的颜色</li>
-						<li>THREE.VertexColors：为每个面（Face3）按照 vertexColors 三个颜色值进行渐变着色</li>
+						<li>THREE.NoColors：默认，表示直接使用材质的颜色为整个物体的所有面着一个颜色 material.color（纯色）</li>
+						<li>THREE.FaceColors：面（Face3）有一个属性 color，为每个面着该属性的颜色</li>
+						<li>THREE.VertexColors：面（Face3）有一个属性 vertexColors，表示面的三个顶点的颜色，为每个面按照该属性的三个颜色值进行渐变着色</li>
 					</ul>
+					<div class="show">
+						<div id="vertex-colors-container"></div>
+						material.vertexColors：
+						<select id="vertex-colors-select">
+							<option value="0">THREE.NoColors</option>
+							<option value="1">THREE.FaceColors</option>
+							<option value="2">THREE.VertexColors</option>
+						</select>
+						<div id="material-color">
+							<input id="material-color-checkbox" type="checkbox" checked>
+							material.color：
+						</div>
+						<div id="face-colors">
+							<input id="face-colors-checkbox" type="checkbox" checked>
+							geometry.faces.color：
+						</div>
+						<div id="vertex-colors">
+							<input id="vertex-colors-checkbox" type="checkbox" checked>
+							geometry.faces.vertexColors：
+						</div>
+						<div style="opacity: .2;" id="colors">geometry.colors：</div>
+						<style>
+							.vertex-color {
+								display: inline-block;
+								width: 50px;
+								height: 50px;
+							}
+						</style>
+						<script>
+							(function() {
+								function getRandomColor() { return Math.round(Math.random() * 0xffffff); }
+								function appendColorBlock(bgc, ctx) {
+									var e = document.createElement('div');
+									e.setAttribute('class', 'vertex-color');
+									e.setAttribute('title', bgc.toUpperCase());
+									e.style.backgroundColor = '#' + bgc;
+									ctx.appendChild(e);
+								}
+								var renderer = initRenderer(document.getElementById('vertex-colors-container'));
+								renderer.setSize(400, 400);
+								var camera = initCamera();
+								var scene = initScene();
+
+								// color
+								var materialColor = new THREE.Color(getRandomColor());
+								var materialColorsFlag = true, faceColorsFlag = true, vertexColorsFlag = true;
+								var nextMaterialColor = materialColor.clone();
+								var nextFaceColors = [];
+								var nextVertexColors = [];
+								appendColorBlock(
+									materialColor.getHexString(),
+									document.getElementById('material-color'));
+
+
+								var geometry = new THREE.BoxGeometry(1, 1, 1);
+								var material = new THREE.MeshBasicMaterial({
+									color: nextMaterialColor,
+									vertexColors: THREE.NoColors
+								});
+								var faceColors = document.getElementById('face-colors');
+								var colors = document.getElementById('colors');
+								var vertexColors = document.getElementById('vertex-colors');
+								geometry.faces.forEach(function(el, i) {
+									var faceColor = new THREE.Color(getRandomColor());
+									el.color = faceColor;
+									nextFaceColors.push(faceColor);
+									appendColorBlock(faceColor.getHexString(), faceColors);
+
+									var c1 = new THREE.Color(getRandomColor());
+									var c2 = new THREE.Color(getRandomColor());
+									var c3 = new THREE.Color(getRandomColor());
+									nextVertexColors.push([c1, c2, c3]);
+									el.vertexColors.push(c1, c2, c3);
+									appendColorBlock(c1.getHexString(), vertexColors);
+									appendColorBlock(c2.getHexString(), vertexColors);
+									appendColorBlock(c3.getHexString(), vertexColors);
+									vertexColors.appendChild(document.createTextNode(' '));
+
+									var vertexColor = new THREE.Color(getRandomColor());
+									geometry.colors.push(vertexColor);
+									appendColorBlock(vertexColor.getHexString(), colors);
+								});
+
+								var cube = new THREE.Mesh(geometry, material);
+								var orbit = new THREE.OrbitControls(camera, renderer.domElement);
+								scene.add(cube);
+								var selecter = document.getElementById('vertex-colors-select');
+								function rerender() {
+									scene.remove(cube);
+									material = new THREE.MeshBasicMaterial({
+										color: nextMaterialColor,
+										vertexColors: Number.parseInt(selecter.value)
+									});
+									cube = new THREE.Mesh(geometry, material);
+									scene.add(cube);
+								};
+								selecter.oninput = rerender;
+								document.getElementById('material-color-checkbox').oninput = function() {
+									nextMaterialColor = materialColorsFlag ? null : materialColor.clone();
+									materialColorsFlag = !materialColorsFlag;
+									rerender();
+								};
+								document.getElementById('face-colors-checkbox').oninput = function() {
+									geometry = new THREE.BoxGeometry(1, 1, 1);
+									geometry.faces.forEach(function(el, i) {
+										el.color = faceColorsFlag ? undefined : nextFaceColors[i];
+										el.vertexColors = vertexColorsFlag ? nextVertexColors[i] : [];
+									});
+									faceColorsFlag = !faceColorsFlag;
+									rerender();
+								};
+								document.getElementById('vertex-colors-checkbox').oninput = function() {
+									geometry = new THREE.BoxGeometry(1, 1, 1);
+									geometry.faces.forEach(function(el, i) {
+										el.color = faceColorsFlag ? nextFaceColors[i] : undefined;
+										el.vertexColors = vertexColorsFlag ? [] : nextVertexColors[i];
+									});
+									vertexColorsFlag = !vertexColorsFlag;
+									rerender();
+								};
+								(function render(){
+									cube.rotateY(.01);
+									cube.rotateZ(.01);
+									var rate = Math.abs(Math.sin(Date.now() / 2000)) + 0.7;
+									cube.scale.set(rate, rate, rate);
+									renderer.render(scene, camera);
+									requestAnimationFrame(render);
+								})();
+
+							})();
+						</script>
+					</div>
 				</p>
 				<h3>shadowSide & side</h3>
 				<p>
@@ -65,7 +198,7 @@
 				<h3>混合</h3>
 				<p>
 					<h4>blending</h4>
-					blending 设置混合方式：
+					blending 设置物体被材质着色后和背景的混合模式，当材质在物体上着色后，物体将以什么模式呈现：
 					<ul>
 						<li>THREE.NoBlending：不混合</li>
 						<li>THREE.NormalBlending：默认，正常混合模式，上层颜色直接覆盖下层颜色</li>
@@ -89,13 +222,32 @@
 						</code></pre>
 						<div>如果颜色的某一分量超过了1.0，则它会被自动截取为1.0，不应出现越界。</div>
 					</div>
+					<h4>blendEquation</h4>
+					blendEquation 与 blending 不同，blendEquation 设置材质和物体如何进行着色：
+					<ul>
+						<li>THREE.AddEquation：默认，加色模式，上层颜色和下层颜色相加</li>
+						<li>THREE.SubtractEquation：减色模式，上层颜色和下层颜色相减</li>
+						<li>THREE.ReverseSubtractEquation：反相</li>
+						<li>THREE.MinEquation：最小值，上层颜色和下层颜色取最小值</li>
+						<li>THREE.MaxEquation：最大值，上层颜色和下层颜色取最大值</li>
+					</ul>
 				</p>
 			</p>
 		</section>
 		<section>
 			<h2>MeshBasicMaterial</h2>
 			<p>
-				
+				通过一个简单的方式来为物体着色，MeshBasicMaterial 不受灯光的影响。
+				<pre><code class="javascript">
+var options = {
+	// 各种参数
+};
+var material = new THREE.MeshBasicMaterial(options);
+				</code></pre>
+				<h3>color</h3>
+				<p>
+					定义材质的颜色，默认为白色（0x000000）。
+				</p>
 			</p>
 		</section>
 		<section class="refer">

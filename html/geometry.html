@@ -91,7 +91,7 @@ geometry.vertices.push(new THREE.Vector3(1, 2, 3));
 				<pre><code class="javascript">
 geomtry.faces.push(new THREE.Face3(0, 1, 2));
 				</code></pre>
-				colors 为颜色数组，对应各个顶点的颜色（比如 colors[0] 对应 vertices[0]），当 geomtry 和 material（材质）合成为 Points（点集） 或 Line（线段）或其他继承这两个类的物体（不包括 Meshes）时候，如果材质的选项 vertexColors 为 THREE.VertexColors 时生效，实现 geomtry 的顶点和颜色的一一映射。
+				colors 为颜色数组，对应各个顶点（vertices）的颜色（比如 colors[0] 对应 vertices[0]），当 geomtry 和 material（材质）合成为 Points（点集） 或 Line（线段）或其他继承这两个类的物体（不包括 Meshes）的时候，如果材质的选项的 vertexColors 为 THREE.VertexColors 就生效，colors 会与 vertices 一一着色。
 				<pre><code class="javascript">
 ...
 var geometry = new THREE.Geometry();
