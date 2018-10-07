@@ -232,12 +232,30 @@
 						<li>THREE.MaxEquation：最大值，上层颜色和下层颜色取最大值</li>
 					</ul>
 				</p>
+				<h3>多边形偏移</h3>
+				<p>
+					设置模型的线框和实体之间的偏移距离，公式为：<sup>[3]</sup>
+					<div class="command">offset = (m * factor) + (r * units)</div>
+					<ul>
+						<li>m：多边形的深度的斜率</li>
+						<li>factor：多边形偏移因子</li>
+						<li>r：产生在窗口坐标系的深度值中可分辨的差异的最小值，常量</li>
+						<li>units：多边形偏移单位</li>
+					</ul>
+					offset 大于 0 表示物体远离摄像机，小于 0 表示物体靠近摄像机，threejs 提供修改 factor 和 units 。
+					<h4>polygonOffset</h4>
+					多边形偏移开关，默认为 false ，即关闭。
+					<h4>polygonOffsetFactor</h4>
+					多边形偏移因子，默认为 0 。
+					<h4>polygonOffsetUnits</h4>
+					多边形偏移单位，默认为 0 。
+				</p>
 			</p>
 		</section>
 		<section>
 			<h2>MeshBasicMaterial</h2>
 			<p>
-				通过一个简单的方式来为物体着色，MeshBasicMaterial 不受灯光的影响。
+				通过一个简单的方式来为物体着色，他继承了 Material 类，所以拥有 Material 类的所有成员和方法，创建实例时传入以选项对象。 MeshBasicMaterial 不受灯光的影响。
 				<pre><code class="javascript">
 var options = {
 	// 各种参数
@@ -246,8 +264,103 @@ var material = new THREE.MeshBasicMaterial(options);
 				</code></pre>
 				<h3>color</h3>
 				<p>
-					定义材质的颜色，默认为白色（0x000000）。
+					定义材质的颜色，默认为白色（0x000000），你可以设置为 null 从而关闭基础颜色。
 				</p>
+				<h3>各种贴图</h3>
+				<p>
+					各种贴图默认都为 null 。
+					<ul>
+						<li>map：颜色贴图</li>
+						<li>alphaMap：alpha 贴图</li>
+						<li>aoMap：环境遮挡贴图</li>
+						<li>envMap：环境贴图</li>
+						<li>specularMap：高光贴图</li>
+					</ul>
+					threejs 官方提供了材质加载工具 TextureLoader 来加载图像：
+					<pre><code class="javascript">
+var url = '图片的地址';
+var texture = new THREE.TextureLoader().load(url, function() {
+	console.log('加载完毕');
+}, function() {
+	console.log('加载中');
+}, function() {
+	console.error('加载出错');
+});
+var material = new THREE.MeshBasicMaterial({map: texture});
+					</code></pre>
+					该方法是异步的，第一个参数为图片地址，其后三个参数分别为加载完成的回调，加载中的回调和加载出错的回调。
+					<div class="show">
+						<div id="map-container"></div>
+						<script>
+							(function() {
+								var scene = initScene();
+								var camera = initCamera();
+								var renderer = initRenderer(document.getElementById('map-container'));
+								var material = new THREE.MeshBasicMaterial({
+									color: 0xffffff,
+									map: new THREE.TextureLoader().load('../images/posz.jpg')
+								});
+								new THREE.OrbitControls(camera, renderer.domElement);
+								var geometry = new THREE.CubeGeometry(1, 1, 1);
+								var mesh = initMesh(geometry, material);
+								scene.add(mesh);
+								(function render(){
+									mesh.rotateY(.05);
+									renderer.render(scene, camera);
+									requestAnimationFrame(render);
+								})();
+							})();
+						</script>
+					</div>
+					当然也可以不写回调直接通过 requestAnimationFrame 循环渲染。
+					<pre><code class="javascript">
+(function render() {
+	renderer.render(scene, camera);
+	requestAnimationFrame(render);
+})();
+					</code></pre>
+				</p>
+				<h3>反射与折射</h3>
+				<p>
+					<ul>
+						<li>reflectivity：反射率，默认为 1</li>
+						<li>refractionRatio：折射率，默认为 0.98</li>
+					</ul>
+				</p>
+				<h3>线框</h3>
+				<p>
+					<ul>
+						<li>wireframe：是否描绘线框，默认为 false</li>
+						<li>wireframeLinewidth：线框宽度（厚度），默认为 1</li>
+						<li>wireframeLinecap：端点样式，默认为 round</li>
+						<li>wireframeLinejoin：连接点样式，默认为 round</li>
+					</ul>
+					只有 wireframe 属性是有效的，wireframeLinejoin 和 wireframeLinecap 只是对应于 webgl 2D wireframeLinewidth 受限于渲染器在大多数平台上只能是 1 即使修改为其他值。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>LineBasicMaterial</h2>
+			<p>
+				用于绘制简答线框的材质。
+				<div class="show">
+					<div id="line-container"></div>
+					<script>
+						(function() {
+							var renderer = initRenderer(document.getElementById('line-container'))
+							var camera = initCamera();
+							var scene = initScene();
+							var mesh = new THREE.Line(new THREE.CubeGeometry(1, 1, 1), new THREE.LineBasicMaterial({color: 0xffffff}));
+							scene.add(mesh);
+							new THREE.OrbitControls(camera, renderer.domElement);
+							(function render() {
+								mesh.rotateY(.01);
+								renderer.render(scene, camera);
+								requestAnimationFrame(render);
+							})();
+						})();
+					</script>
+				</div>
 			</p>
 		</section>
 		<section class="refer">
@@ -255,6 +368,8 @@ var material = new THREE.MeshBasicMaterial(options);
 			<p>
 				<div>[1] Three doc Material <a href="https://threejs.org/docs/index.html#api/en/materials/Material">https://threejs.org/docs/index.html#api/en/materials/Material</a></div>
 				<div>[2] three在线中文文档 <a href="http://techbrood.com/threejs/docs/#参考手册/常量(Constants)/自定义混合方程(CustomBlendingEquation)">http://techbrood.com/threejs/docs/#参考手册/常量(Constants)/自定义混合方程(CustomBlendingEquation)</a></div>
+				<div>[3] BIT祝威 [OpenGL][SharpGL]用Polygon Offset解决z-fighting和stitching问题 <a href="https://www.cnblogs.com/bitzhuwei/archive/2015/06/12/4571539.html">https://www.cnblogs.com/bitzhuwei/archive/2015/06/12/4571539.html</a></div>
+				<div>[4] TextureLoader <a href="https://threejs.org/docs/index.html#api/en/loaders/TextureLoader">https://threejs.org/docs/index.html#api/en/loaders/TextureLoader</a></div>
 			</p>
 		</section>
 	</article>
