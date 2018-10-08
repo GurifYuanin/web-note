@@ -255,7 +255,7 @@
 		<section>
 			<h2>MeshBasicMaterial</h2>
 			<p>
-				通过一个简单的方式来为物体着色，他继承了 Material 类，所以拥有 Material 类的所有成员和方法，创建实例时传入以选项对象。 MeshBasicMaterial 不受灯光的影响。
+				通过一个简单的方式来为物体着色，他继承了 Material 类，所以拥有 Material 类的所有成员和方法，创建实例时传入以选项对象。<span class="different"> MeshBasicMaterial 不受灯光的影响</span>。
 				<pre><code class="javascript">
 var options = {
 	// 各种参数
@@ -342,7 +342,13 @@ var material = new THREE.MeshBasicMaterial({map: texture});
 		<section>
 			<h2>LineBasicMaterial</h2>
 			<p>
-				用于绘制简答线框的材质。
+				用于绘制简单的线框的材质。
+				<pre><code class="javascript">
+var options = {
+	// 线段选项
+};
+var material = new THREE.LineBasicMaterial(options);
+				</code></pre>
 				<div class="show">
 					<div id="line-container"></div>
 					<script>
@@ -361,6 +367,75 @@ var material = new THREE.MeshBasicMaterial({map: texture});
 						})();
 					</script>
 				</div>
+				<h3>lights</h3>
+				<p>
+					不同于 MeshBasicMaterial ，<span class="different">线框可以受灯光影响</span>，默认不受影响，当 lights 属性设置为 true 时可以使材质受灯光影响。
+					<div class="show">
+						<div id="line-lights-container"></div>
+						<div>
+							<input type="checkbox" checked disabled>
+							material.color：
+							<input id="line-material-color" type="color" value="#ffffff">
+						</div>
+						<div>
+							<input type="checkbox" checked disabled>
+							light.color：
+							<input id="line-light-color" type="color" value="#ff0000">
+						</div>
+						<div>
+							<input id="line-material-lights" type="checkbox">material.lights
+						</div>
+						<script>
+							(function() {
+								var renderer = initRenderer(document.getElementById('line-lights-container'));
+								var scene = initScene();
+								var camera = initCamera();
+								var helper = new THREE.AxesHelper(100);
+								var geometry = new THREE.Geometry();
+								camera.translateX(1);
+								for (var i = 0; i < 10; i++) {
+									geometry.vertices.push(new THREE.Vector3(Math.random(), Math.random(), 0));
+								}
+								var light = new THREE.PointLight(0xff0000 , 1, 100 );
+								var pointLightHelper = new THREE.PointLightHelper( light, 1 );
+								var material = new THREE.LineBasicMaterial();
+								var mesh = new THREE.Line(geometry, material);
+								scene.add(mesh, light, helper, pointLightHelper);
+								(function render() {
+									requestAnimationFrame(render);
+									geometry.vertices.forEach(function(el) {
+										el.x += Math.random() < .5 ? .01 : -.01;
+										el.y += Math.random() < .5 ? .01 : -.01;
+										el.z += Math.random() < .5 ? .01 : -.01;
+									});
+									geometry.verticesNeedUpdate = true;
+									scene.remove(mesh);
+									var mesh = new THREE.Line(geometry, material);
+									scene.add(mesh);
+									renderer.render(scene, camera);
+								})();
+								document.getElementById('line-material-color').oninput = function() {
+									material.color = new THREE.Color(Number.parseInt(this.value.substring(1), 16));
+									material.needsUpdate = true;
+								}
+								document.getElementById('line-light-color').oninput = function() {
+									light.color = new THREE.Color(Number.parseInt(this.value.substring(1), 16));
+								}
+								document.getElementById('line-material-lights').oninput = function() {
+									material.lights = !material.lights;
+								}
+							})();
+						</script>
+					</div>
+				</p>
+				<h3>color</h3>
+				<p>
+					与 MeshBasicMaterial 相同。
+				</p>
+				<h3>线框</h3>
+				<p>
+					与 MeshBasicMaterial 相同。
+				</p>
 			</p>
 		</section>
 		<section class="refer">
