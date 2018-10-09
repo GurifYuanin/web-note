@@ -183,7 +183,7 @@ $(function() {
         ['DOM', 'meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'canvas', 'svg'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
         ['数据类型', '数组字符串与对象', '循环', '作用域链', '原型链', '闭包', '事件', '复制粘贴', 'Javascript进程', 'RegExp', 'XMLHttpRequest', 'Class', 'JSONP', 'this', 'jquery', 'promise', 'Generator', 'async', 'Typescript'],
-        ['three', 'geometry', 'material', 'scene', 'camera'],
+        ['three', 'geometry', 'material', 'object', 'scene', 'camera'],
         ['commonJS', 'package.json', 'path', 'file system', 'process', 'webpack', 'plugins', 'loader'],
         ['安装', '实例', '模版', '组件', 'mixins', 'router', 'vuex'],
         ['响应式布局', 'bootstrap', 'viewport'],

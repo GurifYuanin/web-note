@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Object</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/agate.css">
+	<link rel="stylesheet" href="../css/dark.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+	<script src="../js/three.min.js"></script>
+	<script src="../js/three-init.js"></script>
+	<script src="../js/OrbitControls.js"></script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">Object</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				可以被绘制的对象。
+			</p>
+		</section>
+		<section>
+			<h2>Mesh</h2>
+			<p>
+				<h3>点偏移</h3>
+				<p>
+					使 geometry 的每个点各自与某个点按照一定权重（morphTargetInfluences）进行相加，得到新的值，实现不同点的值的不同变化。
+					比如使用 BoxGeometry 创建的几何体的 vertices 有 8 个点，那么就需要另外的 8 个点来进行一一对应，进行的计算相当于：
+					<pre><code class="javascript">
+// 权重因子
+var morphTargetInfluences = .5;
+
+// BoxGeometry 上的点
+var verctices1 = [
+	new Vector3(0, 0, 0),
+	new Vector3(0, 2, 0),
+	new Vector3(0, 0, 2),
+	new Vector3(0, 2, 2),
+	new Vector3(2, 0, 0),
+	new Vector3(2, 2, 0),
+	new Vector3(2, 0, 2),
+	new Vector3(2, 2, 2)
+];
+// 进行相加的点
+var verctices2 = [
+	new Vector3(0, 1, 2),
+	new Vector3(3, 5, 5),
+	new Vector3(6, 4, 9),
+	new Vector3(2, 4, 6),
+	new Vector3(3, 3, 3),
+	new Vector3(0, 2, 2),
+	new Vector3(9, 2, 1),
+	new Vector3(1, 5, 0)
+];
+// 计算结果
+var verctices3 = [
+	verctices1[0].add(verctices2[0].multiplyScalar(morphTargetInfluences)),
+	verctices1[1].add(verctices2[1].multiplyScalar(morphTargetInfluences)),
+	verctices1[2].add(verctices2[2].multiplyScalar(morphTargetInfluences)),
+	verctices1[3].add(verctices2[3].multiplyScalar(morphTargetInfluences)),
+	verctices1[4].add(verctices2[4].multiplyScalar(morphTargetInfluences)),
+	verctices1[5].add(verctices2[5].multiplyScalar(morphTargetInfluences)),
+	verctices1[6].add(verctices2[6].multiplyScalar(morphTargetInfluences)),
+	verctices1[7].add(verctices2[7].multiplyScalar(morphTargetInfluences))
+];
+					</code></pre>
+					morphTargetInfluences 和 verctices2 就是我们要提供的参数，verctices3 就是计算后的结果。
+					<h4>morphTargetInfluences</h4>
+					morphTargetInfluences 是一个数组，默认为 undefined，存放了权重因子，因为点偏移可以偏移多次，上面所展示只进行了一次，所以可能需要多个权重因子。
+					<pre><code class="javascript">
+var geometry = new THREE.BoxGeometry(1, 1, 1);
+var material = new THREE.MeshLambertMaterial({morphTargets: true}); // morphTargets 为 true
+var mesh = new THREE.Mesh(geometry, material);
+mesh.morphTargetInfluences = [1];
+					</code></pre>
+					<h4>morphTargets & morphTargetDictionary</h4>
+					morphTargets 为偏移对象数组，是 geometry 上的属性，偏移对象的形式为：
+					<pre><code class="javascript">
+{
+	name: '',
+	vertices: []
+}
+					</code></pre>
+					name 为偏移对象的名字，当使用 morphTargetDictionary 来查找时需要，vertices 就是前面的 verctices2 ，是 Vector3 数组。
+					<pre><code class="javascript">
+geometry.morphTargets[0] = {
+	name: 'morph',
+	vertices: new THREE.BoxGeometry(1, 1, 1).vertices
+};
+					</code></pre>
+					<div class="show">
+						<div id="morph-container"></div>
+						<div>
+							mesh.morphTargetInfluences：
+							<span id="morph-range-number">1.00</span>
+							<input id="morph-range" type="range" min="0" max="1" step="0.01" value="1">
+						</div>
+						<script>
+							(function() {
+								var scene = initScene();
+								var camera = initCamera();
+								var renderer = initRenderer(document.getElementById('morph-container'));
+								var geometry = new THREE.BoxGeometry(1, 1, 1);
+								var light = new THREE.DirectionalLight(0xffffff);
+								light.position.set(1, 1, 1);
+								geometry.morphTargets.push({
+									name: 'morph',
+									vertices: new THREE.BoxGeometry(2, 2, 2).vertices
+								});
+								geometry.computeMorphNormals();
+								var material = new THREE.MeshLambertMaterial({morphTargets: true, color: 0x00ffff});
+								var mesh = new THREE.Mesh(geometry, material);
+								mesh.morphTargetInfluences = [1];
+								scene.add(mesh, light);
+								new THREE.OrbitControls(camera, renderer.domElement);
+								(function render() {
+									renderer.render(scene, camera);
+									requestAnimationFrame(render);
+								})();
+								document.getElementById('morph-range').onchange = function() {
+									mesh.morphTargetInfluences[0] = Number.parseFloat(this.value);
+									document.getElementById('morph-range-number').innerText = this.value;
+								}
+							})();
+						</script>
+					</div>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 专注前端30年 85 Three.js 通过设置morphTargetInfluences属性来创建动画 <a href="https://blog.csdn.net/qq_30100043/article/details/79954538">https://blog.csdn.net/qq_30100043/article/details/79954538</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

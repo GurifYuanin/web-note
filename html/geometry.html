@@ -11,6 +11,7 @@
 	<script src="../js/sidebar.js"></script>
 	<script src="../js/three.min.js"></script>
 	<script src="../js/three-init.js"></script>
+	<script src="../js/OrbitControls.js"></script>
 </head>
 <body>
 	<aside id="sidebar">
@@ -131,6 +132,108 @@ scene.add(line);
 						})();
 					</script>
 				</div>
+			</p>
+		</section>
+		<section>
+			<h2>BufferGeometry</h2>
+			<p>
+				BufferGeometry 功能上与 Geometry 相同，但性能上更高效，因为他不是以对象的方式存储点线面（比如 Verctor3, Face3），而是直接存储数值，并且会使用缓存来保存数据，因此也比 Geometry 更难操作。
+				<pre><code class="javascript">
+...
+var geometry = new THREE.BufferGeometry();
+// create a simple square shape. We duplicate the top left and bottom right
+// vertices because each vertex needs to appear once per triangle.
+var vertices = new Float32Array( [
+	 0.0,  0.0,  0.0,
+	 1.0, -1.0,  1.0,
+	 1.0,  1.0,  1.0,
+
+	 0.0,  0.0,  0.0,
+	-1.0,  1.0,  1.0,
+	-1.0, -1.0,  1.0
+] );
+
+// itemSize = 3 because there are 3 values (components) per vertex
+geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+var material = new THREE.MeshBasicMaterial( { color: 0xff0000, side: THREE.DoubleSide } );
+var mesh = new THREE.Mesh( geometry, material );
+...
+				</code></pre>
+				<div class="tip">直接复制的官方例子，做了一点修改</div>
+				<div class="show">
+					<div id="buffer-geometry-container"></div>
+					<script>
+						(function() {
+							var renderer = initRenderer(document.getElementById('buffer-geometry-container'));
+							var camera = initCamera();
+							var scene = initScene();
+							var geometry = new THREE.BufferGeometry();
+							var axesHelper = new THREE.AxesHelper( 5 );
+							// create a simple square shape. We duplicate the top left and bottom right
+							// vertices because each vertex needs to appear once per triangle.
+							var vertices = new Float32Array( [
+								 0.0,  0.0,  0.0,
+								 1.0, -1.0,  1.0,
+								 1.0,  1.0,  1.0,
+
+								 0.0,  0.0,  0.0,
+								-1.0,  1.0,  1.0,
+								-1.0, -1.0,  1.0
+							] );
+
+							// itemSize = 3 because there are 3 values (components) per vertex
+							geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+							var material = new THREE.MeshBasicMaterial( { color: 0xff0000, side: THREE.DoubleSide } );
+							var mesh = new THREE.Mesh( geometry, material );
+							scene.add(mesh, axesHelper );
+							new THREE.OrbitControls(camera, renderer.domElement);
+							(function render() {
+								renderer.render(scene, camera);
+								requestAnimationFrame(render);
+							})();
+						})();
+					</script>
+				</div>
+				<h3>如何存储点和面</h3>
+				<p>
+					BufferGeometry 存储点不是通过 vertices 属性来保存点的位置，也不使用 faces 属性来保存面，而是直接在其 attributes 属性上添加一个 position 数组。
+					<pre><code class="javascript">
+var vertices = new Float32Array( [
+	 0.0,  0.0,  0.0,
+	 1.0, -1.0,  1.0,
+	 1.0,  1.0,  1.0,
+
+	 0.0,  0.0,  0.0,
+	-1.0,  1.0,  1.0,
+	-1.0, -1.0,  1.0
+] );
+geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+console.log(geometry);
+					</code></pre>
+					<figure>
+						<img src="../images/three_geometry_buffer_position.jpg">
+					</figure>
+				</p>
+				vertices 的类型为 Float32Array，通过 new THREE.BufferAttribute( vertices, 3 ) 创建缓存属性，其后的 3 表示将 vertices 每 3 个分为一组，相当于将数组的每三个元素作为参数创建 Vector3，这个 Vector3 就代表了一个点的位置，就相当于：
+				<pre><code class="javascript">
+vertices = [
+	new THREE.Vector3(0.0, 0.0, 0.0),
+	new THREE.Vector3(1.0, -1.0,  1.0),
+	new THREE.Vector3(1.0,  1.0,  1.0),
+	new THREE.Vector3(0.0,  0.0,  0.0),
+	new THREE.Vector3(-1.0,  1.0,  1.0),
+	new THREE.Vector3(-1.0, -1.0,  1.0),
+];
+var geometry = new THREE.Geometry();
+geometry.vertices = vertices;
+				</code></pre>
+				然后再按照每三个点组成一个三角面（Face3），相当于：
+				<pre><code class="javascript">
+geometry.faces = [
+	new THREE.Face3(0, 1, 2),
+	new THREE.Face3(3, 4, 5)
+];
+				</code></pre>
 			</p>
 		</section>
 		<section>

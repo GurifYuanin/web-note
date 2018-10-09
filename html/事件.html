@@ -306,6 +306,7 @@
 					<li>mouseleave：当光标离开元素时触发（不冒泡），元素区域上方都算作内部</li>
 					<li>mouseout：当光标离开元素时触发，不被子元素覆盖的区域上方才算内部</li>
 					<li>mousemove：当光标在元素内移动时不断触发</li>
+					<li>mousewheel：当滚轮进行滚动时触发</li>
 				</ul>
 				<div class="show">
 					<span id="mouse">
@@ -446,6 +447,31 @@
 					<img src="../images/event_xy.jpg">
 					<figcaption class="description">点击图片放大</figcaption>
 				</figure>
+				<h3>mousewheel</h3>
+				<p>
+					mousewheel 与其他鼠标点击事件一样，也可以通过 event 对象获得 clientX 等位置属性，同时它还有新属性 wheelDelta 用来表示滚动的方向和大小。wheelDelta 总是 120 的倍数，向上滚动的时候为正数，向下滚动的时候为负数。
+					<div class="show">
+						<div id="mousewheel-container" style="height: 100px; background-color: #f0f0f0; color: #222;">在此区域进行滚动</div>
+						<div>
+							wheelDelta：<span id="mousewheel-number">0</span>
+						</div>
+						<script>
+							(function() {
+								var el = document.getElementById('mousewheel-number');
+								document.getElementById('mousewheel-container').addEventListener('mousewheel', function(event) {
+									el.innerText = Number.parseInt(el.innerText) + event.wheelDelta;
+									event.preventDefault();
+									return false;
+								});
+							})();
+						</script>
+					</div>
+					这里取消了默认事件来阻止滚动滚轮的时候窗口上下滑动。
+					<pre><code class="javascript">
+event.preventDefault();
+return false;
+					</code></pre>
+				</p>
 			</p>
 		</section>
 		<section>
