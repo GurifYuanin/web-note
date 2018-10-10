@@ -87,6 +87,9 @@ var material = new THREE.MeshLambertMaterial({morphTargets: true}); // morphTarg
 var mesh = new THREE.Mesh(geometry, material);
 mesh.morphTargetInfluences = [1];
 					</code></pre>
+					<div class="tip">
+						这里的材质必须选择受 morph 影响的材质，并且 morphTargets 属性为 true ，否则不会点偏移。
+					</div>
 					<h4>morphTargets & morphTargetDictionary</h4>
 					morphTargets 为偏移对象数组，是 geometry 上的属性，偏移对象的形式为：
 					<pre><code class="javascript">
@@ -95,7 +98,7 @@ mesh.morphTargetInfluences = [1];
 	vertices: []
 }
 					</code></pre>
-					name 为偏移对象的名字，当使用 morphTargetDictionary 来查找时需要，vertices 就是前面的 verctices2 ，是 Vector3 数组。
+					name 为偏移对象的名字，当使用 morphTargetDictionary 来查找时需要，vertices 就是前面的 verctices2 ，是 Vector3 实例组成的数组。
 					<pre><code class="javascript">
 geometry.morphTargets[0] = {
 	name: 'morph',
@@ -115,8 +118,7 @@ geometry.morphTargets[0] = {
 								var camera = initCamera();
 								var renderer = initRenderer(document.getElementById('morph-container'));
 								var geometry = new THREE.BoxGeometry(1, 1, 1);
-								var light = new THREE.DirectionalLight(0xffffff);
-								light.position.set(1, 1, 1);
+								var light = new THREE.AmbientLight( 0x404040 );
 								geometry.morphTargets.push({
 									name: 'morph',
 									vertices: new THREE.BoxGeometry(2, 2, 2).vertices
@@ -135,6 +137,79 @@ geometry.morphTargets[0] = {
 									mesh.morphTargetInfluences[0] = Number.parseFloat(this.value);
 									document.getElementById('morph-range-number').innerText = this.value;
 								}
+							})();
+						</script>
+					</div>
+				</p>
+				<h3>drawMode</h3>
+				<p>
+					当 geometry（几何体）为 BufferGeomtry 类型时，通过<a href="./geometry.html#BufferGeometry"> geometry.html </a>知道，它只保存了一系列的点（Vector3 数组），而没有规定怎么读取这些点。 drawMode 属性用于规定如何读取这些点然后拼成一个个的面：
+					<ul>
+						<li>THREE.TrianglesDrawMode：默认，每三个点作为一个面，相当于</li>
+						<pre><code class="javascript">
+geometry.faces = [
+	new THREE.Face3(0, 1, 2),
+	new THREE.Face3(3, 4, 5),
+	new THREE.Face3(6, 7, 8),
+	...
+];
+						</code></pre>
+						<li>THREE.TriangleStripDrawMode：每多一个点，取前面两个点再加上自身一个点形成新的面，最后成为一条带子</li>
+						<pre><code class="javascript">
+geometry.faces = [
+	new THREE.Face3(0, 1, 2),
+	new THREE.Face3(1, 2, 3),
+	new THREE.Face3(2, 3, 4),
+	...
+];
+						</code></pre>
+						<li>THREE.TriangleFanDrawMode：第一个点作为公共点，按顺序取两个点形成新的面，最后成为一把伞</li>
+						<pre><code class="javascript">
+geometry.faces = [
+	new THREE.Face3(0, 1, 2),
+	new THREE.Face3(0, 2, 3),
+	new THREE.Face3(0, 3, 4),
+	...
+];
+						</code></pre>
+					</ul>
+					<div class="show">
+						<div id="draw-mode-container"></div>
+						<div>mesh.drawMode</div>
+						<div><label><input class="draw-mode-radio" type="radio" name="mode" value="0">THREE.TrianglesDrawMode</label></div>
+						<div><label><input class="draw-mode-radio" type="radio" name="mode" value="1" checked>THREE.TriangleStripDrawMode</label></div>
+						<div><label><input class="draw-mode-radio" type="radio" name="mode" value="2">THREE.TriangleFanDrawMode</label></div>
+						<script>
+							(function() {
+								var renderer = initRenderer(document.getElementById('draw-mode-container'));
+								var camera = initCamera();
+								var scene = initScene();
+								var ambientLight = new THREE.AmbientLight( 0x888888 );
+								var geometry = new THREE.BufferGeometry();
+								var vertices = new Float32Array( [
+									 0.0,  0.0,  0.0,
+									 1.0,  0.0,  0.0,
+									 1.0,  1.0,  0.0,
+
+									 1.0,  1.0,  1.0,
+									 0.0,  1.0,  1.0,
+									 0.0,  0.0,  1.0
+								] );
+								geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
+								var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({color: 0xffffff, side: THREE.DoubleSide}));
+								mesh.drawMode = THREE.TriangleStripDrawMode;
+								scene.add(mesh, ambientLight);
+								new THREE.OrbitControls(camera, renderer.domElement);
+								(function render() {
+									mesh.rotateY(.01);
+									renderer.render(scene, camera);
+									requestAnimationFrame(render);
+								})();
+								Array.prototype.forEach.call(document.getElementsByClassName('draw-mode-radio'), function(el) {
+									el.onchange = function() {
+										mesh.drawMode = Number.parseInt(this.value);
+									}
+								});
 							})();
 						</script>
 					</div>

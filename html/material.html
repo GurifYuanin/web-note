@@ -340,6 +340,90 @@ var material = new THREE.MeshBasicMaterial({map: texture});
 			</p>
 		</section>
 		<section>
+			<h2>MeshLambertMaterial</h2>
+			<p>
+				MeshBasicMaterial 作为简单的着色材质，只显示自身颜色（color 和 faces 的颜色），不接受环境光。而 MeshLambertMaterial 用于不光亮的物体，它可以接受环境光的影响，但不会产生高光。
+				<h3>color & emissive</h3>
+				<p>
+					color 为物体本身的颜色，用法和 MeshBasicMaterial 一样，默认为白色。而 emissive 是物体发出的光，默认为黑色。当然它不是一个光源，不能影响其他物体。
+					<div class="show">
+						<div id="lambert-material-container"></div>
+						<div>
+							<input id="lambert-light-color-checkbox" type="checkbox" checked disabled>
+							light.color
+							<input id="lambert-light-color" type="color" value="#ffffff">
+						</div>
+						<div>
+							<input id="lambert-material-color-checkbox" type="checkbox" checked disabled>
+							material.color
+							<input id="lambert-material-color" type="color" value="#ffffff">
+						</div>
+						<div>
+							<input id="lambert-emissive-color-checkbox" type="checkbox" checked disabled>
+							material.emissive
+							<input id="lambert-emissive-color" type="color" value="#000000">
+						</div>
+						<script>
+							(function() {
+								function g(id) { return document.getElementById(id); } // getElementById
+								function ac(el, fn) { // addChangeEventById
+									if (Object.prototype.toString.call(el).toLowerCase() === '[object string]')
+										g(el).onchange = fn;
+									else
+										el.onchange = fn;
+								}
+								function gc(str) { return new THREE.Color(Number.parseInt(str.substring(1), 16)); } // getColorByValue
+								var renderer = initRenderer(document.getElementById('lambert-material-container'));
+								var camera = initCamera();
+								var scene = initScene();
+								var light = new THREE.AmbientLight(0xffffff);
+								var geometry = new THREE.BoxGeometry(1, 1, 1);
+								var material = new THREE.MeshLambertMaterial({color: 0xffffff});
+								material.emissive = new THREE.Color(0x000000);
+								var mesh = new THREE.Mesh(geometry, material);
+								scene.add(mesh, light);
+								(function render() {
+									renderer.render(scene, camera);
+									requestAnimationFrame(render);
+								})();
+								ac('lambert-light-color', function() {
+									light.color = gc(this.value);
+								});
+								ac('lambert-material-color', function() {
+									material.color = gc(this.value);
+								});
+								ac('lambert-emissive-color', function() {
+									material.emissive = gc(this.value);
+								});
+							})();
+						</script>
+					</div>
+				</p>
+				<h3>贴图</h3>
+				<p>
+					拥有和 MeshBasicMaterial 一样的贴图属性：
+					<ul>
+						<li>map：颜色贴图</li>
+						<li>alphaMap：alpha 贴图</li>
+						<li>aoMap：环境遮挡贴图</li>
+						<li>envMap：环境贴图</li>
+						<li>specularMap：高光贴图</li>
+					</ul>
+					同时还多了以下贴图：
+					<ul>
+						<li>lightMap：光照贴图</li>
+						<li>emissiveMap：发射光贴图</li>
+					</ul>
+					还可以对一些贴图的强度进行调控，默认为 1 ，即直接贴图，可以调整为 0 ~ 1 之间：
+					<ul>
+						<li>lightMapIntensity：光照贴图强度</li>
+						<li>emissiveIntensity：发射光贴图强度</li>
+						<li>aoMapIntensity：环境贴图强度</li>
+					</ul>
+				</p>
+			</p>
+		</section>
+		<section>
 			<h2>LineBasicMaterial</h2>
 			<p>
 				用于绘制简单的线框的材质。
