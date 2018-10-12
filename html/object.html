@@ -184,7 +184,8 @@ geometry.faces = [
 								var renderer = initRenderer(document.getElementById('draw-mode-container'));
 								var camera = initCamera();
 								var scene = initScene();
-								var ambientLight = new THREE.AmbientLight( 0x888888 );
+								var ambientLight = new THREE.AmbientLight( 0xcccccc );
+								var pointLight = new THREE.PointLight(0xf92472, 2, 100);
 								var geometry = new THREE.BufferGeometry();
 								var vertices = new Float32Array( [
 									 0.0,  0.0,  0.0,
@@ -198,7 +199,7 @@ geometry.faces = [
 								geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
 								var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({color: 0xffffff, side: THREE.DoubleSide}));
 								mesh.drawMode = THREE.TriangleStripDrawMode;
-								scene.add(mesh, ambientLight);
+								scene.add(mesh, ambientLight, pointLight);
 								new THREE.OrbitControls(camera, renderer.domElement);
 								(function render() {
 									mesh.rotateY(.01);
