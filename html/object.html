@@ -106,6 +106,7 @@ geometry.morphTargets[0] = {
 };
 					</code></pre>
 					<div class="show">
+						<button class="button" id="morph-button">开始渲染</button>
 						<div id="morph-container"></div>
 						<div>
 							mesh.morphTargetInfluences：
@@ -113,7 +114,7 @@ geometry.morphTargets[0] = {
 							<input id="morph-range" type="range" min="0" max="1" step="0.01" value="1">
 						</div>
 						<script>
-							(function() {
+							addOnceClickEventById('morph-button', function() {
 								var scene = initScene();
 								var camera = initCamera();
 								var renderer = initRenderer(document.getElementById('morph-container'));
@@ -137,7 +138,7 @@ geometry.morphTargets[0] = {
 									mesh.morphTargetInfluences[0] = Number.parseFloat(this.value);
 									document.getElementById('morph-range-number').innerText = this.value;
 								}
-							})();
+							});
 						</script>
 					</div>
 				</p>
@@ -174,13 +175,14 @@ geometry.faces = [
 						</code></pre>
 					</ul>
 					<div class="show">
+						<button class="button" id="draw-mode-button">开始渲染</button>
 						<div id="draw-mode-container"></div>
 						<div>mesh.drawMode</div>
 						<div><label><input class="draw-mode-radio" type="radio" name="mode" value="0">THREE.TrianglesDrawMode</label></div>
 						<div><label><input class="draw-mode-radio" type="radio" name="mode" value="1" checked>THREE.TriangleStripDrawMode</label></div>
 						<div><label><input class="draw-mode-radio" type="radio" name="mode" value="2">THREE.TriangleFanDrawMode</label></div>
 						<script>
-							(function() {
+							addOnceClickEventById('draw-mode-button', function() {
 								var renderer = initRenderer(document.getElementById('draw-mode-container'));
 								var camera = initCamera();
 								var scene = initScene();
@@ -211,7 +213,7 @@ geometry.faces = [
 										mesh.drawMode = Number.parseInt(this.value);
 									}
 								});
-							})();
+							});
 						</script>
 					</div>
 				</p>

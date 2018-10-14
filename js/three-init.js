@@ -1,5 +1,6 @@
 function addOnceClickEventById(id, fn) {
 	var el = document.getElementById(id);
+	if (el.innerHTML.trim() === '') el.innerText = '开始渲染';
 	el.addEventListener('click', function() {
 		el.parentNode.removeChild(el);
 		fn();
@@ -15,6 +16,8 @@ function initRenderer( el, options ) {
 		console.error('no element to mount');
 		return;
 	}
+	if (Object.prototype.toString.call(el).toLowerCase() === '[object string]')
+		el = document.getElementById(el);
 	options = options || {
 		width: 250,
 		height: 250
