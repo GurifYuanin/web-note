@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>软件设计师</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/agate.css">
+	<link rel="stylesheet" href="../css/dark.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">软件设计师</h1>
+		</hgroup>
+		<section>
+			<h2>程序语言</h2>
+			<p>
+				<h3>文法</h3>
+				<p>
+					文法是推导规则，比如
+					<pre><code class="language">
+A → B|C|DEF
+					</code></pre>
+					那么就表示 A 可以推出 B 或 C 或 DEF ，A 称为开始符号，也称为非终结符（Vn），如果 B 推不出任何东西，则 B 称之为终结符（Vr）。进行推导本身的文法和所有被推导出来的结果称之为产生式。
+					<ul>
+						<li>算符文法：所有产生式的右边都不包含连续的两个非终结符</li>
+						<li>终结符优先级：其实就是看终结符哪个先被推导出来，先被推导出来的优先级大于后出现的</li>
+					</ul>
+				</p>
+				<h3>相关概念</h3>
+				<p>
+					假设有<span class="different"> A → BF </span>和<span class="different"> B → CDE </span>和<span class="different"> F → G </span>和<span class="different"> C → H</span>。
+					构建树得到：
+					<figure>
+						<img src="../images/software_engineer_tree.jpg">
+					</figure>
+					<ul>
+						<li>短语：构建一棵树后取任意一个子树，推导到最终得到的结果。比如上图就是 HDEF、HDE、H 和 G</li>
+						<li>直接短语：基于短语的基础上，如果推导一次就结束了，比如 F → G 然后 G 无法再进行推导，则称为直接短语。比如上图的 H 和 G</li>
+						<li>句柄：基于直接短语的基础上，如果推导处于最左边，比如 C → H，则成为句柄。比如 C</li>
+						<li>最左推导：每次都优先从最左边进行推导，比如 AXXXC 里虽然 C 可以推导为 D，但结果只能是 BXXXC，C 被不可推导的 X 挡住了</li>
+						<li>最右推导：每次都优先从最右边进行推导，在形式语言中，最右推导常被称为规范推导</li>
+						<li>推导：可以在任意位置进行推导</li>
+					</ul>
+				</p>
+				<h3>编译程序</h3>
+				<p>
+					<ol>
+						<li>词法分析：将字符序列转化为 token 的过程。用户输入的只是一系列字符，词法分析则将这些字符进行切割</li>
+						<li>语法分析：将 token 序列组成语法短语</li>
+						<ul>
+							<li>自上向下：给定文法G和源程序串r，按照正常顺序进行<span class="different">推导</span>得到r</li>
+							<li>自下向上：从给定的输入串r开始，不断寻找子串与文法G中某个产生式P的候选式进行匹配，并用P的左部代替(归约)之，逐步<span class="different">归约</span>到开始符号S</li>
+						</ul>
+						<li>语义分析：对程序的语义进行解释</li>
+						<li>中间代码生成</li>
+						<li>代码优化</li>
+						<li>目标代码生成</li>
+					</ol>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p></p>
+		</section>
+	</article>
+</body>
+</html>

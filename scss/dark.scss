@@ -1,10 +1,11 @@
 $imgSize: 2rem;
 
-$color: #fcfcfc; // 前景色
-$backgroundColor: #464646; // 背景颜色
+$color: #c4c4c4; // 前景色
+$backgroundColor: #484545; // 背景颜色
+$selectionBackgroundColor: #c0c0c0; // 被选中文字背景颜色
 
 /* 侧栏 */
-$sidebarBackgroundColor: #3e3e3e; // 侧栏背景色
+$sidebarBackgroundColor: $backgroundColor; // 侧栏背景色
 $catalogColor: #eee; // 侧栏主块类别前景色
 $catalogHoverColor: white; // 侧栏主块悬浮前景色
 $itemColor: #ccc; // 条目块颜色
@@ -42,8 +43,8 @@ $h6Color: #fff;
 
 $showBorderColor: #ccc;
 $tipColor: #efefef; // 提示框文本颜色
-$tipBackgroundColor: #181818; // 提示框背景色
-$tipBorderColor: #fefefe; // 提示框边框颜色
+$tipBackgroundColor: rgba(56, 56, 56, 0.4); // 提示框背景色
+$tipBorderColor: rgba(255, 251, 238, 0.5); // 提示框边框颜色
 $definitionColor: rgb(50, 50, 78);
 $definitionBackGroundColor: #efefef;
 $strongBackgroundColor: inherit;

@@ -44,7 +44,6 @@ $switch-toggle-height: 25px;
 html {
     // 默认大小
     font-size: 16px;
-    font-family: 'Geneva', 'Helvetica';
     // // 设置根标签字体大小
     // @media (max-device-width:1600px) {
     //     // <= 1600px
@@ -376,13 +375,13 @@ body {
     /* 类别 */
     h3 {
         transition: all .5s;
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         font-weight: normal;
 
         color: #222;
         img {
             margin: 0 5%;
-            height: 1.5rem;
+            height: 1.25rem;
         }
         &:hover {
             font-weight: bold;
@@ -413,7 +412,7 @@ body {
             }
         }
         a {
-            font-size: 1rem;
+            font-size: .95rem;
             text-decoration: none;
 
             color: $itemColor;
@@ -439,6 +438,9 @@ body {
 
 /* 正文  */
 #container {
+    *::selection {
+        background-color: $selectionBackgroundColor;
+    }
     float: right;
 
     margin: 0 4%;
@@ -446,8 +448,8 @@ body {
     // 屏幕大小小于 400px 时的样式
     width: 92%;
 
-    font-size: 1rem;
-    line-height: 1.5rem;
+    font-size: .95rem;
+    line-height: 1.75rem;
 
     // 屏幕大于等于 600px 时的样式
     @media (min-device-width:$deviceThreshold) {
@@ -714,12 +716,14 @@ body {
     }
     /* 提示块 */
     .tip {
-        border-left: solid 2px $tipBorderColor;
+        border-left: solid 4px $tipBorderColor;
         border-radius: 0 5px 5px 0;
-        padding: .5rem;
-
+        margin: 1rem 0;
+        padding: .5rem 1rem;
+        font-size: .95rem;
+        word-break: break-all;
         color: $tipColor;
-        background-color: $tipBackgroundColor;
+        background-color:  $tipBackgroundColor;
     }
     /* 术语 */
     .definition {

@@ -2,6 +2,8 @@ $imgSize: 2rem;
 
 $color: #464646; // 前景色
 $backgroundColor: #fefefe; // 背景颜色
+$selectionBackgroundColor: #dedede; // 被选中文字背景颜色
+
 /* 侧栏 */
 $sidebarBackgroundColor: #efefef; // 侧栏背景色
 $catalogColor: #444; // 侧栏主块类别前景色
@@ -39,8 +41,8 @@ $h5Color: #222;
 $h6Color: #222;
 
 $showBorderColor: #222;
-$tipColor: #111; // 提示框文本颜色
-$tipBackgroundColor: #eee; // 提示框背景色
+$tipColor: #333; // 提示框文本颜色
+$tipBackgroundColor: rgba(128, 128, 128, 0.8); // 提示框背景色
 $tipBorderColor: #222; // 提示框边框颜色
 $definitionColor: white;
 $definitionBackGroundColor: rgb(170, 170, 255);
