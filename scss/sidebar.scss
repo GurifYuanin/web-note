@@ -4,6 +4,12 @@ $switch-height: 30px;
 $switch-toggle-width: 25px;
 $switch-toggle-height: 25px;
 
+.is-danger { color: #f56954 !important; }
+.is-warn { color: #f39c12 !important; }
+.is-different { color: #f92472 !important; }
+.is-success { color: #6cc788 !important; }
+.is-primary { color: #3c81df !important; }
+.is-info { color: #00c0ef !important; }
 @function px2em($px, $base-font-size: 16px) {
     @if (unitless($px)) {
         // 判断是否带单位，如果无单位则默认为 px
