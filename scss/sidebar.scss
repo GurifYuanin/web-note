@@ -456,6 +456,7 @@ body {
 
     font-size: .95rem;
     line-height: 1.75rem;
+    overflow: hidden;
 
     // 屏幕大于等于 600px 时的样式
     @media (min-device-width:$deviceThreshold) {

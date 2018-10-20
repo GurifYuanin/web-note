@@ -213,10 +213,71 @@ A → B|C|DEF
 				</p>
 			</p>
 		</section>
+		<section>
+			<h2>操作系统</h2>
+			<p>
+				<h3>PCB</h3>
+				<p>
+					PCB：进程控制块，一种专门描述进程的数据结构，有这个进程控制块，系统才感知到进程。
+					<figure>
+						<img src="../images/software_engineer_pcb.jpg">
+						<figcaption>https://baike.baidu.com/item/进程控制块/7205297?fr=aladdin</figcaption>
+					</figure>
+					PCB 放在系统的内存上，由于系统上运行着多个进程，系统需要知道哪些进程正在执行，哪些进程阻塞中，所以就需要根据 PCB 来调度进程，有三种存放方式：
+					<ul>
+						<li>线性表方式：不管进程的状态，直接将所有 PCB 顺序放置</li>
+						<li>索引表方式：维护一个就绪索引表和一个阻塞索引表，索引是 PCB 块的首地址</li>
+						<figure>
+							<img src="../images/software_engineer_pcb_index.jpg">
+						</figure>
+						<li>链接表方式：每个 PCB 块都有一个指针，指向下一个 PCB 块的首地址，然后创建就绪指针、阻塞指针、空闲指针，分别指向一个 PCB 块的首地址。当进程状态发生改变的时候，就从一个 PCB 链表转到另一个链表上。</li>
+						<figure>
+							<img src="../images/software_engineer_pcb_link.jpg">
+							<figcaption>https://blog.csdn.net/canyanruxue/article/details/78439934</figcaption>
+						</figure>
+					</ul>
+				</p>
+				<h3>磁盘</h3>
+				<p>
+					<h4>磁盘结构</h4>
+					<figure>
+						<img src="../images/software_engineer_disk.jpg">
+						<figcaption>磁盘结构</figcaption>
+					</figure>
+					<ul>
+						<li>磁盘片：上下面都可以存储数据</li>
+						<li>磁道：磁盘片上的同心圆</li>
+						<li>扇区：磁道切割成若干个扇区，一个扇区称之为一个盘块（数据块）</li>
+					</ul>
+					<h4>时间计算</h4>
+					磁盘是一直在旋转的，读写的磁头则由主杆操作前后移动，所以如果要读取磁盘上某个地方的数据，需要：
+					<ol>
+						<li>主杆控制磁头移动到目标磁道上：m 类似于主杆移动速度，是一个常数，n 距离有目标有多少磁道，s 主杆启动时间，所以需要时间 m * n + s</li>
+						<li>等待磁盘旋转到磁头的位置：由于磁盘旋转无法停止，所以磁头移动到目标磁道上的时候既有可能是刚好就可以进行读写，也可能刚好错过，因此使用 T / 2 作为计算时间，T 是磁盘旋转一周所需时间</li>
+						<li>传输时间：r 为磁盘每秒转多少圈，N 为一条磁道上有多少字节，b 为要读取多少字节，因此需要时间 b / (r * N)</li>
+					</ol>
+					<h4>磁盘调度</h4>
+					当有多个读写请求的时候，该先响应哪个请求？
+					<ul>
+						<li>先来先服务（FCFS）：顾名思义。但可能恰好几个请求的读写位置相差甚远，导致磁头跑来跑去</li>
+						<li>最短寻道优先（SSTF）：根据现在磁头所在的位置，优先选择一条最近的。但可能让磁头一直待在某个地方，因为不断有近的请求进来，导致虽然先来但是请求位置比较远而一直得不到响应</li>
+						<li>扫描算法（SCAN）：电梯算法，每次都只向一个方向移动，直到这个方向上没有请求，再调换方向</li>
+						<li>循环扫描算法：从最外层有请求的磁道往最内层磁道扫描，扫完后回到最外侧有请求的磁道，重复以上</li>
+						<li>NStepSCAN：先将众多请求分成若干个子队列，然后依次对每个子队列使用扫描算法</li>
+						<li>FSCAN 调度算法：将众多请求分成若两个子队列，然后依次对子队列使用扫描算法</li>
+					</ul>
+				</p>
+				<h3>文件索引</h3>
+				<p></p>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
 				<div>[1] 数据流图 <a href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E6%B5%81%E5%9B%BE/4136477?fromtitle=dfd&fromid=65845&fr=aladdin#1">https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E6%B5%81%E5%9B%BE/4136477?fromtitle=dfd&fromid=65845&fr=aladdin#1</a></div>
+				<div>[2] 进程控制块 <a href="https://baike.baidu.com/item/进程控制块/7205297?fr=aladdin">https://baike.baidu.com/item/进程控制块/7205297?fr=aladdin</a></div>
+				<div>[3] 进程控制块及其作用、组织方式 <a href="https://blog.csdn.net/canyanruxue/article/details/78439934">https://blog.csdn.net/canyanruxue/article/details/78439934</a></div>
+				<div>[4] 汤小丹 计算机操作系统(第三版)</div>
 			</p>
 		</section>
 	</article>

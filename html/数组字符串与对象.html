@@ -494,6 +494,12 @@ obj = Object.assign({a: 1}, obj); // 方法一
 obj.b = 2; // 方法二
 obj['c'] = 3; // 方法三
 					</code></pre>
+					需要注意，assign 是将第二个参数的属性赋值给第一个参数，虽然说最后返回这个合并后的对象，但会实际会影响到第一个参数的属性。
+					<pre><code class="javascript">
+var obj = {a: 1};
+Object.assign(obj, {b: 1});
+console.log(obj); // => {a: 1, b: 1}
+					</code></pre>
 				</p>
 				<h3>配置属性：Object.defineProperty / Object.defineProperties</h3>
 				<p>
