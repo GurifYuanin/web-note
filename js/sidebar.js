@@ -181,7 +181,7 @@ $(function() {
                     '其他'
                     ]; // 目录分类
     var items = [
-        ['DOM', 'meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', 'canvas', 'svg'],
+        ['DOM', 'meta标签', 'href和src', 'link', 'script', 'HTML语义化', 'HTML5', '表单元素', 'canvas', 'svg'],
         ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
         ['数据类型', '数组字符串与对象', '循环', '作用域链', '原型链', '闭包', '事件', '复制粘贴', 'Javascript进程', 'RegExp', 'XMLHttpRequest', 'Class', 'JSONP', 'this', 'jquery', 'promise', 'Generator', 'async', 'Typescript'],
         ['three', 'geometry', 'material', 'object', 'scene', 'camera', 'light'],

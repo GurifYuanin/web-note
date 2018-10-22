@@ -31,12 +31,17 @@
 					<li>内部路径总和：根结点到所有其他结点的路径长度的总和</li>
 					<li>穿线树：二叉链表存储结构下，将空的子节点指针指向前驱或后继</li>
 					<li>平衡二叉树：左右两个子树的高度差的绝对值不超过 1</li>
-					<li>二叉排序树：所有的子树遵循<span class="different">左节点值 < 根节点值 < 右节点值</span>的规律</li>
+					<li>二叉排序树 / 二叉搜索树：所有的子树遵循<span class="different">左节点值 < 根节点值 < 右节点值</span>的规律</li>
 					<li>B树：平衡多叉排序树</li>
 					<li>完全二叉树：只有最下面一层的节点度小于 2，其必须全部分布在左侧</li>
 					<figure>
 						<img src="../images/struct_total_binary_tree.jpg">
 					</figure>
+					有以下性质：
+					<ul>
+						<li>叶子节点数 = Math.ceil(总节点数 / 2)</li>
+						<li>叶子节点只出现在最后两层</li>
+					</ul>
 					<li>丰满树：内部路径总和最小的树，比如满二叉树</li>
 					<figure>
 						<img src="../images/struct__full_binary_tree.jpg">

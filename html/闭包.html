@@ -27,8 +27,8 @@
 		<section>
 			<h2>定义</h2>
 			<p>
-				闭包是有权访问另一个函数作用域的变量的函数。<sup>[1]</sup><br>
-				在<a href="./作用域链.html"> 作用域链 </a>的文末，我们知道，当一个函数执行结束后，其作用域链会被销毁，如果不存在外部引用，其变量对象也会被销毁。而闭包，就是存在外部引用的情况下，其变量对象不会被销毁。
+				<code>闭包是有权访问另一个函数作用域的变量的函数。<sup>[1]</sup></code>
+				在<a href="./作用域链.html"> 作用域链 </a>的文末，我们知道，当一个函数执行结束后，其作用域链会被销毁，如果不存在外部引用，其变量对象也会被销毁。而闭包，就是存在外部引用的情况下，其变量对象不会被销毁，<span class="different">依旧可以访问函数上下文之外的变量</span>。
 				<pre><code class="javascrip">
 function foo () {
 	var temp = 'hello world';
@@ -66,7 +66,7 @@ for (var i = 0; i < 5; i++) {
 				</code></pre>
 				此时无论调用哪个 arr[i] ，都是弹出 5 （最后执行了一次 i++ ，i 等于 5 跳出循环），而不会是 0 ~ 4 。
 				<figure style="text-align: center;">
-					<img src="../images/bibao_error.jpg" alt="加载失败">
+					<img src="../images/bibao_error.jpg">
 				</figure>
 				这是因为 arr[i] 的每个匿名函数创建时的<span class="definition"> [[scope]] </span>指向的作用域链里的 i 是同一个 i ，执行完循环后 i 的值为 5 ，调用匿名函数时访问的都是同一个变量对象里的 i 。解决方法是创建一个立即执行的匿名函数，将 i 赋值给匿名函数里的其他变量（例如 j ），每个匿名函数里的 j 都是相互独立的，就不会出现引用同一个 i 的情况。
 				<pre><code class="javascript">
@@ -81,8 +81,17 @@ for (var i = 0; i < 5; i++) {
 }
 				</code></pre>
 				<figure style="text-align: center;">
-					<img src="../images/bibao_true.jpg" alt="加载失败">
+					<img src="../images/bibao_true.jpg">
 				</figure>
+				也可以使用 let 关键字来实现，因为 let 声明的变量是存在作用域的（即一对大括号），每次循环都会生成一个作用域，arr 数组里的函数不会访问到同一个作用域上的变量。
+				<pre><code class="javascript">
+var arr = new Array(5);
+for (let i = 0; i < 5; i++) {
+	arr[i] = function(){
+		console.log(i);
+	}
+}
+				</code></pre>
 			</p>
 		</section>
 		<section>

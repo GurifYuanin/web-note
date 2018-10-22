@@ -301,11 +301,149 @@ window.document.body === document.getElementsByTagName('body')[0] // => true
 				</figure>
 			</p>
 		</section>
+		<section>
+			<h2>页面滚动</h2>
+			<p>
+				<h3>获得 window 的 x/y 轴偏移</h3>
+				<p>
+					<ul>
+						<li>文档的 y 轴偏移：window.pageYOffset 或 window.scrollY</li>
+						<li>文档的 x 轴偏移：window.pageXOffset 或 window.scrollX</li>
+					</ul>
+					<div class="show">
+						<div>window.pageYOffset：<span id="page-y-offset-container"></span></div>
+						<div>window.scrollY：<span id="scroll-y-container"></span></div>
+						<div>window.pageXOffset：<span id="page-x-offset-container"></span></div>
+						<div>window.scrollX：<span id="scroll-x-container"></span></div>
+						<div class="is-success">尝试上下滚动</div>
+						<script>
+							var pageYOffsetEl = document.getElementById('page-y-offset-container'),
+								scrollYEl = document.getElementById('scroll-y-container'),
+								pageXOffsetEl = document.getElementById('page-x-offset-container'),
+								scrollXEl = document.getElementById('scroll-x-container');
+							window.addEventListener('scroll', function() {
+								pageYOffsetEl.innerText = window.pageYOffset;
+								scrollYEl.innerText = window.scrollY;
+								pageXOffsetEl.innerText = window.pageXOffset;
+								scrollXEl.innerText = window.scrollX;
+							});
+						</script>
+					</div>
+					有几个注意点：
+					<ul>
+						<li>IE9 及以上支持 pageXOffset 和 pageYOffset 。</li>
+						<li>得到的是 Number 类型，省略了 px 单位</li>
+						<li>是只读属性，如果进行赋值，会失效（页面滚动也不更新数值了）</li>
+					</ul>
+				</p>
+				<h3>滚动到特定元素</h3>
+				<p>
+					继承自 Element 类的对象有一个 scrollIntoView 方法，用于将页面滚动到这个元素的位置。
+					<figure>
+						<img src="../images/position_scroll_into_view.jpg">
+					</figure>
+					使用时分为三种情况：
+					<ul>
+						<li>不传参数，滚动最终效果是元素在视图顶部</li>
+						<li>传入布尔值</li>
+						<ul>
+							<li>true：和不传参数一样</li>
+							<li>false：滚动最终效果是元素在视图底部</li>
+						</ul>
+						<li>传入一个对象</li>
+						<ul>
+							<li>behavior：滚动行为可以选择为</li>
+							<ul>
+								<li>auto：默认值</li>
+								<li>instant：立即滚动到目标</li>
+								<li>smooth：有平滑动画</li>
+							</ul>
+							<li>block：元素垂直方向哪个地方，有以下值：</li>
+							<ul>
+								<li>start：顶部</li>
+								<li>center：默认值，中部</li>
+								<li>end：底部</li>
+							</ul>
+							<li>inline：元素水平方向哪个位置，有以下值</li>
+							<ul>
+								<li>start：左侧</li>
+								<li>center：中部</li>
+								<li>end：右侧</li>
+								<li>nearest：默认</li>
+							</ul>
+						</ul>
+					</ul>
+					<div class="show">
+						<div><a href="javascript:void(0)" id="anchor-container">我是一个锚点</a></div>
+						<div><input id="none-param" type="radio" name="anchor-param" checked> 无参数</div>
+						<div><input id="align-param" type="radio" name="anchor-param">
+							alignToTop：
+							<select id="align-to-top-select">
+								<option value="0">true</option>
+								<option value="1">false</option>
+							</select>
+						</div>
+						<div><input id="options-param" type="radio" name="anchor-param">
+							scrollIntoViewOptions：
+							<div class="anchor-indent">
+								behavior：
+								<select id="options-behavior">
+									<option value="auto" selected>auto</option>
+									<option value="instant">instant</option>
+									<option value="smooth">smooth</option>
+								</select>
+							</div>
+							<div class="anchor-indent">
+								block：
+								<select id="options-block" value="center">
+									<option value="start">start</option>
+									<option value="center" selected>center</option>
+									<option value="end">end</option>
+								</select>
+							</div>
+							<div class="anchor-indent">
+								inline：
+								<select id="options-inline">
+									<option value="start">start</option>
+									<option value="center">center</option>
+									<option value="end">end</option>
+									<option value="nearest" selected>nearest</option>
+								</select>
+							</div>
+						</div>
+						<button class="button" id="anchor-button">滚动到锚点</button>
+						<style>
+							.anchor-indent { padding-left: 40px; }
+						</style>
+						<script>
+							var el = document.getElementById('anchor-container');
+							var noneParamEl = document.getElementById('none-param');
+							var alignParamEl = document.getElementById('align-param');
+							var alignToTopEl = document.getElementById('align-to-top-select');
+							var optionsParamEl = document.getElementById('options-param');
+							var optionsBehaviorEl = document.getElementById('options-behavior');
+							var optionsBlockEl = document.getElementById('options-block');
+							var optionsInlineEl = document.getElementById('options-inline');
+							document.getElementById('anchor-button').onclick = function() {
+								if (noneParamEl.checked) el.scrollIntoView();
+								else if (alignParamEl.checked) el.scrollIntoView(Number.parseInt(alignToTopEl.value) === 0);
+								else if (optionsParamEl.checked) el.scrollIntoView({
+									behavior: optionsBehaviorEl.value,
+									block: optionsBlockEl.value,
+									inline: optionsInlineEl.value
+								});
+							}
+						</script>
+					</div>
+				</p>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
 				<div>[1] Eric A. Meyer 《CSS权威指南》</div>
 				<div>[2] 柚子君 js中的各种“位置”——“top、clientTop、scrollTop、offsetTop……”，你知道多少 <a href="https://www.cnblogs.com/youziclub/p/4811069.html">https://www.cnblogs.com/youziclub/p/4811069.html</a></div>
+				<div>[3] MDN <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView">https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView</a></div>
 			</p>
 		</section>
 	</article>
