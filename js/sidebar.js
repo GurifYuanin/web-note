@@ -72,22 +72,6 @@ function getViewport(target) {
         'height': target.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
     };
 }
-// 滚动到指定 id 的位置
-function scrollTo(name, el) {
-    if (name === '返回顶部' || !name) {
-        $('html, body').animate({
-            scrollTop: 0
-        }, 500);
-    } else if (el) {
-        el.animate({
-            scrollTop: $('#' + name).offset().top - 100
-        }, 500);
-    } else {
-        $('html, body').animate({
-            scrollTop: $('#' + name).offset().top
-        }, 500);
-    }
-}
 // 获得文件名后缀（不含 .）
 function getSuffix(filename) {
     return filename.substring(filename.lastIndexOf('.') + 1);
@@ -140,9 +124,24 @@ Notify.prototype.info = function(options) {
     }, options.duration);
 };
 
-
 // sidebar
 $(function() {
+    // 滚动到指定 id 的位置
+    function scrollTo(name, el) {
+        if (name === '返回顶部' || !name) {
+            $('html, body').animate({
+                scrollTop: 0
+            }, 500);
+        } else if (el) {
+            el.animate({
+                scrollTop: $('#' + name).offset().top - 100
+            }, 500);
+        } else {
+            $('html, body').animate({
+                scrollTop: $('#' + name).offset().top
+            }, 500);
+        }
+    }
     var viewport = document.createElement('meta');
     var icon = document.createElement('link');
     var autopush = document.createElement('script');

@@ -221,7 +221,7 @@ module.exports = {
 	plugins: [
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vender',
-			filename: 'vender.[hash:8].js' // 将 vue.js vue-router.js 打包到 vender.[hash:8].js 文件
+			filename: 'vender.[hash:8].js' // 提取之后的名字
 		}),
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'runtime' // 选择一个未使用的名字，将 webpack 的代码打包到 runtime.[hash:8].js 文件（分离 webpack 出去）

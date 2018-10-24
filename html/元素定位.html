@@ -157,14 +157,16 @@
 					上下滚动
 				</div>
 				<script>
-					var showFixed = document.getElementById('show-fixed');
-					var fixedBlock = document.getElementById('fixed-block');
-					var flag = true;
-					showFixed.onclick = function() {
-						fixedBlock.style.display = flag ? 'block' : 'none';
-						showFixed.value = flag ? '隐藏 fixed 框' : '显示 fixed 框';
-						flag = !flag;
-					};
+					(function() {
+						var showFixed = document.getElementById('show-fixed');
+						var fixedBlock = document.getElementById('fixed-block');
+						var flag = true;
+						showFixed.onclick = function() {
+							fixedBlock.style.display = flag ? 'block' : 'none';
+							showFixed.value = flag ? '隐藏 fixed 框' : '显示 fixed 框';
+							flag = !flag;
+						};
+					})();
 				</script>
 				<pre><code class="html">
 &lt;div id="fixed-block" style="
@@ -222,7 +224,7 @@
 			</p>
 		</section>
 		<section>
-			<h2>位置</h2>
+			<h2>元素在文档中的位置</h2>
 			<p>
 				如何确定一个元素的位置？关于 Y 轴的有：
 				<ul>
@@ -235,7 +237,14 @@
 					<li>scrollHeight：内容高度 + padding-top + padding-bottom</li>
 					<li>offsetHeight：内容高度（IE、Opera、FF） / height（chrome） + padding-top + padding-bottom + border-top + border-bottom</li>
 				</ul>
-				其中 height 指的是样式上的高度，而"内容高度"指的是元素内的内容的实际高度，比如有 100 行文字，每行文字的 line-height 为 16px ，那内容高度就有 160px，而设置了 height: 100px，那 height 就为 100px。
+				注意：
+				<ol>
+					<li>其中 height 指的是样式上的高度，也就是 getComputedStyle(el).height ，而"内容高度"指的是元素内的内容的实际高度，比如有 100 行文字，每行文字的 line-height 为 16px ，那内容高度就有 160px，而设置了 height: 100px，那 height 就为 100px</li>
+					<li>上面所说的滚动条宽度指的是：</li>
+					<figure>
+						<img src="../images/position_scroll_width.jpg">
+					</figure>
+				</ol>
 				<figure>
 					<img src="../images/position_box.jpg" alt="">
 					<figcaption>实际例子可查看<a href="../demo/position_demo.html">此处</a></figcaption>
@@ -244,7 +253,48 @@
 			</p>
 		</section>
 		<section>
-			<h2>整体宽高</h2>
+			<h2>元素相对视口的位置</h2>
+			<p>
+				Element 元素存在一个 getBoundingClientRect 方法，用于获得该元素当前时刻相对于视口的位置信息的一个<span class="different">对象</span>，对于该方法即使是旧版本的浏览器也基本支持。
+				<pre><code class="javascript">
+var el = document.getElementById('id');
+el.getBoundingClientRect();
+				</code></pre>
+				对象有以下属性：
+				<ul>
+					<li>width / height：元素的宽高</li>
+					<li>top / bottom / left / right：如下图</li>
+					<figure>
+						<img src="../images/position_bounding-rect.jpg">
+					</figure>
+				</ul>
+				<div class="show">
+					<div id="get-bounding-client-rect-demo" style="width: 50px; height: 50px; background-color: gray;"></div>
+					<div>top：<span id="get-bounding-client-rect-top"></span></div>
+					<div>bottom：<span id="get-bounding-client-rect-bottom"></span></div>
+					<div>left：<span id="get-bounding-client-rect-left"></span></div>
+					<div>rigth：<span id="get-bounding-client-rect-right"></span></div>
+					<script>
+						(function() {
+							var el = document.getElementById('get-bounding-client-rect-demo');
+							var top = document.getElementById('get-bounding-client-rect-top');
+							var bottom = document.getElementById('get-bounding-client-rect-bottom');
+							var left = document.getElementById('get-bounding-client-rect-left');
+							var right = document.getElementById('get-bounding-client-rect-right');
+							window.addEventListener('scroll', function() {
+								var rect = el.getBoundingClientRect();
+								top.innerText = rect.top;
+								bottom.innerText = rect.bottom;
+								left.innerText = rect.left;
+								right.innerText = rect.right;
+							});
+						})();
+					</script>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>窗口宽高</h2>
 			<p>
 				在这之前需要知道以下元素代表什么：
 				<ul>
@@ -317,16 +367,18 @@ window.document.body === document.getElementsByTagName('body')[0] // => true
 						<div>window.scrollX：<span id="scroll-x-container"></span></div>
 						<div class="is-success">尝试上下滚动</div>
 						<script>
-							var pageYOffsetEl = document.getElementById('page-y-offset-container'),
-								scrollYEl = document.getElementById('scroll-y-container'),
-								pageXOffsetEl = document.getElementById('page-x-offset-container'),
-								scrollXEl = document.getElementById('scroll-x-container');
-							window.addEventListener('scroll', function() {
-								pageYOffsetEl.innerText = window.pageYOffset;
-								scrollYEl.innerText = window.scrollY;
-								pageXOffsetEl.innerText = window.pageXOffset;
-								scrollXEl.innerText = window.scrollX;
-							});
+							(function() {
+								var pageYOffsetEl = document.getElementById('page-y-offset-container'),
+									scrollYEl = document.getElementById('scroll-y-container'),
+									pageXOffsetEl = document.getElementById('page-x-offset-container'),
+									scrollXEl = document.getElementById('scroll-x-container');
+								window.addEventListener('scroll', function() {
+									pageYOffsetEl.innerText = window.pageYOffset;
+									scrollYEl.innerText = window.scrollY;
+									pageXOffsetEl.innerText = window.pageXOffset;
+									scrollXEl.innerText = window.scrollX;
+								});
+							})();
 						</script>
 					</div>
 					有几个注意点：
@@ -336,7 +388,7 @@ window.document.body === document.getElementsByTagName('body')[0] // => true
 						<li>是只读属性，如果进行赋值，会失效（页面滚动也不更新数值了）</li>
 					</ul>
 				</p>
-				<h3>滚动到特定元素</h3>
+				<h3>滚动到特定元素 - scrollIntoView 方法</h3>
 				<p>
 					继承自 Element 类的对象有一个 scrollIntoView 方法，用于将页面滚动到这个元素的位置。
 					<figure>
@@ -395,7 +447,7 @@ window.document.body === document.getElementsByTagName('body')[0] // => true
 							</div>
 							<div class="anchor-indent">
 								block：
-								<select id="options-block" value="center">
+								<select id="options-block">
 									<option value="start">start</option>
 									<option value="center" selected>center</option>
 									<option value="end">end</option>
@@ -416,23 +468,219 @@ window.document.body === document.getElementsByTagName('body')[0] // => true
 							.anchor-indent { padding-left: 40px; }
 						</style>
 						<script>
-							var el = document.getElementById('anchor-container');
-							var noneParamEl = document.getElementById('none-param');
-							var alignParamEl = document.getElementById('align-param');
-							var alignToTopEl = document.getElementById('align-to-top-select');
-							var optionsParamEl = document.getElementById('options-param');
-							var optionsBehaviorEl = document.getElementById('options-behavior');
-							var optionsBlockEl = document.getElementById('options-block');
-							var optionsInlineEl = document.getElementById('options-inline');
-							document.getElementById('anchor-button').onclick = function() {
-								if (noneParamEl.checked) el.scrollIntoView();
-								else if (alignParamEl.checked) el.scrollIntoView(Number.parseInt(alignToTopEl.value) === 0);
-								else if (optionsParamEl.checked) el.scrollIntoView({
-									behavior: optionsBehaviorEl.value,
-									block: optionsBlockEl.value,
-									inline: optionsInlineEl.value
+							(function() {
+								var el = document.getElementById('anchor-container');
+								var noneParamEl = document.getElementById('none-param');
+								var alignParamEl = document.getElementById('align-param');
+								var alignToTopEl = document.getElementById('align-to-top-select');
+								var optionsParamEl = document.getElementById('options-param');
+								var optionsBehaviorEl = document.getElementById('options-behavior');
+								var optionsBlockEl = document.getElementById('options-block');
+								var optionsInlineEl = document.getElementById('options-inline');
+								document.getElementById('anchor-button').onclick = function() {
+									if (noneParamEl.checked) el.scrollIntoView();
+									else if (alignParamEl.checked) el.scrollIntoView(Number.parseInt(alignToTopEl.value) === 0);
+									else if (optionsParamEl.checked) el.scrollIntoView({
+										behavior: optionsBehaviorEl.value,
+										block: optionsBlockEl.value,
+										inline: optionsInlineEl.value
+									});
+								}
+							})();
+						</script>
+					</div>
+				</p>
+				<h3>滚动到特定元素 - 片段标识符</h3>
+				<p>
+					使用片段标识符 url地址<span class="different">#XXX</span>，当进入的 url 地址跟有这样的片段标识符，就会自动滚动到元素 id 为 XXX 的位置。
+					<pre><code class="html">
+&lt;a id="<span class="strong">segment-demo</span>" href="javascript:void(0)">我是一个 id 为 segment-demo 的锚点&lt;/a>
+&lt;br>
+&lt;a href="#<span class="strong">segment-demo</span>">点我，我是一个可以跳转到当前页面#segment-demo 的锚点&lt;/a>
+					</code></pre>
+					<div class="show">
+						<a id="segment-demo" href="javascript:void(0)">我是一个 id 为 segment-demo 的锚点</a>
+						<br>
+						<a class="self" href="#segment-demo">点我，我是一个可以跳转到当前页面#segment-demo 的锚点</a>
+					</div>
+					<figure>
+						<img src="../images/position_segment.jpg">
+						<figcaption>点击后看地址栏</figcaption>
+					</figure>
+				</p>
+				<h3>手动控制滚动</h3>
+				<p>
+					使用 window.scroll(xOffset, yOffset) 来控制滚动到窗口的 x 轴偏移 xOffset，y 轴偏移 yOffset 的位置。
+					<div class="show">
+						<div>xOffset：<input id="scroll-to-x" type="number" min="0" max="100" value="0"></div>
+						<div>yOffset：<input id="scroll-to-y" type="number" min="0" max="10000" value="5000"></div>
+						<div><button id="scroll-to-button" class="button">滚动</button></div>
+						<script>
+							(function() {
+								var x = document.getElementById('scroll-to-x'),
+									y = document.getElementById('scroll-to-y'),
+									notify = new Notify();
+								document.getElementById('scroll-to-button').onclick = function() {
+									window.scrollTo(Number(x.value), Number(y.value));
+									notify.info({ content: '已经滚动到 x：' + x.value + '，y：' + y.value, type: 'success' });
+								}
+							})();
+						</script>
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>例子</h2>
+			<p>
+				<h3>平滑滚动到某个元素</h3>
+				<p>
+					使用 scrollIntoViewOptions 传入对象选项可以直接进行平滑动画，但存在兼容问题。
+					<figure>
+						<img src="../images/position_scrollintoviewoptions_compatiable.jpg">
+					</figure>
+					于是可以使用 scrollTo 来代替。
+					<pre><code class="javascript">
+var anchor = document.getElementById('smooth-scroll-anchor'); // 锚点元素
+
+// 为按钮添加点击事件，点击后滚动到锚点
+document.getElementById('smooth-scroll-button').onclick = function() {
+	(function scrollToEl() {
+		var windowY = window.scrollY,
+			elementY = anchor.offsetTop,
+			distence = windowY - elementY;
+		// 你可以在这里自定义滚动速度
+		if (Math.abs(distence) > 5) {
+			var next = distence > 0 ?
+				   Math.max(distence * .1, 1) :
+				   Math.min(distence * .1, -1);
+			window.scrollTo(window.scrollX, windowY - next);
+			requestAnimationFrame(scrollToEl);
+		} else {
+			window.scrollTo(window.scrollX, elementY);
+		}
+	})();
+};
+					</code></pre>
+					<div class="show">
+						<div><a id="smooth-scroll-anchor" href="javascript:void(0)">锚点</a></div>
+						<div><button id="smooth-scroll-button" class="button">滚动到锚点</button></div>
+						<script>
+							(function() {
+								var anchor = document.getElementById('smooth-scroll-anchor');
+								document.getElementById('smooth-scroll-button').onclick = function() {
+									(function scrollToEl() {
+										var windowY = window.scrollY,
+											elementY = anchor.offsetTop,
+											distence = windowY - elementY;
+										if (Math.abs(distence) > 5) {
+											var next = distence > 0 ?
+													   Math.max(distence * .1, 1) :
+													   Math.min(distence * .1, -1);
+											window.scrollTo(window.scrollX, windowY - next);
+											requestAnimationFrame(scrollToEl);
+										} else {
+											window.scrollTo(window.scrollX, elementY);
+										}
+									})();
+								};
+							})();
+						</script>
+					</div>
+					考虑到兼容性问题可以用兼容检查获得视窗的偏移量：
+					<pre><code class="javascript">
+function getScrollY() {
+	return window.scrollY || window.pageYOffset || window.document.documentElement.scrollTop;
+}
+					</code></pre>
+				</p>
+				<h3>返回顶部</h3>
+				<p>
+					使用 scrollTo 滚动到顶部。
+					<pre><code class="javascript">
+// 获得按钮
+document.getElementById('scroll-to-top-demo').onclick = function() {
+	window.scrollTo(window.scrollX, 0);
+}
+					</code></pre>
+					<div class="show">
+						<button id="scroll-to-top-demo" class="button">点我回到顶部</button>
+						<script>
+							(function() {
+								document.getElementById('scroll-to-top-demo').onclick = function() { window.scrollTo(window.scrollX, 0); }
+							})();
+						</script>
+					</div>
+				</p>
+				<h3>锚点出现时触发回调</h3>
+				<p>
+					设置当滚动事件，如果视窗第一次出现某个锚点就触发事件，只触发一次，触发后就删除滚动事件。
+					<pre><code class="javascript">
+var notify = new Notify();
+var el = document.getElementById('once-callback-anchor'); // "没有感情的锚点" 元素
+// 函数定义在外面，有名字才能 remove 掉
+function scrollEvent() {
+	if (el.getBoundingClientRect().top < 0) {
+		// 触发后执行的代码
+		notify.info({ content: '你刚才错过了一个没有感情的锚点！', type: 'error' });
+		window.removeEventListener('scroll', scrollEvent); // 移除滚动事件
+	}
+}
+window.addEventListener('scroll', scrollEvent);
+					</code></pre>
+					<div class="show">
+						<a id="once-callback-anchor" href="javascript:void(0)">我是一个没有感情的锚点</a>
+						<script>
+							(function() {
+								var notify = new Notify();
+								var el = document.getElementById('once-callback-anchor');
+								function scrollEvent() {
+									if (el.getBoundingClientRect().top < 0) {
+										notify.info({ content: '你刚才错过了一个没有感情的锚点！', type: 'error' });
+										window.removeEventListener('scroll', scrollEvent);
+									}
+								}
+								window.addEventListener('scroll', scrollEvent);
+							})();
+						</script>
+					</div>
+					当然也可以设置为向下滚动出现元素时触发，然后向上滚动再滚回来出现元素<span class="different">再次触发</span>，这时不移除滚动事件，而是定义一个状态，用于标记能不能触发。
+					<pre><code class="javascript">
+var notify = new Notify();
+var el = document.getElementById('loop-call-back-anchor');
+var isTrigger = false; // 标记事件是否已经触发过
+window.addEventListener('scroll', function() {
+	var top = el.getBoundingClientRect().top;
+	if (!isTrigger && top < 0) {
+		// 还没触发过 且 元素位置在视窗顶部以上
+		// 执行代码
+		// 设置为已经触发
+		isTrigger = true;
+		notify.info({ content: '你刚才错过了一个有感情的锚点！', type: 'info' });
+	} else if (isTrigger && top > 0) {
+		// 已经触发过 且 元素位置在视窗顶部以下
+		// 重置为可以触发
+		isTrigger = false;
+	}
+});
+					</code></pre>
+					<div class="show">
+						<a id="loop-call-back-anchor" href="javascript:void(0)">我是一个有感情的锚点</a>
+						<script>
+							(function() {
+								var notify = new Notify();
+								var el = document.getElementById('loop-call-back-anchor');
+								var isTrigger = false; // 标记事件是否已经触发过
+								window.addEventListener('scroll', function() {
+									var top = el.getBoundingClientRect().top;
+									if (!isTrigger && top < 0) {
+										isTrigger = true;
+										notify.info({ content: '你刚才错过了一个有感情的锚点！', type: 'info' });
+									} else if (isTrigger && top > 0) {
+										isTrigger = false;
+									}
 								});
-							}
+							})();
 						</script>
 					</div>
 				</p>
