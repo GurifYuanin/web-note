@@ -357,6 +357,102 @@ A → B|C|DEF
 				</p>
 			</p>
 		</section>
+		<section>
+			<h2>软件工程</h2>
+			<p>
+				<h3>软件配置管理</h3>
+				<p>
+					Software Configuration Management，对每个项目的变更进行管控（版本控制），并维护不同项目之间的版本关联，以使软件在开发过程中任一时间的内容都可以被追溯<sup>[5]</sup>，主要进行以下内容：
+					<ul>
+						<li>配置项</li>
+						<li>配置状态报告</li>
+						<li>工作空间管理</li>
+						<li>版本控制 / 管理</li>
+						<li>变更控制 / 管理</li>
+						<li>过程支持</li>
+					</ul>
+				</p>
+				<h3>开发方法</h3>
+				<p>
+					<ul>
+						<li>敏捷开发：程序员团队与业务专家之间的紧密协作、面对面的沟通、频繁交付新的软件版本、紧凑而自我组织型的团队</li>
+						<ul>
+							<li>极限编程：将复杂的开发过程分解为一个个相对比较简单的小周期；通过积极的交流、反馈以及其它一系列的方法，开发人员和客户可以非常清楚开发进度、变化、待解决的问题和潜在的困难等，并根据实际情况及时地调整开发过程</li>
+						</ul>
+						<li>迭代开发：整个开发工作被组织为一系列的短小的、固定长度（如3周）的小项目，被称为一系列的迭代。每一次迭代都包括了定义、需求分析、设计、实现与测试。</li>
+						<li>瀑布式开发：严格遵循预先计划的需求、分析、设计、编码、测试的步骤顺序进行。</li>
+					</ul>
+				</p>
+				<h3>耦合 & 内聚</h3>
+				<p>
+					耦合描述模块与模块之间的联系程度，耦合度越低越好，耦合程度从高到低：
+					<ul>
+						<li>内容耦合：一个模块直接使用另一个模块的内部数据，或通过非正常入口而转入另一个模块内部</li>
+						<li>公共耦合：通过一个公共数据环境相互作用的那些模块间的耦合</li>
+						<li>外部耦合：两个模块共用一个外加的数据格式、通信协议或是设备界面</li>
+						<li>控制耦合：一个模块传递控制变量给另一个模块</li>
+						<li>特征 / 标记 / 数据结构耦合：几个模块共享一个复杂的数据结构</li>
+						<li>数据耦合：一个传入基本类型的值给另一个模块</li>
+						<li>消息耦合：状态的去中心化，组件间利用传入值或消息传递来通信</li>
+						<li>无耦合</li>
+					</ul>
+					内聚描述模块内功能独立程度，内聚越高越好，内聚程度从低到高：
+					<ul>
+						<li>偶然内聚：模块中各机能之间唯一的关系是其位在同一个模块中</li>
+						<li>逻辑内聚：逻辑上分为同一类就放同意模块中</li>
+						<li>时间性内聚：将相近时间点运行的程序，放在同一个模块中</li>
+						<li>过程 / 程序内聚：依一组会依照固定顺序运行的程序放在同一个模块中</li>
+						<pre><code class="node">
+var fs = require('fs');
+function readFileAsString(path) {
+	fs.stat(path, function(err, stats) {
+		if (err) { console.error(err); }
+		else if (stats.isFile()) {
+			// 先判断是不是文件
+			fs.readFile(path, function(err, data) {
+				// 再读取文件
+				if (err) { console.error(err); }
+				else { console.log(data.toString()); }
+			});
+		} else { console.error(path + '不是文件'); }
+	});
+}
+						</code></pre>
+						<li>联系 / 信息 / 通信内聚：处理相同的数据或者指各处理使用相同的输入数据或者产生相同的输出数据而在同一个模块中</li>
+						<pre><code class="javascript">
+function modify1(obj) { /* ... */ }
+function modify2(obj) { /* ... */ }
+function modify3(obj) { /* ... */ }
+
+function modifyObject(obj) {
+	modify1(obj);
+	modify2(obj);
+	modify3(obj);
+}
+						</code></pre>
+						<li>依序 / 顺序内聚：一模块的输出数据是另一个模块的输入，类似工厂的生产线</li>
+						<pre><code class="javascript">
+function aLotOfCompute(num) {
+	var pow = Math.pow(num, 2);
+	var length = MathPI * pow;
+	var log = Math.log(length);
+	return log;
+}
+						</code></pre>
+						<li>功能内聚：各机能是因为它们都对模块中单一明确定义的任务有贡献</li>
+					</ul>
+				</p>
+				<h3>维护</h3>
+				<p>
+					<ul>
+						<li>更正 / 改正性维护：纠正软件本身的错误而进行的维护</li>
+						<li>适应性维护：不是系统错误，但为了适应环境而进行重构，优化等</li>
+						<li>完善性维护：为系统拓展新功能</li>
+						<li>预防性维护：考虑到未来而主动进行维护</li>
+					</ul>
+				</p>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
@@ -364,6 +460,7 @@ A → B|C|DEF
 				<div>[2] 进程控制块 <a href="https://baike.baidu.com/item/进程控制块/7205297?fr=aladdin">https://baike.baidu.com/item/进程控制块/7205297?fr=aladdin</a></div>
 				<div>[3] 进程控制块及其作用、组织方式 <a href="https://blog.csdn.net/canyanruxue/article/details/78439934">https://blog.csdn.net/canyanruxue/article/details/78439934</a></div>
 				<div>[4] 汤小丹 计算机操作系统(第三版)</div>
+				<div>[5] 软件配置管理 <a href="https://baike.baidu.com/item/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86/3765602?fr=aladdin">https://baike.baidu.com/item/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86/3765602?fr=aladdin</a></div>
 			</p>
 		</section>
 	</article>
