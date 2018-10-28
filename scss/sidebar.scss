@@ -513,7 +513,7 @@ body {
             position: absolute;
             left: 2px;
             top: 2px;
-            z-index: 2;
+            z-index: 0;
             border-radius: inherit;
             background: #283446; /* Fallback */
             background: linear-gradient(#36455b, #283446);
@@ -546,7 +546,7 @@ body {
               inset 0 -5px 5px rgba(0,0,0,0.5);
                 -webkit-transition: all .5s ease;
                 transition: all .5s ease;
-                z-index: 2;
+                z-index: -1;
         }
 
          /* Toggle */
@@ -883,7 +883,7 @@ body {
     }
     #searchClear {
         width: 24px;
-        margin: 0 .2rem 0 0;
+        margin: -.2rem .2rem 0 0;
         padding: .2rem 0;
 
         position: absolute;

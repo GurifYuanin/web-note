@@ -366,6 +366,43 @@ start chrome https://www.google.com.hk/
 						ipconfig [/all]
 					</div>
 				</p>
+				<h3>查看网络连接</h3>
+				<p>
+					使用 netstat 显示协议统计信息和当前 TCP/IP 网络连接，通常传入三个参数：
+					<ul>
+						<li>n：number，以数字形式显示地址和端口号</li>
+						<li>a：all，显示所有连接和侦听端口</li>
+						<li>o：显示拥有的与每个连接关联的进程 ID（PID）</li>
+					</ul>
+					<div class="command">
+						netstat -nao
+					</div>
+					通常用来查找某个端口被哪个进程占用：
+					<div class="command">
+						netstat -nao | findstr 8080
+					</div>
+					这里的<span class="definition"> | </span>就是前面所说的将前一条指令的结果发送给下一条指令。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>进程</h2>
+			<p>
+				<h3>终止进程</h3>
+				<p>
+					使用 taskkill 来终止进程，可以关闭指定 pid 的进程：
+					<div class="command">
+						taskkill /pid pid号
+					</div>
+					也可以直接输入进程的名字来：
+					<div class="command">
+						taskkill /im 进程名
+					</div>
+					当关闭不掉的时候使用<span class="definition"> /F </span>参数强制关闭。
+					<div class="command">
+						taskkill /im wechat.exe /F
+					</div>
+				</p>
 			</p>
 		</section>
 		<section>

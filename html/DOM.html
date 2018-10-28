@@ -189,6 +189,16 @@ document.createComment('hello world');
 						<img src="../images/dom_comment_text.jpg">
 					</figure>
 				</p>
+				<h3>克隆节点</h3>
+				<p>
+					<pre><code class="javascript">
+var el = document.createElement('div');
+// 对 el 进行一通操作
+// ...
+// 克隆节点
+var newEl = document.cloneNode(el);
+					</code></pre>
+				</p>
 				<h3>追加节点</h3>
 				<p>
 					<h4>添加到末位</h4>
