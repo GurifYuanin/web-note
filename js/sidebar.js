@@ -191,7 +191,7 @@ $(function() {
         ['HTTP', 'TCP'],
         ['CSRF', 'XSS', '同源策略'],
         ['karma', 'Vue Test Utils'],
-        ['Thinkphp5.1', 'htaccess'],
+        ['Thinkphp5.1', 'htaccess', 'Collection'],
         ['树和图', '排序', '算法规范'],
         ['路径匹配', '浏览器渲染', '设计策略', 'cookie', '头疼的兼容', '命名规范', '字符编码', 'bat', 'linux指令', '软件设计师']
     ];

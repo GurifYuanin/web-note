@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Collection</title>
+	<link rel="stylesheet" href="../css/normalize.css">
+	<link rel="stylesheet" href="../css/styles/agate.css">
+	<link rel="stylesheet" href="../css/dark.css">
+	<script src="../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+	<script src="../js/sidebar.js"></script>
+</head>
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">Collection</h1>
+		</hgroup>
+		<section>
+			<h2>Collection - 接口</h2>
+			<p>
+				Collection 表示一组对象（Element）的集合，它定义了一些方法来管理集合内的这些对象，实现自 Collection 接口的类分类：
+				<ul>
+					<li>元素有序 还是 元素无序</li>
+					<li>元素可以重复 还是 元素不可以重复</li>
+				</ul>
+				继承自 Collection 的部分子接口：
+				<table>
+					<tr>
+						<th>接口名</th>
+						<th>解释</th>
+						<th>元素顺序</th>
+						<th>元素重复</th>
+						<th>存取</th>
+					</tr>
+					<tr>
+						<td>List</td>
+						<td>列表</td>
+						<td>有序</td>
+						<td>可重复</td>
+						<td>根据索引任意存取</td>
+					</tr>
+					<tr>
+						<td>Set</td>
+						<td>集合</td>
+						<td>无序</td>
+						<td>不可重复</td>
+						<td>根据哈希存取</td>
+					</tr>
+					<tr>
+						<td>Queue</td>
+						<td>队列</td>
+						<td>有序</td>
+						<td>可重复</td>
+						<td>队头插入，队尾删除</td>
+					</tr>
+					<tr>
+						<td>Deque</td>
+						<td>两端队列</td>
+						<td>有序</td>
+						<td>可重复</td>
+						<td>两端的可以进行插入和删除</td>
+					</tr>
+				</table>
+				<h3>元素操作</h3>
+				<p>
+					<h4>添加元素</h4>
+					<div class="command">boolean add(E e){}</div>
+					<h4>批量添加元素</h4>
+					<div class="command">boolean addAll(Collection c){}</div>
+					<h4>删除元素</h4>
+					<div class="command">boolean remove(Object o){}</div>
+					<h4>批量删除元素</h4>
+					<div class="command">boolean removeAll(Collection c){}</div>
+					<h4>删除所有元素</h4>
+					<div class="command">void clear(){}</div>
+				</p>
+				<h3>判断</h3>
+				<p>
+					<h4>是否包含某个元素</h4>
+					<div class="command">boolean contains(Object o){}</div>
+					<h4>是否包含所有元素</h4>
+					<div class="command">boolean containsAll(Collection c){}</div>
+					<h4>元素个数</h4>
+					<div class="command">int size(){}</div>
+					<h4>集合是否为空</h4>
+					<div class="command">boolean isEnpty(){}</div>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>List - 接口</h2>
+			<p>
+				List，列表，元素按照顺序存放且允许添加重复元素。
+				<h3>元素操作</h3>
+				<p>
+					<h4>添加元素到指定位置</h4>
+					<div class="command">void add(int index, E e){}</div>
+					<h4>获取元素</h4>
+					<div class="command">E get(int index){}</div>	
+					<h4>获得元素索引</h4>
+					<div class="command">int indexOf(Object o){}</div>
+					<div class="command">int lastIndexOf(Object o){}</div>
+				</p>
+
+			</p>
+		</section>
+		<section>
+			<h2>Set - 接口</h2>
+			<p>
+				Set，集合，对应数学概念上的集合，元素无序存放且不可重复。
+			</p>
+		</section>
+		<section>
+			<h2>ArrayList & LinkedList & Vector - 类</h2>
+			<p>
+				三者都继承了并实现 List 接口，都是表示有顺序的元素集合，不同的是存储方式。
+				<ul>
+					<li>ArrayList & Vector：ArrayList 和 Vector 基本相同，都是用数组结构存储数据，不同的是 Vector 在元素操作的时候会加锁保证线程安全</li>
+					<li>LinkedList：使用链表方式存储数据，也是线程不安全的</li>
+				</ul>
+				<table>
+					<tr>
+						<th>类名</th>
+						<th>存储方式</th>
+						<th>线程安全</th>
+						<th>capacity（容量）</th>
+						<th>capacityIncrement（容量增量）</th>
+					</tr>
+					<tr>
+						<td>ArrayList</td>
+						<td>数组</td>
+						<td>不安全</td>
+						<td>总是跟元素数量一样，可以在调用构造函数时传入数值进行初始化</td>
+						<td>/</td>
+					</tr>
+					<tr>
+						<td>Vector</td>
+						<td>数组</td>
+						<td>安全</td>
+						<td>不小于元素数量，可以在调用构造函数时传入数值进行初始化</td>
+						<td>可以在调用构造函数时传入第二个数值进行初始化</td>
+					</tr>
+					<tr>
+						<td>LinkedList</td>
+						<td>链表</td>
+						<td>不安全</td>
+						<td>/</td>
+						<td>/</td>
+					</tr>
+				</table>
+			</p>
+		</section>
+		<section>
+			<h2>HashSet & TreeSet & LinkedSet - 类</h2>
+			<p></p>
+		</section>
+		<section>
+			<h2>Iterator - 接口</h2>
+			<p>
+				Collection 继承了 Iterator 接口，因此 Collection 下的所有实现的类都拥有 Iterator 接口的方法，一般用于对集合里的元素进行遍历。
+				<h3>迭代</h3>
+				<p>
+					<pre><code class="java">
+Iterator&lt;E> ite = 集合对象.iterator(); // 获得迭代器
+while(ite.hasNext()) {
+	E e = ite.next();
+	// 对取出元素进行操作
+}
+					</code></pre>
+				</p>
+				<h3>遍历</h3>
+				<p>
+					使用 Iterator 的 forEach 来遍历集合的所有元素，通常有三种方式，创建 Consumer 实例传入 forEach 方法：
+					<pre><code class="java">
+import java.util.function.Consumer;
+集合对象.forEach(new Consumer&lt;E>() {
+	public void accept(E e) {
+		// 对元素进行操作
+	}
+})
+					</code></pre>
+					使用拉姆达表达式：
+					<pre><code class="java">
+集合对象.forEach(e -> {
+	// 对元素进行操作
+});
+					</code></pre>
+					直接使用已有的方法，比如输出打印：
+					<pre><code class="java">
+集合对象.forEach(System.out::println);
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] JDK 1.8 API </div>
+				<div>[2] Guide to the Java 8 forEach <a href="https://www.baeldung.com/foreach-java">https://www.baeldung.com/foreach-java</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+</html>

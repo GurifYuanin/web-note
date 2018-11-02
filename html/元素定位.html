@@ -629,7 +629,7 @@ function scrollEvent() {
 window.addEventListener('scroll', scrollEvent);
 					</code></pre>
 					<div class="show">
-						<a id="once-callback-anchor" href="javascript:void(0)">我是一个没有感情的锚点</a>
+						<a id="once-callback-anchor" href="javascript:void(0)">我是一个没有感情的锚点（只触发一次）</a>
 						<script>
 							(function() {
 								var notify = new Notify();
@@ -665,7 +665,17 @@ window.addEventListener('scroll', function() {
 });
 					</code></pre>
 					<div class="show">
-						<a id="loop-call-back-anchor" href="javascript:void(0)">我是一个有感情的锚点</a>
+						<a id="loop-call-back-anchor" href="javascript:void(0)">我是一个有感情的锚点（可以重复触发）</a>
+						<div>下面的空白用于占位，使得页面可以滚动到触发条件，若还未触发，请向下滚动</div>
+						<br>
+						<br>
+						<br>
+						<br>
+						<br>
+						<br>
+						<br>
+						<br>
+						<br>
 						<script>
 							(function() {
 								var notify = new Notify();

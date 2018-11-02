@@ -10,6 +10,8 @@ $switch-toggle-height: 25px;
 .is-success { color: #6cc788 !important; }
 .is-primary { color: #3c81df !important; }
 .is-info { color: #00c0ef !important; }
+
+
 @function px2em($px, $base-font-size: 16px) {
     @if (unitless($px)) {
         // 判断是否带单位，如果无单位则默认为 px
@@ -99,30 +101,26 @@ body {
         @include subTitleNav();
         // 导航块
         .subTitleItem {
-            $itemHeight: 1.2rem;
             display: none;
             overflow: hidden;
 
             margin: 5px 0;
-            border: solid 1px #000;
             border-radius: 5px;
             padding: 5px;
-            height: $itemHeight;
 
-            font-size: $itemHeight;
             text-align: center;
             text-overflow: ellipsis;
 
-            color: #000;
-            background-color: #fff;
+            color: #656565;
+            box-shadow: 0 0 10px 0.5px rgba(80, 82, 83, 0.5) inset;
+            background-color: #fcfcfc;
             opacity: 1;
 
+            cursor: pointer;
             &:hover {
-                border: solid 1px #aaf;
+                // border: solid 1px #aaf;
                 color: #fff;
                 background-color: #aaf;
-
-                cursor: pointer;
             }
         }
     }
@@ -447,6 +445,11 @@ body {
     *::selection {
         background-color: $selectionBackgroundColor;
     }
+    @font-face {
+      font-family: 'my font';
+      src: url('方正大标宋简体.TTF');
+    }
+    font-family: 'my font';
     float: right;
 
     margin: 0 4%;
@@ -455,7 +458,8 @@ body {
     width: 92%;
 
     font-size: .95rem;
-    line-height: 1.75rem;
+    line-height: 1.5rem;
+    letter-spacing: .5px;
     overflow: hidden;
 
     // 屏幕大于等于 600px 时的样式
@@ -607,11 +611,8 @@ body {
     }
     /* 标题 */
     #title {
-        height: 3rem;
-
         color: $titleColor;
         font-size: 3rem;
-        line-height: 3rem;
         text-align: center;
         white-space: nowrap;
         @media (max-device-width: 600px) {

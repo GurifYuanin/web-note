@@ -29,7 +29,7 @@
 			<p>
 				<h3>禁用</h3>
 				<p>
-					通过配置 disabled 属性来禁用操作，只需要带有该属性就行，不需要设置<span class="definition">disabled="true"</span>：
+					通过配置 disabled 属性来禁用操作，只需要带有该属性就行，不需要设置<span class="definition">disabled="true"</span>，以下三种情况都禁用了表单：
 					<div class="show">
 						<div>disabled：<input type="text" disabled></div>
 						<div>disabled="true"：<input type="text" disabled="true"></div>
@@ -57,9 +57,9 @@
 				<p>
 					设置 tabindex 属性，使用 tab 键时，焦点跳转的顺序，从小到大跳转，可设置为 1 到 32767 之间的任意一个整数。
 					<div class="show">
-						<input type="text" tabindex="1" placeholder="我是 1">
+						<input type="text" tabindex="1" placeholder="我是 1，下一个是 2">
 						<input type="text" tabindex="3" placeholder="我是 3">
-						<input type="text" tabindex="2" placeholder="我是 2">
+						<input type="text" tabindex="2" placeholder="我是 2，下一个是 3">
 					</div>
 				</p>
 				<h3>焦点</h3>
@@ -91,7 +91,7 @@
 				<ul>
 					<li>method：http 请求方法，只能是<span class="definition"> get </span>或<span class="definition"> post </span>。默认为 get 。</li>
 					<li>action：接收 http 请求的服务器地址</li>
-					<li>enctype：encode type，当触发 form 的 submit 事件后，会将 form 内的表单进行编码，enctype 用来控制编码方式。默认为 application/x-www-form-urlencoded 。</li>
+					<li>enctype：encode type，当触发 form 的 submit 事件后，会将 form 内的表单进行编码，enctype 用来控制编码方式。默认为 application/x-www-form-urlencoded ，即将 form 内的所有表单解析为键值对再发给 action 地址</li>
 					<pre><code class="html">
 &lt;form action="http://www.isempty.site" method="get" enctype="application/x-www-form-urlencoded">
 	&lt;!-- ... -->
@@ -105,7 +105,7 @@
 			<p>
 				<pre><code class="html">
 &lt;label>&lt;input name="goods" type="radio" value="wood"> wood&lt;/label>
-&lt;label>&lt;input name="goods" type="radio" checked value="gaze"> gaze&lt;/label>
+&lt;label>&lt;input name="goods" type="radio" value="gaze" <span class="strong">checked</span>> gaze&lt;/label>
 &lt;label>&lt;input name="goods" type="radio" value="hammer"> hammer&lt;/label>
 				</code></pre>
 				<div class="show">
@@ -114,8 +114,8 @@
 					<label><input name="goods" type="radio" value="hammer"> hammer</label>
 				</div>
 				<ul>
-					<li>使用相同的 name 让多个 radio 分为一组</li>
-					<li>默认初始不选中，设置 checked 属性初始被选中</li>
+					<li>使用相同的 name 让多个 radio 分为一组（互斥选择）</li>
+					<li>单选框默认初始不选中，添加 checked 属性可以使初始时被选中</li>
 				</ul>
 			</p>
 		</section>
@@ -124,10 +124,10 @@
 			<p>
 				当 input 元素的 type 为 checkbox 时创建复选框。
 				<pre><code class="html">
-&lt;input type="checkbox" value="something">
+&lt;input type="checkbox" value="something" <span class="strong">checked</span>>
 				</code></pre>
 				<div class="show">
-					<input id="checkbox-demo" type="checkbox">
+					<input id="checkbox-demo" type="checkbox" checked>
 					<div>value：<span id="checkbox-value"></span></div>
 					<div>checked：<span id="checkbox-checked"></span></div>
 					<script>
@@ -143,9 +143,9 @@
 				</div>
 				有几点不同一般表单元素：
 				<ul>
-					<li>复选框的 value 默认为 on ，不会随开关切换而改变</li>
-					<li>要想知道是否被选中，实用 this.checked 而不是 this.value</li>
-					<li>默认初始不选中，设置 checked 属性初始被选中</li>
+					<li>复选框的 value 默认为 on ，不会随开关切换而改变为 off ，你也可以手动设置为其他值</li>
+					<li>要想知道是否被选中，读取复选框的 checked 属性而不是 value 属性，返回布尔值</li>
+					<li>复选框默认初始不选中，添加 checked 属性后初始时被选中</li>
 				</ul>
 			</p>
 		</section>
@@ -156,7 +156,7 @@
 				<pre><code class="html">
 &lt;select name="fruit">
 	&lt;option value="0">苹果&lt;/option>
-	&lt;option value="1" selected>梨&lt;/option>
+	&lt;option value="1" <span class="strong">selected</span>>梨&lt;/option>
 	&lt;option value="2">桃子&lt;/option>
 &lt;/select>
 				</code></pre>
@@ -177,8 +177,8 @@
 					</script>
 				</div>
 				<ul>
-					<li>为 option 添加 selected 属性用于初始化一开始选择了谁</li>
-					<li>获取 select 的 value ，结果是被选中条目的 value 值</li>
+					<li>为 option 元素添加 selected 属性用于初始化 select 一开始选择了谁</li>
+					<li>获取 select 元素的 value ，结果是当前被选中 option 元素的 value 值</li>
 				</ul>
 			</p>
 		</section>

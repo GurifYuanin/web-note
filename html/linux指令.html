@@ -25,15 +25,184 @@
 			<h1 id="title">linux指令</h1>
 		</hgroup>
 		<section>
+			<h2>文件 & 目录</h2>
+			<p>
+				<h3>文件</h3>
+				<p>
+					<h4>创建文件</h4>
+					<div class="command">
+touch 文件名
+					</div>
+					<h4>删除文件</h4>
+					<ul>
+						<li>-i：交互式删除文件，每次删除一个文件都要询问一次</li>
+						<li>-f：强制删除文件，不询问也不显示删除信息</li>
+						<li>-r：递归删除</li>
+					</ul>
+					<div class="command">
+rm 文件名
+					</div>
+				</p>
+				<h3>目录</h3>
+				<p>
+					<h4>创建目录</h4>
+					递归（-p）、赋权（-m 数字数字数字）创建一个目录。
+					<div class="command">
+mkdir [-m 数字数字数字] [-p] 目录名
+					</div>
+					<h4>删除目录</h4>
+					递归（-p）删除空目录（若非空则失败）。
+					<div class="command">
+rmdir [-p] 目录名
+					</div>
+					递归删除目录。
+					<div class="command">
+rm -r 目录名
+					</div>
+				</p>
+				<h3>文件 & 目录</h3>
+				<p>
+					<h4>移动 & 重命名</h4>
+					<div class="command">
+mv 源路径 目标路径
+					</div>
+					<h4>复制</h4>
+					<ul>
+						<li>-r：递归复制</li>
+						<li>-i：交互式复制，若目标文件存在则询问是否覆盖</li>
+						<li>-p：连同属性（权限等）也复制过去</li>
+						<li>-d：若源是 link，则复制 link 所链接的文件</li>
+						<li>-a：相当于 -dpr 一起使用</li>
+					</ul>
+					<div class="command">
+cp 源路径 目标目录
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
 			<h2>权限</h2>
 			<p>
-				
+				<h3>用户 & 群组 & 其他人</h3>
+				<p>
+					<ul>
+						<li>用户：即一个用户，登陆 linux 是作为一个用户登陆，比如（CentOS）以下表示以 root 用户登陆 localhost 这台机器，当前路径是 / 。</li>
+						<pre><code class="shell">
+[root@localhost /]#
+						</code></pre>
+						<li>群组：一个群组包含多个成员，一个成员可以属于多个群组</li>
+						<li>其他人：对于一个群组而言，如果某个用户不在这个组内，则称这个用户是其他人</li>
+					</ul>
+				</p>
+				<h3>档案权限</h3>
+				<p>
+					一个档案会对以下三者进行权限判定：用户、群组、其他人。一个档案的一个所属关系存在三种权限开关：读、写、执行。所以对于一个档案，查看权限获得 9 (3 乘 3)个参数：
+					<pre><code class="shell">
+# 使用 ls 查看当前路径下的所有档案
+$ ls -l
+l<span class="strong">rwxrwxrwx</span>. 1 root root 7 Oct 31 23:20 bin -> usr/bin
+...
+					</code></pre>
+					<h4>档案类型</h4>
+					第一个字符代表档案的类型：
+					<ul>
+						<li>d：directory，目录</li>
+						<li>-：文件</li>
+						<li>l：link，链接</li>
+						<li>b：装置文件里面的可供储存的接口设备</li>
+						<li>c：装置文件里面的串行端口设备</li>
+					</ul>
+					<h4>权限</h4>
+					之后的 9 个字符分别代表：
+					<ul>
+						<li>r：档案所属 用户 的 读 权限(read)</li>
+						<li>w：档案所属 用户 的 写 权限(write)</li>
+						<li>x：档案所属 用户 的 执行 权限(execute)</li>
+						<li>r：档案所属 群组 的 读 权限(read)</li>
+						<li>w：档案所属 群组 的 写 权限(write)</li>
+						<li>x：档案所属 群组 的 执行 权限(execute)</li>
+						<li>r：档案所属 其他人 的 读 权限(read)</li>
+						<li>w：档案所属 其他人 的 写 权限(write)</li>
+						<li>x：档案所属 其他人 的 执行 权限(execute)</li>
+					</ul>
+					当没有该权限的时候，就会显示为一个<span class="different"> - </span>符号，比如：
+					<pre><code class="shell">
+d<span class="strong">r-xr-xr-x</span>. 13 root root 0 Nov 1 00:09 sys
+					</code></pre>
+					一个用户如果是该文档的所有者，就看前三个符号，如果属于该文档的所属群组中的一员，则看中间三个符号，如果是群组外的一员则看最后三个符号，当然也可以既是所有者同时也属于所属群组。
+					<h4>节点</h4>
+					之后第二列的数字表示有多少档名链接到此节点。
+					<h4>所属用户 & 所属群组</h4>
+					每个档案会属于一个用户和一个群组，第三列显示所属的用户名，第四列显示所属群组的名字。
+					<pre><code class="shell">
+dr-xr-xr-x. 13 <span class="strong">root root</span> 0 Nov 1 00:09 sys
+					</code></pre>
+					<h4>其他</h4>
+					剩下的分别代表该文档的大小（byte），修改日期，文档名字。
+				</p>
+				<h3>改变权限</h3>
+				<p>
+					<h4>改变档案所属用户</h4>
+					chown：change owner ，用来设置档案所属用户。
+					<div class="command">
+chown 用户名 档案路径
+					</div>
+					当然群组和用户都得存在，不然会执行失败。
+					<h4>改变档案所属群组</h4>
+					chgrp：change group ，用来设置档案的所属群组。
+					<div class="command">
+$ chgrp 群组名 档案路径
+					</div>
+					当然群组和档案都得存在，不然会执行失败。
+					<h4>改变档案权限开关</h4>
+					chmod：change mode，用来设置权限开关，有两种使用方法，一是使用命令方式：
+					<div class="command">
+chmod 目标 动作 权限 档案路径
+					</div>
+					<ul>
+						<li>目标可以设置为：a（all，所有人）、u（user，用户）、g（group，群组）、o（other，其他人）。</li>
+						<li>动作：=（设置为）、+（添加权限）、-（减少权限）</li>
+						<li>权限：r（read，读取）、w（write，写）、x（excute，执行）</li>
+					</ul>
+					比如要设置 test 档案所属用户的权限为读写但不可执行，则执行以下命令：
+					<pre><code class="shell">
+$ chmod u=rw test
+					</code></pre>
+					第二种是使用数字模式，输入三位的数字，每个数字是 0 - 7：
+					<div class="command">
+chmod 数字数字数字 档案路径
+					</div>
+					将每个数字翻译为 2 进制，每一位对应一个权限开关，比如 770 对应 111 111 000，说明设置所属用户读写执行权限、所属组读写执行权限、其他人没有权限。
+					<pre><code class="shell">
+$ chmod 770 test
+					</code></pre>
+				</p>
+				<h3>rwx 的意义</h3>
+				<p>
+					<h4>文件</h4>
+					<ul>
+						<li>r：读取（查看）文件内容</li>
+						<li>w：写入（修改）文件的内容</li>
+						<li>x：执行文件</li>
+					</ul>
+					<h4>目录</h4>
+					<ul>
+						<li>r：查看目录下有哪些档案，但只能看到档案名，不能看到详细信息，也不能进入该目录</li>
+						<li>w：编辑目录操作，包括</li>
+						<ul>
+							<li>重命名目录</li>
+							<li>移动目录位置</li>
+							<li><span class="different">创建、删除、移动</span>该目录下的文件</li>
+						</ul>
+						<li>x：进入该目录</li>
+					</ul>
+				</p>
 			</p>
 		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
-
+				<div>[1] 鸟哥的linux私房菜 <a href="http://cn.linux.vbird.org/linux_basic/linux_basic.php">http://cn.linux.vbird.org/linux_basic/linux_basic.php</a></div>
 			</p>
 		</section>
 	</article>

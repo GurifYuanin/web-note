@@ -46,11 +46,11 @@
 				</p>
 				<h3>vertexColors</h3>
 				<p>
-					vertexColors 控制被着色物体的各个面的颜色，可以赋为三个值：
+					vertexColors 控制被着色物体的各个面的颜色，可以赋为以下三个值之一：
 					<ul>
 						<li>THREE.NoColors：默认，表示直接使用材质的颜色为整个物体的所有面着一个颜色 material.color（纯色）</li>
-						<li>THREE.FaceColors：面（Face3）有一个属性 color，为每个面着该属性的颜色</li>
-						<li>THREE.VertexColors：面（Face3）有一个属性 vertexColors，表示面的三个顶点的颜色，为每个面按照该属性的三个颜色值进行渐变着色</li>
+						<li>THREE.FaceColors：面（Face3）有一个属性 color，为各个面分别着该属性的颜色（纯色）</li>
+						<li>THREE.VertexColors：面（Face3）有一个属性 vertexColors，表示面的三个顶点的颜色，为每个面按照该属性的三个颜色值进行<span class="different">渐变</span>着色</li>
 					</ul>
 					<div class="show">
 						<button class="button" id="vertex-color-button">开始渲染</button>
@@ -419,7 +419,7 @@ var material = new THREE.MeshBasicMaterial({map: texture});
 		<section>
 			<h2>MeshLambertMaterial</h2>
 			<p>
-				MeshLambertMaterial 用于不光亮（shiny）的物体，它可以接受环境光的影响，但不会产生高光。
+				MeshLambertMaterial 用于不光亮（shiny）的物体，它<span class="different">可以</span>接受环境光的影响，但不会产生高光。
 				<h3>color & emissive</h3>
 				<p>
 					color 为物体本身的颜色，用法和 MeshBasicMaterial 一样，默认为白色。而 emissive 是物体发出的光，默认为黑色。当然它不是一个光源，不能影响其他物体。
@@ -532,7 +532,7 @@ var material = new THREE.MeshBasicMaterial({map: texture});
 		<section>
 			<h2>MeshPhongMaterial</h2>
 			<p>
-				MeshPhongMaterial 可用于创建有光泽的物体表面，同时也可以产生高光。
+				MeshPhongMaterial 可用于创建有光泽的物体表面（接收光源），同时也<span class="different">可以产生高光</span>。
 				<h3>color & emissve & specular & shininess</h3>
 				<p>
 					<ul>
@@ -555,6 +555,8 @@ var material = new THREE.MeshBasicMaterial({map: texture});
 								renderer.setSize(400, 400);
 								var camera = initCamera();
 								var scene = initScene();
+								camera.position.y = 5;
+								camera.lookAt(0, 0, 0);
 								var geometry = new THREE.BoxGeometry(2, 2, 2);
 								var material = new THREE.MeshPhongMaterial({color: 0x408080});
 								var mesh = new THREE.Mesh(geometry, material);
