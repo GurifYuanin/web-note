@@ -82,6 +82,7 @@
 							}
 						</style>
 						<script>
+							window.addEventListener('load', function() {
 							addOnceClickEventById('vertex-color-button', function() {
 								function getRandomColor() { return Math.round(Math.random() * 0xffffff); }
 								function appendColorBlock(bgc, ctx) {
@@ -181,7 +182,7 @@
 									renderer.render(scene, camera);
 									requestAnimationFrame(render);
 								})();
-							});
+							});});
 						</script>
 					</div>
 				</p>
@@ -216,6 +217,7 @@
 							plane.receiveshadow
 						</div>
 						<script>
+							window.addEventListener('load', function() {
 							addOnceClickEventById('shadow-side-button', function() {
 								function addChangeEventById(id, obj, attr) {
 									document.getElementById(id).onchange = function() {
@@ -258,7 +260,7 @@
 								addChangeEventById('shadow-light-castshadow-checkbox', pointLight, 'castShadow');
 								addChangeEventById('shadow-mesh-castshadow-checkbox', mesh, 'castShadow');
 								addChangeEventById('shadow-plane-receiveshadow-checkbox', plane, 'receiveShadow');
-							});
+							});});
 						</script>
 					</div>
 					要产生投影得同时满足以下：
@@ -369,6 +371,7 @@ var material = new THREE.MeshBasicMaterial({map: texture});
 						<button class="button" id="map-button">开始渲染</button>
 						<div id="map-container"></div>
 						<script>
+							window.addEventListener('load', function() {
 							addOnceClickEventById('map-button', function() {
 								var scene = initScene();
 								var camera = initCamera();
@@ -386,7 +389,7 @@ var material = new THREE.MeshBasicMaterial({map: texture});
 									renderer.render(scene, camera);
 									requestAnimationFrame(render);
 								})();
-							});
+							});});
 						</script>
 					</div>
 					当然也可以不写回调直接通过 requestAnimationFrame 循环渲染。
@@ -447,6 +450,7 @@ var material = new THREE.MeshBasicMaterial({map: texture});
 							<input id="lambert-emissive-color" type="color" value="#000000">
 						</div>
 						<script>
+							window.addEventListener('load', function() {
 							addOnceClickEventById('lambert-material-button', function() {
 								function g(id) { return document.getElementById(id); } // getElementById
 								function ac(el, fn) { // addChangeEventById
@@ -501,7 +505,7 @@ var material = new THREE.MeshBasicMaterial({map: texture});
 									isAmbientLight ? scene.remove(light) : scene.add(light);
 									isAmbientLight = !isAmbientLight;
 								})
-							});
+							});});
 						</script>
 					</div>
 				</p>
@@ -550,6 +554,7 @@ var material = new THREE.MeshBasicMaterial({map: texture});
 						<div>material.specular <input id="phong-material-specular" type="color" value="#111111"></div>
 						<div>material.shininess <input id="phong-material-shininess" type="range" min="0" max="1000" step="1" value="30"> <span id="phong-material-shininess-show">30</span></div>
 						<script>
+							window.addEventListener('load', function() {
 							addOnceClickEventById('phong-material-button', function() {
 								var renderer = initRenderer(document.getElementById('phong-material-container'));
 								renderer.setSize(400, 400);
@@ -588,7 +593,7 @@ var material = new THREE.MeshBasicMaterial({map: texture});
 									material.shininess = Number.parseFloat(this.value);
 									document.getElementById('phong-material-shininess-show').innerText = this.value;
 								}
-							});
+							});});
 						</script>
 					</div>
 				</p>
@@ -608,6 +613,7 @@ var material = new THREE.LineBasicMaterial(options);
 					<button class="button" id="line-button">开始渲染</button>
 					<div id="line-container"></div>
 					<script>
+						window.addEventListener('load', function() {
 						addOnceClickEventById('line-button', function() {
 							var renderer = initRenderer(document.getElementById('line-container'))
 							var camera = initCamera();
@@ -620,7 +626,7 @@ var material = new THREE.LineBasicMaterial(options);
 								renderer.render(scene, camera);
 								requestAnimationFrame(render);
 							})();
-						});
+						});});
 					</script>
 				</div>
 				<h3>lights</h3>
@@ -643,6 +649,7 @@ var material = new THREE.LineBasicMaterial(options);
 							<input id="line-material-lights" type="checkbox">material.lights
 						</div>
 						<script>
+							window.addEventListener('load', function() {
 							addOnceClickEventById('line-lights-button', function() {
 								var renderer = initRenderer(document.getElementById('line-lights-container'));
 								var scene = initScene();
@@ -685,7 +692,7 @@ var material = new THREE.LineBasicMaterial(options);
 								document.getElementById('line-material-lights').oninput = function() {
 									material.lights = !material.lights;
 								}
-							});
+							});});
 						</script>
 					</div>
 				</p>

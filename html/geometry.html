@@ -75,6 +75,19 @@ geometry.faces.push(new THREE.Face3(0, 1, 2));
 						})();
 					</script>
 				</div>
+				<h3>各种 NeedUpdate</h3>
+				<p>
+					当 geometry 的一些属性发生变更的时（例如 vertices）并不会马上更新到场景上，就需要手动设置以下值为 true 来重新计算。
+					<ul>
+						<li>verticesNeedUpdate：更新顶点数组</li>
+						<li>elementsNeedUpdate：更新面数组</li>
+						<li>colorsNeedUpdate：更新颜色数组</li>
+						<li>uvsNeedUpdate：更新 uv 数组</li>
+						<li>normalsNeedUpdate：更新法线数组</li>
+						<li>groupsNeedUpdate：更新材质索引</li>
+						<li>lineDistancesNeedUpdate：更新线段距离</li>
+					</ul>
+				</p>
 			</p>
 		</section>
 		<section>
@@ -110,6 +123,7 @@ scene.add(line);
 					<button class="button" id="colors-button">开始渲染</button>
 					<div id="colors-container"></div>
 					<script>
+						window.addEventListener('load', function() {
 						addOnceClickEventById('colors-button', function() {
 							var renderer = new THREE.WebGLRenderer();
 							renderer.setSize(200, 200);
@@ -130,7 +144,7 @@ scene.add(line);
 							var line = new THREE.Line( geometry, material );
 							scene.add(line);
 							renderer.render(scene, camera);
-						});
+						});});
 					</script>
 				</div>
 			</p>
@@ -165,6 +179,7 @@ var mesh = new THREE.Mesh( geometry, material );
 					<button class="button" id="buffer-geometry-button">开始渲染</button>
 					<div id="buffer-geometry-container"></div>
 					<script>
+						window.addEventListener('load', function() {
 						addOnceClickEventById('buffer-geometry-button', function() {
 							var renderer = initRenderer(document.getElementById('buffer-geometry-container'));
 							var camera = initCamera();
@@ -193,7 +208,7 @@ var mesh = new THREE.Mesh( geometry, material );
 								renderer.render(scene, camera);
 								requestAnimationFrame(render);
 							})();
-						});
+						});});
 					</script>
 				</div>
 				<h3>如何存储点和面</h3>
@@ -257,6 +272,7 @@ box.setFromCenterAndSize(new THREE.Vector3(0, 0, 0), new THREE.Vector3(2, 1, 3))
 					<button class="button" id="box-button">开始渲染</button>
 					<div id="box-container"></div>
 					<script>
+						window.addEventListener('load', function() {
 						addOnceClickEventById('box-button', function() {
 							var renderer = initRenderer(document.getElementById('box-container'));
 							// var camera = new THREE.PerspectiveCamera( 80, 1 );
@@ -275,7 +291,7 @@ box.setFromCenterAndSize(new THREE.Vector3(0, 0, 0), new THREE.Vector3(2, 1, 3))
 								renderer.render(scene, camera);
 								requestAnimationFrame(render);
 							})();
-						});
+						});});
 					</script>
 				</div>
 				Box3 用于提供作为几何体的 boundingBox ，而创建一个实质的长方体需要使用 BoxGeometry 类。
@@ -335,6 +351,7 @@ var cube = new THREE.Mesh(
 					<button class="button" id="box-geometry-button">开始渲染</button>
 					<div id="box-geometry-container"></div>
 					<script>
+						window.addEventListener('load', function() {
 						addOnceClickEventById('box-geometry-button', function() {
 							var renderer = initRenderer(document.getElementById('box-geometry-container'));
 							var camera = initCamera();
@@ -351,7 +368,7 @@ var cube = new THREE.Mesh(
 								renderer.render(scene, camera);
 								requestAnimationFrame(render);
 							})();
-						});
+						});});
 					</script>
 				</div>
 			</p>
@@ -428,6 +445,7 @@ var axesHelper = new THREE.AxesHelper(100);
 					<button class="button" id="sphere-button">开始渲染</button>
 					<div id="sphere-container"></div>
 					<script>
+						window.addEventListener('load', function() {
 						addOnceClickEventById('sphere-button', function() {
 							var renderer = initRenderer(document.getElementById('sphere-container'));
 							var camera = initCamera();
@@ -447,7 +465,7 @@ var axesHelper = new THREE.AxesHelper(100);
 								renderer.render(scene, camera);
 								requestAnimationFrame(render);
 							})();
-						});
+						});});
 					</script>
 				</div>
 			</p>
@@ -492,6 +510,7 @@ var axesHelper = new THREE.AxesHelper(100);
 					<button class="button" id="circle-geometry-button">开始渲染</button>
 					<div id="circle-geometry-container"></div>
 					<script>
+						window.addEventListener('load', function() {
 						addOnceClickEventById('circle-geometry-button', function() {
 							var last = 8;
 							var renderer = initRenderer('circle-geometry-container');
@@ -510,7 +529,7 @@ var axesHelper = new THREE.AxesHelper(100);
 								scene.add(mesh);
 								renderer.render(scene, camera);
 							})();
-						});
+						});});
 					</script>
 				</div>
 			</p>

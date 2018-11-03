@@ -36,6 +36,7 @@
 		<section>
 			<h2>Mesh</h2>
 			<p>
+				Mesh，多边形网格，Geometry 只是空壳的几何体，Mesh 是几何体加上材质，可以创造出自定义的实质对象。
 				<h3>点偏移</h3>
 				<p>
 					使 geometry 的每个点各自与某个点按照一定权重（morphTargetInfluences）进行相加，得到新的值，实现不同点的值的不同变化。
@@ -114,6 +115,7 @@ geometry.morphTargets[0] = {
 							<input id="morph-range" type="range" min="0" max="1" step="0.01" value="1">
 						</div>
 						<script>
+							window.addEventListener('load', function() {
 							addOnceClickEventById('morph-button', function() {
 								var scene = initScene();
 								var camera = initCamera();
@@ -138,7 +140,7 @@ geometry.morphTargets[0] = {
 									mesh.morphTargetInfluences[0] = Number.parseFloat(this.value);
 									document.getElementById('morph-range-number').innerText = this.value;
 								}
-							});
+							});});
 						</script>
 					</div>
 				</p>
@@ -182,6 +184,7 @@ geometry.faces = [
 						<div><label><input class="draw-mode-radio" type="radio" name="mode" value="1" checked>THREE.TriangleStripDrawMode</label></div>
 						<div><label><input class="draw-mode-radio" type="radio" name="mode" value="2">THREE.TriangleFanDrawMode</label></div>
 						<script>
+							window.addEventListener('load', function() {
 							addOnceClickEventById('draw-mode-button', function() {
 								var renderer = initRenderer(document.getElementById('draw-mode-container'));
 								var camera = initCamera();
@@ -213,10 +216,85 @@ geometry.faces = [
 										mesh.drawMode = Number.parseInt(this.value);
 									}
 								});
-							});
+							});});
 						</script>
 					</div>
 				</p>
+			</p>
+		</section>
+		<section>
+			<h2>Line</h2>
+			<p>
+				只需要提供点，然后逐个点画出一条折线来。
+				<pre><code class="javascript">
+...
+// geometry 有 5 个点
+var geometry = new THREE.Geometry();
+geometry.vertices.push(
+	new THREE.Vector3( 0, -1, 0 ),
+	new THREE.Vector3( 0, 0, 0 ),
+	new THREE.Vector3( 1, 0, 0 ),
+	new THREE.Vector3( 0, 0, 0),
+	new THREE.Vector3( 0, 1, 0 )
+);
+var line = new THREE.Line(geometry, new THREE.MeshBasicMaterial());
+...
+var constant = Math.PI / 30;
+(function render() {
+	requestAnimationFrame(render);
+	var now = new Date();
+	var seconds = now.getSeconds();
+	var minutes = now.getMinutes();
+	var hours = now.getHours();
+	geometry.vertices[0].x = Math.sin(minutes * constant); // 分针
+	geometry.vertices[0].y = Math.cos(minutes * constant);
+	geometry.vertices[2].x = Math.sin(seconds * constant) * 1.5; // 秒针
+	geometry.vertices[2].y = Math.cos(seconds * constant) * 1.5;
+	geometry.vertices[4].x = Math.cos(hours * constant) / 2; // 时针
+	geometry.vertices[4].y = Math.cos(hours * constant) / 2;
+	geometry.verticesNeedUpdate = true;
+	renderer.render(scene, camera);
+})();		
+				</code></pre>
+				<div class="show">
+					<button class="button" id="line-button">开始渲染</button>
+					<div id="line-container"></div>
+					<script>
+						window.addEventListener('load', function() {
+						addOnceClickEventById('line-button', function() {
+							var renderer = initRenderer(document.getElementById('line-container'));
+							var camera = initCamera();
+							camera.translateY(-1);
+							var scene = initScene();
+							var geometry = new THREE.Geometry();
+							geometry.vertices.push(
+								new THREE.Vector3( 0, -1, 0 ),
+								new THREE.Vector3( 0, 0, 0 ),
+								new THREE.Vector3( 1, 0, 0 ),
+								new THREE.Vector3( 0, 0, 0),
+								new THREE.Vector3( 0, 1, 0 )
+							);
+							var line = new THREE.Line(geometry, new THREE.MeshBasicMaterial());
+							scene.add(line);
+							var constant = Math.PI / 30;
+							(function render() {
+								requestAnimationFrame(render);
+								var now = new Date();
+								var seconds = now.getSeconds();
+								var minutes = now.getMinutes();
+								var hours = now.getHours();
+								geometry.vertices[0].x = Math.sin(minutes * constant); // 分针
+								geometry.vertices[0].y = Math.cos(minutes * constant);
+								geometry.vertices[2].x = Math.sin(seconds * constant) * 1.5; // 秒针
+								geometry.vertices[2].y = Math.cos(seconds * constant) * 1.5;
+								geometry.vertices[4].x = Math.cos(hours * constant) / 2; // 时针
+								geometry.vertices[4].y = Math.cos(hours * constant) / 2;
+								geometry.verticesNeedUpdate = true;
+								renderer.render(scene, camera);
+							})();
+						});});
+					</script>
+				</div>
 			</p>
 		</section>
 		<section class="refer">

@@ -160,8 +160,35 @@
 			</p>
 		</section>
 		<section>
-			<h2>HashSet & TreeSet & LinkedSet - 类</h2>
-			<p></p>
+			<h2>HashSet & TreeSet - 类</h2>
+			<p>
+				<table>
+					<tr>
+						<th>类名</th>
+						<th>存储方式</th>
+						<th>线程安全</th>
+						<th>capacity（容量）</th>
+						<th>capacityIncrement（容量增量）</th>
+						<th>判断元素是否相等</th>
+					</tr>
+					<tr>
+						<td>HashSet</td>
+						<td>基于 HashMap 保存数据</td>
+						<td>不安全</td>
+						<td>可以在调用构造函数时传入数值进行初始化</td>
+						<td>可以在调用构造函数时传入第二个数值进行初始化</td>
+						<td>equals 和 hashCode 都不相等</td>
+					</tr>
+					<tr>
+						<td>TreeSet</td>
+						<td>基于 TreeMap< 保存数据，有序二叉树</td>
+						<td>TreeSet</td>
+						<td>/</td>
+						<td>/</td>
+						<td>equals 或 CompareTo 不相等</td>
+					</tr>
+				</table>
+			</p>
 		</section>
 		<section>
 			<h2>Iterator - 接口</h2>
