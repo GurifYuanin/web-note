@@ -223,9 +223,10 @@ geometry.faces = [
 			</p>
 		</section>
 		<section>
-			<h2>Line</h2>
+			<h2>Line & LineSegments</h2>
 			<p>
-				只需要提供点，然后逐个点画出一条折线来。
+				<h3>Line</h3>
+				Line 只需要提供点，然后逐个点画出一条<span class="definition">折线</span>来。
 				<pre><code class="javascript">
 ...
 // geometry 有 5 个点
@@ -293,6 +294,44 @@ var constant = Math.PI / 30;
 								renderer.render(scene, camera);
 							})();
 						});});
+					</script>
+				</div>
+				<h3>LineSegments</h3>
+				LineSegments 和 Line 基本相同，唯一不同的是渲染方式 LineSegments 使用 gl.LINES 而 Line 使用 gl.STRIP，最终 LineSegments 绘制一段<span class="definition">虚线折线条</span>。
+				<div class="show">
+					<button class="button" id="line-segments-button">开始渲染</button>
+					<div id="line-segments-container"></div>
+					<div>上为：LineSegments</div>
+					<div>下为：Line</div>
+					<script>
+						window.addEventListener('load', function() {
+							addOnceClickEventById('line-segments-button', function() {
+								var renderer = initRenderer(document.getElementById('line-segments-container'));
+								var camera = initCamera();
+								var scene = initScene();
+								var geometry = new THREE.Geometry();
+								var geometry2 = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0, 0, 0 ),
+									new THREE.Vector3( 1, 1, 0 ),
+									new THREE.Vector3( 2, 0, 0 ),
+									new THREE.Vector3( 3, -1, 0),
+									new THREE.Vector3( 4, 0, 0 )
+								);
+								geometry2.vertices.push(
+									new THREE.Vector3( 0, 1, 0 ),
+									new THREE.Vector3( 1, 2, 0 ),
+									new THREE.Vector3( 2, 1, 0 ),
+									new THREE.Vector3( 3, 0, 0),
+									new THREE.Vector3( 4, 1, 0 )
+								);
+								var line = new THREE.Line(geometry, new THREE.MeshBasicMaterial());
+								var lingSegments = new THREE.LineSegments(geometry2, new THREE.MeshBasicMaterial());
+								camera.translateX(2);
+								scene.add(line, lingSegments);
+								renderer.render(scene, camera);
+							});
+						});
 					</script>
 				</div>
 			</p>

@@ -88,7 +88,6 @@ A → B|C|DEF
 				<p>
 					<ol>
 						<li>物理层：物理上存在的数据传输线路线，以 bit 传输：网线、集线器、中继器、HUB</li>
-
 						<li>数据链路层：寻找物理地址，重发，流控制，以数据帧传输：网卡、二层交换机、网桥</li>
 						<li>网络层：路由寻址，分组转发，以数据包传输：路由器、防火墙、多层交换机</li>
 						<li>传输层：进程间的连接建立，控制数据包的发送，以数据段传输：进程、端口</li>
@@ -106,8 +105,42 @@ A → B|C|DEF
 						<li>传输层：有 TCP、UDP 等协议</li>
 						<li>应用层：有 HTTP、FTP、Telnet 等协议</li>
 					</ol>
+					<table>
+						<tr>
+							<th>协议</th>
+							<th>端口</th>
+						</tr>
+						<tr>
+							<td>HTTP</td>
+							<td>80</td>
+						</tr>
+						<tr>
+							<td>HTTPS</td>
+							<td>43</td>
+						</tr>
+						<tr>
+							<td>FTP</td>
+							<td>21</td>
+						</tr>
+						<tr>
+							<td>TCP</td>
+							<td>22</td>
+						</tr>
+						<tr>
+							<td>Telnet</td>
+							<td>23</td>
+						</tr>
+						<tr>
+							<td>SMTP</td>
+							<td>25</td>
+						</tr>
+						<tr>
+							<td>POP3</td>
+							<td>110</td>
+						</tr>
+					</table>
 				</p>
-				<h3>数据校验</h3>
+				<h3>数据校验(数据链路层)</h3>
 				<p>
 					<h4>奇偶校验</h4>
 					奇偶校验就是在发送的数据后追加一位（bit）数据，若前面的数据 1 的个数为奇数则追加 1（或相反），若前面的数据 1 的个数为偶数则追加 0（或相反）。收到数据后判断最后的这一位是否符合奇偶校验。
@@ -173,6 +206,20 @@ A → B|C|DEF
 					<figure>
 						<img src="../images/software_engineer_mice_3.jpg">
 					</figure>
+					<h4>CRC校验</h4>
+					CRC 冗余校验是将 k 位的校验码添加到数据后，如下：
+					<div class="show">
+						<div style="display: inline-block; width: 50px; height: 50px; border: solid 1px white; margin: 0; padding: 0;">数据</div><div style="display: inline-block; width: 50px; height: 50px; border: solid 1px white; margin: 0; padding: 0;">校验码</div>
+					</div>
+					收发双方事先规定一个生成多项式 C(X)，比如 C(X) = X<sup>4</sup> + X<sup>2</sup> + X + 1，然后指数次与位进行对应，换成二进制数 10111 。此时如果发送方要发一串数据，比如 1101011，那么通过数据 / 生成多项式得到商和余数，余数就是校验码。
+					<figure>
+						<img src="../images/software_engineer_crc.jpg">
+					</figure>
+					然后因为 C(X) 的最高位是 4 次方，所以将数据左移 4 位，即将 1101011 变成 1101011<span class="different">0000</span>，再用这个左移后的数字与校验码 1111 相加，得到最终要发送过去的数据 11010111111。
+					<figure>
+						<img src="../images/software_engineer_crc_check.jpg">
+					</figure>
+					接收方收到数据后，根据规定已经知道 C(X) = X<sup>4</sup> + X<sup>2</sup> + X + 1，所以直到最后的 4 位是校验码，此时只需要去掉后 4 位然后也进行一次除运算，如果得到的商和后 4 位一样，则说明没有出错，反之则说明数据传输出错。
 				</p>
 				<h3>安全</h3>
 				<p>
@@ -192,6 +239,7 @@ A → B|C|DEF
 						<li>强化网络安全策略</li>
 					</ol>
 				</p>
+
 			</p>
 		</section>
 		<section>
@@ -204,34 +252,6 @@ A → B|C|DEF
 						<li>程序查询方式：即让 CPU 不停地询问外设是否完成，这个过程 CPU 只做询问，不做其他事情</li>
 						<li>程序中断方式：CPU 和外设各自进行工作，当外设完成工作的时，给 CPU 一个中断信号，CPU 就会停下手头的工作（保存现场信息）来处理中断信息，处理完之后再恢复现场信息</li>
 						<li>DMA：Direct Memory Access，直接借助硬件来完成 IO 操作，CPU 可以不用专门管理 IO 过程</li>
-					</ul>
-				</p>
-			</p>
-		</section>
-		<section>
-			<h2>模型</h2>
-			<p>
-				<h3>数据流图 / DFD</h3>
-				<p>
-					数据流图从数据传递和加工的角度，以图形的方式刻画数据流从输入到输出的移动变换过程。<sup>[1]</sup>
-					<ul>
-						<li>数据流：数据在系统内传播的路径，如姓名、年龄、单位、身份证号、日期、目的地等</li>
-						<li>数据源或宿：代表系统之外的实体，如人、动物、系统</li>
-						<li>加工：对数据进行处理的单元</li>
-						<li>数据存储：表示信息的静态存储</li>
-					</ul>
-				</p>
-				<h3>关系实体图 / E-R图</h3>
-				<p>
-					想想你的数据库原理怎么学的。
-				</p>
-				<h3>UML</h3>
-				<p>
-					UML，Unify Modify Language 统一方法既统一建模语言。
-					<ul>
-						<li>用例驱动</li>
-						<li>体系结构为中心</li>
-						<li>迭代开发或增量开发</li>
 					</ul>
 				</p>
 			</p>
@@ -409,7 +429,7 @@ A → B|C|DEF
 					<ul>
 						<li>偶然内聚：模块中各机能之间唯一的关系是其位在同一个模块中</li>
 						<li>逻辑内聚：逻辑上分为同一类就放同意模块中</li>
-						<li>时间性内聚：将相近时间点运行的程序，放在同一个模块中</li>
+						<li>时间性内聚：将相近时间点运行的程序，放在同一个模块中（是时间相近，不是时间顺序）</li>
 						<li>过程 / 程序内聚：依一组会依照固定顺序运行的程序放在同一个模块中</li>
 						<pre><code class="node">
 var fs = require('fs');
@@ -458,6 +478,29 @@ function aLotOfCompute(num) {
 						<li>适应性维护：不是系统错误，但为了适应<span class="different"> 环境 </span>而进行重构，优化等</li>
 						<li>改善 / 完善性维护：为系统拓展<span class="different"> 新功能 </span></li>
 						<li>预防性维护：考虑到<span class="different"> 未来 </span>而主动进行维护</li>
+					</ul>
+				</p>
+				<h3>数据流图 / DFD</h3>
+				<p>
+					数据流图从数据传递和加工的角度，以图形的方式刻画数据流从输入到输出的移动变换过程。<sup>[1]</sup>
+					<ul>
+						<li>数据流：数据在系统内传播的路径，如姓名、年龄、单位、身份证号、日期、目的地等</li>
+						<li>数据源或宿：代表系统之外的实体，如人、动物、系统</li>
+						<li>加工：对数据进行处理的单元</li>
+						<li>数据存储：表示信息的静态存储</li>
+					</ul>
+				</p>
+				<h3>关系实体图 / E-R图</h3>
+				<p>
+					想想你的数据库原理怎么学的。
+				</p>
+				<h3>UML</h3>
+				<p>
+					UML，Unify Modify Language 统一方法既统一建模语言。
+					<ul>
+						<li>用例驱动</li>
+						<li>体系结构为中心</li>
+						<li>迭代开发或增量开发</li>
 					</ul>
 				</p>
 			</p>
