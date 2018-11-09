@@ -948,12 +948,12 @@ $(function() {
         var contentSection = document.createElement('div');
         username.innerText = el.username || '匿名';
         username.setAttribute('class', 'commentUsername');
-        time.innerText = el.create_time + ' #' + el.floor;
+        time.innerText = (el.create_time || formatDate(new Date())) + ' #' + el.floor; // 时间和楼层
         time.setAttribute('class', 'commentTime');
         contentSection.innerText = el.comment_content;
         contentSection.setAttribute('class', 'commentSection');
         headSection.appendChild(username);
-        headSection.appendChild(time) || formatDate(new Date());
+        headSection.appendChild(time);
         oneComment.appendChild(headSection);
         oneComment.appendChild(contentSection);
         nowComment.appendChild(oneComment);

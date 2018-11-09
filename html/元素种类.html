@@ -87,10 +87,60 @@
 			<h2>inline-block(行内块级)</h2>
 			<p>
 				<h3>特点</h3>
-				<ol>
-					<li>只占领元素自身的大小，不同元素可以在同一行上。</li>
-					<li>高度 (height) 、宽度 (width) 、行高 (line-height) 以及内外边距 (padding + margin) 都可设置。</li>
-				</ol>
+				<p>
+					<ol>
+						<li>只占领元素自身的大小，不同元素可以在同一行上。</li>
+						<li>高度 (height) 、宽度 (width) 、行高 (line-height) 以及内外边距 (padding + margin) 都可设置。</li>
+					</ol>
+				</p>
+				<h3>多余空格</h3>
+				<p>
+					若元素成为了 inline-block 元素，那么如果：
+					<pre><code class="html">
+&lt;div style="display: inline-block; border: solid white 1px;">hello&lt;/div>
+&lt;div style="display: inline-block; border: solid white 1px;">world&lt;/div>
+					</code></pre>
+					<div class="show">
+						<div style="display: inline-block; border: solid white 1px;">hello</div>
+						<div style="display: inline-block; border: solid white 1px;">world</div>
+					</div>
+					hello 和 world 会有一个空格，因为实际上写的代码是这样的：
+					<pre><code class="html">
+&lt;div style="display: inline-block; border: solid white 1px;">hello&lt;/div><span class="strong">回车</span>
+&lt;div style="display: inline-block; border: solid white 1px;">world&lt;/div>
+					</code></pre>
+					解决方法是不要这个回车，特别是当多个 inline-block 元素时，可以这样写：
+					<pre><code class="html">
+&lt;ul id="inline-block-ul">
+	&lt;li>
+		要点一
+	&lt;/li>&lt;li>
+		要点二
+	&lt;/li>&lt;li>
+		要点三
+	&lt;/li>&lt;li>
+		要点五
+	&lt;/li>
+&lt;/ul>
+&lt;style>
+#inline-block-ul > li {
+	display: inline-block;
+}
+&lt;/style>
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>flex</h2>
+			<p>
+				弹性布局，参见<a href="./CSS3.html#flex">CSS3 的 flex</a>
+			</p>
+		</section>
+		<section>
+			<h2>grid</h2>
+			<p>
+				网格布局。
 			</p>
 		</section>
 		<section>

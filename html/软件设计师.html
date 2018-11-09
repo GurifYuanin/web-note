@@ -79,10 +79,20 @@ A → B|C|DEF
 						<li>目标代码生成</li>
 					</ol>
 				</p>
+				<h3>前缀 / 中缀 / 后缀表达式</h3>
+				<p>
+					比如计算：(1 + 2) * 3 / 4
+					<ul>
+						<li>前缀表达式：/ * + 1 2 3 4：从右往左扫描，遇到数字则入栈，遇到运算符则从栈弹出两个数字运算，再将运算结果入栈</li>
+						<li>中缀表达式：(1 + 2) * 3 / 4</li>
+						<li>后缀表达式：1 2 + 3 * 4 /：从左往右扫描，遇到数字则入栈，遇到运算符则从栈弹出两个数字运算，再将运算结果入栈</li>
+					</ul>
+					
+				</p>
 			</p>
 		</section>
 		<section>
-			<h2>网络</h2>
+			<h2>计算机网络</h2>
 			<p>
 				<h3>ISO 7 层模型</h3>
 				<p>
@@ -226,6 +236,9 @@ A → B|C|DEF
 					<h4>攻击</h4>
 					<ul>
 						<li>主动攻击：中断、修改、伪造数据</li>
+						<ul>
+							<li>重放攻击：截获了某条数据，放行，过一段时间后又把这条数据发送过去若干次。比如 A 向 B 付款 100 元，B 获得了这条数据，B 获得了 100 元，一会后 B 又把这条数据发送了 10 次，B 获得了 1000 元</li>
+						</ul>
 						<li>被动攻击：非法获得某些数据，但又不修改这些数据，也就是窃取 / 偷窥</li>
 					</ul>
 					<h4>防火墙</h4>
@@ -401,15 +414,29 @@ A → B|C|DEF
 						<li>过程支持</li>
 					</ul>
 				</p>
+				<h3>软件维护工具</h3>
+				<p>
+					<ul>
+						<li>版本控制工具</li>
+						<li>文档分析工具</li>
+						<li>开发信息库工具</li>
+						<li>逆向工程</li>
+						<li>再工程工具</li>
+						<li>配置管理支持工具</li>
+					</ul>
+				</p>
 				<h3>开发方法</h3>
 				<p>
 					<ul>
+						<li>瀑布式模型：严格遵循预先计划的需求、分析、设计、编码、测试的步骤顺序进行，每一步都按照<span class="different">文档</span>进行。</li>
+						<li>螺旋模型：每一步都有风险评估的瀑布模型</li>
+						<li>喷泉模型：基于面向对象的瀑布模型</li>
+						<li>增量模型：渐进，分批次提交</li>
 						<li>敏捷开发：程序员团队与业务专家之间的紧密协作、面对面的沟通、频繁交付新的软件版本、紧凑而自我组织型的团队</li>
 						<ul>
 							<li>极限编程：将复杂的开发过程分解为一个个相对比较简单的小周期；通过积极的交流、反馈以及其它一系列的方法，开发人员和客户可以非常清楚开发进度、变化、待解决的问题和潜在的困难等，并根据实际情况及时地调整开发过程</li>
 						</ul>
 						<li>迭代开发：整个开发工作被组织为一系列的短小的、固定长度（如3周）的小项目，被称为一系列的迭代。每一次迭代都包括了定义、需求分析、设计、实现与测试。</li>
-						<li>瀑布式开发：严格遵循预先计划的需求、分析、设计、编码、测试的步骤顺序进行。</li>
 					</ul>
 				</p>
 				<h3>耦合 & 内聚</h3>
@@ -471,6 +498,52 @@ function aLotOfCompute(num) {
 						<li>功能内聚：各机能是因为它们都对模块中单一明确定义的任务有贡献</li>
 					</ul>
 				</p>
+				<h3>测试</h3>
+				<p>
+					白盒测试：
+					<ul>
+						<li>语句覆盖：所有语句都至少被执行过一次</li>
+						<pre><code class="javascript">
+var a = 4; // 满足语句覆盖 -> 执行了 console.log
+if (a < 5) {
+	console.log('a < 5');
+}
+						</code></pre>
+						<li>判定结果覆盖 / 点覆盖：所有判定条件的结果都至少出现过一次</li>
+						<pre><code class="javascript">
+var a = 4; // 满足 a < 5 的条件 -> true
+var a = 5; // 满足 a >= 5 的条件 -> false
+if (a < 5) {
+	console.log('a < 5');
+} else {
+	console.log('a >= 5');
+}
+						</code></pre>
+						<li>条件覆盖 / 路径覆盖：所有的判定条件里的小分支都至少出现过一次</li>
+						<pre><code class="javascript">
+var a = 4, b = 4; // 满足 a < 5, b < 5
+var a = 5, b = 5; // 满足 a >=5, b >= 5
+if (a < 5 && b < 5) {
+	console.log('a < 5 && b < 5');
+} else {
+	console.log('a >= 5 || b >= 5');
+}
+						</code></pre>
+						<li>条件/判定覆盖：即同时满足判定覆盖和条件覆盖</li>
+						<li>条件组合覆盖：所有判定条件里的小分支进行排列组合</li>
+						<pre><code class="javascript">
+var a = 4, b = 4; // 满足 a < 5, b < 5
+var a = 5, b = 5; // 满足 a >= 5, b >= 5
+var a = 5, b = 4; // 满足 a < 5, b >= 5
+var a = 4, b = 5; // 满足 a >= 5, b < 5
+if (a < 5 && b < 5) {
+	console.log('a < 5 && b < 5');
+} else {
+	console.log('a >= 5 || b >= 5');
+}
+						</code></pre>
+					</ul>
+				</p>
 				<h3>维护</h3>
 				<p>
 					<ul>
@@ -480,27 +553,102 @@ function aLotOfCompute(num) {
 						<li>预防性维护：考虑到<span class="different"> 未来 </span>而主动进行维护</li>
 					</ul>
 				</p>
-				<h3>数据流图 / DFD</h3>
+				<h3>调试</h3>
 				<p>
+					<ul>
+						<li>试探法：猜，一步步试探</li>
+						<li>回溯法：从错误地方开始跟踪代码</li>
+						<li>归纳法：分析、归纳提出错误原因</li>
+						<li>演绎法：列出所有错误可能</li>
+						<li>对分查找法：缩小错误范围</li>
+					</ul>
+				</p>
+				<h3>结构化分析方法</h3>
+				<p>
+					<h4>数据流图 / DFD</h4>
 					数据流图从数据传递和加工的角度，以图形的方式刻画数据流从输入到输出的移动变换过程。<sup>[1]</sup>
 					<ul>
+						<li>数据源：代表系统之外的实体，如人、系统、厂家</li>
 						<li>数据流：数据在系统内传播的路径，如姓名、年龄、单位、身份证号、日期、目的地等</li>
-						<li>数据源或宿：代表系统之外的实体，如人、动物、系统</li>
 						<li>加工：对数据进行处理的单元</li>
 						<li>数据存储：表示信息的静态存储</li>
 					</ul>
-				</p>
-				<h3>关系实体图 / E-R图</h3>
-				<p>
+					<figure>
+						<img src="../images/software_engineer_df.jpg">
+					</figure>
+
+					<h4>数据字典</h4>
+					<ul>
+						<li>数据项条目</li>
+						<li>数据流条目</li>
+						<li>文件条目</li>
+						<li>加工条目</li>
+					</ul>
+
+					<h4>关系实体图 / E-R图</h4>
 					想想你的数据库原理怎么学的。
-				</p>
-				<h3>UML</h3>
-				<p>
+
+					<h4>UML</h4>
 					UML，Unify Modify Language 统一方法既统一建模语言。
 					<ul>
 						<li>用例驱动</li>
 						<li>体系结构为中心</li>
 						<li>迭代开发或增量开发</li>
+					</ul>
+					模式：
+					<ul>
+						<li>创建型模型：创建对象的模式，抽象了实例化的过程
+							<ul>
+								<li>单例模式：一个类只有一个实例（不会重复创建），并且向整个系统提供</li>
+								<pre><code class="java">
+class SingleTon {
+	static SingleTon instance = new SingleTon();
+	public SingleTon getInstance() {
+		return this.instance;
+	}
+}
+								</code></pre>
+								<li>工厂模式：每个工厂生产一个对象</li>
+							</ul>
+						</li>
+						<li>结构型模型：解决怎样组装现有的类
+							<ul>
+								<li>桥接模式：写多个接口然后自由组合</li>
+							</ul>
+						</li>
+						<li>行为型模型（类 / 对象）
+							<ul>
+								<li>观察者模式：当一个对象状态发生改变的时候，相关的对象做出相应的反应</li>
+								<li>访问者模式：封装类，通过类的方法操作对象，而不是直接操作对象</li>
+								<li>策略模式：将一系列算法封装到对应的类里，他们有相同的接口，然后自由选择与替换</li>
+								<pre><code class="java">
+// 我今天要穿什么衣服呢
+class Clothes1 implements Cloth {}
+class Clothes2 implements Cloth {}
+class Clothes3 implements Cloth {}
+								</code></pre>
+							</ul>
+						</li>
+					</ul>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>数据库</h2>
+			<p>
+				<h3>Armstrong公理</h3>
+				<p>
+					假设有关系模式R&lt;U,F&gt;，那么存在公理：
+					<ul>
+						<li>自反律：如果 Y ⊂ X，那么 X -> Y（X 和 Y 都属于 U 的一部分）</li>
+						<li>增广律：如果 X -> Y，那么 XZ -> YZ（Z 属于 U 的一部分）</li>
+						<li>传递律：如果 X -> Y，Y -> Z，那么 X -> Z</li>
+					</ul>
+					因此可以得到的推论：
+					<ul>
+						<li>合并规则：如果 X -> Y，X -> Z，那么 X -> YZ</li>
+						<li>分解规则：如果 X -> Y， Z ⊂ Y，那么 X -> Z</li>
+						<li>伪传递规则：如果 X -> Y，YW -> Z，那么 XW -> Z</li>
 					</ul>
 				</p>
 			</p>
@@ -513,6 +661,7 @@ function aLotOfCompute(num) {
 				<div>[3] 进程控制块及其作用、组织方式 <a href="https://blog.csdn.net/canyanruxue/article/details/78439934">https://blog.csdn.net/canyanruxue/article/details/78439934</a></div>
 				<div>[4] 汤小丹 计算机操作系统(第三版)</div>
 				<div>[5] 软件配置管理 <a href="https://baike.baidu.com/item/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86/3765602?fr=aladdin">https://baike.baidu.com/item/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86/3765602?fr=aladdin</a></div>
+				<div>[6] Java经典设计模式(1) <a href="http://www.importnew.com/18390.html">http://www.importnew.com/18390.html</a></div>
 			</p>
 		</section>
 	</article>
