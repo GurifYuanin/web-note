@@ -195,9 +195,12 @@ document.createComment('hello world');
 var el = document.createElement('div');
 // 对 el 进行一通操作
 // ...
-// 克隆节点
-var newEl = document.cloneNode(el);
+// 方法一
+var newEl = el.cloneNode();
+// 方法二
+var newEl = document.importNode(el);
 					</code></pre>
+					cloneNode 和 importNode 都可以追加一个布尔值的参数，默认为 false ，表示不递归克隆，设置为 true 后递归克隆元素下的所有节点，
 				</p>
 				<h3>追加节点</h3>
 				<p>

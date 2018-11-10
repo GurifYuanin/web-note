@@ -40,6 +40,12 @@ console.log(__filename);
 					<img src="../images/path_dirname_filename.jpg">
 					<figcaption>执行 D:\Git\web-note\demo\global-object.js</figcaption>
 				</figure>
+				实际上在 node 环境下，对于每一个 js 文件（模块），都会被包装为：
+				<pre><code class="node">
+(function(exports, require, module, __filename, __dirname) {
+	// 你的代码
+});
+				</code></pre>
 			</p>
 		</section>
 		<section>

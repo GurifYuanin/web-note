@@ -140,7 +140,58 @@
 		<section>
 			<h2>grid</h2>
 			<p>
-				网格布局。
+				网格布局，通过给父元素设置 css 属性 display: grid，然后设置行和列的分割方法，父元素下的所有子元素便会按照网格方式进行分布。
+				<pre><code class="html">
+&lt;div style="display: grid; grid-template-rows: 100px 100px 100px; grid-template-columns: 100px 100px 100px;">
+	&lt;div>1&lt;/div>
+	&lt;div>2&lt;/div>
+	&lt;div>3&lt;/div>
+	&lt;div>4&lt;/div>
+	&lt;div>5&lt;/div>
+	&lt;div>6&lt;/div>
+	&lt;div>7&lt;/div>
+	&lt;div>8&lt;/div>
+	&lt;div>9&lt;/div>
+&lt;/div>		
+				</code></pre>
+				<div class="show">
+<div style="display: grid; grid-template-rows: 100px 100px 100px; grid-template-columns: 100px 100px 100px;">
+	<div>1</div>
+	<div>2</div>
+	<div>3</div>
+	<div>4</div>
+	<div>5</div>
+	<div>6</div>
+	<div>7</div>
+	<div>8</div>
+	<div>9</div>
+</div>
+				</div>
+				<h3>设置行列宽高</h3>
+				<p>
+					通过 grid-template-rows 来设置每一行的高度，通过 grid-template-columns 来设置每一列的宽度。
+					<pre><code class="css">
+selector {
+	grid-template-rows: 单位 | 数量 fr;
+	grid-template-columns: 单位 | 数量 fr;
+}
+					</code></pre>
+					fr 表示等分数，比如：
+					<pre><code class="html">
+&lt;div style="height: 100px; display: grid; grid-template-rows: 1fr 2fr 1fr;">
+	&lt;div style="background-color: #0f0f0f;">1&lt;/div>
+	&lt;div style="background-color: #8f8f8f;">2&lt;/div>
+	&lt;div style="background-color: #3f3f3f;">3&lt;/div>
+&lt;/div>
+					</code></pre>
+					<div class="show">
+						<div style="height: 100px; display: grid; grid-template-rows: 1fr 2fr 1fr;">
+							<div style="background-color: #0f0f0f;">1</div>
+							<div style="background-color: #8f8f8f;">2</div>
+							<div style="background-color: #3f3f3f;">3</div>
+						</div>
+					</div>
+				</p>
 			</p>
 		</section>
 		<section>

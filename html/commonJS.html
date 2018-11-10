@@ -111,15 +111,17 @@ console.log(compute.add(a, b)); // => 3
 				<div class="tip">若 B 没有后缀名，Node 会尝试自动添加<span class="definition"> .js、 .json、 .node </span></div><br>
 				例如<span class="definition"> D:/Git/web-note/demo/commonjs_demo.js </span>加载上例的<span class="definition"> compute.js </span>，commonjs_demo.js 的内容为：
 				<pre><code class="javascript">
-					require('compute');
+require('compute');
 				</code></pre>
 				其加载顺序为：
 				<ol>
+					<li>寻找 node 内置的核心模块是否有 compute 这个模块</li>
 					<li>D:\\Git\\web-note\\demo\\node_modules\\compute</li>
 					<li>D:\\Git\\web-note\\node_modules\\compute</li>
 					<li>D:\\Git\\node_modules\\compute</li>
 					<li>D:\\node_modules\\compute</li>
 				</ol>
+				然后使用内置的 fs（filesystem）来 <span class="definition">同步</span> 读取文件。
 			</p>
 		</section>
 		<section>
