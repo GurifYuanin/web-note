@@ -112,12 +112,132 @@ console.log('hello world');
 	$callback = $_GET('callback');
 	$index =(int)$_GET('index');
 	$data = $arr[$index]; // 请求的数据
-	echo $callback . '($data)'; // 最终返回的数据
+	echo $callback . '(' . json_encode($data) . ')'; // 最终返回的数据
 ?&gt;
 				</code></pre>
 				php 文件读取查询片段得知要获取 index 为 1 的数据，于是将在服务器保存的数组 $arr 取出索引为 1 的数据（字符串 hello 2 ），因此最终返回的结果是<span class="definition"> foo('hello 2') </span>。demo.html 收到该结果后执行 foo 函数，控制台输出 hello 2 。
 				<div class="tip">
 					因为整个过程是在客户端设置一个回调函数，通常其返回数据中回调函数的参数为一个 JSON 对象，就像是预先准备了个容器来装 JSON 对象，因此称之为填充式 JSON 。（个人瞎编的）
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>封装</h2>
+			<p>
+				使用 javascript 封装一个实现 jsonp 的函数。
+				<pre><code class="javascript">
+/**
+ * jsonp
+ * @param  { String }   url      请求地址	required
+ * @param  { Function } callback 回调函数	required
+ * @param  { Object }   data     查询参数	optional
+ * @return { undefined }
+ */
+function jsonp(url, callback, data) {
+	if (!url) {
+		throw new ReferenceError('请求 url 不能为空');
+	} else if (typeof callback !== 'function') {
+		throw new TypeError('callback 必须为函数');
+	} else {
+		var scriptEl = document.createElement('script'); // 创建 script 标签
+
+		// 为 window 对象添加属性，当 jsonp 加载完成后自动执行
+		// 这里检查了一下，如果是匿名函数，则认为回到函数名为 callback
+		var callbackName = callback.name === '' ? 'callback' : callback.name;
+		window[callbackName] = function(data) {
+			document.head.removeChild(scriptEl); // 已经获得数据，移除 script 标签
+			callback(data); // 调用回调函数
+		}
+		
+		// 将 data 转化为表单键值对
+		var query = data ? Object.entries(data).reduce(function(sum, el) {
+			return sum + '&' + el[0] + '=' + el[1];
+		}, '') : '';
+		
+		scriptEl.setAttribute('src', url + '?callback=' + callbackName + query);
+		document.head.appendChild(scriptEl);
+	}
+}
+
+// 调用 jsonp
+var url = 'http://isempty.site/index.php/note/Demo/jsonp';
+var data = { a: 1, b: 2 };
+function callback(data) {
+	console.log(data);
+}
+jsonp(url, callback, data);
+				</code></pre>
+				<div class="show">
+					<div>url：<input id="jsonp-demo-url" style="min-width: 50%;" type="text" value="http://isempty.site/index.php/note/Demo/jsonp"></div>
+					<div>
+						callback：
+						<textarea id="jsonp-demo-callback" style="width: 100%;" rows="10">
+function callback(data) {
+	console.log(data);
+}
+						</textarea>
+					<div></div>
+					<div>
+						data:
+						<textarea id="jsonp-demo-data" style="width: 100%;" rows="10">
+{
+	a: 1,
+	b: 2
+}
+						</textarea>
+					</div>
+					<div><button class="button" id="jsonp-demo-button">发送</button></div>
+					<div>返回结果：</div>
+					<div id="jsonp-demo-container"></div>
+					<script>
+						(function() {
+							var urlEl = document.getElementById('jsonp-demo-url');
+							var callbackEl = document.getElementById('jsonp-demo-callback');
+							var dataEl = document.getElementById('jsonp-demo-data');
+							var responseEl = document.getElementById('jsonp-demo-container');
+							document.getElementById('jsonp-demo-button').onclick = function() {
+								function jsonp(url, callback, data) {
+									if (!url) {
+										throw new ReferenceError('请求 url 不能为空');
+									} else if (typeof callback !== 'function') {
+										throw new TypeError('callback 必须为函数');
+									} else {
+										var scriptEl = document.createElement('script'); // 创建 script 标签
+
+										// 为 window 对象添加属性，当 jsonp 加载完成后自动执行
+										// 这里检查了一下，如果是匿名函数，则认为回到函数名为 callback
+										var callbackName = callback.name === '' ? 'callback' : callback.name;
+										window[callbackName] = function(data) {
+
+											document.head.removeChild(scriptEl); // 已经获得数据，移除 script 标签
+											callback(data); // 调用回调函数
+											responseEl.innerText = '{';
+											for (var key in data) {
+												responseEl.innerText += key + ':' + data[key] + ',';
+											}
+											responseEl.innerText += '}';
+										}
+										
+										// 将 data 转化为表单键值对
+										var query = data ? Object.entries(data).reduce(function(sum, el) {
+											return sum + '&' + el[0] + '=' + el[1];
+										}, '') : '';
+										
+										scriptEl.setAttribute('src', url + '?callback=' + callbackName + query);
+										document.head.appendChild(scriptEl);
+									}
+								}
+								var url = urlEl.value;
+								var str = callbackEl.value.trim().replace(/[\r\n]/g, '');
+								var callback = function() {
+									eval(str);
+								};
+								var dataString = dataEl.value.replace(/\s/g, '').replace('\'', '"').replace(/(?<={|,)(\w+)(?=:)/g, '"$1"');
+								var data = JSON.parse(dataString);
+								jsonp(url, callback, data);
+							}	
+						})();
+					</script>
 				</div>
 			</p>
 		</section>

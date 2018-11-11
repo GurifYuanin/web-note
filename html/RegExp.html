@@ -113,6 +113,11 @@ var exp3 = new RegExp(/abc/, 'g');
 							<th>匹配</th>
 						</tr>
 						<tr>
+							<td>\数字</td>
+							<td>反向引用</td>
+							<td>引用和前一个分组的结果一样的字符串</td>
+						</tr>
+						<tr>
 							<td>\. 或 \/ 或 \[ 或 \\ 或 \+ 或 \* 或 \? 或 \^ 或 \$</td>
 							<td></td>
 							<td>匹配去掉左侧 \ 的右侧字符</td>
@@ -243,6 +248,26 @@ var exp3 = new RegExp(/abc/, 'g');
 							<td>匹配 "字符串B且前面没有字符串A" ，相当于 /字符串B/ 的结果集减去 /字符串A字符串B/ 的结果集</td>
 						</tr>
 					</table>
+					<h4>分组 和 \数字</h4>
+					正则表达式可以使用小括号来设置一个分组：
+					<pre><code class="javascript">
+new RegExp('(abc)def(hij)');
+					</code></pre>
+					abc 是分组 1 ，hij 是分组 2 ，在正则表达式中使用 \数字 来对前面的匹配分组进行再次引用：
+					<pre><code class="javascript">
+/(abc)def\1/.test('abcdefabc'); // => true
+					</code></pre>
+					它是对结果的引用，比如：
+					<pre><code class="javascript">
+/(\d{3}) = \1/.test('123 = 123'); // => true
+/(\d{3}) = \1/.test('456 = 456'); // => true
+					</code></pre>
+					<h4>分组 和 $数字</h4>
+					使用字符串的 replace 方法时，使用 $数字 来对获得分组的引用，比如将所有 &lt;tag&gt; 变成 &gt;tag&lt;，将所有 &lt;/tag&gt; 变成 &gt;/tag&lt;：
+					<pre><code class="javascript">
+'&lt;html>&lt;head>&lt;/head>&lt;body>&lt;/body>&lt;/html>'.replace(/&lt;(\/?\w+)>/g, '>$1&lt;');
+// => "&gt;html&lt;&gt;head&lt;&gt;/head&lt;&gt;body&lt;&gt;/body&lt;&gt;/html&lt;"
+					</code></pre>
 				</p>
 				<h3>修饰符</h3>
 				<p>

@@ -339,10 +339,10 @@ router.beforeEach((to, from, next) => {
 });
 					</code></pre>
 					在组件中通过<span class="definition"> this.$route.meta.routeList </span>读取数组。
-					<pre><code class="javascript">
+					<pre><code class="vue">
 当前位置：
 &lt;div v-for="position in $route.meta.routeList"&gt;
-	> {{position}}
+	&gt; {{position}}
 &lt;/div&gt;
 					</code></pre>
 				</p>
@@ -364,6 +364,64 @@ router.beforeEach((to, from, next) => {
 				<p>
 					matched 是一个数组，记录了所有嵌套路由的路由记录。
 				</p>
+			</p>
+		</section>
+		<section>
+			<h2>history mode</h2>
+			<p>
+				vue-router 默认是 history 模式，原理是通过设置 <span class="definition">hashchange</span> 事件，监听 window.location.hash 的变化，一旦发生变化就触发。event 事件对象提供两个属性：oldURL 和 newURL，分别对应跳转前的 URL 和跳转后的 URL 。
+				<div class="show">
+					<a class="self" href="#hash1">#hash1</a>
+					<a class="self" href="#hash2">#hash2</a>
+					<a class="self" href="#hash3">#hash3</a>
+					<a class="self" href="#hash4">#hash4</a>
+					<div>oldURL：<span id="hash-change-old-url"></span></div>
+					<div>newURL：<span id="hash-change-new-url"></span></div>
+					<script>
+						(function() {
+							var oldURLEl = document.getElementById('hash-change-old-url');
+							var newURLEl = document.getElementById('hash-change-new-url');
+							window.addEventListener('hashchange', function(e) {
+								oldURLEl.innerText = e.oldURL;
+								newURLEl.innerText = e.newURL;
+							});
+						})();
+					</script>
+				</div>
+				当触发修改后，vue-router 再根据 hash 调用 render 方法渲染来 DOM 。
+			</p>
+		</section>
+		<section>
+			<h2>hash mode</h2>
+			<p>
+				HTML5 的 window.history 新增了 pushState 和 replaceState 方法，使用该方法会修改页面的 URL 但不会刷新页面。
+				<div class="command">
+					<div>window.history.pushState(状态对象, 标题, 地址)</div>
+					<div>window.history.replaceState(状态对象, 标题, 地址)</div>
+				</div>
+				<div class="show">
+					<div>状态对象：{}</div>
+					<div>标题：<input id="hash-mode-title" type="text"></div>
+					<div>地址：<input id="hash-mode-address" type="text"></div>
+					<div><button id="hash-mode-button" class="button">pushState</button></div>
+					<script>
+						(function() {
+							var addressEl = document.getElementById('hash-mode-address');
+							var titleEl = document.getElementById('hash-mode-title');
+							document.getElementById('hash-mode-button').onclick = function() {
+								window.history.pushState({}, titleEl.value, addressEl.value);
+							};
+						})();
+					</script>
+				</div>
+				<div class="tip">haschange 事件只监听 URL 的 hash 是否发生变更，而 pushState 或 replaceState 并不会触发 hashchange 事件。</div>
+				在 vue-router 设置模式为 hash mode 。
+				<pre><code class="javascript">
+new VueRouter({
+	mode: 'hash',
+	// 其他路由设置
+});
+				</code></pre>
 			</p>
 		</section>
 		<section class="refer">
