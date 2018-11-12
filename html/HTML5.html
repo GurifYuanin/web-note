@@ -233,14 +233,14 @@ if (typeof(Storage) !== 'undefined') {
 		<section>
 			<h2>Application Cache</h2>
 			<p>
-				应用缓存，即对页面资源进行离线缓存.
+				应用缓存，即对页面资源进行离线缓存。
 				<pre><code class="html">
 &lt;!-- 在 html 标签上使用 manifest 属性 --&gt;
 &lt;html lang="en" manifest="mycache.appcache"&gt;
 ...
 &lt;/html&gt;
 				</code></pre>
-				mycache.appcache 是在服务器的 manifest 文件，用于指定页面上哪些资源需要缓存，哪些不需要缓存。
+				mycache.appcache 是在服务器的 manifest （清单）文件，用于指定页面上哪些资源需要缓存，哪些不需要缓存。
 				<pre><code class="appcache">
 CACHE MANIFEST
 # 此处写需要被缓存的资源
@@ -252,6 +252,37 @@ FALLBACK:
 # 此处写获取不到资源时的替补资源
 资源 替补资源
 				</code></pre>
+				由于 ApplicationCache 的一些问题<sup>[4]</sup>，已经从 Web 标准中移除，虽然一些浏览器目前仍然支持它，但也许会在未来的某个时间停止支持，请尽量不要使用该特性。<sup>[5]</sup>
+			</p>
+		</section>
+		<section>
+			<h2>Web App Manifest</h2>
+			<p>
+				Web App Manifest 不是 HTML5 的新特性，此时(2018-11)也正在草案阶段，目前只有手机端的 Chrome 和 Firefox 实现。此处用作与 Application Cache 进行对比，它是一个 json 文件：
+				<pre><code class="json">
+{
+  "short_name": "用户主屏幕上的文本",
+  "name": "网络应用安装横幅的文本",
+  "icons": [
+    {
+      "src": "图标地址",
+      "type": "图标格式",
+      "sizes": "图标尺寸"
+    }
+  ],
+  "start_url": "启动地址"
+}
+				</code></pre>
+				然后在首页添加：
+				<pre><code class="html">
+&lt;link rel="manifest" href="/manifest.json">
+				</code></pre>
+				用户在访问网站后，会询问是否向屏幕添加快捷图标，添加后用户可以直接点击该快捷图标打开网页，它不仅仅是一个快捷打开方式，还可以实现：
+				<ul>
+					<li>设置启动图像(icons)、背景颜色(background_color)、主题颜色(theme-color)</li>
+					<li>隐藏浏览器的 UI 使得更像是在访问一个应用程序</li>
+					<li>设置默认启动方向：竖屏还是横屏</li>
+				</ul>
 			</p>
 		</section>
 		<section>
@@ -423,6 +454,8 @@ if ('WebSocket' in window) {
 				<div>[1] 维基百科 HTML5 <a href="https://zh.wikipedia.org/wiki/HTML5">https://zh.wikipedia.org/wiki/HTML5</a></div>
 				<div>[2] 菜鸟教程 HTML5 <a href="http://www.runoob.com/html/html5-intro.html">http://www.runoob.com/html/html5-intro.html</a></div>
 				<div>[3] 尹萨萨 [标准模式与混杂模式] <a href="https://www.jianshu.com/p/4aa37da38b81">https://www.jianshu.com/p/4aa37da38b81</a></div>
+				<div>[4] Jake Archibald Application Cache is a Douchebag <a href="https://alistapart.com/article/application-cache-is-a-douchebag">https://alistapart.com/article/application-cache-is-a-douchebag</a></div>
+				<div>[5] MDN 使用应用缓存 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Using_the_application_cache">https://developer.mozilla.org/zh-CN/docs/Web/HTML/Using_the_application_cache</a></div>
 			</p>
 		</section>
 	</article>

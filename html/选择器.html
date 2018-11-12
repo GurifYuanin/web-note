@@ -142,6 +142,36 @@ selector1 > selector2 {}
 				</code></pre>
 			</p>
 		</section>
+		<section>
+			<h2>同权重问题</h2>
+			<p>
+				当两个属性赋值给同一个元素，且权重相同，比如：
+				<pre><code class="html">
+&lt;p class="green blue">hello world&lt;/p>
+&lt;style>
+	.blue {
+		color: blue;
+	}
+	.green {
+		color: green;
+	}
+&lt;/style>
+				</code></pre>
+				虽然在 class="" 上 blue 在 green 后面，但实际效果是： 
+				<div class="show">
+					<p class="green blue">hello world</p>
+					<style>
+						.blue {
+							color: blue;
+						}
+						.green {
+							color: green;
+						}
+					</style>
+				</div>
+				也就是说同权重的时候，看的是哪个属性后面声明，晚声明的属性覆盖先声明的属性（有毒）。
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>

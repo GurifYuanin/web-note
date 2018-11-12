@@ -36,7 +36,7 @@
 			</p>
 		</section>
 		<section>
-			<h2>block(块级)</h2>
+			<h2>block</h2>
 			<p>
 				<h3>特点</h3>
 				<ol>
@@ -59,7 +59,7 @@
 				</ol>
 		</section>
 		<section>
-			<h2>inline(内联)</h2>
+			<h2>inline</h2>
 			<p>
 				<h3>特点</h3>
 				<ol>
@@ -84,7 +84,7 @@
 			</p>
 		</section>
 		<section>
-			<h2>inline-block(行内块级)</h2>
+			<h2>inline-block</h2>
 			<p>
 				<h3>特点</h3>
 				<p>
@@ -109,9 +109,9 @@
 &lt;div style="display: inline-block; border: solid white 1px;">hello&lt;/div><span class="strong">回车</span>
 &lt;div style="display: inline-block; border: solid white 1px;">world&lt;/div>
 					</code></pre>
-					解决方法是不要这个回车，特别是当多个 inline-block 元素时，可以这样写：
+					解决方法一：不要这个回车，特别是当多个 inline-block 元素时，可以这样写：
 					<pre><code class="html">
-&lt;ul id="inline-block-ul">
+&lt;ul class="inline-block-ul">
 	&lt;li>
 		要点一
 	&lt;/li>&lt;li>
@@ -123,28 +123,78 @@
 	&lt;/li>
 &lt;/ul>
 &lt;style>
-#inline-block-ul > li {
+.inline-block-ul > li {
 	display: inline-block;
 }
 &lt;/style>
 					</code></pre>
 					<div class="show">
-					<ul id="inline-block-ul">
-						<li>
-							要点一
-						</li><li>
-							要点二
-						</li><li>
-							要点三
-						</li><li>
-							要点四
-						</li>
-					</ul>
-					<style>
-					#inline-block-ul > li {
-						display: inline-block;
-					}
-					</style>	
+						<ul class="inline-block-ul">
+							<li>
+								要点一
+							</li><li>
+								要点二
+							</li><li>
+								要点三
+							</li><li>
+								要点四
+							</li>
+						</ul>
+						<style>
+						.inline-block-ul > li {
+							display: inline-block;
+						}
+						</style>	
+					</div>
+					解决方法二：不要闭合标签。
+					<pre><code class="html">
+&lt;ul class="inline-block-ul">
+	&lt;li>要点一
+	&lt;li>要点二
+	&lt;li>要点三
+	&lt;li>要点四
+&lt;/ul>
+					</code></pre>
+					<div class="show">
+						<ul class="inline-block-ul">
+							<li>要点一
+							<li>要点二
+							<li>要点三
+							<li>要点四
+						</ul>
+					</div>
+					解决方法三：让父元素 letter-spacing 活 word-spacing 为负数，子元素不变。letter-spacing 表示字母间距，word-spacing 表示单词间距。
+					<pre><code class="html">
+&lt;ul class="inline-block-ul letter-spacing">
+	&lt;li>要点一&lt;/li>
+	&lt;li>要点二&lt;/li>
+	&lt;li>要点三&lt;/li>
+	&lt;li>要点四&lt;/li>
+&lt;/ul>
+&lt;style>
+	.letter-spacing {
+		letter-spacing: -3px;
+	}
+	.letter-spacing > li {
+		letter-spacing: 0px;
+	}
+&lt;/style>
+					</code></pre>
+					<div class="show">
+						<ul class="inline-block-ul letter-spacing">
+							<li>要点一</li>
+							<li>要点二</li>
+							<li>要点三</li>
+							<li>要点四</li>
+						</ul>
+						<style>
+							.letter-spacing {
+								letter-spacing: -3px;
+							}
+							.letter-spacing > li {
+								letter-spacing: 0px;
+							}
+						</style>
 					</div>
 				</p>
 			</p>

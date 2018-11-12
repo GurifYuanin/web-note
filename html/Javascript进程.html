@@ -39,7 +39,7 @@ $.ajax({
 })
 console.log('执行 ajax 后');
 				</code></pre>
-				输出 "执行 ajax 前" 之后向 www.demo.com 发送了个 http 请求，如果该请求迟迟没有回应，后面的代码(<span class="definition"> console.log('执行 ajax 后'); </span>)就无法执行，也就无法输出 "执行 ajax 后"。此时就需要让 ajax 代码的请求异步执行。
+				输出 "执行 ajax 前" 之后向 www.demo.com 发送了个 http 请求，如果 javascript 是同步执行，且该请求迟迟没有回应，后面的代码(console.log('执行 ajax 后');)就无法执行。此时就需要让 http 请求 <span class="definition">异步执行</span> 。
 			</p>
 		</section>
 		<section>
@@ -50,7 +50,7 @@ console.log('执行 ajax 后');
 					<img src="../images/javascript_process_event_loop.jpg">
 					<figcaption>事件队列机制</figcaption>
 				</figure>
-				javascript 代码则在执行栈（execution context stack）上执行，<strong><u>只有执行栈上的代码执行完之后</u></strong>才会去照看一下任务队列，如果任务队列上有事件，那么依次（队列-先进先出）一条条取出执行。
+				javascript 代码则在执行栈（execution context stack）上执行，<strong><u>只有执行栈上的代码执行完之后</u></strong>才会去照看一下任务队列，此时如果任务队列上有事件，那么就依次从队列上（队列-先进先出）一条条取出执行。
 				<pre><code class="javascript">
 setTimeout(function() {
 	console.log('hello world');
@@ -67,7 +67,7 @@ while (new Date() - now < 3000) {}
 					<li>0ms 时刻，执行了 setTimeout ，告诉 javascript 函数 function() { console.log('hello world'); } 要在 1000ms 后执行</li>
 					<li>0-1000ms 时间，进入 while 循环中</li>
 					<li>1000ms 时刻，定时器触发，将函数 function() { console.log('hello world'); } 放入事件队列</li>
-					<li>1000-3000ms 时间，依旧在 while 循环中</li>
+					<li>1000-3000ms 时间，依旧在 while 循环中，所以没办法去执行事件队列里的任务</li>
 					<li>3000ms 时刻，跳出 while 循环，执行栈没有要执行的代码，这时去看事件队列，取出函数 function() { console.log('hello world'); } 并执行</li>
 				</ol>
 			</p>
@@ -101,7 +101,7 @@ if (window.Worker) {
 	worker.terminate();
 }
 				</code></pre>
-				父子进程可以进行相互通信，方法与父进程相似，但子进程的全局对象不是 window ，而是父进程创建出来的 worker 实例，所以向父进程传输数据和设置钩子的时候，可以直接在全局对象上设置。
+				父子进程可以进行相互通信，方法与父进程相似，但子进程的全局对象不是 window ，而是父进程创建出来的 worker 实例，所以向父进程传输数据和设置钩子的时候，可以直接在全局对象上设置 this.xxx = ... ，然后父进程通过 worker.xxx 来获取。
 				<pre><code class="javascript">
 /* 子进程代码 */
 // 向父进程发送 'hello world'
@@ -119,6 +119,7 @@ close();
 				<ul>
 					<li>没有 window 全局对象，所以也无法操作父进程的 DOM ，但可以直接使用一部分 API，如 WebSockets，IndexedDB 以及FireFox OS 专用的 Data Store API 等数据存储机制<sup>[2]</sup></li>
 					<li>父进程只能调用同源的脚本</li>
+					<li>出于安全考虑，chrome 不允许本地(file:///)执行子进程。</li>
 				</ul>
 			</p>
 		</section>
