@@ -206,6 +206,39 @@ Set-Cookie: key=hello; expires=Green Time; Max-Age=second; path=path; domain=dom
 			</p>
 		</section>
 		<section>
+			<h2>cookie 共享</h2>
+			<p>
+				<h3>子域名获得父域名 cookie</h3>
+				<p>
+					使用浏览器访问网站资源的时候会自动将当前域名下的 cookie 发送到服务器，且子域名可以获得父域名的 cookie，比如：
+					<pre><code class="http">
+# 父域名
+example.com
+
+# 子域名
+sub.example.com
+					</code></pre>
+					如果用户先访问父域名 example.com ，设置了 cookie 为 key=value，再去访问子域名 sub.example.com ，那么子域名可以获得父域名的 cookie，但是以下情况子域名不会获得父域名:
+					<pre><code class="http">
+# 父域名
+www.example.com
+
+# 子域名
+sub.example.com
+					</code></pre>
+					尽管 example.com 和 www.example.com 指向同一个 IP ，但 www.example.com 的 cookie 不会发送给 sub.example.com 。
+				</p>
+				
+				<h3>跨域标签会发送 cookie</h3>
+				<p>
+					script、img、object 等标签，虽然可以获得跨域资源，但也会将本域的 cookie 发送过去，比如使用 cdn。
+					<pre><code class="html">
+&lt;script src="https://cdn.bootcss.com/xxx/x.x.x/xxx.min.js">&lt;/script>
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
 			<h2>缺点</h2>
 			<p>
 				<ul>
@@ -244,6 +277,7 @@ Set-Cookie: key=hello; expires=Green Time; Max-Age=second; path=path; domain=dom
 				<div>[2] MDN cookies <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies">https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies</a></div>
 				<div>[3] php手册 setcookie <a href="http://php.net/manual/zh/function.setcookie.php">http://php.net/manual/zh/function.setcookie.php</a></div>
 				<div>[4] MDN documen.cookie <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Document/cookie">https://developer.mozilla.org/zh-CN/docs/Web/API/Document/cookie</a></div>
+				<div>[5] Bjørn Johansen To www or not <a href="https://bjornjohansen.no/www-or-not">https://bjornjohansen.no/www-or-not</a></div>
 			</p>
 		</section>
 	</article>

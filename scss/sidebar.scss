@@ -368,7 +368,7 @@ body {
         padding: 1%;
         width: 25%;
 
-        box-shadow: 0 0 .5rem #444;
+        box-shadow: 0 0 .5rem $color;
         position: fixed;
         overflow: auto;
         top: 0;
@@ -379,6 +379,9 @@ body {
         font-size: $imgSize;
 
         color: $catalogColor;
+        @media (max-device-width: $deviceThreshold) {
+            text-align: center;
+        }
     }
     /* 类别 */
     h3 {
@@ -440,6 +443,7 @@ body {
         margin: 0 10px 0 0;
         width: $imgSize;
 
+        vertical-align: middle;
         cursor: pointer;
     }
 }
@@ -466,6 +470,7 @@ body {
         width: 65%;
     }
     .lastModify {
+        padding: 2.5px 0;
         text-align: center;
         color: gray;
     }
@@ -671,7 +676,7 @@ body {
         margin: 0;
         padding: 10px 10% 0 10%;
         @media (max-device-width: $deviceThreshold) {
-            padding: 0 2%;
+            padding: 20px 2.5% 0 2.5%;
         }
         // 强调代码
         .strong {
@@ -708,6 +713,9 @@ body {
             cursor: pointer;
             &:hover {
                 opacity: .5;
+            }
+            @media (max-device-width: $deviceThreshold) {
+                padding: 10px 0;
             }
         }
         .codeDark {
@@ -869,6 +877,8 @@ body {
     height: 1.2rem;
 
     margin: 5px auto;
+
+    text-align: left;
     #searchInput {
         width: 100%;
         height: 1.5rem;

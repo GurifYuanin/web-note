@@ -73,6 +73,41 @@ while (new Date() - now < 3000) {}
 			</p>
 		</section>
 		<section>
+			<h2>异步顺序</h2>
+			<p>
+				先进入任务队列的先执行（废话）。
+				<pre><code class="javascript">
+setTimeout(function() {
+	console.log('setTimeout1');
+}, 0);
+setTimeout(function() {
+	console.log('setTimeout2');
+}, 0);
+
+// => setTimeout1
+// => setTimeout2
+				</code></pre>
+				promise 的 then 优先于 setTimeout。
+				<pre><code class="javascript">
+setTimeout(function() {
+	console.log('setTimeout');
+}, 0);
+new Promise(function(resolve) {
+	console.log('promise');
+	resolve();
+}).then(function(data) {
+	console.log('then');
+});
+console.log('console');
+
+// => promise
+// => console
+// => then
+// => setTimeout
+				</code></pre>
+			</p>
+		</section>
+		<section>
 			<h2>子进程</h2>
 			<p>
 				HTML5 提供了 Web Workers API，可以在 javascript 主进程下创建子进程（也是 javascript 脚本文件）。

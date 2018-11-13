@@ -123,6 +123,9 @@ Notify.prototype.info = function(options) {
         win.style.opacity = '0';
     }, options.duration);
 };
+function isPhone() {
+    return getViewport().width < 600;
+}
 
 // sidebar
 $(function() {
@@ -209,7 +212,11 @@ $(function() {
     $sidebar.append(str);
 
     // SE
-    $catalog.append('<section id="searchContainer"><input id="searchInput" type="text" placeholder="搜索文章"/><div id="searchClear">x</div><section id="searchResult"></section></section>');
+    $catalog.append('<section id="searchContainer">' +
+                        '<input id="searchInput" type="text" placeholder="搜索文章"/>' +
+                        '<div id="searchClear">x</div>' +
+                        '<section id="searchResult"></section>' +
+                    '</section>');
 
     var $searchInput = $('#searchInput');
     var $searchResult = $('#searchResult');
@@ -354,7 +361,9 @@ $(function() {
         });
     });
 
-    $title.after('<div class="lastModify"><img style="height: 25px;" src="../images/modify.svg"></div>' + '<div class="lastModify">' + document.lastModified + '</div>' +
+    $title.after('<div class="lastModify"><img style="height: 25px;" src="../images/modify.svg"></div>' +
+                '<div class="lastModify">共 ' + $container.text().replace(/[\s\r\n]/g, '').length + ' 字</div>' +
+                '<div class="lastModify">' + document.lastModified + '</div>' +
                 '<div class="switch">' +
                     '<input id="toggle" type="checkbox" title="切换主题">' +
                     '<label for="toggle"><i></i></label>' +
@@ -453,7 +462,7 @@ $(function() {
             $sidebar.css('display', 'none');
             // 允许重新展开侧栏
             $showCatalog.css('display', 'block');
-            if (cb && typeof cb === 'function') cb();
+            if (typeof cb === 'function') cb();
         });
 
         widthAndMargin(65, 90, 25, 1);
@@ -463,7 +472,7 @@ $(function() {
         var width = getViewport().width;
         var padding;
         // 如果视窗大小小于 600 px
-        if (width < 600) {
+        if (isPhone()) {
             width = '100%';
             padding = '0';
         } else {
@@ -518,7 +527,6 @@ $(function() {
         };
         if (el.innerHTML === currentH2) el.click();
         subTitleNav += '<div class="subTitleItem">' + el.innerHTML + '</div>';
-        // if ()
     });
     subTitleNav = '<div id="subTitleNav">' + subTitleNav + '<div class="subTitleItem">返回顶部</div></div>';
     // 右下角子标题导航
@@ -621,7 +629,8 @@ $(function() {
     }
     preTitle = wrapByA(preTitle);
     nextTitle = wrapByA(nextTitle);
-    $('.refer').after('<div id="footer" ><div class="prePage">上一篇：' + preTitle + '</div><div class="nextPage">下一篇：' + nextTitle + '</div></div>');
+    var $refer = $('.refer').length === 0 ? $('section').last() : $('.refer');
+    $refer.after('<div id="footer" ><div class="prePage">上一篇：' + preTitle + '</div><div class="nextPage">下一篇：' + nextTitle + '</div></div>');
 
     // 将不是目前浏览的条目收起来
     items.forEach(function(item, index) {

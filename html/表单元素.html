@@ -182,6 +182,201 @@
 				</ul>
 			</p>
 		</section>
+		<section>
+			<h2>file</h2>
+			<p>
+				最简陋的单个文件文件上传：
+				<pre><code class="html">
+&lt;input type="file"&gt;
+				</code></pre>
+				<div class="show">
+					<input type="file">
+				</div>
+				加入 multiple 属性可以允许用户同时上传多个文件（按住 Ctrl 或 Shift 多选）。
+				<pre><code class="html">
+&lt;input type="file" multiple>
+				</code></pre>
+				<div class="show">
+					<input type="file" multiple>
+				</div>
+				<h3>美化样式</h3>
+				<p>
+					如果直接添加在 file 表单上，会连同其后的文字（未选择任何文件）也一起被修饰，比如：
+					<pre><code class="html">
+&lt;input style="border: solid 1px gray; background: white; color: black;" type="file"&gt;
+					</code></pre>
+					<div class="show">
+						<input style="border: solid 1px gray; background: white; color: black;" type="file">
+					</div>
+					解决方法一：直接隐藏（display:none）表单元素，然后使其作为 label 标签的子元素，当点击 label 标签的时候也触发文件上传框，之后修饰的样式添加在 label 标签上就行。
+					<pre><code class="html">
+&lt;label>
+	&lt;span class="button">上传文件&lt;/span>
+	&lt;input style="<span class="strong">display: none;</span>" type="file">
+&lt;/label>
+
+&lt;!-- 为上传文件按钮添加样式 -->
+&lt;style>
+	.button {
+		cursor: pointer;
+		background-color: #f5f5f5;
+		color: #363636;
+		border: none;
+		padding: 5px 10px;
+		margin: 0 5px;
+		border-radius: 5px;
+	}
+	.button:hover {
+		background-color: rgb(232, 232, 232);
+	}
+	.button:active {
+		box-shadow: 1px 2px 5px -3px #222 inset;
+	}
+&lt;/style>
+					</code></pre>
+					<div class="show">
+						<label>
+							<span class="button">上传文件</span>
+							<input style="display: none;" type="file">
+						</label>
+					</div>
+					解决方法二：使用 label 的 for 属性，隐藏上传文件表单元素，当点击 label 时触发上传文件框，但这种方法要为上传文件表单设置一个唯一的 id ，不太适合循环渲染多个文件上传，好处是可以不用把表单元素放在 label 内。
+					<pre><code class="html">
+&lt;label class="button" for="upload-file-demo">上传文件&lt;/label>
+&lt;input id="upload-file-demo" style="display: none;" type="file">
+					</code></pre>
+					<div class="show">
+						<label class="button" for="upload-file-demo">上传文件</label>
+						<input id="upload-file-demo" style="display: none;" type="file">
+					</div>
+					解决方法三：隐藏上传文件表单，然后借助 javascript 手动去触发上传文件表单的 click 事件。
+					<pre><code class="html">
+&lt;input id="upload-file-demo-form" type="file" style="display: none;">
+&lt;button class="button" id="upload-file-demo-button">上传文件&lt;/button>
+&lt;script>
+	document.getElementById('upload-file-demo-button').onclick = function() {
+		document.getElementById('upload-file-demo-form').click();
+	}
+&lt;/script>
+					</code></pre>
+					<div class="show">
+						<input id="upload-file-demo-form" type="file" style="display: none;">
+						<button class="button" id="upload-file-demo-button">上传文件</button>
+						<script>
+							document.getElementById('upload-file-demo-button').onclick = function() {
+								document.getElementById('upload-file-demo-form').click();
+							}
+						</script>
+					</div>
+				</p>
+				<h3>获得文件</h3>
+				<p>
+					通过表单元素的 input 或 change 事件，当用户上传文件时触发，然后就可以获取：
+					<ul>
+						<li>文件表单元素上的 value ，表示用户上传文件的<span class="different">路径 + 文件名</span></li>
+						<li>文件表单元素上的 files ，表示用户上传的<span class="different">文件数组（FileList）</span></li>
+					</ul>
+					<pre><code class="javascript">
+var el = ... // 获得文件表单元素
+el.oninput = function(event) {
+	console.log(this.value);
+	console.log(this.files);
+}
+					</code></pre>
+					<div class="show">
+						<input type="file" id="get-upload-file-demo" multiple>
+						<div>this.value / event.target.value：<span id="get-upload-file-value"></span></div>
+						<div>this.files / event.target.files：<span id="get-upload-file-files"></span></div>
+						<script>
+							(function() {
+								var valueEl = document.getElementById('get-upload-file-value');
+								var filesEl = document.getElementById('get-upload-file-files');
+								document.getElementById('get-upload-file-demo').oninput = function(event) {
+									valueEl.innerText = this.value;
+									var files = this.files;
+									var str = '{<br>';
+									for (var key in files) {
+										str += '&nbsp;&nbsp;' + key + ': ' + files[key].toString() + '<br>';
+									}
+									str += '}';
+									filesEl.innerHTML = str;
+								}
+							})();
+						</script>
+					</div>
+					文件数组的第一个元素就是刚才上传的文件（this.files[0]），是 File 类型的数据，存在以下属性：
+					<ul>
+						<li>lastModified：最后一次修改时间，是一个时间戳</li>
+						<li>name：文件名</li>
+						<li>size：文件大小</li>
+						<li>type：文件的 MIME 类型</li>
+					</ul>
+				</p>
+				<h3>允许上传同一份文件</h3>
+				<p>
+					使用 input 或 change 方法的原理是监听表单的 value 属性是否发生改变，改变时触发，当用户上传了 A.jpg 后又上传了 A.jpg ，表单的 value 没有改变，此时不会触发 input 或 change 事件。解决方法是每次触发完事件后将 value 设置为空。
+					<pre><code class="javascript">
+el.oninput = function() {
+	var file = this.files[0];
+	// ...
+	// 最后将表单的 value 属性设置为空
+	// 当然按钮后面的文字会显示 "未选择任何文件
+	this.value = '';
+}
+					</code></pre>
+				</p>
+				<h3>显示图片</h3>
+				<p>
+					通过 this.files 获得文件列表，然后借助 FileReader 读取文件，将其保存为 DataURI，然后添加 img 元素到页面上。
+					<pre><code class="html">
+&lt;input id="upload-image-to-show" type="file">
+&lt;div id="upload-image-container">&lt;/div>
+
+&lt;script>
+	document.getElementById('upload-image-to-show').oninput = function() {
+		if (this.files[0]) {
+			var fileReader = new FileReader();
+			fileReader.readAsDataURL(this.files[0]);
+			fileReader.onload = function() {
+				var img = new Image(); // 也可用 document.createElement('img')
+				img.src = fileReader.result;
+				document.getElementById('upload-image-container').appendChild(img);
+			}
+		}
+	}
+&lt;/script>
+					</code></pre>
+					<div class="show">
+						<input id="upload-image-to-show" type="file">
+						<div id="upload-image-container"></div>
+						<script>
+							(function() {
+								document.getElementById('upload-image-to-show').oninput = function() {
+									if (this.files[0]) {
+										var fileReader = new FileReader();
+										fileReader.readAsDataURL(this.files[0]);
+										fileReader.onload = function() {
+											var img = new Image(); // 也可用 document.createElement('img')
+											img.src = fileReader.result;
+											document.getElementById('upload-image-container').appendChild(img);
+										}
+									}
+								}
+							})();
+						</script>
+					</div>
+					拿到 img 后就可以查看图片的一些参数了，比如宽高：
+					<pre><code class="javascript">
+// ...
+img.onload = function() {
+	console.log(img.width);
+	console.log(img.height);
+}
+// ...
+					</code></pre>
+				</p>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>

@@ -223,7 +223,7 @@ geometry.faces = [
 			</p>
 		</section>
 		<section>
-			<h2>Line & LineSegments</h2>
+			<h2>Line & LineSegments & LineLoop</h2>
 			<p>
 				<h3>Line</h3>
 				Line 只需要提供点，然后逐个点画出一条<span class="definition">折线</span>来。
@@ -301,16 +301,21 @@ var constant = Math.PI / 30;
 				<div class="show">
 					<button class="button" id="line-segments-button">开始渲染</button>
 					<div id="line-segments-container"></div>
-					<div>上为：LineSegments</div>
+					<div>上为：LineLoop</div>
+					<div>中为：LineSegments</div>
 					<div>下为：Line</div>
 					<script>
 						window.addEventListener('load', function() {
 							addOnceClickEventById('line-segments-button', function() {
 								var renderer = initRenderer(document.getElementById('line-segments-container'));
 								var camera = initCamera();
+								camera.translateX(2);
+								camera.fov = 60;
+								camera.updateProjectionMatrix();
 								var scene = initScene();
 								var geometry = new THREE.Geometry();
 								var geometry2 = new THREE.Geometry();
+								var geometry3 = new THREE.Geometry();
 								geometry.vertices.push(
 									new THREE.Vector3( 0, 0, 0 ),
 									new THREE.Vector3( 1, 1, 0 ),
@@ -325,15 +330,24 @@ var constant = Math.PI / 30;
 									new THREE.Vector3( 3, 0, 0),
 									new THREE.Vector3( 4, 1, 0 )
 								);
+								geometry3.vertices.push(
+									new THREE.Vector3( 0, 2, 0 ),
+									new THREE.Vector3( 1, 3, 0 ),
+									new THREE.Vector3( 2, 2, 0 ),
+									new THREE.Vector3( 3, 1, 0),
+									new THREE.Vector3( 4, 2, 0 )
+								);
 								var line = new THREE.Line(geometry, new THREE.MeshBasicMaterial());
 								var lingSegments = new THREE.LineSegments(geometry2, new THREE.MeshBasicMaterial());
-								camera.translateX(2);
-								scene.add(line, lingSegments);
+								var lineLoop = new THREE.LineLoop(geometry3, new THREE.MeshBasicMaterial())
+								scene.add(line, lingSegments, lineLoop);
 								renderer.render(scene, camera);
 							});
 						});
 					</script>
 				</div>
+				<h3>LineLoop</h3>
+				LineLoop 相当于有闭合的折线（Line），看上面看上面。
 			</p>
 		</section>
 		<section class="refer">
