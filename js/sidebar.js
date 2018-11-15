@@ -82,8 +82,10 @@ function filterRepeat (arr) {
     if (window.Set) {
         result = [...new Set(arr)];
     } else {
-        arr.map(function(el) {
-            return result.indexOf(el) === -1
+        arr.forEach(function(el) {
+            if (result.indexOf(el) === -1) {
+                result.push(el);
+            }
         });
     }
     return result;
@@ -160,6 +162,7 @@ $(function() {
 
     var url = window.location.href;
     var currentTitle = decodeURI(url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')));
+    var $body = $('body');
     var $sidebar = $('#sidebar'); // 导航条
     var $hideCatalog = $('#hideCatalog'); // 隐藏目录图片
     var $showCatalog = $('#showCatalog'); // 显示目录图片
@@ -375,6 +378,10 @@ $(function() {
     var notify = new Notify();
     // 代码类型提醒
     $('.hljs').each(function(index, el) {
+        // var firstChild = Array.prototype.find.call(el.childNodes, function(e) {
+        //     return e.nodeType === 1;
+        // });
+        // if (!firstChild) return;
         var codeType = document.createElement('div'); // 显示代码的类型（语言）
         var codeCopy = document.createElement('div'); // 赋值代码按钮
         codeType.setAttribute('class', 'codeType');
@@ -382,13 +389,15 @@ $(function() {
         codeCopy.setAttribute('title', '点击复制代码');
         var type = el.getAttribute('class').split(' ')[0]; // 取出是哪种类型的代码
         codeType.innerText = type;
-        codeCopy.style.right = codeType.innerText.length * 8 + (10 - codeType.innerText.length) + 'px'; // 动态设置距离
         codeCopy.onclick = function() {
-            copy(el.innerText.substring(1, el.innerText.lastIndexOf('\n')));
+            copy(el.innerText.substring(1 + type.length).trim());
             notify.info({content: '已经复制到剪切板'});
         };
-        el.appendChild(codeType);
-        el.appendChild(codeCopy);
+        var container = document.createElement('div');
+        container.setAttribute('class', 'codeTypeCopyContainer');
+        container.appendChild(codeType);
+        container.appendChild(codeCopy);
+        el.prepend(container);
     });
 
     // 文章标题点击后变换样式
@@ -460,8 +469,8 @@ $(function() {
             'padding': '0'
         }, 'slow', function() {
             $sidebar.css('display', 'none');
-            // 允许重新展开侧栏
-            $showCatalog.css('display', 'block');
+            // 如果是电脑则允许重新展开侧栏
+            $showCatalog.css('display', isPhone() ? 'none' : 'block');
             if (typeof cb === 'function') cb();
         });
 
@@ -479,8 +488,8 @@ $(function() {
             width = '25%';
             padding = '1%';
         }
-        $sidebar.css('display', 'inline-block');
         $showCatalog.css('display', 'none');
+        $sidebar.css('display', 'inline-block');
         $sidebar.animate({
             'width': width,
             'padding': padding
@@ -494,14 +503,54 @@ $(function() {
     $showCatalog.attr('title', '点击显示侧栏');
     $hideCatalog.click(hideCatalog);
     $showCatalog.click(showCatalog);
+
+    // 添加手机顶部导航元素
+    $body.append('<div id="phoneMenu">' +
+                    '<a class="self" href="/" >返回首页</a>' +
+                    '<a id="phoneShowCatalog" href="javascript:void(0)">返回导航</a>' +
+                 '</div>');
+    $phoneMenu = $('#phoneMenu');
+    $phoneShowCatalog = $('#phoneShowCatalog');
+
+    function isSidebarFull() {
+        return $sidebar.css('width') === '100%';
+    }
     window.addEventListener('resize', function () {
         var width = getViewport().width;
-        if (width < 1000 && $sidebar.css('display') !== 'none' && $sidebar[0].style.width !== '100%') {
+        if (width < 1000 && $sidebar.css('display') !== 'none' && !isSidebarFull()) {
             hideCatalog();
-        } else if (width >= 1000 &&  $sidebar[0].style.width === '100%') {
+        } else if (width >= 1000 &&  isSidebarFull()) {
             hideCatalog(showCatalog);
         }
+        if (isPhone()) {
+            $showCatalog.css('display', 'none');
+        } else {
+            if ($sidebar.css('width') === '0px') $showCatalog.css('display', 'block');
+            $phoneMenu.stop().slideUp();
+        }
     });
+
+    var scrollTimer = null;
+    var lastBodyTop = document.body.getBoundingClientRect().top;
+    window.addEventListener('scroll', function(event) {
+        if (isPhone()) {
+            if (scrollTimer) clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(function() {
+                var currentBodyTop = document.body.getBoundingClientRect().top;
+                if (currentBodyTop > lastBodyTop) {
+                    $phoneMenu.stop().slideDown();
+                } else {
+                    $phoneMenu.stop().slideUp();
+                }
+                lastBodyTop = currentBodyTop;
+            }, 20);
+        }
+    });
+    $phoneShowCatalog.click(function() {
+        if (!isSidebarFull()) showCatalog();
+        scrollTo('返回顶部');
+    });
+
     $('a').not('.self').attr('target', '_blank'); // 所有链接默认新标签打开
 
     var $subTitle = $('#container>section>h2'); // 一级子标题
@@ -531,7 +580,7 @@ $(function() {
     subTitleNav = '<div id="subTitleNav">' + subTitleNav + '<div class="subTitleItem">返回顶部</div></div>';
     // 右下角子标题导航
     // 添加 html 元素
-    $('body').append(subTitleNav + subTitleToggleString);
+    $body.append(subTitleNav + subTitleToggleString);
     // 设置跳转事件
     var $subTitleItem = $('.subTitleItem');
     var $subTitleToggle = $('#subTitleToggle');
@@ -630,7 +679,10 @@ $(function() {
     preTitle = wrapByA(preTitle);
     nextTitle = wrapByA(nextTitle);
     var $refer = $('.refer').length === 0 ? $('section').last() : $('.refer');
-    $refer.after('<div id="footer" ><div class="prePage">上一篇：' + preTitle + '</div><div class="nextPage">下一篇：' + nextTitle + '</div></div>');
+    $refer.after('<div id="footer" >' +
+                    '<div class="prePage">上一篇：' + preTitle + '</div>' +
+                    '<div class="nextPage">下一篇：' + nextTitle + '</div>' +
+                 '</div>');
 
     // 将不是目前浏览的条目收起来
     items.forEach(function(item, index) {

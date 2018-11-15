@@ -245,7 +245,10 @@ export default {
 // index.js
 import foo from './foo.js';
 foo.log();
-				</code></pre> 
+				</code></pre>
+				<div class="tip">
+					ES6 不同于前几个规范，前几个规范是运行时加载，将 js 文件当作一个对象，每次加载（require）都会执行一遍 js 文件里的代码然后获得一个全新的对象。而 ES6 是编译时加载，在 javascript 代码执行前就静态分析依赖关系，通过 import 关键字获得一个指针，指向同一个对象。
+				</div>
 			</p>
 		</section>
 		<section class="refer">

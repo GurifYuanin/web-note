@@ -98,6 +98,32 @@ html {
 body {
     @include scrollStyle();
     background-color: $backgroundColor;
+
+    // 手机端的顶部导航
+    #phoneMenu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        padding: 10px;
+        color: $backgroundColor;
+        background-color: $color;
+        overflow: auto;
+        @media (min-device-width: $deviceThreshold) {
+            display: none;
+        }
+        > a {
+            color: inherit;
+            text-decoration: none;
+            &:first-child {
+                float: left;
+            }
+            &:last-child {
+                float: right;
+            }
+        }
+    }
     // 导航块
     #subTitleNav {
         width: 20%;
@@ -674,9 +700,9 @@ body {
         position: relative;
         border-radius: 5px;
         margin: 0;
-        padding: 10px 10% 0 10%;
+        padding: 0 10%;
         @media (max-device-width: $deviceThreshold) {
-            padding: 20px 2.5% 0 2.5%;
+            padding: 0 2.5%;
         }
         // 强调代码
         .strong {
@@ -688,34 +714,34 @@ body {
 
             background-color: $strongBackgroundColor;
         }
+        .codeTypeCopyContainer {
+            overflow: hidden;
+            padding: 5px 0;
+            margin-right: -10%;
+            @media (max-device-width: $deviceThreshold) {
+                margin-right: -2.5%;
+            }
+        }
         // 代码类型
         .codeType {
-            position: absolute;
-            right: 0;
-            top: 0;
-            padding: 10px 20px;
+            float: right;
 
             font-family: initial;
             text-align: right;
         }
         .codeCopy {
-            position: absolute;
+            float: right;
             background-image: url('../images/copy_bright.svg');
             background-repeat: no-repeat;
             background-size: 25px 25px;
             background-origin: content-box;
-            padding: 10px 20px;
 
             height: 25px;
             width: 25px;
-            top: 0;
 
             cursor: pointer;
             &:hover {
                 opacity: .5;
-            }
-            @media (max-device-width: $deviceThreshold) {
-                padding: 10px 0;
             }
         }
         .codeDark {

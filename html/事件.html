@@ -471,6 +471,35 @@
 event.preventDefault();
 return false;
 					</code></pre>
+					<h4>对比 scroll 事件</h4>
+					scroll 仅适用于带滚动条的元素，当滚动条发生滚动的时候触发，而 mousewheel 可以使用于一切元素，当鼠标处于元素上进行滚动（鼠标中键）时触发，触发后如果滚动了滚动条，才去执行 scroll 事件。
+					<div class="show">
+						<div id="scroll-mousewheel-demo" style="height: 200px; background-color: #f0f0f0; overflow: scroll;">
+							<div style="height: 600px; color: black;">在此区域进行上下滚动</div>
+						</div>
+						<div>scroll time：<span id="scroll-time"></span></div>
+						<div>mousewheel time：<span id="mousewheel-time"></span></div>
+						<div>时间差(ms)：<span id="difference-time"></span></div>
+						<script>
+							(function() {
+								var el = document.getElementById('scroll-mousewheel-demo');
+								var scrollEl = document.getElementById('scroll-time');
+								var mousewheelEl = document.getElementById('mousewheel-time');
+								var differenceEl = document.getElementById('difference-time');
+								var scrollTime = 0;
+								var mousewheelTime = 0;
+								el.onscroll = function() {
+									scrollTime = Date.now();
+									scrollEl.innerText = scrollTime;
+									differenceEl.innerText = scrollTime - mousewheelTime;
+								}
+								el.onmousewheel = function() {
+									mousewheelTime = Date.now();
+									mousewheelEl.innerText = mousewheelTime;
+								}
+							})();
+						</script>
+					</div>
 				</p>
 			</p>
 		</section>

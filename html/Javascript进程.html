@@ -87,7 +87,12 @@ setTimeout(function() {
 // => setTimeout1
 // => setTimeout2
 				</code></pre>
-				promise 的 then 优先于 setTimeout。
+				不同的异步任务还分宏任务（macro-task）队列和微任务（micro-task）队列：
+				<ul>
+					<li>宏任务：setTimeout, setInterval</li>
+					<li>微任务：Promise.then, process.nextTick</li>
+				</ul>
+				当执行栈上的同步代码执行完之后，会去微任务队列查看有没有任务，有的话逐一取出来执行，执行完之后再去宏任务队列取队头的一条记录放到执行栈上执行，执行完之后就又去看看微任务队列有没有任务 ... 不断循环。
 				<pre><code class="javascript">
 setTimeout(function() {
 	console.log('setTimeout');

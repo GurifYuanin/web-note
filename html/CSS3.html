@@ -257,26 +257,73 @@ transform: translateZ(100px);
 		<section>
 			<h2>transition</h2>
 			<p>
+				设置属性过渡开关，当属性发生变更的时候触发过渡，其完整格式为：
+				<div class="command">
+					transition: 属性名|all 过渡时长 过渡曲线 延迟时长, ...
+				</div>
+				<ul>
+					<li>属性名：css 属性</li>
+					<li>过渡时长：单位既可以用 s(秒)，也可以用 ms(毫秒)</li>
+					<li>
+						过渡曲线：
+						<ul>
+							<li>ease：缓入 + 缓出</li>
+							<li>ease-in：缓入</li>
+							<li>ease-out：缓出</li>
+							<li>ease-in-out：另一种缓入 + 缓出</li>
+							<li>linear：线性</li>
+							<li>cubic-bezier(x,y,z,w)：自定义贝塞尔曲线</li>
+						</ul>
+					</li>
+					<li>延迟时长：属性变更后延迟时间执行，既可以用 s(秒)，也可以用 ms(毫秒)</li>
+				</ul>
 				<style>
-					.animate {
+					#transition-demo {
 						width: 100px;
 						height: 100px;
 						color: white;
+						transition: all 1s;
+						background-color: gray;
 					}
-					.animate:hover{
+					#transition-demo:hover{
 						width: 200px;
 						height: 200px;
 					}
 				</style>
 				<div class="show">
-					<div class="animate" style="
-						transition: width 1s, height 1s;
-						background-color: #888;
-					">悬浮我</div>
+					<div id="transition-demo">悬浮我</div>
+					<div>transition-duration：<input id="transition-duration" type="number" value="1" min="0" step="0.1" max="10">s</div>
+					<div>
+						transition-timing-function：
+						<select id="transition-timing-function">
+							<option checked value="ease">ease</option>
+							<option value="ease-in">ease-in</option>
+							<option value="ease-out">ease-out</option>
+							<option value="ease-in-out">ease-in-out</option>
+							<option value="linear">linear</option>
+						</select>
+					</div>
+					<div>transition-delay：<input id="transition-delay" value="0" type="number" min="0" step="0.1" max="10">s</div>
+					<script>
+						(function() {
+							var demoEl = document.getElementById('transition-demo');
+							var timingEl = document.getElementById('transition-timing-function');
+							var durationEl = document.getElementById('transition-duration');
+							var delayEl = document.getElementById('transition-delay');
+							function updateDemoElementTransition() {
+								demoEl.style.transition = 'all ' + durationEl.value + 's ' + timingEl.value + ' ' + delayEl.value + 's';
+							}
+							timingEl.onchange = updateDemoElementTransition;
+							durationEl.onchange = updateDemoElementTransition;
+							delayEl.onchange = updateDemoElementTransition;
+						})();
+					</script>
 				</div>
 				<pre><code class="css">
 div {
-	transition: width 1s, height 1s; /* 打开 width 和 height 动画开关 */
+	width: 100px;
+	height: 100px;
+	transition: all 1s; /* 打开 width 和 height 动画开关 */
 }
 div:hover {
 	width: 200px;
@@ -289,58 +336,65 @@ div:hover {
 			<h2>@keyframes</h2>
 			<p>
 				使用 @keyframes 预设一个动画，再将这个动画添加到 css 属性 animation 上，元素将立即执行这个动画。
-				<div class="show">
-					<div class="keyframes">点击按钮</div>
-					<input id="bigger" type="button" value="变大">
-					<style>
-						@keyframes bigger{
-							from {
-								width: 100px;
-								height: 100px;
-							}
-							to {
-								width: 200px;
-								height: 200px;
-							}
-						}
-
-						.keyframes {
-							width: 100px;
-							height: 100px;
-							color: white;
-							background-color: #888;
-						}
-						.be-bigger {
-							animation: bigger 1s;
-						}
-					</style>
-					<script>
-						$(function() {
-							$('#bigger').click(function() {
-								setTimeout(function() {
-									$('.keyframes').removeClass('be-bigger');
-								}, 1000);
-								$('.keyframes').addClass('be-bigger');
-							});
-						});
-					</script>
-				</div>
-				<pre><code class="css">
-/* 设置一个动画 */
-@keyframes bigger{
+				<h3>预设动画</h3>
+				<p>
+					存在两种方式预设动画：from...to 或 百分比。
+					<pre><code class="css">
+@keyframes from-to {
 	from {
-		width: 100px;
 		height: 100px;
 	}
 	to {
-		width: 200px;
-		height: 200px;
+		height: 100px;
 	}
 }
-div {
-	animation: bigger 1s; /* 添加后立即执行 */
+@keyframes percentage {
+	0% {
+		height: 100px;
+	}
+	100% {
+		height: 100px;
+	}
 }
-				</code></pre>
+					</code></pre>
+				</p>
+				<h3>使用动画</h3>
+				<p>
+					前面已经设置了动画，并且每个动画都有个动画名，通过 animation 属性给元素添加动画，且动画会马上开始执行。
+					<div class="command">
+						animation: 动画名 动画时长 动画曲线 延迟时长 动画样式是否保留 动画执行次数 动画执行方向
+					</div>
+					<ul>
+						<li>动画名：animation-name</li>
+						<li>动画时长：animation-duration</li>
+						<li>动画曲线：animation-timing-function</li>
+						<li>延迟时长：animation-delay</li>
+						<li>
+							动画样式是否保留：animation-fill-mode，表示动画开始前和结束后，是否显示动画样式：
+							<ul>
+								<li>none：不保留，执行完动画后动画上的属性都消失</li>
+								<li>forwards：执行后，to 或 100% 里的样式将保留给元素</li>
+								<li>backwards：执行前 from 或 0% 里的样式将保留给元素</li>
+								<li>both：forwards + backwards</li>
+								<li>initial</li>
+							</ul>
+						</li>
+						<li>动画执行次数：animation-iteration-count，默认是 1 ，可以设置为 infinite（无限）</li>
+						<li>
+							动画执行方向：animation-direction：
+							<ul>
+								<li>normal：正常顺序</li>
+								<li>reverse：反向</li>
+								<li>alternate：来回播放</li>
+								<li>alternate-reverse：来回播放的反向</li>
+								<li>initial</li>
+							</ul>
+						</li>
+					</ul>
+					<div class="show">
+						
+					</div>
+				</p>
 			</p>
 		</section>
 		<section>

@@ -204,6 +204,11 @@ var newEl = document.importNode(el);
 				</p>
 				<h3>追加节点</h3>
 				<p>
+					<h4>追加到首位</h4>
+					使用 prepend 方法追加元素作为第一个子元素。
+					<pre><code class="javascript">
+parentNode.prepend(childNode);
+					</code></pre>
 					<h4>添加到末位</h4>
 					使用 createElement 创建的元素节点，通过 appendChild 可以将元素追加到子节点中，追加作为当前节点的<span class="different"> 最后一个子节点 </span>。
 					<script></script>
