@@ -192,7 +192,7 @@ $(function() {
         ['three', 'geometry', 'material', 'object', 'scene', 'camera', 'light'],
         ['commonJS', 'package.json', 'path', 'file system', 'process', 'koa', 'webpack', 'plugins', 'loader'],
         ['安装', '实例', '模版', '组件', 'mixins', 'router', 'vuex'],
-        ['响应式布局', 'bootstrap', 'viewport'],
+        ['响应式布局', '响应式图片', 'bootstrap', 'viewport'],
         ['抓包工具', 'chrome devtools', 'git', 'sublime 插件'],
         ['HTTP', 'TCP'],
         ['CSRF', 'XSS', '同源策略'],

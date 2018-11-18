@@ -29,11 +29,12 @@ function initRenderer( el, options ) {
 }
 
 function initCamera( options ) {
-	options = options || {
-		fov: 45,
-		aspect: 1,
-		near: .1,
-		far: 2000
+	if (options === undefined) options = {};
+	options = {
+		fov: options.fov || 45,
+		aspect: options.aspect || 1,
+		near: options.near || .1,
+		far: options.far || 2000
 	};
 	var camera = new THREE.PerspectiveCamera( options.fov, options.aspect, options.near, options.far );
 	camera.position.set(0, 1, 5);
