@@ -166,9 +166,9 @@ var cat = new Cat('小白猫');
 cat.say(); // => 小白猫说话了！
 cat.gender; // => female
 					</code></pre>
-					通过创建一个 Animal 实例向 Cat 的原型对象赋值，Cat 不仅会继承 Animal.prototype 上的方法，还会获得创建实例（new Animal()）时得到的属性（即 name, gender），当然 name 属性既在 cat 实例上，也在 cat.__prototype__ 上，但 cat.name 比 cat.__prototype.name 优先获得（原型链）。
+					通过创建一个 Animal 实例向 Cat 的原型对象赋值，Cat 不仅会继承 Animal.prototype 上的方法，还会获得创建实例（new Animal()）时得到的属性（即 name, gender，因为 Animal 实例对象作为 Cat 的原型对象被继承，通过 Cat 构造函数创建出来的实例都共享该原型对象）。当然，因为 Cat 构造函数内也执行了 this.name = name，所以 name 属性既在 cat 实例上，也在 cat.__prototype__ 上，但 cat.name 比 cat.__prototype.name 优先获得（原型链）。
 					<div class="tip">
-						但是，由于 new Animal() 赋值给 Cat.prototype ，意味着所有 new Cat() 得到的实例通过 实例.gender 访问的都是同一个属性，即 Cat.prototype.gender ，因此所有的猫都是雌性的啦。
+						但是，由于 new Animal() 赋值给 Cat.prototype ，意味着所有通过 new Cat() 得到的实例，使用 实例.gender 访问的都是同一个属性，即 Cat.prototype.gender ，因此所有的猫都是雌性的啦。
 					</div>
 				</p>
 				<h3>仅继承父类 prototype 上的方法</h3>
@@ -184,7 +184,7 @@ cat.gender; // => undefined
 					</code></pre>
 					cat.gender 在原型链上找不到，所以得到 undefined 。
 				</p>
-				<h3>继承构造函数代码给每个实例</h3>
+				<h3>继承构造函数代码给每个实例（可传参）</h3>
 				<p>
 					如果并不想要 Animal.prototype 上的方法和属性，只想要每个实例都能有构造函数内的 name 和 gender 属性呢？可以如此写：
 					<pre><code class="javascript">
@@ -197,8 +197,26 @@ function Cat(name) {
 	this.name = name;
 }
 var cat = new Cat();
+cat.say(); // => 报错，因为 cat 实例没有从 Animal.prototype 获得方法
 					</code></pre>
 					这个时候 cat.gender 访问的就是实例上的属性，而不是 cat.__protot__.gender 或 Cat.prototype.gender 。
+				</p>
+				<h3>new 方式继承构造函数代码给每个实例（可传参，但丢失自身原型链）</h3>
+				<p>
+					通过 new 关键字创建的实例，执行构造函数默认会将其上下文（this）对象返回，也可以显式地返回一个对象。
+					<pre><code class="javascript">
+function Foo(name) {
+	return {
+		name: name,
+		say: function() {
+			console.log(this.name + '说话了！')
+		}
+	};
+}
+var foo = new Foo('猫');
+foo.say(); // => 猫说话了！
+					</code></pre>
+
 				</p>
 			</p>
 		</section>

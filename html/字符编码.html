@@ -219,6 +219,52 @@ encodeURIComponent(string); // => http%3A%2F%2Fdemo.com%2Findex.html%3Fusername%
 						注意： urlencode 会将<span class="definition"> 空格 </span>编码为<span class="definition"> + </span>，而不是<span class="definition"> %20 </span>。
 					</div>
 				</p>
+				<h3>Java - Servlet</h3>
+				<p>
+					<h4>获得客户端请求头 Content-Type 的 charset</h4>
+					通过 HttpServletRequest.getCharacterEncoding 来获得客户端发送的请求头 Content-Type 设置的字符编码，如果没有这个请求头，则得到 null 。
+					<pre><code class="java">
+request.getCharacterEncoding();
+					</code></pre>
+					<figure>
+						<img src="../images/charset_servlet_getcharacterencode.jpg">
+					</figure>
+					<h4>设置客户端数据的解码方式</h4>
+					Servlet 容器会有一个默认的对客户端数据的解码方式，比如 ISO-8859-1 ，服务器收到客户端的数据后就会对数据进行解码，相当于进行了以下操作：
+					<pre><code class="java">
+java.net.URLDecoder.decode(客户端的数据, "ISO-8859-1");
+					</code></pre>
+					实际上，客户端发送的数据的编码方式不一定是 ISO-8859-1 编码，比如可能使用 utf-8 进行编码，如果是这样以上结果会得到乱码。所以通过 HttpServletRequest.setCharacterEncoding 来手动设置解码方式。但这个方法只能影响到请求体，所以对 GET 请求无效（GET 请求没有请求体）。
+					<pre><code class="java">
+request.setCharacterEncoding("utf-8");
+					</code></pre>
+					<h4>进行数据编码方式转换</h4>
+					如果是 GET 请求获得的数据，或在返回的时候想要将数据进行编码格式的变化，假如已经知道原来的编码方式，想要转化为另一种编码方式，就要进行以下操作：
+					<pre><code class="java">
+String preCharset = "ISO-8859-1"; // 原先的字符编码方式
+String nextCharset = "utf-8"; // 即将进行的编码方式
+String data = "我是数据"; // 要被转换的数据
+data = new String(data.getBytes(preCharset), nextCharset);
+					</code></pre>
+					<h4>设置响应头 Content-Type</h4>
+					既可以使用 HttpServletResponse.setCharacterEncoding 来设置字符编码。
+					<pre><code class="java">
+response.setCharacterEncoding("utf-8");
+					</code></pre>
+					也可以使用 HttpServletResponse.setContentType 设置 Content-Type 来让客户端知道数据类型和解码方式。
+					<pre><code class="java">
+response.setContentType("text/html; charset=utf-8");
+					</code></pre>
+					以下两种方式是等价的：
+					<pre><code class="java">
+// 方式一
+response.setCharacterEncoding("utf-8");
+response.setContentType("text/html");
+
+// 方式二
+response.setContentType("text/html; charset=utf-8");
+					</code></pre>
+				</p>
 			</p>
 		</section>
 		<section>
@@ -230,6 +276,24 @@ encodeURIComponent(string); // => http%3A%2F%2Fdemo.com%2Findex.html%3Fusername%
 					<figure>
 						<img src="../images/code_which.jpg" alt="">
 					</figure>
+				</p>
+				<h3>html</h3>
+				<p>
+					html 的 meta 标签可以告诉浏览器该 html 文档解码时使用哪种解码方式：
+					<pre><code class="html">
+&lt;meta charset="utf-8">
+					</code></pre>
+				</p>
+				<h3>Content-Type</h3>
+				<p>
+					Content-Type 是 HTTP 协议的一个通用报文头，指定数据的格式和<span class="different">解码</span>方式。
+					<ul>
+						<li>如果是客户端发送请求的请求头，则表示客户端发送的数据服务器该用什么方式解码</li>
+						<li>如果是服务器端响应的响应头，则表示客户端收到返回数据后该用什么方式解码</li>
+					</ul>
+					<pre><code class="http">
+Content-Type: text/html; charset=utf-8
+					</code></pre>
 				</p>
 			</p>
 		</section>
@@ -247,6 +311,7 @@ encodeURIComponent(string); // => http%3A%2F%2Fdemo.com%2Findex.html%3Fusername%
 				<div>[9] 阮一峰 字符编码笔记：ASCII，Unicode 和 UTF-8 <a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html">http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html</a></div>
 				<div>[10] 维基百科 UTF-16 <a href="https://zh.wikipedia.org/wiki/UTF-16">https://zh.wikipedia.org/wiki/UTF-16</a></div>
 				<div>[11] PHP手册 rawurlencode <a href="http://php.net/manual/zh/function.rawurlencode.php">http://php.net/manual/zh/function.rawurlencode.php</a></div>
+				<div>[12] Servlet 中文处理 <a href="https://openhome.cc/Gossip/Encoding/Servlet.html">https://openhome.cc/Gossip/Encoding/Servlet.html</a></div>
 			</p>
 		</section>
 	</article>
