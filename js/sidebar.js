@@ -9,16 +9,16 @@ function formatDate (date) {
     date = date || new Date();
     if (date instanceof Date) {
       // 如果是 Date 对象
-      let year = date.getFullYear();
-      let month = date.getMonth() + 1;
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
       month = month < 10 ? '0' + month : month;
-      let day = date.getDate();
+      var day = date.getDate();
       day = day < 10 ? '0' + day : day;
-      let hour = date.getHours();
+      var hour = date.getHours();
       hour = hour < 10 ? '0' + hour : hour;
-      let minute = date.getMinutes();
+      var minute = date.getMinutes();
       minute = minute < 10 ? '0' + minute : minute;
-      let second = date.getSeconds();
+      var second = date.getSeconds();
       second = second < 10 ? '0' + second : second;
       return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
     } else if (/^\d+$/.test(date)) {
@@ -28,7 +28,7 @@ function formatDate (date) {
       // 否则，还给你！
       return date;
     }
-};
+}
 // 复制到剪切板
 function copy (message) {
     var area = document.createElement('textarea'); // 用于临时暂存复制的代码的文本域
@@ -1068,7 +1068,7 @@ $(function() {
                     username: appendCommentUsername.value,
                     content: appendCommentText.value
                 },
-                success: function (data) {
+                success: function(data) {
                     if (data.status) {
                         // 添加评论成功
                         addOneComment(data.comment);
@@ -1078,13 +1078,13 @@ $(function() {
                         updateListNumber();
                     } else { notify.info({content: data.message || '添加评论失败', type: 'error'}); }
                 },
-                error (err) {
+                error: function(err) {
                     notify.info({content: '无法进行评论', type: 'error'});
                 }
             });
         }
 
-    }
+    };
     appendCommentClear.innerText = '清空';
     appendCommentClear.onclick = function () { appendCommentText.value = ''; }
     appendCommentClear.setAttribute('class', 'button');

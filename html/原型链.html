@@ -138,17 +138,23 @@ alert(apple instanceof Object); // true
 		<section>
 			<h2>实现继承</h2>
 			<p>
-				<h3>继承所有</h3>
+				<h3>共享所有</h3>
 				<p>
-					默认情况下通过构造函数创建出来的对象的 prototype 是 Object，因此实例对象可以使用 Object 的方法。
+					默认情况下通过构造函数创建出来的对象的 prototype 是 Object。
+					<pre><code class="javascript">
+Function.prototype === Object.__proto__; // => true
+					</code></pre>
+					因此实例对象可以使用 Object 的方法。
 					<pre><code class="javascript">
 function Cat(name) {
 	this.name = name;
 }
 var cat = new Cat('小白猫');
+cat.toString(); // => [object Object]
 					</code></pre>
-					假如有个父类叫 Animal，如果我们希望 Cat 继承 Animal，使得创建出来的实例能够访问父类的原型上的方法。
+					假如有个父类叫 Animal，如果我们希望 Cat 继承 Animal，使得创建出来的实例能够访问（<span class="different">共享</span>）父类的原型上的方法。
 					<pre><code class="javascript">
+// 定义父类
 function Animal(name, gender) {
 	this.name = name || '动物';
 	this.gender = gender || 'female';
@@ -157,21 +163,23 @@ Animal.prototype.say = function() {
 	console.log(this.name + '说话了！');
 }
 
+// 实现继承
 Cat.prototype = new Animal();
 // 等价于这种方法
 // Cat.prototype = Object.create(new Animal());
+// 将构造函数指针掰回去
 Cat.prototype.constructor = Cat;
 
 var cat = new Cat('小白猫');
 cat.say(); // => 小白猫说话了！
 cat.gender; // => female
 					</code></pre>
-					通过创建一个 Animal 实例向 Cat 的原型对象赋值，Cat 不仅会继承 Animal.prototype 上的方法，还会获得创建实例（new Animal()）时得到的属性（即 name, gender，因为 Animal 实例对象作为 Cat 的原型对象被继承，通过 Cat 构造函数创建出来的实例都共享该原型对象）。当然，因为 Cat 构造函数内也执行了 this.name = name，所以 name 属性既在 cat 实例上，也在 cat.__prototype__ 上，但 cat.name 比 cat.__prototype.name 优先获得（原型链）。
+					通过创建一个 Animal 实例赋值作为 Cat 的原型对象，通过 Cat 构造函数创建出来的实例对象不仅会继承 Animal.prototype 上的方法，还会获得创建父类实例（即 new Animal()）时得到的属性（即 name, gender）。当然，因为 Cat 构造函数内也执行了 this.name = name，所以 name 属性既在 cat 实例上，也在 cat.__prototype__ 上，但由于原型链的优先级， cat.name 比 cat.__prototype.name 优先获得。
 					<div class="tip">
-						但是，由于 new Animal() 赋值给 Cat.prototype ，意味着所有通过 new Cat() 得到的实例，使用 实例.gender 访问的都是同一个属性，即 Cat.prototype.gender ，因此所有的猫都是雌性的啦。
+						但是，由于 new Animal() 赋值给 Cat.prototype ，意味着所有通过 new Cat() 得到的实例，使用 实例.gender 访问的都是同一个属性，即 Cat.prototype.gender（或者说是 cat.__proto__.gender） ，因此所有的猫都是雌性的啦。
 					</div>
 				</p>
-				<h3>仅继承父类 prototype 上的方法</h3>
+				<h3>仅共享父类 prototype 上的方法</h3>
 				<p>
 					如果只是想获得父类的原型对象，而不希望获得父类构造函数执行时生成的属性（即 name, gender）：
 					<pre><code class="javascript">
@@ -184,7 +192,7 @@ cat.gender; // => undefined
 					</code></pre>
 					cat.gender 在原型链上找不到，所以得到 undefined 。
 				</p>
-				<h3>继承构造函数代码给每个实例（可传参）</h3>
+				<h3>仅继承构造函数代码（可传参）</h3>
 				<p>
 					如果并不想要 Animal.prototype 上的方法和属性，只想要每个实例都能有构造函数内的 name 和 gender 属性呢？可以如此写：
 					<pre><code class="javascript">
@@ -201,9 +209,9 @@ cat.say(); // => 报错，因为 cat 实例没有从 Animal.prototype 获得方�
 					</code></pre>
 					这个时候 cat.gender 访问的就是实例上的属性，而不是 cat.__protot__.gender 或 Cat.prototype.gender 。
 				</p>
-				<h3>new 方式继承构造函数代码给每个实例（可传参，但丢失自身原型链）</h3>
+				<h3>继承父类构造函数和原型（丢失自身原型链）</h3>
 				<p>
-					通过 new 关键字创建的实例，执行构造函数默认会将其上下文（this）对象返回，也可以显式地返回一个对象。
+					通过 new 关键字创建的实例，执行构造函数默认会将其上下文（this）对象返回，也可以显式地返回一个对象，此时就变成了工厂模式。
 					<pre><code class="javascript">
 function Foo(name) {
 	return {
@@ -215,8 +223,85 @@ function Foo(name) {
 }
 var foo = new Foo('猫');
 foo.say(); // => 猫说话了！
-					</code></pre>
 
+// 等价于
+var foo = Foo('猫');
+foo.say(); // => 猫说话了！
+					</code></pre>
+					如果试图通过 new 父类（Animal）构造函数并返回该实例对象，因为此时创建出来的实例对象是 Animal 实例，所以会丢失自身（Cat）原型链上的属性和方法。
+					<pre><code class="javascript">
+function Cat(name) {
+	var cat = new Animal();
+	cat.name = name;
+	return cat;
+}
+// 在原型链上定义一个 Cat 有的方法但 Animal 没有的方法
+Cat.prototype.sleep = function() {
+	console.log('喵咕zzz...');
+}
+var cat = new Cat('猫');
+cat.sleep(); // 报错
+					</code></pre>
+				</p>
+				<h3>继承父类构造函数和原型（不丢失自身原型链）</h3>
+				<p>
+					第一种做法，是组合<span class="different">共享所有</span>和<span class="different">继承构造函数代码给每个实例</span>。实质上是先创建子类的 this，然后通过 call 或者 apply 方法调用父类构造函数，使其构造函数的代码在 this 环境（作为上下文）下执行。
+					<pre><code class="javascript">
+function Cat(name) {
+	Animal.call(this);
+
+	this.name = name;
+}
+Cat.prototype = new Animal();
+// 因为我们不需要 Animal 构造函数上的代码（this.gender = xxx 之类的）
+// 只需要原型对象，所以更好的写法是
+// Cat.prototype = Object.create(Animal.prototype);
+Cat.prototype.constructor = Cat;
+Cat.prototype.sleep = function() {
+	console.log('喵咕zzz...');
+}
+var cat = new Cat('猫');
+cat.sleep(); // => 喵咕zzz...
+					</code></pre>
+					第二种做法，如果希望继承父类一些原生方法，例如父类是 Array ， 那么就需要通过<span class="different">继承父类构造函数和原型</span>的方法，但通过循环给每个实例赋值子类原型对象，子类原型对象上的属性和方法不共享了，每个 Cat 实例都有一份副本。
+					<pre><code class="javascript">
+function Cat(name) {
+	// 父类的构造函数
+	var cat = new Animal();
+
+	// 创建出来的实例没有子类的原型对象
+	// 所以需要逐一赋值
+	<span class="strong">
+	for (var key in Cat.prototype) {
+		cat[key] = Cat.prototype[key];
+	}	
+	</span>
+
+	// 子类的构造函数
+	cat.name = name;
+
+	return cat;
+}
+Cat.prototype.sleep = function() {
+	console.log('喵咕zzz...');
+}
+var cat = new Cat('猫');
+cat.sleep(); // 喵咕zzz...
+					</code></pre>
+					ES6 使用 class 和 extends 关键字的原理与第二种做法差不多。是先通过 super 关键字创建一个 this，相当于<span class="definition">父类.prototype.constructor.call(this)</span>，然后再用子类的构造函数修改 this ，最后返回这个 this 。
+					<pre><code class="javascript">
+class Cat extends Animal{
+	constructor(name) {
+		super();
+		this.name = name;
+	}
+	sleep() {
+		console.log('喵咕zzz...');
+	}
+}
+var cat = new Cat('猫');
+cat.sleep(); // 喵咕zzz...
+					</code></pre>
 				</p>
 			</p>
 		</section>

@@ -265,6 +265,21 @@ response.setContentType("text/html");
 response.setContentType("text/html; charset=utf-8");
 					</code></pre>
 				</p>
+				<h3>Java - JSP</h3>
+				<p>
+					除了使用 Servlet 的 HttpServletResponse 进行数据响应：
+					<pre><code class="java">
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	PrintWriter out = response.getWriter();
+	<span class="strong">out.println("Hello world");</span>
+}
+					</code></pre>
+					在 JSP 文件中设置:
+					<pre><code class="jsp">
+&lt;%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+					</code></pre>
+					contentType 对应响应报文头的 Content-Type，pageEncoding 告诉 java 该 jsp 转换为 servlet 时采用的编码集。
+				</p>
 			</p>
 		</section>
 		<section>
