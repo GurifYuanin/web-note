@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title>git</title>
@@ -10,6 +11,7 @@
 	<script src="../js/highlight.pack.js"></script>
 	<script src="../js/sidebar.js"></script>
 </head>
+
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
@@ -457,10 +459,10 @@ $ git reflog
 						git remote [-v]
 					</div>
 					使用 git remote show <主机名> 显示指定主机的详细信息
-					<div class="command">
-						git remote show 主机名
-					</div>
-					<pre><code class="shell">
+						<div class="command">
+							git remote show 主机名
+						</div>
+						<pre><code class="shell">
 # 添加远程主机
 $ git remote add origin git@github:GurifYuanin/web-note.git
 
@@ -546,6 +548,12 @@ $ git push -f 远程主机 本地分支:远程分支
 						</code></pre>
 					</ul>
 				</p>
+				<h3>删除远程分支</h3>
+				<p>
+					<div class="command">
+						git push 远程主机名 :远程分支名
+					</div>
+				</p>
 			</p>
 		</section>
 		<section class="refer">
@@ -561,4 +569,5 @@ $ git push -f 远程主机 本地分支:远程分支
 		?>
 	</article>
 </body>
+
 </html>
