@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title>数组和字符串</title>
@@ -10,6 +11,7 @@
 	<script src="../js/highlight.pack.js"></script>
 	<script src="../js/sidebar.js"></script>
 </head>
+
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
@@ -244,7 +246,8 @@ return flag;
 						<li>index：元素索引，可选</li>
 						<li>array：原数组，可选</li>
 					</ul>
-					indexOf 和 includes 传入任意参数，功能与 findIndex 一样，不同的是直接将参数与数组的每个元素进行比较，indexOf 得到传入参数在数组内的索引(int)，includes 得到是否查找得到(boolean)。
+					indexOf 和 includes 传入任意参数，功能与 findIndex 一样，不同的是直接将参数与数组的每个元素进行比较，indexOf 得到传入参数在数组内的索引(int)，includes
+					得到是否查找得到(boolean)。
 					<pre><code class="javascript">
 // find 遍历所有元素并调用函数，当函数返回 true 时返回该元素
 // 当找不到时，返回 undefined
@@ -343,6 +346,27 @@ var obj = {
 var arr = Array.from(obj); // => [1, 2]
 				</code></pre>
 			</p>
+			<h3>其他</h3>
+			Array.prototype.fill 方法用于给数组内所有元素赋同一个值。
+			<pre><code class="javascript">
+var arr = [1, 2, 3, 4, 5];
+arr.fill(0);
+console.log(arr); // => [0, 0, 0, 0, 0]
+			</code></pre>
+			fill 方法有一个坑点，每个数组元素都是同一个数据源，所以如果传入参数是引用对象，那么数组每个元素都是同一个对象：
+			<pre><code class="javascript">
+var arr = [1, 2, 3, 4, 5];
+arr.fill([]); // arr 变成了 [[], [], [], [], []]
+arr[0].push(1);
+console.log(arr); // arr 变成了 [[1], [1], [1], [1], [1]]
+			</code></pre>
+			这和 map 方法完全不同。
+			<pre><code class="javascript">
+var arr = [1, 2, 3, 4, 5];
+arr = arr.map(_ => []); // arr 变成了 [[], [], [], [], []]
+arr[0].push(1);
+console.log(arr); // arr 变成了 [[1], [], [], [], []]
+			</code></pre>
 		</section>
 		<section>
 			<h2>创建字符串</h2>
@@ -645,7 +669,8 @@ Object.defineProperty(obj, 'a', {
 	}
 });
 					</code></pre>
-					以上无论是调用 getter 获得值还是对 obj.a 进行赋值，都会进入死递归。调用 getter 时，进入函数，返回 obj.a ，但 obj.a 又调用了 getter ，无限循环导致栈溢出。 setter 也是同理。如果要实现部分拦截，或者要实现拦截并修改原来的值并进行返回，可以这样写：
+					以上无论是调用 getter 获得值还是对 obj.a 进行赋值，都会进入死递归。调用 getter 时，进入函数，返回 obj.a ，但 obj.a 又调用了 getter ，无限循环导致栈溢出。 setter
+					也是同理。如果要实现部分拦截，或者要实现拦截并修改原来的值并进行返回，可以这样写：
 					<pre><code class="javascriot">
 obj._a = null;
 Object.defineProperty(obj, 'a', {
@@ -681,7 +706,8 @@ var proxy = new Proxy(obj, {
 });
 proxy.a; // => 2
 					</code></pre>
-					通过 proxy 代理对象访问 a ，先过一层代理，得到 target.a + 1 ，其中 target 就是 obj 。然后再过一层 obj 的 getter 得到 obj.a 为 1 ，因此最终结果为 obj.a + 1 = 1 + 1 = 2 。
+					通过 proxy 代理对象访问 a ，先过一层代理，得到 target.a + 1 ，其中 target 就是 obj 。然后再过一层 obj 的 getter 得到 obj.a 为 1 ，因此最终结果为 obj.a + 1 =
+					1 + 1 = 2 。
 					<h4>获得描述符：Object.getOwnPropertyDescriptor</h4>
 					<pre><code class="javascript">
 var obj = {};
@@ -768,4 +794,5 @@ console.log(obj2.a); // => undefined
 		</section>
 	</article>
 </body>
+
 </html>
