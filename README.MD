@@ -31,7 +31,7 @@
             <p>
                 在线文档可在个人网站查看，其版本可能会比 Github 上的代码有所滞后。
                 <div class="show">
-                    <a href="http://isempty.site/web-note/html/index.html">http://isempty.site/web-note/html/index.html</a>
+                    <a href="https://gurifyuanin.github.io/web-note/dist/html/index.html">https://gurifyuanin.github.io/web-note/dist/html/index.html</a>
                 </div>
             </p>
         </section>

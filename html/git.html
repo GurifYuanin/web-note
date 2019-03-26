@@ -178,7 +178,7 @@ Changes to be committed:
 						rmdir [-rf] 文件匹配
 					</div>
 					<h4>恢复</h4>
-					使用 checkout -- files 可以将工作树上的文件恢复到上次 add 时的状态。
+					使用 checkout -- files 丢弃工作分支上的修改，回到上一次 add 时的状态。
 					<div class="command">
 						git checkout -- 路径匹配
 					</div>
@@ -247,7 +247,7 @@ Changes not staged for commit:
 		modified:   hello.txt
 </div>
 					</code></pre>
-					改用后一条指令的结果进行取消暂存的结果：
+					他只是取消了 add 操作，hello.txt 文件还在工作分支上。改用后一条指令的结果进行取消暂存的结果：
 					<pre><code class="shell">
 $ git rm --cached hello.txt
 $ git status
@@ -258,6 +258,7 @@ Changes to be committed:
 		deleted:    hello.txt
 </div>
 					</code></pre>
+					你已经找不到 hello.txt 了，因为你已经把它删了。
 				</p>
 				<h3>隐藏</h3>
 				<p>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../css/codemirror.css">
+  <link rel="stylesheet" href="../css/theme/monokai.css">
+  <script src="../js/codemirror.js"></script>
+  <script src="../js/mode/htmlmixed/htmlmixed.js"></script>
+  <script src="../js/mode/xml/xml.js"></script>
+  <script src="../js/mode/javascript/javascript.js"></script>
+  <script src="../js/mode/css/css.js"></script>
+  <title>试验田</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    #show-container {
+      margin: 0 .5% 1% .5%;
+      height: 300px;
+    }
+
+    #result {
+      color: white;
+      height: 250px;
+      background-color: rgb(39, 40, 34);
+    }
+
+    #html-container,
+    #js-container {
+      box-sizing: border-box;
+      display: inline-block;
+      width: 49%;
+      padding: 0 .5% 1% .5%;
+      height: 300px;
+    }
+
+    .border {
+      border: solid 1px #888;
+      border-top: none;
+    }
+
+    .nav {
+      height: 40px;
+      background-color: #2b2b2b;
+      padding: .5%;
+      margin-top: .5%;
+      border-radius: 5px 5px 0 0;
+      border-none;
+    }
+
+    .nav ul li {
+      display: inline-block;
+      padding: .5%;
+      border-radius: 5px;
+      color: white;
+    }
+
+    .nav ul li:hover {
+      cursor: pointer;
+    }
+
+    #html-input-area,
+    #js-input-area {
+      width: 100%;
+      height: 260px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="show-container">
+    <div class="nav">
+      <ul>
+        <li>结果</li>
+      </ul>
+    </div>
+    <div id="result" class="border">
+    </div>
+  </div>
+  <div id="html-container">
+    <div class="nav">
+      <ul>
+        <li>类型：html</li>
+      </ul>
+    </div>
+    <div class="border">
+      <textarea id="html-input-area"></textarea>
+    </div>
+  </div>
+  <div id="js-container">
+    <div class="nav">
+      <ul>
+        <li>类型：javascript</li>
+      </ul>
+    </div>
+    <div class="border">
+      <textarea id="js-input-area"></textarea>
+    </div>
+  </div>
+</body>
+<script>
+  window.onload = function () {
+    var result = document.getElementById('result');
+    var htmlEditor = CodeMirror.fromTextArea(document.getElementById("html-input-area"), {
+      mode: "text/html",
+      styleActiveLine: true,
+      lineWrapping: true,
+      theme: 'monokai',
+      lineNumbers: true
+    });
+    htmlEditor.on('change', function () {
+      result.innerHTML = htmlEditor.getValue();
+    });
+    var jsEditor = CodeMirror.fromTextArea(document.getElementById("js-input-area"), {
+      mode: "application/javascript",
+      styleActiveLine: true,
+      lineWrapping: true,
+      theme: 'monokai',
+      lineNumbers: true
+    });
+    jsEditor.on('change', function () {
+      eval(jsEditor.getValue());
+    });
+  };
+</script>
+
+</html>
