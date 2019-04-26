@@ -192,12 +192,12 @@ $(function () {
     ['three', 'geometry', 'material', 'object', 'scene', 'camera', 'light'],
     ['commonJS', 'package.json', 'path', 'file system', 'process', 'koa', 'webpack', 'plugins', 'loader'],
     ['安装', '实例', '模版', '组件', 'mixins', 'router', 'vuex'],
-    ['响应式布局', '响应式图片', 'bootstrap', 'viewport'],
+    ['响应式布局', '响应式图片', 'bootstrap', 'viewport', '1px'],
     ['抓包工具', 'chrome devtools', 'git', 'sublime 插件'],
     ['HTTP', 'TCP'],
     ['CSRF', 'XSS', '同源策略'],
     ['karma', 'Vue Test Utils'],
-    ['Thinkphp5.1', 'htaccess', 'Collection', 'python2'],
+    ['Thinkphp5.1', 'htaccess', 'Collection', 'python2', 'Django'],
     ['树和图', '排序', '队列和栈', '算法规范'],
     ['路径匹配', '浏览器渲染', '设计策略', '头疼的兼容', '命名规范', '字符编码', 'bat', 'linux指令', '软件设计师']
   ];

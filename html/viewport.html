@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title>viewport</title>
@@ -11,6 +12,7 @@
 	<script src="../js/sidebar.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
+
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
@@ -30,7 +32,8 @@
 			<p>
 				<h3>设备像素 / 物理像素</h3>
 				<p>
-					设备像素（device pixel），各个显示器上显示的图像，实际上是由横纵摆放的小方格组成的，如<span class="definition"> 分辨率 1600 x 980 </span>，表示 x 轴方向切割为 1600 份，y 轴方向切割为 980 份，总共 1600 x 980 个小方格。
+					设备像素（device pixel），各个显示器上显示的图像，实际上是由横纵摆放的小方格组成的，如<span class="definition"> 分辨率 1600 x 980 </span>，表示 x 轴方向切割为
+					1600 份，y 轴方向切割为 980 份，总共 1600 x 980 个小方格。
 					<figure>
 						<img src="../images/viewport_dp.jpg" alt="">
 						<figcaption>每一个方格称之为一个物理像素</figcaption>
@@ -72,7 +75,8 @@ window.devicePixelRatio
 				</p>
 				<h3>例子：iphone X</h3>
 				<p>
-					iphone X 的设备像素宽度为 1125，DPR 为 3，也就是说，在 css 中，只需要给元素设置宽度<span class="definition"> width: 375px </span> （1125 / 3 = 375）就可以占满屏幕宽度。如果你是在手机端，可以直接浏览该 demo：<a href="../demo/vw_iphone_x.html"> vm_iphone_x.html </a>。
+					iphone X 的设备像素宽度为 1125，DPR 为 3，也就是说，在 css 中，只需要给元素设置宽度<span class="definition"> width: 375px </span> （1125 / 3
+					= 375）就可以占满屏幕宽度。如果你是在手机端，可以直接浏览该 demo：<a href="../demo/vw_iphone_x.html"> vm_iphone_x.html </a>。
 					<pre><code class="html">
 &lt;meta name="viewport" content="width=device-width">
 &lt;div style="height: 400px; <span class="strong">width: 375px;</span> background: linear-gradient(90deg, #000, green, #000);"></div>
@@ -103,7 +107,8 @@ window.devicePixelRatio
 						<li>device-width</li>
 					</ul>
 					<h4>html（根标签）</h4>
-					html 的宽高与 viewport 的宽高挂钩，实际上 html 的宽高是以 viewport 的宽高作为参照，html 的宽高等于 viewport 的宽高。使用 meta 标签写入 viewport 信息的 width，查看 html 标签，发现宽度跟 viewport 的 width 一样。
+					html 的宽高与 viewport 的宽高挂钩，实际上 html 的宽高是以 viewport 的宽高作为参照，html 的宽高等于 viewport 的宽高。使用 meta 标签写入 viewport 信息的
+					width，查看 html 标签，发现宽度跟 viewport 的 width 一样。
 					<pre><code class="html">
 &lt;meta name="viewport" content="width=350"&gt;
 					</code></pre>
@@ -124,7 +129,9 @@ var width = window.innerWidth || document.documentElement.clientWidth  || docume
 					<figure>
 						<img src="../images/viewport_number.gif">
 					</figure>
-					由于固定死了 viewport 的大小，尽管设备的宽高一直在变，但浏览器始终认为 viewport （展示给用户的界面）是固定不变的，页面会以一种缩放的形式缩放到 viewport 的大小。这种方法可以认为<span class="definition"> 只有一种设备 </span>来访问页面，比如设置 with=600 则认为所有设备都是 600px 宽，写个 300px 宽的 div 块则无论在哪个移动设备都占一半大小宽度，但有一个问题：<a href="../demo/fix_viewport.html"> PC 端不适配 </a>，PC 端不响应 viewport 的固定宽度。
+					由于固定死了 viewport 的大小，尽管设备的宽高一直在变，但浏览器始终认为 viewport （展示给用户的界面）是固定不变的，页面会以一种缩放的形式缩放到 viewport 的大小。这种方法可以认为<span
+						class="definition"> 只有一种设备 </span>来访问页面，比如设置 with=600 则认为所有设备都是 600px 宽，写个 300px 宽的 div
+					块则无论在哪个移动设备都占一半大小宽度，但有一个问题：<a href="../demo/fix_viewport.html"> PC 端不适配 </a>，PC 端不响应 viewport 的固定宽度。
 					<pre><code class="html">
 &lt;meta name="viewport" content="width=600"&gt;
 &lt;div style="width: 300px; margin: auto; background-color: black; color: white;"&gt;hello world&lt;/div&gt;
@@ -141,8 +148,12 @@ var width = window.innerWidth || document.documentElement.clientWidth  || docume
 						第一种设置 width 为 device-width ，由于宽度跟随设备，所以浏览时总是能够显示全部的页面，即使页面实际大小远大于设备宽度，也会自动缩放到合适的程度。
 					</p>
 					<p>
-						第二种设置 width 为固定值（2560），表示只适配某种宽度的设备，尽管设备只有 350px 宽，由于 width=2560 ，浏览器便认为设备上的 viewport 有 2560px 宽，1280px 宽的 web 页面最终呈现出来的效果也只能占据浏览器一半宽度。
+						第二种设置 width 为固定值（2560），表示只适配某种宽度的设备，尽管设备只有 350px 宽，由于 width=2560 ，浏览器便认为设备上的 viewport 有 2560px 宽，1280px 宽的
+						web 页面最终呈现出来的效果也只能占据浏览器一半宽度。
 					</p>
+					<div class="tip">
+						注意，这里的 1280 不是说我写了样式 width: 1280px，明确写了固定宽度 1280px 的话不会受 viewport 影响，直接就是独立像素 1280px。此处指的是不写宽度的情况下块级元素的全部宽度。
+					</div>
 				</p>
 				<h3>initial-scale</h3>
 				<p>
@@ -153,7 +164,8 @@ var width = window.innerWidth || document.documentElement.clientWidth  || docume
 		<section>
 			<h2>Flexible</h2>
 			<p>
-				Flexible 是手机淘宝团队适配移动端的一种解决方案，其原理设置 viewport(视窗) 为跟随设备宽度，然后引入<a href="https://github.com/amfe/lib-flexible">flexible.js</a>文件：
+				Flexible 是手机淘宝团队适配移动端的一种解决方案，其原理设置 viewport(视窗) 为跟随设备宽度，然后引入<a
+					href="https://github.com/amfe/lib-flexible">flexible.js</a>文件：
 				<pre><code class="git">
 # 下载包
 npm i -S amfe-flexible
@@ -214,7 +226,8 @@ npm i -S amfe-flexible
   }
 }(window, document))
 					</code></pre>
-					简单来讲，其原理为当页面尺寸发生变化（resize 事件）时，修改根标签的 font-size 为视窗宽度的 1/10，比如使用 1600px * 900px 的设备访问，根标签的 font-size 就等于 160px。
+					简单来讲，其原理为当页面尺寸发生变化（resize 事件）时，修改根标签的 font-size 为视窗宽度的 1/10，比如使用 1600px * 900px 的设备访问，根标签的 font-size 就等于
+					160px。
 				</p>
 				<h3>设计</h3>
 				<p>
@@ -222,7 +235,8 @@ npm i -S amfe-flexible
 					<pre><code class="html">
 &lt;div style="width: 5rem;"&gt;hello world&lt;/div&gt;
 					</code></pre>
-					假如设计稿的宽度为 750px，那么该设计宽度的 1/10 就等于 1rem = 75px，写 css 样式时就需要将设计稿上的 px 按照 75 : 1 的比例换算为 rem。比如 300px 的 div 块，在设计稿上占了 40% 的宽度。
+					假如设计稿的宽度为 750px，那么该设计宽度的 1/10 就等于 1rem = 75px，写 css 样式时就需要将设计稿上的 px 按照 75 : 1 的比例换算为 rem。比如 300px 的 div
+					块，在设计稿上占了 40% 的宽度。
 					<figure>
 						<img src="../images/viewport_flexible.jpg" alt="">
 					</figure>
@@ -279,11 +293,8 @@ div {
 				<h3>兼容性</h3>
 				<p>
 					<figure>
-						<iframe
-							src="https://caniuse.com/#search=vw,%20vh,%20vmin,%20vmax"
-							frameborder="0"
-							style="width: 100%; height: 1000px;"
-						/>
+						<iframe src="https://caniuse.com/#search=vw,%20vh,%20vmin,%20vmax" frameborder="0"
+							style="width: 100%; height: 1000px;" />
 						<figcaption>https://caniuse.com/#search=vw,%20vh,%20vmin,%20vmax</figcaption>
 					</figure>
 				</p>
@@ -292,11 +303,17 @@ div {
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
-				<div>[1] 大漠 走向视网膜（Retina）的Web时代 <a href="http://www.w3cplus.com/css/towards-retina-web.html">http://www.w3cplus.com/css/towards-retina-web.html</a></div>
-				<div>[2] amfe/lib-flexible Github <a href="https://github.com/amfe/lib-flexible">https://github.com/amfe/lib-flexible</a></div>
-				<div>[3] 大漠 使用Flexible实现手淘H5页面的终端适配 <a href="https://www.w3cplus.com/mobile/lib-flexible-for-html5-layout.html">https://www.w3cplus.com/mobile/lib-flexible-for-html5-layout.html</a></div>
+				<div>[1] 大漠 走向视网膜（Retina）的Web时代 <a
+						href="http://www.w3cplus.com/css/towards-retina-web.html">http://www.w3cplus.com/css/towards-retina-web.html</a>
+				</div>
+				<div>[2] amfe/lib-flexible Github <a
+						href="https://github.com/amfe/lib-flexible">https://github.com/amfe/lib-flexible</a></div>
+				<div>[3] 大漠 使用Flexible实现手淘H5页面的终端适配 <a
+						href="https://www.w3cplus.com/mobile/lib-flexible-for-html5-layout.html">https://www.w3cplus.com/mobile/lib-flexible-for-html5-layout.html</a>
+				</div>
 			</p>
 		</section>
 	</article>
 </body>
+
 </html>
