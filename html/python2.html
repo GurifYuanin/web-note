@@ -155,6 +155,8 @@ world
 					<li>list.index(element)：找到元素索引</li>
 					<li>list.reverse()：翻转元素</li>
 					<li>list.sort([cmp])：列表排序</li>
+					<li>string.join(list)：列表连接为字符串，相当于 javascript 的 list.join(string)</li>
+					<li>[li.key for li in list]：相当于 javascript 的 list.map(li => li.key)</li>
 				</ul>
 				<h3>字典方法</h3>
 				<ul>
@@ -409,6 +411,29 @@ for key in string | list | tuple | dict:
 else:
 # 语句 或 continue 或 break
 # 空一行
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>魔术方法</h2>
+			<p>
+				<h3>__str__</h3>
+				当我们没有定义该方法时输出（print）一个对象时，得到的是指针地址。
+				<pre><code class="python">
+class A:
+	pass;
+
+print A();
+&lt;__main__.A instance at 0x1081cd680&gt;
+				</code></pre>
+				当我们定义了该方法后，输出的是该方法的返回值（返回值必是字符串，否则报错）。
+				<pre><code class="python">
+class A:
+	def __str__(self):
+		return 'Hello world';
+		
+print A();
+Hello world
 				</code></pre>
 			</p>
 		</section>

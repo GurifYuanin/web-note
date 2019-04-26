@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../css/normalize.css">
+  <link rel="stylesheet" href="../css/styles/agate.css">
+  <link rel="stylesheet" href="../css/dark.css">
+  <script src="../js/jquery-3.2.1-compressed.js"></script>
+  <script src="../js/highlight.pack.js"></script>
+  <script src="../js/sidebar.js"></script>
+  <title>Django</title>
+</head>
+
+<body>
+  <aside id="sidebar">
+    <section id="catalog">
+      <img id="hideCatalog" src="../images/catalog.png" alt="加载失败">
+      目录
+    </section>
+  </aside>
+  <div id="showCatalog">
+    <img src="../images/arrow.png">
+  </div>
+  <article id="container">
+    <hgroup>
+      <h1 id="title">Django</h1>
+    </hgroup>
+    <section>
+      <h2>路由</h2>
+      <p>
+        URL 路径从根 urls.py 开始拼接，根 urls.py 文件通过查看 settings.py 文件获得。
+        <pre><code class="python">
+ROOT_URLCONF = 'urls'
+        </code></pre>
+        先在 settings.py 注册应用，假如应用名字为 app，则在<span class="different">INSTALLED_APPS</span>追加 app 一项。
+        <pre><code class="python">
+INSTALLED_APPS = [
+  'app',
+];
+        </code></pre>
+        然后查看 urls.py 文件：
+        <pre><code class="python">
+# 根 urls.py
+from django.conf.urls import url, include;
+urlpatterns = [
+  url(r'^app/', include('app.urls')),
+];
+
+# app/urls.py
+from django.conf.urls import url;
+from . import views;
+urlpatterns = [
+  url(r'^path/$', views.index, name = 'path'),
+];
+
+        </code></pre>
+        这种情况访问如果 /app/path/ ，就会将访问到 app 项目下的 views.py 的 index 函数。其后的<span class="different">name =
+          'path'</span>表示该条路由别名是<span class="different"> path </span>，我们可以在视图层通过别名来引用。
+        <pre><code class="python">
+&lt;a href="{% url 'path' %}"&gt;path&lt;/a&gt;
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>静态资源</h2>
+      <p>
+        在上一节（路由）的前提下，在 app 目录下添加 static 目录，该目录下的所有文件作为静态资源，可以被直接访问，比如存在 app/static/style.css，那么可以访问 URL 地址<span
+          class="different">/static/style.css</span>来获取资源。
+      </p>
+    </section>
+    <section>
+      <h2>模型</h2>
+      <p>
+        <h3>配置数据库</h3>
+        先在 setings.py 文件配置数据库连接。
+        <pre><code class="python">
+# Database
+# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+DATABASES = {
+  'default': {
+  'ENGINE': 'django.db.backends.mysql',
+  'NAME': '数据库名',
+  'USER': '用户名',
+  'PASSWORD': '密码',
+  'HOST': '数据库IP',
+  'PORT': '数据库端口',
+  }
+}
+        </code></pre>
+        <h3>定义模型</h3>
+        在项目下创建模型定义文件，比如在 app 下创建 models.py。
+        <pre><code class="python">
+from django.db import models;
+
+class 表名(models.Model):
+  # 表字段约束
+  字段名 = models.类型(max_length = 长度);
+  # 外码约束
+  other_table = models.ForeignKey(其他表名, on_delete = models.CASCADE);
+
+  def 自定义函数(self):
+    # pass;
+        </code></pre>
+        <h3>使用模型</h3>
+        获得模型后进行表查询等操作。
+        <pre><code class="python">
+from app.models import 表名;
+
+def index(request):
+  # 查询所有数据
+  data = 表名.objects.all();
+  # 通过主码查询一条记录
+  d = 表名.object.get(pk = 值);
+  # 插入一条记录
+  d = 表名(字段名 = 值);
+  d.save();
+  # 删除一条记录
+  d.delete();
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>返回 JSON 数据</h2>
+      <p>
+        从 model 中取出数据，得到的数据类型为 QuerySet，进行格式化后返回。
+        <h3>serializers</h3>
+        serializers 只适用于 QuerySet 类型的数据。
+        <pre><code class="python">
+from django.core.serializers import serialize;
+from django.http import HttpResponse;
+from .models import Model;
+
+def index(request):
+  result = serialize('json', Model.objects.all());
+  return HttpResponse(result);
+        </code></pre>
+        <h3>JsonResponse</h3>
+        JsonResponse 用于将 dict 作为 json 返回。
+        <pre><code class="python">
+from django.http import JsonResponse;
+
+def index(request):
+  return JsonResponse({
+    'id': 1
+  });
+        </code></pre>
+        <h3>simplejson</h3>
+        simplejson 仅仅是将 dict 转化为 json。
+        <pre><code class="python">
+# 先下载 simplejson
+pip install simplejson
+
+import simplejson;
+
+def index(request):
+  result = simplejson.dumps({
+    'id': 1
+  });
+  return HttpResponse(result);
+        </code></pre>
+        <h3>JsonResponse + model_to_dict</h3>
+        使用 model_to_dict 将 QuerySet 转化为列表，再使用 JsonResponse 返回列表。很繁琐，且最终返回的是数组。
+        <pre><code class="python">
+from django.http import JsonResponse;
+from django.forms.models import model_to_dict;
+from .models import Model;
+
+def index(request):
+  result = [model_to_dict(m) for m in Model.objects.all()];
+  # 关闭安全开关，使得允许转化列表为 json
+  # 最终返回 [{ ... }]
+  return JsonResponse(result, safe = False);
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>调试</h2>
+      <p>
+        进行交互式调试。
+        <pre><code class="shell">
+python manage.py shell
+Python 2.7.10 (default, Feb 22 2019, 21:17:52)
+[GCC 4.2.1 Compatible Apple LLVM 10.0.1 (clang-1001.0.37.14)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>>
+        </code></pre>
+        之后可以直接 import 模块进行调试。
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] django2.2 model <a
+            href="https://docs.djangoproject.com/en/2.2/topics/db/models/">https://docs.djangoproject.com/en/2.2/topics/db/models/</a>
+        </div>
+      </p>
+    </section>
+  </article>
+</body>
+
+</html>
