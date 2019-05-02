@@ -29,6 +29,44 @@
       <h1 id="title">Django</h1>
     </hgroup>
     <section>
+      <h2>安装</h2>
+      <p>
+        <h3>使用 pip 安装 django</h3>
+        <pre><code class="shell">
+$ pip install django
+        </code></pre>
+        <h3>搭建项目</h3>
+        通过指令自动初始化项目。
+        <pre><code class="shell">
+$ django-admin startproject 项目名
+        </code></pre>
+        该命令会创建一个项目模板，其目录结构为：
+        <div id="catalogFrame">
+          <img src="../images/dir.png">项目名：该名字仅是目录名，后续可以进行任意修改<br>
+          <div>
+            <img src="../images/python.png">manage.py<br>
+            <img src="../images/dir.png">项目名：python 包名，后续使用 "项目名.xxx" 来引入该包下的模块<br>
+            <div>
+              <img src="../images/python.png">__init__.py<br>
+              <img src="../images/python.png">settings.py：项目配置文件<br>
+              <img src="../images/python.png">urls.py：根路由配置文件<br>
+              <img src="../images/python.png">wsgi.py<br>
+            </div>
+          </div>
+        </div>
+        <h3>新增应用</h3>
+        通过命令行方式为该项目（project）添加应用（app）。
+        <pre><code class="shell">
+$ python manage.py startapp 应用名
+        </code></pre>
+        <h3>启动服务器</h3>
+        启动服务，默认为 8000 端口。也可以通过参数指定端口。
+        <pre><code class="shell">
+$ python manage.py runserver [端口号]
+        </code></pre>
+      </p>
+    </section>
+    <section>
       <h2>路由</h2>
       <p>
         URL 路径从根 urls.py 开始拼接，根 urls.py 文件通过查看 settings.py 文件获得。
@@ -181,7 +219,7 @@ def index(request):
       <p>
         进行交互式调试。
         <pre><code class="shell">
-python manage.py shell
+$ python manage.py shell
 Python 2.7.10 (default, Feb 22 2019, 21:17:52)
 [GCC 4.2.1 Compatible Apple LLVM 10.0.1 (clang-1001.0.37.14)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
@@ -194,8 +232,8 @@ Type "help", "copyright", "credits" or "license" for more information.
     <section class="refer">
       <h2>参考文献</h2>
       <p>
-        <div>[1] django2.2 model <a
-            href="https://docs.djangoproject.com/en/2.2/topics/db/models/">https://docs.djangoproject.com/en/2.2/topics/db/models/</a>
+        <div>[1] django1.11 model <a
+            href="https://docs.djangoproject.com/en/1.11/topics/db/models/">https://docs.djangoproject.com/en/1.11/topics/db/models/</a>
         </div>
       </p>
     </section>
