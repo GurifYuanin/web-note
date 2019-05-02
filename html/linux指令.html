@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title>linux指令</title>
@@ -10,6 +11,7 @@
 	<script src="../js/highlight.pack.js"></script>
 	<script src="../js/sidebar.js"></script>
 </head>
+
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
@@ -31,7 +33,7 @@
 				<p>
 					<h4>创建文件</h4>
 					<div class="command">
-touch 文件名
+						touch 文件名
 					</div>
 					<h4>删除文件</h4>
 					<ul>
@@ -40,7 +42,7 @@ touch 文件名
 						<li>-r：递归删除</li>
 					</ul>
 					<div class="command">
-rm 文件名
+						rm 文件名
 					</div>
 				</p>
 				<h3>目录</h3>
@@ -48,23 +50,23 @@ rm 文件名
 					<h4>创建目录</h4>
 					递归（-p）、赋权（-m 数字数字数字）创建一个目录。
 					<div class="command">
-mkdir [-m 数字数字数字] [-p] 目录名
+						mkdir [-m 数字数字数字] [-p] 目录名
 					</div>
 					<h4>删除目录</h4>
 					递归（-p）删除空目录（若非空则失败）。
 					<div class="command">
-rmdir [-p] 目录名
+						rmdir [-p] 目录名
 					</div>
 					递归删除目录。
 					<div class="command">
-rm -r 目录名
+						rm -r 目录名
 					</div>
 				</p>
 				<h3>文件 & 目录</h3>
 				<p>
 					<h4>移动 & 重命名</h4>
 					<div class="command">
-mv 源路径 目标路径
+						mv 源路径 目标路径
 					</div>
 					<h4>复制</h4>
 					<ul>
@@ -75,7 +77,7 @@ mv 源路径 目标路径
 						<li>-a：相当于 -dpr 一起使用</li>
 					</ul>
 					<div class="command">
-cp 源路径 目标目录
+						cp 源路径 目标目录
 					</div>
 				</p>
 			</p>
@@ -145,19 +147,19 @@ dr-xr-xr-x. 13 <span class="strong">root root</span> 0 Nov 1 00:09 sys
 					<h4>改变档案所属用户</h4>
 					chown：change owner ，用来设置档案所属用户。
 					<div class="command">
-chown 用户名 档案路径
+						chown 用户名 档案路径
 					</div>
 					当然群组和用户都得存在，不然会执行失败。
 					<h4>改变档案所属群组</h4>
 					chgrp：change group ，用来设置档案的所属群组。
 					<div class="command">
-$ chgrp 群组名 档案路径
+						$ chgrp 群组名 档案路径
 					</div>
 					当然群组和档案都得存在，不然会执行失败。
 					<h4>改变档案权限开关</h4>
 					chmod：change mode，用来设置权限开关，有两种使用方法，一是使用命令方式：
 					<div class="command">
-chmod 目标 动作 权限 档案路径
+						chmod 目标 动作 权限 档案路径
 					</div>
 					<ul>
 						<li>目标可以设置为：a（all，所有人）、u（user，用户）、g（group，群组）、o（other，其他人）。</li>
@@ -170,7 +172,7 @@ $ chmod u=rw test
 					</code></pre>
 					第二种是使用数字模式，输入三位的数字，每个数字是 0 - 7：
 					<div class="command">
-chmod 数字数字数字 档案路径
+						chmod 数字数字数字 档案路径
 					</div>
 					将每个数字翻译为 2 进制，每一位对应一个权限开关，比如 770 对应 111 111 000，说明设置所属用户读写执行权限、所属组读写执行权限、其他人没有权限。
 					<pre><code class="shell">
@@ -199,12 +201,59 @@ $ chmod 770 test
 				</p>
 			</p>
 		</section>
+		<section>
+			<h2>查找</h2>
+			<p>
+				<h3>find</h3>
+				find 用于查找<span class="different">文件名</span>，并允许对查找出来的文件进行操作。
+				<h4>根据名字查找</h4>
+				<pre><code class="shell">
+$ find . -name '*.jpg'
+				</code></pre>
+				<h4>根据文件类型查找</h4>
+				<ul>
+					<li>d：directory，目录</li>
+					<li>f：file，文件</li>
+					<li>l：link，符号连接</li>
+				</ul>
+				<pre><code class="shell">
+$ find . -f
+				</code></pre>
+				<h4>找出并进行操作</h4>
+				找出文件格式为 jpg 的图片并删除它们。
+				<pre><code class="shell">
+$ find . -name '*.jpg' -exec rm {} \;
+				</code></pre>
+				<h3>grep</h3>
+				grep 用于对字符串进行正则匹配，同时它可以对<span class="different">文件内容</span>进行正则，也可以对目录下的所有文件进行正则。
+				<h4>递归查找目录</h4>
+				-E 表示 '[0-9]+' 为正则表达式，-r 表示递归查找当前目录（.），-n 表示查找结果显示行数。
+				<pre><code class="shell">
+$ grep -E '[0-9]+' . -r -n
+				</code></pre>
+				<h3>tree</h3>
+				tree 用于树状现实目录结构，先安装 tree 工具，再进行使用。
+				<pre><code class="shell">
+$ brew install tree
+				</code></pre>
+				<div class="command">
+					tree [路径] [-L 深度]
+				</div>
+				现实当前目录深度为 2 的目录结构。
+				<pre><code class="shell">
+$ tree . -L 2
+				</code></pre>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
-				<div>[1] 鸟哥的linux私房菜 <a href="http://cn.linux.vbird.org/linux_basic/linux_basic.php">http://cn.linux.vbird.org/linux_basic/linux_basic.php</a></div>
+				<div>[1] 鸟哥的linux私房菜 <a
+						href="http://cn.linux.vbird.org/linux_basic/linux_basic.php">http://cn.linux.vbird.org/linux_basic/linux_basic.php</a>
+				</div>
 			</p>
 		</section>
 	</article>
 </body>
+
 </html>

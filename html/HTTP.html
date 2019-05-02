@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title>HTTP</title>
@@ -10,6 +11,7 @@
 	<script src="../js/highlight.pack.js"></script>
 	<script src="../js/sidebar.js"></script>
 </head>
+
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
@@ -47,7 +49,8 @@
 		<section>
 			<h2>报文</h2>
 			<p>
-				当在浏览器敲入 URL 后回车，浏览器通过查询 DNS 得知该域名的 IP，然后创建<span class="definition"> 请求报文 </span>并发送给服务器（IP 地址）。<span class="definition"> 请求报文 </span>的格式为：
+				当在浏览器敲入 URL 后回车，浏览器通过查询 DNS 得知该域名的 IP，然后创建<span class="definition"> 请求报文 </span>并发送给服务器（IP 地址）。<span
+					class="definition"> 请求报文 </span>的格式为：
 				<pre><code class="http">
 方法 URI HTTP/版本
 请求首部字段
@@ -66,7 +69,9 @@ HTTP/版本 状态码 状态短语
 报文主体
 				</code></pre>
 				可以看到，报文主体和首部字段隔着一个空行（CR+LF）。空行后的就是浏览器上渲染的内容，空行前是该次报文的首部信息。<br>
-				浏览器通过这种方式来获取 Web 资源。比如在我的网站上有这么一个页面<a href="http://isempty.site/web-note/demo/http_demo.html"> http://isempty.site/web-note/demo/http_demo.html </a>，该页面的 HTML 代码很简单，body 内只有一个<span class="definition">hello ! </span>的文本节点。
+				浏览器通过这种方式来获取 Web 资源。比如在我的网站上有这么一个页面<a href="http://isempty.site/web-note/demo/http_demo.html">
+					http://isempty.site/web-note/demo/http_demo.html </a>，该页面的 HTML 代码很简单，body 内只有一个<span class="definition">hello
+					! </span>的文本节点。
 				<pre><code class="html">
 &lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
@@ -148,7 +153,8 @@ Range: bytes=0-1
 				</p>
 				<h3>Referer</h3>
 				<p>
-					Refer 表示进行请求的源，例如下面是<span class="definition"> www.origin.com/index.html </span>页面，向<span class="definition"> www.demo.com </span>请求一张图片<span class="definition"> demo.jpg </span>。
+					Refer 表示进行请求的源，例如下面是<span class="definition"> www.origin.com/index.html </span>页面，向<span class="definition">
+						www.demo.com </span>请求一张图片<span class="definition"> demo.jpg </span>。
 					<pre><code class="html">
 &lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
@@ -264,7 +270,16 @@ If-Match: "33a64df551425fcc55e4d42a148795d9f25f89d4"
 					</code></pre>
 					服务器端就可以通过 If-Match 的值来判断服务器端的资源是否已经改变（弱验证器进行的是模糊匹配），返回资源或者 304。
 				</p>
-				<h3></h3>
+				<h3>X-Frame-Options</h3>
+				<p>
+					X-Frame-Options 用于告诉浏览器是否允许自己的页面被嵌入到其他页面里（通过 iframe 等方式）。
+					<ul>
+						<li>DENY：禁止</li>
+						<li>SAMEORIGIN：仅在同源时才可以嵌入</li>
+						<li>ALLOW-FROM uri：仅允许指定 uri 可以嵌入</li>
+						<li>不设置：允许任何页面嵌入</li>
+					</ul>
+				</p>
 			</p>
 		</section>
 		<section>
@@ -541,13 +556,21 @@ Content-Type: application/json; charset=utf-8
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
-				<div>[1] Fielding, Roy T.; Gettys, James; Mogul, Jeffrey C.; Nielsen, Henrik Frystyk; Masinter, Larry; Leach, Paul J.; Berners-Lee, Tim. Hypertext Transfer Protocol – HTTP/1.1. IETF. June 1999. RFC 2616. </div>
-				<div>[2] W3C School HTTP 方法：GET 对比 POST <a href="http://www.w3school.com.cn/tags/html_ref_httpmethods.asp">http://www.w3school.com.cn/tags/html_ref_httpmethods.asp</a></div>
+				<div>[1] Fielding, Roy T.; Gettys, James; Mogul, Jeffrey C.; Nielsen, Henrik Frystyk; Masinter, Larry; Leach,
+					Paul J.; Berners-Lee, Tim. Hypertext Transfer Protocol – HTTP/1.1. IETF. June 1999. RFC 2616. </div>
+				<div>[2] W3C School HTTP 方法：GET 对比 POST <a
+						href="http://www.w3school.com.cn/tags/html_ref_httpmethods.asp">http://www.w3school.com.cn/tags/html_ref_httpmethods.asp</a>
+				</div>
 				<div>[3] 上野宣 图解HTTP </div>
-				<div>[4] MDN ETag <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/ETag">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/ETag</a></div>
-				<div>[5] 彻底理解浏览器缓存机制 <a href="https://www.cnblogs.com/shixiaomiao1122/p/7591556.html">https://www.cnblogs.com/shixiaomiao1122/p/7591556.html</a></div>
+				<div>[4] MDN ETag <a
+						href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/ETag">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/ETag</a>
+				</div>
+				<div>[5] 彻底理解浏览器缓存机制 <a
+						href="https://www.cnblogs.com/shixiaomiao1122/p/7591556.html">https://www.cnblogs.com/shixiaomiao1122/p/7591556.html</a>
+				</div>
 			</p>
 		</section>
 	</article>
 </body>
+
 </html>

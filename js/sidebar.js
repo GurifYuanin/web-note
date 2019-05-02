@@ -182,7 +182,9 @@ $(function () {
     '安全',
     '测试',
     '后端',
+    '数据库',
     '算法',
+    'AfterEffect',
     '其他'
   ]; // 目录分类
   var items = [
@@ -197,16 +199,18 @@ $(function () {
     ['HTTP', 'TCP'],
     ['CSRF', 'XSS', '同源策略'],
     ['karma', 'Vue Test Utils'],
-    ['Thinkphp5.1', 'htaccess', 'Collection', 'python2', 'Django'],
+    ['Thinkphp5.1', 'htaccess', 'nginx', 'Collection', 'python2', 'Django'],
+    ['redis'],
     ['树和图', '排序', '队列和栈', '算法规范'],
+    ['effect'],
     ['路径匹配', '浏览器渲染', '设计策略', '头疼的兼容', '命名规范', '字符编码', 'bat', 'linux指令', '软件设计师']
   ];
   // 插入侧栏
   var str = '';
   var isBright = false; // 是否在日间模式
-  for (var i = 0;i < category.length;i++) {
+  for (var i = 0; i < category.length; i++) {
     str += wrapByTag('<img src="../images/slide_down' + (isBright ? '' : '_dark') + '.png">' + category[i], 'h3');
-    for (var j = 0, tmp = '', insertedId = '';j < items[i].length;j++) {
+    for (var j = 0, tmp = '', insertedId = ''; j < items[i].length; j++) {
       insertedId = items[i][j] === currentTitle ? ' id="currentItem" ' : '';
       tmp += '<div' + insertedId + '>' + wrapByA(items[i][j]) + '</div>';
     }
@@ -231,24 +235,42 @@ $(function () {
   var liIndex = 0;
   // 根据关键字获得搜索结果列表
   function getSearchResult(keyword) {
-    var res = '';
-    items.forEach(function (item, groupIndex) {
-      item.forEach(function (el) {
-        try {
-          var reg = new RegExp(keyword, 'i');
-          if (reg.test(el)) {
-            res += wrapByTag(
-              wrapByA(
-                el,
-                el.replace(reg, '<span class="filteredHightLight">' + el.match(reg) + '</span>') + ' <span class="filteredCategory">(' + category[groupIndex] + ')</span>',
-                '_blank'),
-              'li'
-            );
-          }
-        } catch (e) { }
-      });
-    });
-    return res;
+    var wrappedElements = []; // html 标签包裹后的条目
+    var matchRates = []; // 匹配率，非负数数组，越接近 0 表示匹配率越高
+    // 查找匹配的条目
+    for (var i = 0; i < items.length; i++) {
+      for (var j = 0; j < items[i].length; j++) {
+        var reg = new RegExp(keyword, 'i');
+        var el = items[i][j];
+        if (reg.test(el)) {
+          var wrappedEl = wrapByTag(
+            wrapByA(
+              el,
+              el.replace(reg, '<span class="filteredHightLight">' + el.match(reg) + '</span>') + ' <span class="filteredCategory">(' + category[i] + ')</span>',
+              '_blank'),
+            'li'
+          );
+          matchRates.push(Math.abs(el.length - keyword.length));
+          wrappedElements.push(wrappedEl);
+        }
+      }
+    }
+    // 高匹配度的关键字排前列
+    var result = new Array(wrappedElements.length);
+    for (var i = wrappedElements.length - 1; i >= 0; i--) {
+      var min = Number.MAX_SAFE_INTEGER;
+      var index = -1;
+      for (var j = 0; j < wrappedElements.length; j++) {
+        if (min >= matchRates[j]) {
+          min = matchRates[j];
+          index = j;
+        }
+      }
+      result.push(wrappedElements[index]);
+      wrappedElements.splice(index, 1);
+      matchRates.splice(index, 1);
+    }
+    return result.join('');
   }
 
   $searchResult.css('display', 'none');
@@ -263,7 +285,7 @@ $(function () {
         var arr = keyword.split('');
         arr = filterRepeat(arr);
         var tmp = [];
-        for (var i = 0;i < arr.length;i++) {
+        for (var i = 0; i < arr.length; i++) {
           tmp = getSearchResult(arr[i]);
           str = tmp.length > str.length ? tmp : str; // 保留搜索结果最多的
         }
@@ -441,7 +463,7 @@ $(function () {
       widthStart = 5;
       widthInc = -1 / piece;
     }
-    for (var i = start, delay = 0;i !== end;i += valInc, widthStart += widthInc, delay += timeInc) {
+    for (var i = start, delay = 0; i !== end; i += valInc, widthStart += widthInc, delay += timeInc) {
       (function () {
         var percentage = i + '%';
         var margin = '0 ' + widthStart + '%';
@@ -557,7 +579,7 @@ $(function () {
   var subTitleNav = ''; // 子标题导航 html 字符串
   var subTitleToggleString = ''; // 子标题导航开关
   var subTitleBlockNumber = 4;
-  for (var i = 1;i <= subTitleBlockNumber;i++) {
+  for (var i = 1; i <= subTitleBlockNumber; i++) {
     subTitleToggleString += '<div class="block' + i + '"></div>';
   }
   subTitleToggleString = '<div id="subTitleToggle">' + subTitleToggleString + '</div>';
@@ -599,7 +621,7 @@ $(function () {
   function showBlock(event) {
     var time = 0;
     // 块消失
-    for (i = $subTitleBlock.length;i >= 0;i-- , time += blockInterval) {
+    for (i = $subTitleBlock.length; i >= 0; i-- , time += blockInterval) {
       (function () {
         var delay = time;
         var j = i;
@@ -609,7 +631,7 @@ $(function () {
       })();
     }
     // 导航项出现
-    for (i = $subTitleItem.length - 1;i >= 0;i-- , time += itemInterval) {
+    for (i = $subTitleItem.length - 1; i >= 0; i-- , time += itemInterval) {
       (function () {
         var delay = time;
         var j = i;
@@ -630,7 +652,7 @@ $(function () {
     if (event.target.getAttribute('class') !== 'subTitleItem') {
       isLeave = true; // 加锁，不让导航项出现
       // 导航项消失
-      for (var time = 0, i = 0;i < $subTitleItem.length;i++ , time += itemInterval) {
+      for (var time = 0, i = 0; i < $subTitleItem.length; i++ , time += itemInterval) {
         (function () {
           var delay = time;
           var j = i;
@@ -640,7 +662,7 @@ $(function () {
         })();
       }
       // 块出现
-      for (i = 0;i < $subTitleBlock.length;i++ , time += blockInterval) {
+      for (i = 0; i < $subTitleBlock.length; i++ , time += blockInterval) {
         (function () {
           var delay = time;
           var j = i;
@@ -767,7 +789,7 @@ $(function () {
     if (imgContainer.lastChild instanceof HTMLImageElement) {
       var img = imgContainer.lastChild,
         imgs = $('#container figure>img').toArray();
-      for (var i = 0;i < imgs.length;i++) {
+      for (var i = 0; i < imgs.length; i++) {
         if (imgs[i].src === img.src) {
           flag ?
             i - 1 >= 0 ? img.src = imgs[i - 1].src : notify.info({ content: '已经是第一张了' }) : // 上一张
