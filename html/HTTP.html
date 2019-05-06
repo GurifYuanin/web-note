@@ -3,6 +3,8 @@
 
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>HTTP</title>
 	<link rel="stylesheet" href="../css/normalize.css">
 	<link rel="stylesheet" href="../css/styles/agate.css">
@@ -171,6 +173,18 @@ Range: bytes=0-1
 					<pre><code class="http">
 Refer: www.origin.com/index.html
 					</code></pre>
+				</p>
+				<h3>REMOTE_ADDR</h3>
+				<p>
+					REMOTE_ADDR 表示发起请求的主机的 IP 地址。
+				</p>
+				<h3>X-Forwarded-For</h3>
+				<p>
+					X-Forwarded-For 表示该请求经历的机器的 IP 地址列表。比如从 ip0 发出到 ip1 转发到 ip2 最后转发到服务器，那么 X-Forwarded-For 就是：
+					<pre><code class="http">
+X-Forwarded-For: ip0, ip1
+					</code></pre>
+					服务器通过 X-Forwarded-For 获取 ip0 和 ip1，通过上面的 REMOTE_ADDR 获取 ip2。
 				</p>
 			</p>
 		</section>

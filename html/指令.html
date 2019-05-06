@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>linux指令</title>
+	<title>Linux指令</title>
 	<link rel="stylesheet" href="../css/normalize.css">
 	<link rel="stylesheet" href="../css/styles/agate.css">
 	<link rel="stylesheet" href="../css/dark.css">
@@ -24,7 +24,7 @@
 	</div>
 	<article id="container">
 		<hgroup>
-			<h1 id="title">linux指令</h1>
+			<h1 id="title">Linux指令</h1>
 		</hgroup>
 		<section>
 			<h2>文件 & 目录</h2>
@@ -245,11 +245,127 @@ $ tree . -L 2
 				</code></pre>
 			</p>
 		</section>
+		<section>
+			<h2>进程管理</h2>
+			<p>
+				<h3>ps</h3>
+				ps（Process Status）用于打印当前进程状态，常用命令为 ps -ef。
+				<ul>
+					<li>-e：现实所有进程</li>
+					<li>-f：format，格式化输出结果</li>
+				</ul>
+				<pre><code class="shell">
+$ ps -ef
+UID PID PPID C STIME TTY TIME CMD
+...
+				</code></pre>
+				<ul>
+					<li>UID：user id</li>
+					<li>PID：process id</li>
+					<li>PPID：parent process id</li>
+					<li>C：CPU 占用率</li>
+					<li>STIME：system time，进程启动时的系统时间</li>
+					<li>TTY：登入者的终端机位置</li>
+					<li>TIME：CPU 执行了多久该进程（没有被 CPU 执行时不计时）</li>
+					<li>CMD：command，启动该进程的命令</li>
+				</ul>
+				<h3>top</h3>
+				top 用于实时现实进程状态。
+				<pre><code class="shell">
+$ top
+top - 10:36:58 up 40 days, 9:47, 2 users, load average: 0.00, 0.01, 0.05
+Tasks: 72 total, 1 running, 71 sleeping, 0 stopped, 0 zombie
+%Cpu(s): 0.0 us, 0.0 sy, 0.0 ni,100.0 id, 0.0 wa, 0.0 hi, 0.0 si, 0.0 st
+KiB Mem : 1883708 total, 606076 free, 201860 used, 1075772 buff/cache
+KiB Swap: 0 total, 0 free, 0 used. 1480728 avail Mem
+
+PID USER PR NI VIRT RES SHR S %CPU %MEM TIME+ COMMAND
+...
+				</code></pre>
+				<ul>
+					<li>
+						第一行：系统基本信息
+						<ul>
+							<li>10:36:58：当前系统时间</li>
+							<li>40 days, 9:47：操作系统已经启动 40 天 9 时 47 分</li>
+							<li>2 users：当前两个用户登录系统</li>
+							<li>load average: 0.00, 0.01, 0.05：负载均衡情况</li>
+						</ul>
+					</li>
+					<li>
+						第二行：Task，任务 / 进程信息
+						<ul>
+							<li>2 total：当前系统 72 个进程</li>
+							<li>1 running, 71 sleeping, 0 stopped, 0 zombie：1 个进程正在执行，71 个在睡眠，0 个已停止，0 个僵尸进程</li>
+						</ul>
+					</li>
+					<li>
+						第三行：%Cpu(s)，cpu 占用<span class="different">百分比</span>
+						<ul>
+							<li>us：user space，用户空间</li>
+							<li>sy：内核空间</li>
+							<li>ni：改变过优先级的进程占用CPU的百分比</li>
+							<li>id：ideal，空闲</li>
+							<li>wa：io 等待</li>
+							<li>hi：hard interrupt，硬中断</li>
+							<li>si：soft interrupt，软中断</li>
+						</ul>
+					</li>
+					<li>
+						第四行：内存状态信息
+						<ul>
+							<li>1883708 total：总大小</li>
+							<li>606076 free：剩余大小</li>
+							<li>201860 used：已使用</li>
+							<li>1075772 buff/cache：缓存</li>
+						</ul>
+					</li>
+					<li>
+						第五行：交换分区信息
+					</li>
+					<li>
+						第六行：进程列头
+						<ul>
+							<li>PID：process id</li>
+							<li>user：进程所有者</li>
+							<li>PR：进程优先级</li>
+							<li>NI：nice 值</li>
+							<li>VIRT</li>
+							<li>RES：</li>
+							<li>SHR</li>
+							<li>S：status，进程状态</li>
+							<li>%CPU：cpu 占用百分比</li>
+							<li>%MEM：内存占用百分比</li>
+							<li>TIME+：cpu 时间</li>
+							<li>COMMAND：启动进程时执行的命令</li>
+						</ul>
+					</li>
+				</ul>
+				<h4>排序</h4>
+				top 默认按照 CPU% 进行排序，使用 top 命令后输入<span class="different">x</span>（加粗）和<span
+					class="different">b</span>（反转底色）高亮显示排序列，使用<span class="different">
+					<</span>或 <span class="different">>
+				</span>切换其他列排序。
+				<h3>lsof</h3>
+				list open file，显示所有 linux 打开的文件，常用 -i 参数，用于查询网络地址，比如查询 80 端口的文件。
+				<pre><code class="shell">
+$ lsof -i:80
+COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME
+...
+				</code></pre>
+				<div class="tip">
+					一些文件可能查询不出来，因为当前用户权限不足，如果希望查得所有文件，使用 root 权限。
+				</div>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
 				<div>[1] 鸟哥的linux私房菜 <a
 						href="http://cn.linux.vbird.org/linux_basic/linux_basic.php">http://cn.linux.vbird.org/linux_basic/linux_basic.php</a>
+				</div>
+				<div>[2] 竹子 top 指令<a
+						href="https://www.cnblogs.com/peida/archive/2012/12/24/2831353.html">https://www.cnblogs.com/peida/archive/2012/12/24/2831353.html</a>
 				</div>
 			</p>
 		</section>
