@@ -32,6 +32,10 @@
       <h2>简介</h2>
       <p>
         redis 是 key-value 数据库，数据保存在内存上，因此可以实现高效存取。
+        <div class="show">
+          <iframe src="http://47.102.208.48:8081/" frameborder="0"
+            style="display: block; width: 100%; min-height: 800px;"></iframe>
+        </div>
       </p>
     </section>
     <section>
@@ -91,9 +95,6 @@ $ redis-cli [-h host] [-p port] [-a password]
 127.0.0.1:6379>CONFIG SET 配置项名 配置项值
         </code></pre>
         当遇到<span class="different">(error) ERR Unsupported CONFIG parameter:</span>错误时，说明该配置项不能进行动态修改，只能在启动前进行配置。
-        <pre><code class="shell">
-
-        </code></pre>
       </p>
     </section>
     <section>
@@ -222,6 +223,16 @@ $ redis-cli [-h host] [-p port] [-a password]
     <section>
       <h2>通用操作</h2>
       <p>
+        <h3>查找 key</h3>
+        keys 指令对 key（键名）进行匹配，可以使用 * 来表示任意多个任意字符，比如以下表示获得所有 key。
+        <pre><code class="shell">
+127.0.0.1:6379> KEYS *
+        </code></pre>
+        keys 将会获得所有符合条件的 key，出于性能考虑，应该使用 scan 命令进行扫描，scan 使用一个游标，每次扫描返回若干（取决于 key 的数量）key，并返回游标位置，下次扫描就可以在该位置上继续扫描。
+        <pre><code class="shell">
+127.0.0.1:6379> SCAN position
+        </code></pre>
+        上面命令表示从 position 开始扫描，redis 将返回两个结果：扫描后的下一个位置，扫描得到的 key 列表。
         <h3>判断 key 是否存在</h3>
         <pre><code class="shell">
 # 不存在：0
@@ -292,6 +303,53 @@ $ redis-cli [-h host] [-p port] [-a password]
         <div class="tip">
           channel 为渠道名，大小写敏感。
         </div>
+      </p>
+    </section>
+    <section>
+      <h2>安全</h2>
+      <p>
+        <h3>设置密码</h3>
+        默认情况 redis 服务不需要密码，可以在配置文件里设置认证密码：
+        <pre><code class="config">
+requirepass &lt;password&gt;
+        </code></pre>
+        或者使用 redis-cli 连接到 redis 后设置密码。
+        <pre><code class="shell">
+127.0.0.1:6379> CONFIG set requirepass &lt;password&gt;
+        </code></pre>
+        设置后，退出重新连接，此时进行 redis 操作就会要求先进行密码验证。
+        <pre><code class="shell">
+127.0.0.1:6379> KEYS *
+(error) NOAUTH Authentication required.
+127.0.0.1:6379> AUTH &lt;password&gt;
+        </code></pre>
+        <div class="tip">
+          redis 官方建议：由于 redis 校验密码速度过快（150k/s），因此应该使用强密码，否则容易被破解。或者不设置验证，同时禁止外网连接。
+        </div>
+        <h3>允许外网连接</h3>
+        默认情况，redis 只允许本机连接，在 redis 配置文件里有一行：
+        <pre><code class="config">
+bind 127.0.0.1 ::1
+        </code></pre>
+        bind 表示只允许 127.0.0.1 和 ::1 进行连接，::1 指的是 ipv6 的环回路地址，相当于 ipv4 的 127.0.0.1。如果希望给所有客户端进行连接，则注释掉改行再重启 redis。
+        <pre><code class="shell">
+# 使用配置文件启动 redis
+redis-server /usr/local/etc/redis.conf
+# 连接到指定 ip 和 端口的 redis
+redis-cli -h xxx.xxx.xxx.xxx -p xxxx
+        </code></pre>
+        <h3>连接数</h3>
+        redis 默认最大连接数为 10000，通过 maxclients 配置项进行修改。
+        <pre><code class="shell">
+# 获得配置
+127.0.0.1:6379> CONFIG get maxclients
+# 设置配置
+127.0.0.1:6379> CONFIT set maxclients 10000
+        </code></pre>
+        或者在启动时通过参数进行配置。
+        <pre><code class="shell">
+$ redis-server --maxclients 10000
+        </code></pre>
       </p>
     </section>
     <section class="refer">

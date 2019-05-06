@@ -29,15 +29,96 @@
       <h1 id="title">Nginx</h1>
     </hgroup>
     <section>
-      <h2>反向代理</h2>
+      <h2>简介</h2>
+      <p>
+        <div class="tip">
+          nginx 使用 # 进行单行注释。
+        </div>
+      </p>
     </section>
     <section>
       <h2>本地文件服务器</h2>
+      <p>
+        使用 root 表示本地资源的位置，比如希望 127.0.0.1:8080 访问本地位置 /www/static。
+        <pre><code class="nginx">
+http {
+  server {
+    listen 8080;
+    location / {
+      root /www/static;
+    }
+  }
+}
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>反向代理</h2>
+      <p>
+        <h3>基本使用</h3>
+        使用 127.0.0.1:8080 代理 https://www.baidu.com ，当我们（客户端）访问 127.0.0.1:8080 时，nginx 请求百度，再将请求到的结果返回给客户端。
+        <pre><code class="nginx">
+events {
+  worker_connections 2048;
+}
+http {
+  server {
+    listen 8080;
+    location / {
+      proxy_pass https://www.baidu.com;
+    }
+  } 
+}
+        </code></pre>
+        <h3>读取请求头</h3>
+        使用 $ + 请求头的方式来读取来自客户端的请求头，比如读取 remote_addr。
+        <pre><code class="nginx">
+$remote_addr
+        </code></pre>
+        <h3>添加请求头</h3>
+        <pre><code class="nginx">
+proxy_set_header Refer www.baidu.com;
+        </code></pre>
+        <h3>删除请求头</h3>
+        <pre><code class="nginx">
+proxy_set_header Refer '';
+        </code></pre>
+        <h3>添加响应头</h3>
+        在 location 内添加配置项 add_header，比如使其允许跨域。
+        <pre><code class="nginx">
+add_header Access-Control-Allow-Origin *;
+add_header Access-Control-Allow-Methods 'GET, POST, OPTIONS';
+add_header Access-Control-Allow-Headers 'DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization';
+        </code></pre>
+        <h3>移除响应头</h3>
+        当 nginx 作为代理服务器时，想要移除从目标主机（比如上面的百度）设置的响应字段，可以使用 proxy_hide_header 配置项。
+        <pre><code class="nginx">
+proxy_hide_header 'X-Frame-Options';
+        </code></pre>
+        也可以先安装 headers-more-nginx-module （安装方法见<a
+          href="https://github.com/openresty/headers-more-nginx-module#installation">此处</a>）模块再使用 more_clear_headers
+        配置项。
+        <pre><code class="nginx">
+more_clear_headers 'X-Frame-Options';
+        </code></pre>
+        当 nginx 直接作为服务器，想要隐藏本机服务器的一些字段，可以使用 fastcgi_hide_header 配置项。
+        <pre><code class="nginx">
+fastcgi_hide_header 'X-Frame-Options';
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>常用配置项</h2>
+      <p>
+        <h3>events.worker_connections</h3>
+      </p>
     </section>
     <section class="refer">
       <h2>参考文献</h2>
       <p>
-
+        <div>[1] github more_clear_headers <a
+            href="https://github.com/openresty/headers-more-nginx-module">https://github.com/openresty/headers-more-nginx-module</a>
+        </div>
       </p>
     </section>
   </article>
