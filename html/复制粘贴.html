@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title>复制粘贴</title>
@@ -10,6 +11,7 @@
 	<script src="../js/highlight.pack.js"></script>
 	<script src="../js/sidebar.js"></script>
 </head>
+
 <body>
 	<aside id="sidebar">
 		<section id="catalog">
@@ -81,7 +83,8 @@ if (window.clipboardData) {
 	alert('浏览器不支持 clipboardData');
 }
 					</code></pre>
-					当 HTML 文档存在 id 为 clipboardData 时，window.clipboardData 可以获得该元素，使得以上兼容检测认为浏览器支持 clipboardData，另一方面，直接给 window 创建全局变量 clipboardData 也同样会误导类型检测，所以最好写成以下：
+					当 HTML 文档存在 id 为 clipboardData 时，window.clipboardData 可以获得该元素，使得以上兼容检测认为浏览器支持 clipboardData，另一方面，直接给 window
+					创建全局变量 clipboardData 也同样会误导类型检测，所以最好写成以下：
 					<pre><code class="javascript">
 if (window.clipboardData instanceof DataTransfer) {
 	alert('浏览器支持 clipboardData');
@@ -98,7 +101,8 @@ if (window.clipboardData instanceof DataTransfer) {
 		<section>
 			<h2>jquery.zclip</h2>
 			<p>
-				借助 jquery.zclip 插件（基于 Zero Clipboard），可以实现所有浏览器的复制粘贴问题，原理是当按下某个 DOM 元素的时候触发事件创建一个不可见的 .swf 文件，进而实现复制粘贴的功能，所以使用该插件需要浏览器支持 flash。
+				借助 jquery.zclip 插件（基于 Zero Clipboard），可以实现所有浏览器的复制粘贴问题，原理是当按下某个 DOM 元素的时候触发事件创建一个不可见的 .swf
+				文件，进而实现复制粘贴的功能，所以使用该插件需要浏览器支持 flash。
 				<ol>
 					<li>下载文件：jquery 和 jquery.zclip，导入到 HTML 中</li>
 					<pre><code class="javascript">
@@ -176,6 +180,29 @@ document.body.removeChild(textarea); // 移除文本域
 			</p>
 		</section>
 		<section>
+			<h2>复制功能</h2>
+			<p>
+				综上，不依赖插件的情况下实现一个复制功能的代码为：
+				<pre><code class="javascript">
+function copy(message) {
+	if (DataTransfer && window.clipboardData instanceof DataTransfer) {
+		// IE
+		window.clipboardData.setData('text', message);
+	} else {
+		// 非 IE
+		var area = document.createElement('textarea'); // 用于临时暂存复制的代码的文本域
+		document.body.appendChild(area);
+		area.value = message;
+		area.select(); // 选中
+		document.execCommand('copy'); // 复制
+		document.body.removeChild(area);
+	}
+	
+}
+				</code></pre>
+			</p>
+		</section>
+		<section>
 			<h2>禁用复制</h2>
 			<p>
 				复制大抵分两种，右键-复制 以及 Ctrl + C。
@@ -217,10 +244,14 @@ document.body.oncopy = function (event) {
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
-				<div>[1] patricklodder Github <a href="https://github.com/patricklodder/jquery-zclip">https://github.com/patricklodder/jquery-zclip</a></div>
-				<div>[2] MDN document.execCommand <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand">https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand</a></div>
+				<div>[1] patricklodder Github <a
+						href="https://github.com/patricklodder/jquery-zclip">https://github.com/patricklodder/jquery-zclip</a></div>
+				<div>[2] MDN document.execCommand <a
+						href="https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand">https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand</a>
+				</div>
 			</p>
 		</section>
 	</article>
 </body>
+
 </html>

@@ -438,6 +438,56 @@ Hello world
 			</p>
 		</section>
 		<section>
+			<h2>装饰器</h2>
+			<p>
+				装饰器为一种语法糖，实质上是一个函数或类，将被装饰器装饰的函数作为参数传入。当装饰器是函数时，其他执行顺序如下：
+				<pre><code class="python">
+def decorator(foo):
+	def wrapper(*args):
+		print 'I am wrapper in decorator'
+		return foo(*args)
+	return wrapper
+
+@decorator
+def foo():
+  pass
+
+foo('hello world')
+				</code></pre>
+				<span class="different">foo()</span>将 foo 作为参数传递给 decorator 并执行，decorator 执行后获得 wrapper 函数，将 'hello world'
+				作为参数传递给 wrapper 并执行，执行得到的返回值便是 foo 的返回值，等价于以下代码：
+				<pre><code class="python">
+def decorator(foo):
+	def wrapper(*args):
+		print 'I am wrapper in decorator'
+		return foo(*args)
+	return wrapper
+
+def foo():
+  pass
+
+decorator(foo)('hello world')
+				</code></pre>
+				由于装饰器本质是函数，所以可以使用装饰器前（@xxx）执行函数并返回一个函数，将返回的函数作为装饰器，实现更灵活的操作。
+				<pre><code class="python">
+def use_decorator(option):
+	def decorator(foo):
+		def wrapper(*args):
+			print 'I am wrapper in decorator in use_decorator'
+			return foo(*args);
+		return wrapper
+	return decorator
+
+@use_decorator('before hello world')
+def foo():
+  pass
+
+foo('hello world')
+				</code></pre>
+
+			</p>
+		</section>
+		<section>
 			<h2>math</h2>
 			<p>
 				使用 math 包来进行运算：

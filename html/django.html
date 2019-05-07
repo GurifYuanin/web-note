@@ -55,7 +55,16 @@ $ django-admin startproject 项目名
           </div>
         </div>
         <h3>新增应用</h3>
-        通过命令行方式为该项目（project）添加应用（app）。
+        django 默认自带以下应用，在 settings.py 的 INSTALLED_APP 中可进行增删：
+        <ul>
+          <li>admin：提供管理员界面来管理数据库</li>
+          <li>auth：认证系统</li>
+          <li>contenttypes</li>
+          <li>sessions：session 管理</li>
+          <li>messages：消息管理</li>
+          <li>staticfiles：数据统计</li>
+        </ul>
+        我们可以通过命令行方式为该项目（project）添加应用（app）。
         <pre><code class="shell">
 $ python manage.py startapp 应用名
         </code></pre>
@@ -73,13 +82,7 @@ $ python manage.py runserver [端口号]
         <pre><code class="python">
 ROOT_URLCONF = 'urls'
         </code></pre>
-        先在 settings.py 注册应用，假如应用名字为 app，则在<span class="different">INSTALLED_APPS</span>追加 app 一项。
-        <pre><code class="python">
-INSTALLED_APPS = [
-  'app',
-];
-        </code></pre>
-        然后查看 urls.py 文件：
+        在 app 下新增 urls.py 文件，编辑 urls.py 文件：
         <pre><code class="python">
 # 根 urls.py
 from django.conf.urls import url, include;
@@ -113,7 +116,7 @@ urlpatterns = [
       <h2>模型</h2>
       <p>
         <h3>配置数据库</h3>
-        先在 setings.py 文件配置数据库连接。
+        先在 setings.py 文件配置数据库连接，以配置 mysql 数据库为例子：
         <pre><code class="python">
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -142,6 +145,18 @@ class 表名(models.Model):
   def 自定义函数(self):
     # pass;
         </code></pre>
+        <h3>建表</h3>
+        先在 settings.py 注册应用，假如应用名字为 app，则在<span class="different">INSTALLED_APPS</span>追加 app 一项。
+        <pre><code class="python">
+INSTALLED_APPS = [
+  'app.apps.AppConfig',
+];
+        </code></pre>
+        app.apps.AppConfig 指的就是 app/apps.py 的 AppConfig 类，添加完该项之后 django 才会创建 app 应用的表。然后需要在命令行执行以下命令：
+        <pre><code class="shell">
+$ python manage.py migrate
+        </code></pre>
+        该命令会检查 settings.py 里的 INSTALLED_APPS，根据前面的定义的模型，创建必要的数据库表。
         <h3>使用模型</h3>
         获得模型后进行表查询等操作。
         <pre><code class="python">
@@ -157,6 +172,55 @@ def index(request):
   d.save();
   # 删除一条记录
   d.delete();
+        </code></pre>
+        <h3>Did you install mysqlclient or MySQL-python?</h3>
+        使用<span class="different">python manage.py runserver</span>启动后会得到一堆报错，提示<span class="different">Did you install
+          mysqlclient or
+          MySQL-python?</span>，在项目下的 __init__.py 内
+        添加以下代码：
+        <pre><code class="python">
+import pymysql;
+
+pymysql.install_as_MySQLdb();
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>认证</h2>
+      <p>
+        django 默认自带了认证系统 django.contrib.auth，执行<span class="different">python manage.py migrate</span>后会自动创建相应的数据库表。
+        <ul>
+          <li>auth_user：用户</li>
+          <li>auth_group：群组</li>
+          <li>auth_user_groups</li>
+          <li>auth_permission：权限</li>
+          <li>auth_group_permissions</li>
+          <li>auth_user_user_permissions</li>
+        </ul>
+        使用该认证系统的模型的方法为：
+        <pre><code class="python">
+from django.contrib.auth.models import User, Group, ...;
+        </code></pre>
+        <h3>创建超级管理员</h3>
+        超级管理员可以登录管理后台，对数据库表数据进行操作。在命令行中进行超级管理员的创建：
+        <pre><code class="shell">
+# 创建时需要输入管理员的用户名、邮箱和密码，使用用户名和密码进行登录
+$ python manage.py createsuperuser
+Username:...
+Email address:...
+Password: **********
+Password (again): *********
+Superuser created successfully.
+        </code></pre>
+        随后访问 /admin/ 登录管理后台。
+        <h3>往 admin 注册应用</h3>
+        在新建应用（startapp）后，默认情况，管理员平台无法管理该应用，只有通过应用下的 admin.py 向 django.contrib.admin 注册模型后，才能被管理系统修改。
+        <pre><code class="python">
+from django.contrib import admin
+
+from .models import Model
+
+admin.site.register(Model)
         </code></pre>
       </p>
     </section>
@@ -217,7 +281,8 @@ def index(request):
     <section>
       <h2>调试</h2>
       <p>
-        进行交互式调试。
+        <h3>交互式调试</h3>
+        在命令行进行交互式调试。
         <pre><code class="shell">
 $ python manage.py shell
 Python 2.7.10 (default, Feb 22 2019, 21:17:52)
@@ -227,13 +292,59 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>>
         </code></pre>
         之后可以直接 import 模块进行调试。
+        <pre><code class="shell">
+>>> from django.contrib.auth.models import User;
+>>> user = user.objects.get_user(username = 'Mick');
+        </code></pre>
+        <h3>Web 调试面板</h3>
+        为 django 应用添加右侧调试面板（django-debug-toolbar）。
+        <ol>
+          <li>
+            使用 pip 安装 django-debug-toolbar
+            <pre><code class="shell">
+$ pip install django-debug-toolbar
+            </code></pre>
+          </li>
+          <li>在 settings.py 中的 INSTALLED_APPS 添加 debug_toolbar</li>
+          <li>
+            在 urls.py 中新增以下代码：
+            <pre><code class="python">
+from django.conf.urls import url, include
+from django.conf import settings
+
+if settings.DEBUG:
+  import debug_toolbar
+  urlpatterns = [
+    url(r'__debug__/', include(debug_toolbar.urls))
+  ] + urlpatterns
+            </code></pre>
+          </li>
+          <li>在 settings.py 中的 MIDDLEWARE 添加 debug_toolbar.middleware.DebugToolbarMiddleware</li>
+          <li>
+            在 settings.py 新增以下代码，表示调试面板功能会在 127.0.0.1 时开启，否则不开启调试面板：
+            <pre><code class="python">
+INTERNAL_IPS = [
+  '127.0.0.1'
+]
+            </code></pre>
+          </li>
+        </ol>
       </p>
     </section>
     <section class="refer">
       <h2>参考文献</h2>
       <p>
-        <div>[1] django1.11 model <a
+        <div>[1] django1.11 Models <a
             href="https://docs.djangoproject.com/en/1.11/topics/db/models/">https://docs.djangoproject.com/en/1.11/topics/db/models/</a>
+        </div>
+        <div>[2] django1.11 Getting started <a
+            href="https://docs.djangoproject.com/en/1.11/intro/">https://docs.djangoproject.com/en/1.11/intro/</a>
+        </div>
+        <div>[3] django1.11 Using the Django authentication system <a
+            href="https://docs.djangoproject.com/en/1.11/topics/auth/default/#how-to-log-a-user-in">https://docs.djangoproject.com/en/1.11/topics/auth/default/#how-to-log-a-user-in</a>
+        </div>
+        <div>[4] django-debug-toolbar <a
+            href="https://django-debug-toolbar.readthedocs.io/en/latest/installation.html">https://django-debug-toolbar.readthedocs.io/en/latest/installation.html</a>
         </div>
       </p>
     </section>

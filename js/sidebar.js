@@ -35,7 +35,7 @@ function copy(message) {
   document.body.appendChild(area);
   if (DataTransfer && window.clipboardData instanceof DataTransfer) {
     // IE
-    window.clipboardData.setData('text', el.innerText.replace(type, ''));
+    window.clipboardData.setData('text', message);
   } else {
     // 非 IE
     area.value = message;
