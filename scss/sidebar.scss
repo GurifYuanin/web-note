@@ -489,7 +489,7 @@ body {
     font-size: .95rem;
     line-height: 1.5rem;
     letter-spacing: .25px;
-    overflow: hidden;
+    // overflow: hidden;
 
     // 屏幕大于等于 600px 时的样式
     @media (min-device-width:$deviceThreshold) {
@@ -769,6 +769,7 @@ body {
     }
     /* 术语 */
     .definition {
+        position: relative;
         margin: 1px;
         border-radius: .2rem;
         padding: 1px;
@@ -777,9 +778,11 @@ body {
 
         color: $definitionColor;
         background-color: $definitionBackGroundColor;
+        cursor: help;
     }
     /* 突出文字 */
     .different {
+        position: relative;
         padding: 2px 4px;
         margin: 0 2px;
 
@@ -790,6 +793,55 @@ body {
         cursor: help;
         &:hover {
             background-color: #00889b;
+        }
+    }
+    .differentSearch {
+        display: none;
+        min-width: 500px;
+        position: absolute;
+        left: 0;
+        top: -100%;
+        background-color: white;
+        border: solid 1px black;
+        border-radius: 10px;
+        color: black;
+        padding: 20px;
+        transform: translate(0%, -100%);
+        box-shadow: 0 0 5px 1px rgba(127, 127, 127, .5);
+        overflow: visible;
+        cursor: default;
+        .searchResultClose {
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin: 20px;
+            color: gray;
+            &:hover {
+                cursor: pointer;
+                color: red;
+            }
+        }
+        em {
+            color: red;
+        }
+        a {
+            color: black;
+            border-radius: 0;
+            &:hover {
+                color: white;
+            }
+        }
+        &::before{
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-bottom: 1px solid #000;
+            border-right: 1px solid #000;
+            transform: rotate(45deg) translateX(16px);
         }
     }
     /* 指令 */

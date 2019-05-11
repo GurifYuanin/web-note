@@ -1,11 +1,11 @@
 {
   "devDependencies": {
-    "commitizen": "^2.9.6",
+    "commitizen": "^3.1.1",
     "cz-conventional-changelog": "^2.1.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-autoprefixer": "^5.0.0",
     "gulp-html-minify": "^0.0.14",
-    "gulp-imagemin": "^4.1.0",
+    "gulp-imagemin": "^5.0.3",
     "gulp-minify-css": "^1.2.4",
     "gulp-sass": "^4.0.1",
     "gulp-uglify-es": "^1.0.4",

@@ -257,7 +257,7 @@ Expires: Sun Sep 16 2018 22:58:49 GMT
 						<li>must-revalidate: 如果页面过期，则去服务器进行获取</li>
 					</ul>
 				</p>
-				<h3>Last-Modified</h3>
+				<h3>If-Modified-Since & Last-Modified</h3>
 				<p>
 					客户端向服务器请求资源，服务器返回的报文会带有 Last-Modified 头部信息，表示该资源最后修改时间。
 					<pre><code class="http">
@@ -269,7 +269,7 @@ If-Modified-Since: Sun Sep 16 2018 22:58:49 GMT
 					</code></pre>
 					服务器对比这个 If-Modified-Since 和文件的最后修改时间，如果一致，则返回状态码 304 ，否则返回资源。
 				</p>
-				<h3>ETag</h3>
+				<h3>If-Match & ETag</h3>
 				<p>
 					Entity Tag，服务器返回的资源携带该头信息，由服务器自己决定值为多少（通过某种方式将资源转化散列值），分为强验证和弱验证。
 					<pre><code class="http">
@@ -292,6 +292,14 @@ If-Match: "33a64df551425fcc55e4d42a148795d9f25f89d4"
 						<li>SAMEORIGIN：仅在同源时才可以嵌入</li>
 						<li>ALLOW-FROM uri：仅允许指定 uri 可以嵌入</li>
 						<li>不设置：允许任何页面嵌入</li>
+					</ul>
+				</p>
+				<h3>DNT</h3>
+				<p>
+					DNT，Do Not Track，表明了用户对于网站追踪的偏好。它允许用户指定自己是否更注重个人隐私还是定制化内容。
+					<ul>
+						<li>1：用户不愿意目标站点追踪用户个人信息</li>
+						<li>0：愿意目标站点追踪用户个人信息</li>
 					</ul>
 				</p>
 			</p>
@@ -530,12 +538,19 @@ Content-Type: application/json; charset=utf-8
 					<h3>403</h3>
 					<p>
 						<img class="http-version-img" src="../images/http_1.0.png">
-						403 表示客户端进行的请求由于某种原因（权限、未授权等）被服务器端拒绝了。（Forbidden，禁止）
+						403 表示客户端进行的请求由于某种原因（权限、未授权等）被服务器端拒绝了。（Forbidden，禁止）
+						<div class="tip">
+							从 rfc 的原话来讲，服务器理解了该请求，但是拒绝去执行。
+						</div>
 					</p>
 					<h3>404</h3>
 					<p>
 						<img class="http-version-img" src="../images/http_1.0.png">
 						404 表示服务器端找不到该资源。（Not Found，未找到）
+					</p>
+					<h3>405</h3>
+					<p>
+						405 表示方法不允许。（Method Not Allow
 					</p>
 					<h3>500</h3>
 					<p>
@@ -571,7 +586,8 @@ Content-Type: application/json; charset=utf-8
 			<h2>参考文献</h2>
 			<p>
 				<div>[1] Fielding, Roy T.; Gettys, James; Mogul, Jeffrey C.; Nielsen, Henrik Frystyk; Masinter, Larry; Leach,
-					Paul J.; Berners-Lee, Tim. Hypertext Transfer Protocol – HTTP/1.1. IETF. June 1999. RFC 2616. </div>
+					Paul J.; Berners-Lee, Tim. Hypertext Transfer Protocol – HTTP/1.1. IETF. June 1999. RFC 2616. <a
+						href="https://www.rfc-editor.org/rfc/rfc2616.txt">https://www.rfc-editor.org/rfc/rfc2616.txt</a> </div>
 				<div>[2] W3C School HTTP 方法：GET 对比 POST <a
 						href="http://www.w3school.com.cn/tags/html_ref_httpmethods.asp">http://www.w3school.com.cn/tags/html_ref_httpmethods.asp</a>
 				</div>
@@ -581,6 +597,9 @@ Content-Type: application/json; charset=utf-8
 				</div>
 				<div>[5] 彻底理解浏览器缓存机制 <a
 						href="https://www.cnblogs.com/shixiaomiao1122/p/7591556.html">https://www.cnblogs.com/shixiaomiao1122/p/7591556.html</a>
+				</div>
+				<div>[6] MDN DNT <a
+						href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/DNT">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/DNT</a>
 				</div>
 			</p>
 		</section>
