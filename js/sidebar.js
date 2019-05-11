@@ -205,7 +205,7 @@ $(function () {
     ['树和图', '排序', '队列和栈', '算法规范'],
     ['指令', '目录结构'],
     ['effect'],
-    ['路径匹配', '浏览器渲染', '设计策略', '头疼的兼容', '命名规范', '字符编码', 'bat', '软件设计师']
+    ['路径匹配', '浏览器渲染', '设计策略', '头疼的兼容', '命名规范', '字符编码', 'bat', '软件设计师', 'pwa']
   ];
   // 插入侧栏
   var str = '';
@@ -1020,7 +1020,67 @@ $(function () {
     }
   })();
 
-
+  (function () {
+    // 点击关键字进行百度搜索
+    $('.different, .definition').click(function () {
+      var that = $(this);
+      var hasSearched = that.attr('has-searched');
+      var keyword = that.text();
+      if (hasSearched) return;
+      $.ajax({
+        method: 'GET',
+        url: 'http://47.102.208.48:8082/api/search/',
+        data: {
+          keyword: keyword,
+          access_token: '1b3f5b75ffbb73abc4f717d1bb17eaadae9127f8a35466cd721c9ac'
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.items.length > 0) {
+            that.attr('has-searched', 'true');
+            var list = data.items.filter(function (item) {
+              return !item.is_ad;
+            });
+            var searchResultEl = document.createElement('div');
+            var headerEl = document.createElement('div');
+            var closeEl = document.createElement('span');
+            closeEl.innerText = '✘';
+            closeEl.setAttribute('class', 'searchResultClose');
+            closeEl.onclick = function (event) {
+              that.empty();
+              that.text(keyword);
+              that.removeAttr('has-searched');
+              event.stopPropagation();
+            }
+            headerEl.innerText = '相关搜索';
+            searchResultEl.appendChild(closeEl);
+            headerEl.style.textAlign = 'center';
+            searchResultEl.setAttribute('title', '点击关闭');
+            searchResultEl.appendChild(headerEl);
+            searchResultEl.setAttribute('class', 'differentSearch');
+            // searchResultEl.onclick = closeSearchResultEl;
+            for (var i = 0; i < list.length; i++) {
+              var div = document.createElement('div');
+              var a = document.createElement('a');
+              div.appendChild(a);
+              a.setAttribute('href', list[i].href);
+              a.setAttribute('title', list[i].description);
+              a.setAttribute('target', '_blank');
+              a.onclick = function (event) {
+                event.stopPropagation();
+              }
+              a.innerHTML = list[i].title;
+              searchResultEl.appendChild(div);
+            }
+            that.append(searchResultEl);
+            $(searchResultEl).fadeIn();
+          } else {
+            notify.info({ content: '查无相关内容' });
+          }
+        }
+      })
+    });
+  })();
 
   // 添加评论区
   // 添加一条评论

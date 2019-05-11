@@ -1,28 +1,33 @@
+var os = require('os');
 var gulp = require('gulp'),
-       sass = require('gulp-sass'), // sass 预编译
-       autoprefixer = require('gulp-autoprefixer'), // css 前缀自动补全
-       minifycss = require('gulp-minify-css'), // css 压缩
-       minifyimg = require('gulp-imagemin'), // 图片压缩
-       // minifyjs = require('gulp-uglify'), // js 压缩
-       uglify = require('gulp-uglify-es').default, // js 压缩
-       gutil = require('gulp-util');
+    sass = require('gulp-sass'), // sass 预编译
+    autoprefixer = require('gulp-autoprefixer'), // css 前缀自动补全
+    minifycss = require('gulp-minify-css'), // css 压缩
+    minifyimg = require('gulp-imagemin'), // 图片压缩
+    // minifyjs = require('gulp-uglify'), // js 压缩
+    uglify = require('gulp-uglify-es').default, // js 压缩
+    gutil = require('gulp-util');
 // 复制 html 文件（不压缩因为文档中一些地方需要空白）
-gulp.task('copyhtml', function() {
+var isWin = /windows/i.test(os.type()); // 是否为 window 操作系统
+gulp.task('copyhtml', function (done) {
     gulp.src(['./html/*.html']).pipe(gulp.dest('./dist/html'));
-    gulp.src(['./html/*.html']).pipe(gulp.dest('G:/web/site/public/other/web-note/html'));
+    isWin && gulp.src(['./html/*.html']).pipe(gulp.dest('G:/web/site/public/other/web-note/html'));
+    done();
 });
 // 复制 demo 文件
-gulp.task('copydemo', function() {
+gulp.task('copydemo', function (done) {
     gulp.src('./demo/*.html').pipe(gulp.dest('./dist/demo'));
-    gulp.src('./demo/*.html').pipe(gulp.dest('G:/web/site/public/other/web-note/demo'));
+    isWin && gulp.src('./demo/*.html').pipe(gulp.dest('G:/web/site/public/other/web-note/demo'));
+    done();
 });
 // 复制 css 文件
-gulp.task('copycss', function(){
+gulp.task('copycss', function (done) {
     gulp.src(['./css/**']).pipe(gulp.dest('./dist/css'));
-    gulp.src(['./css/**']).pipe(gulp.dest('G:/web/site/public/other/web-note/css'));
+    isWin && gulp.src(['./css/**']).pipe(gulp.dest('G:/web/site/public/other/web-note/css'));
+    done();
 });
 // 监听 sass 编译
-gulp.task('sass', function () {
+gulp.task('sass', function (done) {
     gulp.src(['./scss/dark.scss', './scss/bright.scss'])
         .pipe(sass({
             outputStyle: 'compressed'
@@ -36,34 +41,37 @@ gulp.task('sass', function () {
         .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
         .pipe(gulp.dest('css'));
     gulp.src('./css/*.css').pipe(gulp.dest('./dist/css'));
-    gulp.src('./css/*.css').pipe(gulp.dest('G:/web/site/public/other/web-note/css'));
+    isWin && gulp.src('./css/*.css').pipe(gulp.dest('G:/web/site/public/other/web-note/css'));
+    done();
 });
 // 压缩图片
-gulp.task('minifyimg', function() {
+gulp.task('minifyimg', function (done) {
     gulp.src('./images/**')
-             .pipe(minifyimg())
-             .pipe(gulp.dest('./dist/images'));
-    gulp.src('./dist/images').pipe(gulp.dest('G:/web/site/public/other/web-note/images'));
+        .pipe(minifyimg())
+        .pipe(gulp.dest('./dist/images'));
+    isWin && gulp.src('./dist/images').pipe(gulp.dest('G:/web/site/public/other/web-note/images'));
+    done();
 });
 // 压缩 js 文件
-gulp.task('minifyjs', function() {
+gulp.task('minifyjs', function (done) {
     gulp.src('./js/*.js')
-             .pipe(uglify({
-                mangle: true, // 是否修改变量名
-                compress: true // 是否完全压缩
-             }))
-             .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
-             .pipe(gulp.dest('./dist/js'));
-    gulp.src('./dist/js').pipe(gulp.dest('G:/web/site/public/other/web-note/js'));
+        .pipe(uglify({
+            mangle: true, // 是否修改变量名
+            compress: true // 是否完全压缩
+        }))
+        .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
+        .pipe(gulp.dest('./dist/js'));
+    isWin && gulp.src('./dist/js').pipe(gulp.dest('G:/web/site/public/other/web-note/js'));
+    done();
 });
 
 // 监听常用文件夹
-gulp.task('default', function() {
-    gulp.watch('./scss/*.scss', ['sass']);
-    // gulp.watch('./images/*', ['minifyimg']);
-    // gulp.watch('./js/*.js', ['minifyjs']);
+gulp.task('default', function () {
+    gulp.watch('./scss/*.scss', gulp.series('sass'));
+    // gulp.watch('./images/*', gulp.parallel('minifyimg'));
+    // gulp.watch('./js/*.js', gulp.parallel('minifyjs'));
 });
 
 
 // 直接执行
-gulp.task('exec', ['copyhtml', 'copydemo',  'copycss', 'sass', 'minifyimg', 'minifyjs']);
+gulp.task('exec', gulp.parallel(...['copyhtml', 'copydemo', 'copycss', 'sass', 'minifyimg', 'minifyjs']));
