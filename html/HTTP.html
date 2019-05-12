@@ -580,6 +580,15 @@ Content-Type: application/json; charset=utf-8
 				<p>
 					使用端口：443。
 				</p>
+				<h3>加密</h3>
+				<p>
+					对称加密 + 非对称加密的方式。
+					<ol>
+						<li>客户端生成一个<span class="different">对称秘钥</span>，使用公钥（公开，所有人都知道的秘钥）进行加密</li>
+						<li>服务器收到加密后的秘钥，使用私钥（只有服务器持有）进行解密，获得<span class="different">对称秘钥</span></li>
+						<li>之后的通信使用该秘钥进行加密和解密</li>
+					</ol>
+				</p>
 			</p>
 		</section>
 		<section class="refer">
