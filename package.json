@@ -1,4 +1,20 @@
 {
+  "name": "web-note",
+  "version": "0.0.1",
+  "description": "Web note about html, css, js etc",
+  "main": "html/index.html",
+  "author": "GurifYuanin",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:GurifYuanin/web-note.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GurifYuanin/web-note/issues"
+  },
+  "dependencies": {
+    "tar": ">=4.4.2"
+  },
   "devDependencies": {
     "commitizen": "^3.1.1",
     "cz-conventional-changelog": "^2.1.0",
@@ -14,7 +30,9 @@
     "orchestrator": "^0.3.8"
   },
   "script": {
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "dev": "gulp default",
+    "build": "gulp exec"
   },
   "config": {
     "commitizen": {
