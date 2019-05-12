@@ -31,20 +31,14 @@
             <p>
                 在线文档可在个人网站查看，其版本可能会比 Github 上的代码有所滞后。
                 <div class="show">
-                    <a href="https://gurifyuanin.github.io/web-note/dist/html/index.html">https://gurifyuanin.github.io/web-note/dist/html/index.html</a>
+                    <a href="https://gurifyuanin.github.io/web-note/html/index.html">https://gurifyuanin.github.io/web-note/html/index.html</a>
                 </div>
             </p>
         </section>
         <section>
             <h3>开发</h3>
             <p>
-                项目使用 gulp 打包静态资源，安装 npm 依赖包后使用以下命令进行开发：
-                <code>
-                    # 监听资源变更，打包 sass 等
-                    $ gulp default
-                    # 打包所有资源
-                    $ gulp exec
-                </code>
+                项目使用 gulp 打包静态资源，安装 npm 依赖包后使用以下命令进行开发<code> $ gulp default </code>。
             </p>
         </section>
         <section class="refer">
