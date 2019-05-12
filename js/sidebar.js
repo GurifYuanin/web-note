@@ -1029,7 +1029,7 @@ $(function () {
       if (hasSearched) return;
       $.ajax({
         method: 'GET',
-        url: 'http://47.102.208.48:8082/api/search/',
+        url: '//47.102.208.48:8082/api/search/',
         data: {
           keyword: keyword,
           access_token: '1b3f5b75ffbb73abc4f717d1bb17eaadae9127f8a35466cd721c9ac'
