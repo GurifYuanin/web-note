@@ -1077,6 +1077,12 @@ $(function () {
           } else {
             notify.info({ content: '查无相关内容' });
           }
+        },
+        error: function () {
+          notify.info({
+            type: 'error',
+            content: '查询出错'
+          })
         }
       })
     });
