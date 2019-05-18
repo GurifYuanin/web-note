@@ -220,6 +220,74 @@ pymysql.install_as_MySQLdb();
       </p>
     </section>
     <section>
+      <h2>缓存</h2>
+      <p>
+        使用 redis 对部分数据进行缓存。
+        <h3>安装</h3>
+        使用 pip 安装 django-redis 。
+        <pre><code class="shell">
+$ pip install django-redis
+        </code></pre>
+        <h3>配置</h3>
+        在 settings.py 文件中追加以下项目进行配置：
+        <pre><code class="python">
+CACHES = {
+  "default": {
+    "BACKEND": "django_redis.cache.RedisCache",
+    "LOCATION": "redis://127.0.0.1:6379",
+    "OPTIONS": {
+      "CLIENT_CLASS": "django_redis.client.DefaultClient",
+    }
+  }
+}
+        </code></pre>
+        主要为配置<span class="different">LOCATION</span>一项，即 redis 服务器地址，可以具体到连接哪个数据库：
+        <pre><code class="python">
+"LOCATION": "redis://127.0.0.1:6379/1",
+        </code></pre>
+        OPTIONS 中可添加的其他配置项有：
+        <ul>
+          <li>PICKLE_VERSION: 选择 pickle 作为序列化数据工具，可以设置具体版本号，也可以设置为 -1 表示最新版本，默认开启</li>
+          <li>SOCKET_CONNECT_TIMEOUT：套接字连接超时时间，单位秒</li>
+          <li>SOCKET_TIMEOUT：套接字连接后读写超时时间，单位秒</li>
+          <li>COMPRESSOR：是否开启压缩，默认不开启</li>
+          <li>IGNORE_EXCEPTIONS：读写 redis 时是否不触发异常（True / Fasle）</li>
+          <li>
+            CONNECTION_POOL_KWARGS
+            <ul>
+              <li>max_connections：最大连接数</li>
+            </ul>
+          </li>
+        </ul>
+        除此之外，也可以通过声明全局变量来配置 django-redis 参数：
+        <ul>
+          <li>DJANGO_REDIS_LOGGER：django 日志文件地址</li>
+          <li>DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS：是否忽视 redis 异常日志（True / False）</li>
+          <li>设置 redis 为 session 存储数据库，设置方法参见以下</li>
+        </ul>
+        <pre><code class="python">
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+        </code></pre>
+        <h3>使用</h3>
+        <pre><code class="python">
+from django.core.cache import cache
+# 读取
+cache.get(key)
+# 设置
+cache.set(key, value, timeout=seconds)
+# 读取过期时间（秒）
+cache.ttl(key)
+# 设置过期时间
+cache.expire(key, timeout=seconds)
+cache.persist(key)
+# 扫描
+iter = cache.iter_keys(pattern)
+next(iter)
+        </code></pre>
+      </p>
+    </section>
+    <section>
       <h2>请求与响应</h2>
       <p>
         <h3>HttpRequest</h3>

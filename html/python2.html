@@ -303,6 +303,7 @@ print g; # => 2
 			<p>
 				<h3>声明与使用类</h3>
 				<pre><code class="python">
+# 创建类
 class ClassName:
 	staticProperty = initValue;
 	__privateProperty = value; # 私有方法，只能通过 self.__privateProperty 访问
@@ -318,8 +319,12 @@ class ClassName:
 
 	def __del__(self):
 		# 实例对象呗销毁时调用
+		
 
+# 创建实例
 instance = ClassName(params);
+# 获得类所有方法和属性
+dir(instance)
 # 判断是否有属性
 hasattr(instance, 'instanceProperty');
 # 获取属性
