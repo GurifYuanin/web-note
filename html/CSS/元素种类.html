@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+	<title>元素种类</title>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">元素种类</h1>
+		</hgroup>
+		<section>
+			<h2>分类</h2>
+			<p>
+				CSS中，元素可以从两个方面进行分类。<br>
+				<ul>
+					<li>一是从是否可替换区分，分为<span class="definition">可替换元素</span>与<span class="definition">不可替换元素</span></li>
+					<li>二是从显示效果区分，分为<span class="definition">block</span>、<span class="definition">inline</span>、<span
+							class="definition">inline-block</span>、<span class="definition">run-in</span>等</li>
+				</ul>
+				我们可以用 display 属性来进行修改，这里只解释第二种分类方式。
+			</p>
+		</section>
+		<section>
+			<h2>block</h2>
+			<p>
+				<h3>特点</h3>
+				<ol>
+					<li>每个元素占整一行。</li>
+					<li>高度 (height) 、宽度 (width) 、行高 (line-height) 以及内外边距 (padding + margin) 都可设置。</li>
+				</ol>
+				<h3>常见元素</h3>
+				<ol>
+					<li>div</li>
+					<li>p</li>
+					<li>h1~h6</li>
+					<li>table</li>
+					<li>label</li>
+					<li>form</li>
+					<li>table</li>
+					<li>ol</li>
+					<li>ul</li>
+					<li>li</li>
+					<li>pre</li>
+				</ol>
+		</section>
+		<section>
+			<h2>inline</h2>
+			<p>
+				<h3>特点</h3>
+				<ol>
+					<li>只占领元素自身的大小，不同元素可以在同一行上。</li>
+					<li>高度 (height) 、宽度 (width) 及顶部和底部外边距 (margin-top + margin-bottom) 不可设置。</li>
+				</ol>
+				<h3>常用元素</h3>
+				<ul>
+					<li>a</li>
+					<li>b / strong</li>
+					<li>em</li>
+					<li>i</li>
+					<li>u</li>
+					<li>q</li>
+					<li>s / strike</li>
+					<li>span</li>
+					<li>img</li>
+					<li>textarea</li>
+					<li>code</li>
+					<li>sup / sub</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>inline-block</h2>
+			<p>
+				<h3>特点</h3>
+				<p>
+					<ol>
+						<li>只占领元素自身的大小，不同元素可以在同一行上。</li>
+						<li>高度 (height) 、宽度 (width) 、行高 (line-height) 以及内外边距 (padding + margin) 都可设置。</li>
+					</ol>
+				</p>
+				<h3>多余空格</h3>
+				<p>
+					若元素成为了 inline-block 元素，那么如果：
+					<pre><code class="html">
+&lt;div style="display: inline-block; border: solid white 1px;">hello&lt;/div>
+&lt;div style="display: inline-block; border: solid white 1px;">world&lt;/div>
+					</code></pre>
+					<div class="show">
+						<div style="display: inline-block; border: solid white 1px;">hello</div>
+						<div style="display: inline-block; border: solid white 1px;">world</div>
+					</div>
+					hello 和 world 会有一个空格，因为实际上写的代码是这样的：
+					<pre><code class="html">
+&lt;div style="display: inline-block; border: solid white 1px;">hello&lt;/div><span class="strong">回车</span>
+&lt;div style="display: inline-block; border: solid white 1px;">world&lt;/div>
+					</code></pre>
+					解决方法一：不要这个回车，特别是当多个 inline-block 元素时，可以这样写：
+					<pre><code class="html">
+&lt;ul class="inline-block-ul">
+	&lt;li>
+		要点一
+	&lt;/li>&lt;li>
+		要点二
+	&lt;/li>&lt;li>
+		要点三
+	&lt;/li>&lt;li>
+		要点四
+	&lt;/li>
+&lt;/ul>
+&lt;style>
+.inline-block-ul > li {
+	display: inline-block;
+}
+&lt;/style>
+					</code></pre>
+					<div class="show">
+						<ul class="inline-block-ul">
+							<li>
+								要点一
+							</li>
+							<li>
+								要点二
+							</li>
+							<li>
+								要点三
+							</li>
+							<li>
+								要点四
+							</li>
+						</ul>
+						<style>
+							.inline-block-ul>li {
+								display: inline-block;
+							}
+						</style>
+					</div>
+					解决方法二：不要闭合标签。
+					<pre><code class="html">
+&lt;ul class="inline-block-ul">
+	&lt;li>要点一
+	&lt;li>要点二
+	&lt;li>要点三
+	&lt;li>要点四
+&lt;/ul>
+					</code></pre>
+					<div class="show">
+						<ul class="inline-block-ul">
+							<li>要点一
+							<li>要点二
+							<li>要点三
+							<li>要点四
+						</ul>
+					</div>
+					解决方法三：让父元素 letter-spacing 活 word-spacing 为负数，子元素不变。letter-spacing 表示字母间距，word-spacing 表示单词间距。
+					<pre><code class="html">
+&lt;ul class="inline-block-ul letter-spacing">
+	&lt;li>要点一&lt;/li>
+	&lt;li>要点二&lt;/li>
+	&lt;li>要点三&lt;/li>
+	&lt;li>要点四&lt;/li>
+&lt;/ul>
+&lt;style>
+	.letter-spacing {
+		letter-spacing: -3px;
+	}
+	.letter-spacing > li {
+		letter-spacing: 0px;
+	}
+&lt;/style>
+					</code></pre>
+					<div class="show">
+						<ul class="inline-block-ul letter-spacing">
+							<li>要点一</li>
+							<li>要点二</li>
+							<li>要点三</li>
+							<li>要点四</li>
+						</ul>
+						<style>
+							.letter-spacing {
+								letter-spacing: -3px;
+							}
+
+							.letter-spacing>li {
+								letter-spacing: 0px;
+							}
+						</style>
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>flex</h2>
+			<p>
+				弹性布局，参见<a href="./CSS3.html#flex">CSS3 的 flex</a>
+			</p>
+		</section>
+		<section>
+			<h2>grid</h2>
+			<p>
+				网格布局，通过给父元素设置 css 属性 display: grid (块级)或 display: inline-grid (行内)将父元素设置为容器，然后设置行和列的分割方法，父元素下的所有子元素便会按照网格方式进行分布。
+				<pre><code class="html">
+&lt;div style="display: grid; grid-template-rows: 100px 100px 100px; grid-template-columns: 100px 100px 100px;">
+	&lt;div>1&lt;/div>
+	&lt;div>2&lt;/div>
+	&lt;div>3&lt;/div>
+	&lt;div>4&lt;/div>
+	&lt;div>5&lt;/div>
+	&lt;div>6&lt;/div>
+	&lt;div>7&lt;/div>
+	&lt;div>8&lt;/div>
+	&lt;div>9&lt;/div>
+&lt;/div>		
+				</code></pre>
+				<div class="show">
+					<div style="display: grid; grid-template-rows: 100px 100px 100px; grid-template-columns: 100px 100px 100px;">
+						<div>1</div>
+						<div>2</div>
+						<div>3</div>
+						<div>4</div>
+						<div>5</div>
+						<div>6</div>
+						<div>7</div>
+						<div>8</div>
+						<div>9</div>
+					</div>
+				</div>
+				<h3>设置行列宽高</h3>
+				<p>
+					通过 grid-template-rows 来设置每一行的高度，通过 grid-template-columns 来设置每一列的宽度。
+					<pre><code class="css">
+selector {
+	grid-template-rows:  数量 fr|长度单位;
+	grid-template-columns: 数量 fr|长度单位;
+}
+					</code></pre>
+					既可以用原有的长度单位，比如 px，也可以用适用于网格布局的新单位 fr ，fr 表示获得剩余空间的等分数，比如：
+					<pre><code class="html">
+&lt;div style="height: 100px; display: grid; grid-template-rows: 1fr 2fr 1fr;">
+	&lt;div style="background-color: #0f0f0f;">1fr&lt;/div>
+	&lt;div style="background-color: #8f8f8f;">2fr&lt;/div>
+	&lt;div style="background-color: #3f3f3f;">1fr&lt;/div>
+&lt;/div>
+					</code></pre>
+					<div class="show">
+						<div style="height: 100px; display: grid; grid-template-rows: 1fr 2fr 1fr;">
+							<div style="background-color: #0f0f0f;">1fr</div>
+							<div style="background-color: #8f8f8f;">2fr</div>
+							<div style="background-color: #3f3f3f;">1fr</div>
+						</div>
+					</div>
+					<h4>repeat 方法</h4>
+					repeat 方法用于生成多个相同的值。
+					<div class="command">repeat(重复次数, 值)</div>
+					比如以下写法是等价的：
+					<pre><code class="css">
+/* 1fr 2fr 的格式连续出现了 3 次 */
+selector {
+	grid-template-rows: 4fr 1fr 2fr 1fr 2fr 1fr 2fr;
+}
+/* 使用 repeat 方法 */
+selector {
+	grid-template-rows: 4fr repeat(3, 1fr 2fr);
+}
+					</code></pre>
+				</p>
+				<h3>自动设置行列宽高</h3>
+				<p>
+					当没有显示地指定行列宽高(grid-template-rows 或 grid-template-columns)的时候，这时网格布局就会依赖另一个属性来设置宽高：grid-auto-rows 或
+					grid-auto-columns。
+					<pre><code class="html">
+&lt;div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 50px 50px; <span class="strong">grid-auto-rows: 100px;</span>">
+	&lt;div style="background-color: #888">1&lt;/div>
+	&lt;div style="background-color: #888">2&lt;/div>
+	&lt;div style="background-color: #888">3&lt;/div>
+	&lt;div style="background-color: #888">4&lt;/div>
+	&lt;div style="background-color: #222">5&lt;/div>
+&lt;/div>
+					</code></pre>
+					<div class="show">
+						<div
+							style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 50px 50px; grid-auto-rows: 100px;">
+							<div style="background-color: #888">1</div>
+							<div style="background-color: #888">2</div>
+							<div style="background-color: #888">3</div>
+							<div style="background-color: #888">4</div>
+							<div style="background-color: #222">5</div>
+						</div>
+					</div>
+					<span class="different">grid-template-rows: 50px 50px;</span>只设置了两行，第三行没有被涉及到，此时就会去看 grid-auto-rows
+					属性，此后多出的行(4, 5, 6 ... 行)也都会依照该属性来显示。
+					<h4>minmax 方法</h4>
+					minmax 方法可以用在 grid-auto-rows 或 grid-auto-columns 属性上，用于定义网格元素最小和最大允许的宽高（由于元素内的东西大小不定，网格元素的宽高总是大小不定）。
+					<div class="command">
+						minmax(最小值, 最大值)
+					</div>
+					<pre><code class="html">
+&lt;div style="display: grid; <span class="strong">grid-auto-rows: minmax(20px, auto);</span>">
+	&lt;div style="background-color: #666">&lt;/div>
+	&lt;div style="background-color: #888">&lt;p>段落1&lt;/p>&lt;p>段落2&lt;/p>&lt;p>段落3&lt;/p>&lt;/div>
+&lt;/div>
+					</code></pre>
+					<div class="show">
+						<div style="display: grid;  grid-auto-rows: minmax(20px, auto);">
+							<div style="background-color: #666"></div>
+							<div style="background-color: #888">
+								<p>段落1</p>
+								<p>段落2</p>
+								<p>段落3</p>
+							</div>
+						</div>
+					</div>
+					第一个元素内没有东西，高度应该为 0 ，但 minmax 规定最小高度为 20px，所以最终高度为 20px 。第二个元素内有 3 个 p 标签，高度大于 20px，此时由于最大高度为 auto ，因此正常显示。
+				</p>
+				<h3>特定单元跨区域分布</h3>
+				<p>
+					网格布局给每个轨道设置了一个数字编号，从 1 开始递增：
+					<figure>
+						<img src="../../images/display_grid_line.jpg">
+					</figure>
+					知道了轨道的编号，便可以使用 grid-row-start, grid-row-end, grid-column-start, grid-column-end 属性，让网格元素横跨某几个轨道布局：
+					<pre><code class="html">
+&lt;div style="display: grid; grid-template-columns: repeat(4, 1fr);">
+	&lt;div style="<span class="strong">grid-column-start: 1; grid-column-end: 5;</span>">header&lt;/div>
+	&lt;div>sidebar&lt;/div>
+	&lt;div style="<span class="strong">grid-column-start: 2; grid-column-end: 5;</span>">content&lt;/div>
+	&lt;div style="<span class="strong">grid-column-start: 1; grid-column-end: 5;</span>">footer&lt;/div>
+&lt;/div>
+					</code></pre>
+					<div class="show">
+						<div style="display: grid; grid-template-columns: repeat(4, 1fr);">
+							<div style="grid-column-start: 1; grid-column-end: 5; background-color: gray;">header</div>
+							<div style="background-color: #aaa">sidebar</div>
+							<div style="grid-column-start: 2; grid-column-end: 5; background-color: #444;">content</div>
+							<div style="grid-column-start: 1; grid-column-end: 5; background-color: gray;">footer</div>
+						</div>
+					</div>
+					<h4>使用 / 来简写</h4>
+					总是要写 grid-row-start, grid-row-end 等过于繁琐，网格布局提供了合并属性 grid-row 或 grid-column，可以直接使用 / 方式来设置开始和结束编号：
+					<div class="command">
+						<div>grid-row: 开始编号/结束编号</div>
+						<div>grid-column: 开始编号/结束编号</div>
+					</div>
+					<pre><code class="html">
+&lt;div style="display: grid; grid-template-columns: repeat(3, 1fr)">
+	&lt;div style="grid-column: 1/4">1/4&lt;/div>
+	&lt;div>5&lt;/div>
+	&lt;div>6&lt;/div>
+	&lt;div>7&lt;/div>
+&lt;/div>
+					</code></pre>
+					<div class="show">
+						<div style="display: grid; grid-template-columns: repeat(3, 1fr)">
+							<div style="grid-column: 1/4; background-color: #888">1/4</div>
+							<div style="background-color: #aaa">5</div>
+							<div style="background-color: #aaa">6</div>
+							<div style="background-color: #aaa">7</div>
+						</div>
+					</div>
+					<h4>横跨 n 个轨道</h4>
+					除了设置开始编号和结束编号，另一种表示写法是从轨道 k 开始横跨 n 个轨道：
+					<div class="command">
+						<div>grid-row: 开始编号/span 长度</div>
+						<div>grid-column: 开始编号/span 长度</div>
+					</div>
+					效果等同于 grid-row: 开始编号/开始编号+长度。
+					<pre><code class="html">
+&lt;div style="display: grid; grid-template-columns: repeat(3, 1fr)">
+	&lt;div style="grid-column: 1/span 3">1/4&lt;/div>
+	&lt;div>5&lt;/div>
+	&lt;div>6&lt;/div>
+	&lt;div>7&lt;/div>
+&lt;/div>
+					</code></pre>
+					<div class="show">
+						<div style="display: grid; grid-template-columns: repeat(3, 1fr)">
+							<div style="grid-column: 1/span 3; background-color: #888">1/4</div>
+							<div style="background-color: #aaa">5</div>
+							<div style="background-color: #aaa">6</div>
+							<div style="background-color: #aaa">7</div>
+						</div>
+					</div>
+				</p>
+				<h3>网格间距</h3>
+				<p>
+					使用 grid-row-gap 或 grid-column-gap 设定网格水平和垂直方向，单元格与单元格之间的间距。
+					<pre><code class="html">
+&lt;div class="grid-gap-demo" style="display: grid;
+			   grid-template-rows: repeat(3, 1fr);
+			   grid-template-columns: repeat(3, 1fr);
+			   grid-row-gap: 10px;
+			   grid-column-gap: 10px;">
+	&lt;div>1&lt;/div>
+	&lt;div>2&lt;/div>
+	&lt;div>3&lt;/div>
+	&lt;div>4&lt;/div>
+	&lt;div>5&lt;/div>
+	&lt;div>6&lt;/div>
+	&lt;div>7&lt;/div>
+	&lt;div>8&lt;/div>
+	&lt;div>9&lt;/div>
+&lt;/div>
+					</code></pre>
+					<div class="show">
+						<div class="grid-gap-demo"
+							style="display: grid; grid-template-rows: repeat(3, 1fr); grid-template-columns: repeat(3, 1fr); grid-row-gap: 10px; grid-column-gap: 10px;">
+							<div>1</div>
+							<div>2</div>
+							<div>3</div>
+							<div>4</div>
+							<div>5</div>
+							<div>6</div>
+							<div>7</div>
+							<div>8</div>
+							<div>9</div>
+						</div>
+						<style>
+							.grid-gap-demo>div {
+								background-color: gray;
+							}
+						</style>
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>嵌套</h2>
+			<p>
+				元素间的嵌套遵循以下：
+				<ul>
+					<li>块级元素可以包含内联元素和某些块级元素</li>
+					<li>内联元素可以包含内联元素，但不能包含块级元素</li>
+				</ul>
+				以上只是笼统的说法，实际情况复杂许多。
+				<h3>p</h3>
+				<p>
+					p 内部不能嵌套块级元素。
+					<pre><code class="html">
+&lt;p&gt;
+	&lt;div&gt;hello world&lt;/div&gt;
+&lt;/p&gt;
+&lt;!-- 实际上会被渲染为 --&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;div&gt;hello world&lt;/div&gt;
+					</code></pre>
+				</p>
+				<h3>a</h3>
+				<p>
+					a 内部可以嵌套块级元素，以下会正常渲染。
+					<pre><code class="html">
+&lt;a href="javascript:void(0)"&gt;&lt;div&gt;hello world&lt;/div&gt;&lt;/a&gt;
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Eric A.Meyer 《CSS权威指南》</div>
+				<div>[2] zpeople HTML5与ＨTML4的元素嵌套规则 <a
+						href="https://www.jianshu.com/p/5fc78e64a415">https://www.jianshu.com/p/5fc78e64a415</a></div>
+				<div>[3] MDN 网格布局的基本概念 <a
+						href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout">https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

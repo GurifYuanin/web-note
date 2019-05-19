@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>material</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+	<script src="../../js/three.min.js"></script>
+	<script src="../../js/three-init.js"></script>
+	<script src="../../js/OrbitControls.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">material</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				material，材质，在计算机图形学中用于描述物体的外貌。
+			</p>
+		</section>
+		<section>
+			<h2>Material 抽象类</h2>
+			<p>
+				所有属于材质的类都会继承 Material 类，拥有该类的所有成员和方法。
+				<h3>transparent & ooacity</h3>
+				<p>
+					<ul>
+						<li>transparent 是一个布尔值，默认为 false，表示材质不是透明的，即不透明度为 1 。当设置为 true 时，材质才可能是透明的，opacity 属性才会生效。</li>
+						<li>opacity 表示材质的透明度，默认为 1 ，表示不透明，设置为 0 时表示完全透明。</li>
+					</ul>
+				</p>
+				<h3>vertexColors</h3>
+				<p>
+					vertexColors 控制被着色物体的各个面的颜色，可以赋为以下三个值之一：
+					<ul>
+						<li>THREE.NoColors：默认，表示直接使用材质的颜色为整个物体的所有面着一个颜色 material.color（纯色）</li>
+						<li>THREE.FaceColors：面（Face3）有一个属性 color，为各个面分别着该属性的颜色（纯色）</li>
+						<li>THREE.VertexColors：面（Face3）有一个属性 vertexColors，表示面的三个顶点的颜色，为每个面按照该属性的三个颜色值进行<span
+								class="different">渐变</span>着色</li>
+					</ul>
+					<div class="show">
+						<button class="button" id="vertex-color-button">开始渲染</button>
+						<div id="vertex-colors-container"></div>
+						material.vertexColors：
+						<select id="vertex-colors-select">
+							<option value="0">THREE.NoColors</option>
+							<option value="1">THREE.FaceColors</option>
+							<option value="2">THREE.VertexColors</option>
+						</select>
+						<div id="material-color">
+							<input id="material-color-checkbox" type="checkbox" checked>
+							material.color：
+						</div>
+						<div id="face-colors">
+							<input id="face-colors-checkbox" type="checkbox" checked>
+							geometry.faces.color：
+						</div>
+						<div id="vertex-colors">
+							<input id="vertex-colors-checkbox" type="checkbox" checked>
+							geometry.faces.vertexColors：
+						</div>
+						<div style="opacity: .2;" id="colors">geometry.colors：</div>
+						<style>
+							.vertex-color {
+								display: inline-block;
+								width: 50px;
+								height: 50px;
+							}
+						</style>
+						<script>
+							window.addEventListener('load', function () {
+								addOnceClickEventById('vertex-color-button', function () {
+									function getRandomColor() { return Math.round(Math.random() * 0xffffff); }
+									function appendColorBlock(bgc, ctx) {
+										var e = document.createElement('div');
+										e.setAttribute('class', 'vertex-color');
+										e.setAttribute('title', bgc.toUpperCase());
+										e.style.backgroundColor = '#' + bgc;
+										ctx.appendChild(e);
+									}
+									var renderer = initRenderer(document.getElementById('vertex-colors-container'));
+									renderer.setSize(400, 400);
+									var camera = initCamera();
+									var scene = initScene();
+
+									// color
+									var materialColor = new THREE.Color(getRandomColor());
+									var materialColorsFlag = true, faceColorsFlag = true, vertexColorsFlag = true;
+									var nextMaterialColor = materialColor.clone();
+									var nextFaceColors = [];
+									var nextVertexColors = [];
+									appendColorBlock(
+										materialColor.getHexString(),
+										document.getElementById('material-color'));
+
+
+									var geometry = new THREE.BoxGeometry(1, 1, 1);
+									var material = new THREE.MeshBasicMaterial({
+										color: nextMaterialColor,
+										vertexColors: THREE.NoColors
+									});
+									var faceColors = document.getElementById('face-colors');
+									var colors = document.getElementById('colors');
+									var vertexColors = document.getElementById('vertex-colors');
+									geometry.faces.forEach(function (el, i) {
+										var faceColor = new THREE.Color(getRandomColor());
+										el.color = faceColor;
+										nextFaceColors.push(faceColor);
+										appendColorBlock(faceColor.getHexString(), faceColors);
+
+										var c1 = new THREE.Color(getRandomColor());
+										var c2 = new THREE.Color(getRandomColor());
+										var c3 = new THREE.Color(getRandomColor());
+										nextVertexColors.push([c1, c2, c3]);
+										el.vertexColors.push(c1, c2, c3);
+										appendColorBlock(c1.getHexString(), vertexColors);
+										appendColorBlock(c2.getHexString(), vertexColors);
+										appendColorBlock(c3.getHexString(), vertexColors);
+										vertexColors.appendChild(document.createTextNode(' '));
+
+										var vertexColor = new THREE.Color(getRandomColor());
+										geometry.colors.push(vertexColor);
+										appendColorBlock(vertexColor.getHexString(), colors);
+									});
+
+									var cube = new THREE.Mesh(geometry, material);
+									var orbit = new THREE.OrbitControls(camera, renderer.domElement);
+									scene.add(cube);
+									var selecter = document.getElementById('vertex-colors-select');
+									function rerender() {
+										scene.remove(cube);
+										material = new THREE.MeshBasicMaterial({
+											color: nextMaterialColor,
+											vertexColors: Number.parseInt(selecter.value)
+										});
+										cube = new THREE.Mesh(geometry, material);
+										scene.add(cube);
+									};
+									selecter.oninput = rerender;
+									document.getElementById('material-color-checkbox').oninput = function () {
+										nextMaterialColor = materialColorsFlag ? null : materialColor.clone();
+										materialColorsFlag = !materialColorsFlag;
+										rerender();
+									};
+									document.getElementById('face-colors-checkbox').oninput = function () {
+										geometry = new THREE.BoxGeometry(1, 1, 1);
+										geometry.faces.forEach(function (el, i) {
+											el.color = faceColorsFlag ? undefined : nextFaceColors[i];
+											el.vertexColors = vertexColorsFlag ? nextVertexColors[i] : [];
+										});
+										faceColorsFlag = !faceColorsFlag;
+										rerender();
+									};
+									document.getElementById('vertex-colors-checkbox').oninput = function () {
+										geometry = new THREE.BoxGeometry(1, 1, 1);
+										geometry.faces.forEach(function (el, i) {
+											el.color = faceColorsFlag ? nextFaceColors[i] : undefined;
+											el.vertexColors = vertexColorsFlag ? [] : nextVertexColors[i];
+										});
+										vertexColorsFlag = !vertexColorsFlag;
+										rerender();
+									};
+									(function render() {
+										cube.rotateY(.01);
+										cube.rotateZ(.01);
+										var rate = Math.abs(Math.sin(Date.now() / 2000)) + 0.7;
+										cube.scale.set(rate, rate, rate);
+										renderer.render(scene, camera);
+										requestAnimationFrame(render);
+									})();
+								});
+							});
+						</script>
+					</div>
+				</p>
+				<h3>shadowSide & side</h3>
+				<p>
+					side 定义物体的哪个面（Face3）会被渲染出来：
+					<ul>
+						<li>THREE.FrontSide：默认，前面</li>
+						<li>THREE.BackSide：后面</li>
+						<li>THREE.DoubleSide：前后面</li>
+					</ul>
+					shadowSide 定义投影的方向，可赋的值与以上相同，默认为 null，即看 side 的脸色行事。
+					<div class="tip">
+						产生投影需要开启许多条件（开关），并且对性能消耗比较大。
+					</div>
+					<div class="show">
+						<button class="button" id="shadow-side-button">开始渲染</button>
+						<div id="shadow-side-container"></div>
+						<div>
+							<input id="shadow-renderer-shadowmap-enabled-checkbox" type="checkbox" checked>renderer.shadowMap.enabled
+						</div>
+						<div>
+							<input id="shadow-light-castshadow-checkbox" type="checkbox" checked>
+							light.castShadow
+						</div>
+						<div>
+							<input id="shadow-mesh-castshadow-checkbox" type="checkbox" checked>
+							mesh.castShadow
+						</div>
+						<div>
+							<input id="shadow-plane-receiveshadow-checkbox" type="checkbox" checked>
+							plane.receiveshadow
+						</div>
+						<script>
+							window.addEventListener('load', function () {
+								addOnceClickEventById('shadow-side-button', function () {
+									function addChangeEventById(id, obj, attr) {
+										document.getElementById(id).onchange = function () {
+											obj[attr] = !obj[attr];
+										}
+									}
+
+									var renderer = initRenderer(document.getElementById('shadow-side-container'));
+									renderer.shadowMap.enabled = true;
+									var scene = initScene();
+									scene.background = new THREE.Color(0xffffff);
+									var camera = initCamera();
+									var pointLight = new THREE.PointLight(0xff00ff, 1, 100);
+									pointLight.position.set(1, 1, 0);
+									pointLight.castShadow = true;
+
+									var pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
+									var shadowCameraHelper = new THREE.CameraHelper(pointLight.shadow.camera);
+									var geometry = new THREE.BoxGeometry(1, 1, 1);
+									var material = new THREE.MeshPhongMaterial({ color: 0x666666 });
+									var mesh = new THREE.Mesh(geometry, material);
+									mesh.castShadow = true;
+									var plane = new THREE.Mesh(new THREE.PlaneGeometry(5, 20, 32),
+										new THREE.MeshPhongMaterial({ color: 0xeeeeee, side: THREE.DoubleSide }));
+									plane.rotateX(Math.PI / 2);
+									plane.position.y -= .5;
+									plane.receiveShadow = true;
+									scene.add(mesh,
+										pointLight,
+										pointLightHelper,
+										shadowCameraHelper,
+										plane);
+									new THREE.OrbitControls(camera, renderer.domElement);
+									(function render() {
+										pointLight.position.x = Math.sin(Date.now() / 1000);
+										renderer.render(scene, camera);
+										requestAnimationFrame(render);
+									})();
+									addChangeEventById('shadow-renderer-shadowmap-enabled-checkbox', renderer.shadowMap, 'enabled');
+									addChangeEventById('shadow-light-castshadow-checkbox', pointLight, 'castShadow');
+									addChangeEventById('shadow-mesh-castshadow-checkbox', mesh, 'castShadow');
+									addChangeEventById('shadow-plane-receiveshadow-checkbox', plane, 'receiveShadow');
+								});
+							});
+						</script>
+					</div>
+					要产生投影得同时满足以下：
+					<ul>
+						<li>webgl 渲染器（new THREE.WebGLRenderer()）的 shadowMap.enabled 设置为 true</li>
+						<li>灯光不能是环境光（AmbientLight）</li>
+						<li>灯光的 castShadow 属性为 true</li>
+						<li>进行投影的物体 castShadow 属性为 true</li>
+						<li>被投影的物体的 receiveShadow 属性为 true</li>
+						<li>进行投影和被进行投影的材质必须是能受灯光影响的材质，不能是 MeshBasicMaterial 之类不受光源影响的材质</li>
+					</ul>
+				</p>
+				<h3>混合</h3>
+				<p>
+					<h4>blending</h4>
+					blending 设置物体被材质着色后和背景的混合模式，当材质在物体上着色后，物体将以什么模式呈现：
+					<ul>
+						<li>THREE.NoBlending：不混合</li>
+						<li>THREE.NormalBlending：默认，正常混合模式，上层颜色直接覆盖下层颜色</li>
+						<li>THREE.AdditiveBlending：加色模式，上层颜色和下层颜色相加，最终效果变亮</li>
+						<li>THREE.SubtractiveBlending：减色模式，上层颜色和下层颜色相减，最终效果变暗</li>
+						<li>THREE.MultiplyBlending：乘法，上层颜色和下层颜色相乘</li>
+						<li>THREE.CustomBlending：自定义模式，可以自己写表达式计算混合后的颜色</li>
+					</ul>
+					设置为自定义混合模式后，可以自己写混合方式，关于混合的讲解：<sup>[2]</sup>
+					<div class="show">
+						<div>所谓混合就是在绘制时，不是直接把新的颜色覆盖在原来旧的颜色上，而是将新的颜色与旧的颜色经过一定的运算，获得最终的混合颜色。</div>
+						<div>其中新的颜色被称为源颜色，旧的颜色称为目标颜色。传统意义上的混合，是将源颜色乘以源因子，目标颜色乘以目标因子，然后相加。</div>
+						<div>源因子和目标因子设置的不同直接导致混合结果的不同。</div>
+						<div>下面用数学公式来表达一下这个运算方式。假设源颜色的四个分量（指红色，绿色，蓝色，alpha值）是(Rs, Gs, Bs, As)，目标颜色的四个分量是(Rd, Gd, Bd, Ad)，</div>
+						<div>又设源因子为(Sr, Sg, Sb, Sa)，目标因子为(Dr, Dg, Db, Da)。则混合产生的新颜色可以表示为：</div>
+						<pre><code class="javascript">
+(Rs * Sr + Rd * Dr, // R
+ Gs * Sg + Gd * Dg, // G
+ Bs * Sb + Bd * Db, // B
+ As * Sa + Ad * Da) // Alpha
+						</code></pre>
+						<div>如果颜色的某一分量超过了1.0，则它会被自动截取为1.0，不应出现越界。</div>
+					</div>
+					<h4>blendEquation</h4>
+					blendEquation 与 blending 不同，blendEquation 设置材质和物体如何进行着色：
+					<ul>
+						<li>THREE.AddEquation：默认，加色模式，上层颜色和下层颜色相加</li>
+						<li>THREE.SubtractEquation：减色模式，上层颜色和下层颜色相减</li>
+						<li>THREE.ReverseSubtractEquation：反相</li>
+						<li>THREE.MinEquation：最小值，上层颜色和下层颜色取最小值</li>
+						<li>THREE.MaxEquation：最大值，上层颜色和下层颜色取最大值</li>
+					</ul>
+				</p>
+				<h3>多边形偏移</h3>
+				<p>
+					设置模型的线框和实体之间的偏移距离，公式为：<sup>[3]</sup>
+					<div class="command">offset = (m * factor) + (r * units)</div>
+					<ul>
+						<li>m：多边形的深度的斜率</li>
+						<li>factor：多边形偏移因子</li>
+						<li>r：产生在窗口坐标系的深度值中可分辨的差异的最小值，常量</li>
+						<li>units：多边形偏移单位</li>
+					</ul>
+					offset 大于 0 表示物体远离摄像机，小于 0 表示物体靠近摄像机，threejs 提供修改 factor 和 units 。
+					<h4>polygonOffset</h4>
+					多边形偏移开关，默认为 false ，即关闭。
+					<h4>polygonOffsetFactor</h4>
+					多边形偏移因子，默认为 0 。
+					<h4>polygonOffsetUnits</h4>
+					多边形偏移单位，默认为 0 。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>MeshBasicMaterial</h2>
+			<p>
+				通过一个简单的方式来为物体着色，他继承了 Material 类，所以拥有 Material 类的所有成员和方法，创建实例时传入以选项对象。<span class="different"> MeshBasicMaterial
+					不受灯光的影响</span>。
+				<pre><code class="javascript">
+var options = {
+	// 各种参数
+};
+var material = new THREE.MeshBasicMaterial(options);
+				</code></pre>
+				<h3>color</h3>
+				<p>
+					定义材质的颜色，默认为白色（0x000000），你可以设置为 null 从而关闭基础颜色。
+				</p>
+				<h3>各种贴图</h3>
+				<p>
+					各种贴图默认都为 null 。
+					<ul>
+						<li>map：颜色贴图</li>
+						<li>alphaMap：alpha 贴图</li>
+						<li>aoMap：环境遮挡贴图</li>
+						<li>envMap：环境贴图</li>
+						<li>specularMap：高光贴图</li>
+					</ul>
+					threejs 官方提供了材质加载工具 TextureLoader 来加载图像：
+					<pre><code class="javascript">
+var url = '图片的地址';
+var texture = new THREE.TextureLoader().load(url, function() {
+	console.log('加载完毕');
+}, function() {
+	console.log('加载中');
+}, function() {
+	console.error('加载出错');
+});
+var material = new THREE.MeshBasicMaterial({map: texture});
+					</code></pre>
+					该方法是异步的，第一个参数为图片地址，其后三个参数分别为加载完成的回调，加载中的回调和加载出错的回调。
+					<div class="show">
+						<button class="button" id="map-button">开始渲染</button>
+						<div id="map-container"></div>
+						<script>
+							window.addEventListener('load', function () {
+								addOnceClickEventById('map-button', function () {
+									var scene = initScene();
+									var camera = initCamera();
+									var renderer = initRenderer(document.getElementById('map-container'));
+									var material = new THREE.MeshBasicMaterial({
+										color: 0xffffff,
+										map: new THREE.TextureLoader().load('../../images/posz.jpg')
+									});
+									new THREE.OrbitControls(camera, renderer.domElement);
+									var geometry = new THREE.CubeGeometry(1, 1, 1);
+									var mesh = initMesh(geometry, material);
+									scene.add(mesh);
+									(function render() {
+										mesh.rotateY(.05);
+										renderer.render(scene, camera);
+										requestAnimationFrame(render);
+									})();
+								});
+							});
+						</script>
+					</div>
+					当然也可以不写回调直接通过 requestAnimationFrame 循环渲染。
+					<pre><code class="javascript">
+(function render() {
+	renderer.render(scene, camera);
+	requestAnimationFrame(render);
+})();
+					</code></pre>
+				</p>
+				<h3>反射与折射</h3>
+				<p>
+					<ul>
+						<li>reflectivity：反射率，默认为 1</li>
+						<li>refractionRatio：折射率，默认为 0.98</li>
+					</ul>
+				</p>
+				<h3>线框</h3>
+				<p>
+					<ul>
+						<li>wireframe：是否描绘线框，默认为 false</li>
+						<li>wireframeLinewidth：线框宽度（厚度），默认为 1</li>
+						<li>wireframeLinecap：端点样式，默认为 round</li>
+						<li>wireframeLinejoin：连接点样式，默认为 round</li>
+					</ul>
+					只有 wireframe 属性是有效的，wireframeLinejoin 和 wireframeLinecap 只是对应于 webgl 2D wireframeLinewidth 受限于渲染器在大多数平台上只能是 1
+					即使修改为其他值。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>MeshLambertMaterial</h2>
+			<p>
+				MeshLambertMaterial 用于不光亮（shiny）的物体，它<span class="different">可以</span>接受环境光的影响，但不会产生高光。
+				<h3>color & emissive</h3>
+				<p>
+					color 为物体本身的颜色，用法和 MeshBasicMaterial 一样，默认为白色。而 emissive 是物体发出的光，默认为黑色。当然它不是一个光源，不能影响其他物体。
+					<div class="show">
+						<button class="button" id="lambert-material-button">开始渲染</button>
+						<div id="lambert-material-container"></div>
+						<div>
+							<input id="lambert-point-light-color-checkbox" type="checkbox" checked>
+							pointLight.color
+							<input id="lambert-point-light-color" type="color" value="#ff00ff">
+						</div>
+						<div>
+							<input id="lambert-ambient-light-color-checkbox" type="checkbox" checked>
+							ambientLight.color
+							<input id="lambert-ambient-light-color" type="color" value="#888888">
+						</div>
+						<div>
+							<input id="lambert-material-color-checkbox" type="checkbox" checked disabled>
+							material.color
+							<input id="lambert-material-color" type="color" value="#ffffff">
+						</div>
+						<div>
+							<input id="lambert-emissive-color-checkbox" type="checkbox" checked disabled>
+							material.emissive
+							<input id="lambert-emissive-color" type="color" value="#000000">
+						</div>
+						<script>
+							window.addEventListener('load', function () {
+								addOnceClickEventById('lambert-material-button', function () {
+									function g(id) { return document.getElementById(id); } // getElementById
+									function ac(el, fn) { // addChangeEventById
+										if (Object.prototype.toString.call(el).toLowerCase() === '[object string]')
+											g(el).onchange = fn;
+										else
+											el.onchange = fn;
+									}
+									function gc(str) { return new THREE.Color(Number.parseInt(str.substring(1), 16)); } // getColorByValue
+									var renderer = initRenderer(document.getElementById('lambert-material-container'));
+									var camera = initCamera();
+									var scene = initScene();
+									var light = new THREE.AmbientLight(0x888888);
+									var isPointLight = true, isAmbientLight = true;
+									var pointLight = new THREE.PointLight(0xff00ff, 1, 100);
+									pointLight.position.set(1, 1, 1);
+									var pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
+									var geometry = new THREE.BoxGeometry(1, 1, 1);
+									var material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+									material.emissive = new THREE.Color(0x000000);
+									var mesh = new THREE.Mesh(geometry, material);
+									scene.add(mesh, light, pointLight, pointLightHelper);
+									new THREE.OrbitControls(camera, renderer.domElement);
+									(function render() {
+										pointLight.position.x = Math.sin(Date.now() / 2000);
+										renderer.render(scene, camera);
+										requestAnimationFrame(render);
+									})();
+									ac('lambert-ambient-light-color', function () {
+										light.color = gc(this.value);
+									});
+									ac('lambert-material-color', function () {
+										material.color = gc(this.value);
+									});
+									ac('lambert-emissive-color', function () {
+										material.emissive = gc(this.value);
+									});
+									ac('lambert-point-light-color', function () {
+										pointLight.color = gc(this.value);
+									});
+									ac('lambert-point-light-color-checkbox', function () {
+										if (isPointLight) {
+											scene.remove(pointLight)
+											scene.remove(pointLightHelper)
+										} else {
+											scene.add(pointLight)
+											scene.add(pointLightHelper)
+										}
+										isPointLight = !isPointLight;
+									});
+									ac('lambert-ambient-light-color-checkbox', function () {
+										isAmbientLight ? scene.remove(light) : scene.add(light);
+										isAmbientLight = !isAmbientLight;
+									})
+								});
+							});
+						</script>
+					</div>
+				</p>
+				<h3>贴图</h3>
+				<p>
+					拥有和 MeshBasicMaterial 一样的贴图属性：
+					<ul>
+						<li>map：颜色贴图</li>
+						<li>alphaMap：alpha 贴图</li>
+						<li>aoMap：环境遮挡贴图</li>
+						<li>envMap：环境贴图</li>
+						<li>specularMap：高光贴图</li>
+					</ul>
+					同时还多了以下贴图：
+					<ul>
+						<li>lightMap：光照贴图</li>
+						<li>emissiveMap：发射光贴图</li>
+					</ul>
+					还可以对一些贴图的强度进行调控，默认为 1 ，即直接贴图，可以调整为 0 ~ 1 之间：
+					<ul>
+						<li>lightMapIntensity：光照贴图强度</li>
+						<li>emissiveIntensity：发射光贴图强度</li>
+						<li>aoMapIntensity：环境贴图强度</li>
+					</ul>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>MeshPhongMaterial</h2>
+			<p>
+				MeshPhongMaterial 可用于创建有光泽的物体表面（接收光源），同时也<span class="different">可以产生高光</span>。
+				<h3>color & emissve & specular & shininess</h3>
+				<p>
+					<ul>
+						<li>MeshPhongMaterial 比 MeshLambertMaterial 多了 specular ，即高光，默认为 0x111111，深灰色 <span
+								style="display: inline-block; width: 50px; height: 50px; background-color: #111; vertical-align: middle;"></span>
+						</li>
+						<li>color 默认为白色</li>
+						<li>emissive 默认为黑色</li>
+						<li>shininess 用于控制闪亮程度，默认为 30 </li>
+					</ul>
+					<div class="show">
+						<button class="button" id="phong-material-button">开始渲染</button>
+						<div id="phong-material-container"></div>
+						<div>light.color <input id="phong-material-light-color" type="color" value="#ff00ff"></div>
+						<div>material.color <input id="phong-material-color" type="color" value="#408080"></div>
+						<div>material.emissive <input id="phong-material-emissive" type="color" value="#000000"></div>
+						<div>material.specular <input id="phong-material-specular" type="color" value="#111111"></div>
+						<div>material.shininess <input id="phong-material-shininess" type="range" min="0" max="1000" step="1"
+								value="30"> <span id="phong-material-shininess-show">30</span></div>
+						<script>
+							window.addEventListener('load', function () {
+								addOnceClickEventById('phong-material-button', function () {
+									var renderer = initRenderer(document.getElementById('phong-material-container'));
+									renderer.setSize(400, 400);
+									var camera = initCamera();
+									var scene = initScene();
+									camera.position.y = 5;
+									camera.lookAt(0, 0, 0);
+									var geometry = new THREE.BoxGeometry(2, 2, 2);
+									var material = new THREE.MeshPhongMaterial({ color: 0x408080 });
+									var mesh = new THREE.Mesh(geometry, material);
+									var pointLight = initPointLight(0xff00ff);
+									var ambientLight = new THREE.AmbientLight({ color: 0x404040, intensity: .1 });
+									pointLight.intensity = 1;
+									var pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
+									scene.add(mesh, pointLight, pointLightHelper, ambientLight);
+									new THREE.OrbitControls(camera, renderer.domElement);
+									(function render() {
+										var now = Date.now() / 1000;
+										pointLight.position.set(Math.sin(now), 2, Math.cos(now));
+										renderer.render(scene, camera);
+										requestAnimationFrame(render);
+									})();
+									document.getElementById('phong-material-color').onchange = function () {
+										material.color = value2color(this.value);
+									}
+									document.getElementById('phong-material-emissive').onchange = function () {
+										material.emissive = value2color(this.value);
+									}
+									document.getElementById('phong-material-specular').onchange = function () {
+										material.specular = value2color(this.value);
+									}
+									document.getElementById('phong-material-light-color').onchange = function () {
+										pointLight.color = value2color(this.value);
+									}
+									document.getElementById('phong-material-shininess').onchange = function () {
+										material.shininess = Number.parseFloat(this.value);
+										document.getElementById('phong-material-shininess-show').innerText = this.value;
+									}
+								});
+							});
+						</script>
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>LineBasicMaterial</h2>
+			<p>
+				用于绘制简单的线框的材质。
+				<pre><code class="javascript">
+var options = {
+	// 线段选项
+};
+var material = new THREE.LineBasicMaterial(options);
+				</code></pre>
+				<div class="show">
+					<button class="button" id="line-button">开始渲染</button>
+					<div id="line-container"></div>
+					<script>
+						window.addEventListener('load', function () {
+							addOnceClickEventById('line-button', function () {
+								var renderer = initRenderer(document.getElementById('line-container'))
+								var camera = initCamera();
+								var scene = initScene();
+								var mesh = new THREE.Line(new THREE.CubeGeometry(1, 1, 1), new THREE.LineBasicMaterial({ color: 0xffffff }));
+								scene.add(mesh);
+								new THREE.OrbitControls(camera, renderer.domElement);
+								(function render() {
+									mesh.rotateY(.01);
+									renderer.render(scene, camera);
+									requestAnimationFrame(render);
+								})();
+							});
+						});
+					</script>
+				</div>
+				<h3>lights</h3>
+				<p>
+					不同于 MeshBasicMaterial ，<span class="different">线框可以受灯光影响</span>，默认不受影响，当 lights 属性设置为 true 时可以使材质受灯光影响。
+					<div class="show">
+						<button class="button" id="line-lights-button">开始渲染</button>
+						<div id="line-lights-container"></div>
+						<div>
+							<input type="checkbox" checked disabled>
+							material.color：
+							<input id="line-material-color" type="color" value="#ffffff">
+						</div>
+						<div>
+							<input type="checkbox" checked disabled>
+							light.color：
+							<input id="line-light-color" type="color" value="#ff0000">
+						</div>
+						<div>
+							<input id="line-material-lights" type="checkbox">material.lights
+						</div>
+						<script>
+							window.addEventListener('load', function () {
+								addOnceClickEventById('line-lights-button', function () {
+									var renderer = initRenderer(document.getElementById('line-lights-container'));
+									var scene = initScene();
+									var camera = initCamera();
+									var helper = new THREE.AxesHelper(100);
+									var geometry = new THREE.Geometry();
+									camera.translateX(1);
+									for (var i = 0; i < 10; i++) {
+										geometry.vertices.push(new THREE.Vector3(Math.random(), Math.random(), 0));
+									}
+									var light = new THREE.PointLight(0xff0000, 1, 100);
+									var pointLightHelper = new THREE.PointLightHelper(light, 1);
+									var material = new THREE.LineBasicMaterial();
+									var mesh = new THREE.Line(geometry, material);
+									scene.add(mesh, light, helper, pointLightHelper);
+									new THREE.OrbitControls(camera, renderer.domElement);
+									(function render() {
+										requestAnimationFrame(render);
+										geometry.vertices.forEach(function (el) {
+											el.x += Math.random() < .5 ? .01 : -.01;
+											el.y += Math.random() < .5 ? .01 : -.01;
+											el.z += Math.random() < .5 ? .01 : -.01;
+										});
+										geometry.verticesNeedUpdate = true;
+										scene.remove(mesh);
+										var mesh = new THREE.Line(geometry, material);
+										scene.add(mesh);
+										renderer.render(scene, camera);
+									})();
+									document.getElementById('line-material-color').oninput = function () {
+										material.color = new THREE.Color(Number.parseInt(this.value.substring(1), 16));
+										material.needsUpdate = true;
+									}
+									document.getElementById('line-light-color').oninput = function () {
+										light.color = new THREE.Color(Number.parseInt(this.value.substring(1), 16));
+										scene.remove(pointLightHelper);
+										pointLightHelper = new THREE.PointLightHelper(light, 1);
+										scene.add(pointLightHelper);
+									}
+									document.getElementById('line-material-lights').oninput = function () {
+										material.lights = !material.lights;
+									}
+								});
+							});
+						</script>
+					</div>
+				</p>
+				<h3>color</h3>
+				<p>
+					与 MeshBasicMaterial 相同。
+				</p>
+				<h3>线框</h3>
+				<p>
+					与 MeshBasicMaterial 相同。
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Three doc Material <a
+						href="https://threejs.org/docs/index.html#api/en/materials/Material">https://threejs.org/docs/index.html#api/en/materials/Material</a>
+				</div>
+				<div>[2] three在线中文文档 <a
+						href="http://techbrood.com/threejs/docs/#参考手册/常量(Constants)/自定义混合方程(CustomBlendingEquation)">http://techbrood.com/threejs/docs/#参考手册/常量(Constants)/自定义混合方程(CustomBlendingEquation)</a>
+				</div>
+				<div>[3] BIT祝威 [OpenGL][SharpGL]用Polygon Offset解决z-fighting和stitching问题 <a
+						href="https://www.cnblogs.com/bitzhuwei/archive/2015/06/12/4571539.html">https://www.cnblogs.com/bitzhuwei/archive/2015/06/12/4571539.html</a>
+				</div>
+				<div>[4] TextureLoader <a
+						href="https://threejs.org/docs/index.html#api/en/loaders/TextureLoader">https://threejs.org/docs/index.html#api/en/loaders/TextureLoader</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

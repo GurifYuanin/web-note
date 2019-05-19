@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>module</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">模块化</h1>
+		</hgroup>
+		<section>
+			<h2>script标签</h2>
+			<p>
+				HTML 文档中，使用<span class="definition"> script </span>标签加载外部脚本或插入脚本代码。
+				<pre><code class="html">
+&lt;!-- 引入外部脚本 --&gt;
+&lt;script src="script.js"&gt;&lt;/script&gt;
+
+&lt;!-- 插入脚本代码 --&gt;
+&lt;script&gt;
+	alert('hello world');
+&lt;/script&gt;
+				</code></pre>
+				<h3>属性</h3>
+				<p>
+					<h4>src</h4>
+					<span class="definition"> src </span>属性用于引入外部脚本文件（URL）。
+					<h4>type</h4>
+					<span class="definition"> type </span>属性用于指定脚本的类型，由于 javascript 是 HTML 的默认脚本，所以当类型是 javascript 时候可以省略。
+					<pre><code class="html">
+&lt;script type="text/javascript"&gt;
+document.write('hello world');
+&lt;/script&gt;
+					</code></pre>
+					<h4>charset</h4>
+					<span class="definition"> charset </span>属性用于规定脚本的字符集，默认是 ISO-8859-1 。
+					<h4>language</h4>
+					<span class="definition"> language </span>属性用于规定脚本的语言，从 HTML4.01 开始不赞成使用。
+					<h4>默认、async 和 defer</h4>
+					当使用<span class="definition"> script </span>引用外部脚本的时候，存在以下三种情况：
+					<ul>
+						<li>默认（即不加属性）：HTML 解析器暂停，下载脚本文件（同步），下载完后执行脚本，执行完脚本后 HTML 解析器继续工作</li>
+						<li>defer：HTML 解析器继续运行，下载脚本文件（异步），下载完成后不立即执行脚本，等待 HTML 解析器完成工作后再执行脚本</li>
+						<li>async：HTML 解析器继续运行，下载脚本文件（异步），下载完成后立即执行脚本同时 HTML 解析器暂停解析，执行完毕后 HTML 解析器继续工作</li>
+					</ul>
+					也就是说，默认情况下脚本阻塞 HTML 解析器的解析，可以设置<span class="definition"> async / defer
+					</span>来异步加载，当脚本文件过大时可以添加该属性。脚本的运行则必然是阻塞 HTML 解析器解析的。
+					<figure>
+						<img src="../../images/script_async_defer.jpg" alt="加载失败">
+					</figure>
+					<pre><code class="html">
+&lt;script src="script.js"&gt;&lt;/script&gt;
+&lt;script defer src="script.js"&gt;&lt;/script&gt;
+&lt;script async src="script.js"&gt;&lt;/script&gt;
+						</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>闭包</h2>
+			<p>
+				ES6 之前只有函数能够创建块级作用域，所以将模块写成：
+				<pre><code class="javascript">
+// 定义模块
+window.module1 = (function() {
+	// ...
+	return {
+		// ...
+		log: function() {
+			console.log('hello world');
+		}
+	};
+})();
+
+// 还是通过 script 标签引入
+// 使用模块
+module1.log();
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>commonJS</h2>
+			<p>
+				commonJS 规范使用 require 关键字来引入模块，Nodejs 是对 commonJS 的一种实现，通过同步的方式加载模块，只能在 Node 环境下执行。参见 <a
+					href="./commonJS.html">commonJS.html</a> 。
+				<pre><code class="node">
+// 已经从 nodejs 官网下载 nodejs 到本地
+// a.js 模块
+module.exports = {
+	log: function() {
+		console.log('hello world');
+	}
+};
+
+// b.js 模块
+// 如果在浏览器端执行，会抛出 ReferenceError 异常，因为没有 require 关键字
+var a = require('./a.js');
+a.log();
+				</code></pre>
+				在本地执行 b.js 文件：
+				<pre><code class="shell">
+$ node a.js
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>browserify</h2>
+			<p>
+				为了能够在浏览器像 nodejs 一样加载模块，使用 browserify 工具对所有模块依赖进行打包，打包到一个文件。
+				<ol>
+					<li>使用 npm 安装 browserify</li>
+					<pre><code class="shell">
+$ npm install -g browserify 
+					</code></pre>
+					<li>与 commonJS 一样写模块依赖</li>
+					<pre><code class="javascript">
+// foo.js
+module.exports = {
+	log: function() {
+		console.log('hello world');
+	}
+}
+
+// index.js
+var foo = require('./foo.js');
+foo.log();
+					</code></pre>
+					<li>使用 browserify 进行打包编译</li>
+					<pre><code class="shell">
+$ browserify index.js -o bundle.js
+					</code></pre>
+					<li>得到最终文件，在 html 中使用 script 引入该打包后的文件</li>
+					<pre><code class="html">
+&lt;script src="bundle.js">&lt;/script>
+					</code></pre>
+				</ol>
+				最终得到的文件 bundle.js 的代码为：
+				<pre><code class="javascript">
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i&lt;t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+module.exports = {
+	log: function() {
+		console.log('hello world');
+	}
+}
+},{}],2:[function(require,module,exports){
+var foo = require('./foo.js');
+foo.log();
+},{"./foo.js":1}]},{},[2]);
+
+				</code></pre>
+				本质上是给每个 js 文件提供了 require, module, exports 方法，让浏览器环境也能执行代码。
+			</p>
+		</section>
+		<section>
+			<h2>AMD</h2>
+			<p>
+				AMD(Asynchronous Module Definition) 是相对于 commonJS 的另一种规范，使用 define 和 require 来定义和依赖模块，A 是指 Asynchronous
+				异步，通过异步方法加载模块。requireJS 则是 AMD 的一种实现。
+				<pre><code class="javascript">
+// 从官网下载 requreJS 并安装到本地
+// foo.js
+define({
+	log: function() {
+		console.log('hello world');
+	}
+});
+// index.js
+require(['foo'], function(foo){
+  foo.log();
+})
+				</code></pre>
+				为了能在浏览器执行，与 browserify 同样，需要将以上代码进行打包编译：
+				<pre><code class="shell">
+$ node index.js -o bundle.js
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>CMD</h2>
+			<p>
+				CMD(Common Module Definition) 通用模块规范，定义模块的方法类似于 AMD，调用模块的方法类似于 commonJS。
+				<pre><code class="javascript">
+// 在入口文件 main.js 配置 seajs
+seajs.config({}); // 简单配置
+seajs.use("index.js"); // 入口模块
+
+// foo.js 模块
+define(function(require, exports) {
+	exports.log = function() {
+		console.log('hello world');
+	}
+});
+
+// index.js 模块
+var foo = require('foo.js');
+foo.log();
+				</code></pre>
+				然后使用构建工具对 main.js 进行构建，构建后的文件引入 html 文件中。
+			</p>
+		</section>
+		<section>
+			<h2>UMD</h2>
+			<p>
+				一种通用规范（不是实现），考虑到前面多种规范（commonJS，AMD，CMD）兼容，为了能让一份代码在多个环境下执行。比如写一个 foo.js 模块：
+				<pre><code class="javascript">
+// foo.js
+(function (global, factory) {
+   typeof exports === 'object' && typeof module !== 'undefined' ?
+   		  module.exports = factory() : // Nodejs
+   		  typeof define === 'function' && define.amd ?
+   		  define(factory) : // AMD 或 CMD
+          (global.<span class="strong">foo </span>= factory()); // 都不是，那就挂载到 this
+}(this, (function () { 
+   // foo.js 的代码
+})
+				</code></pre>
+				它是将模块代码放在函数内，传入立即执行函数作为 factory 参数，立即执行函数执行后判断全局环境是哪一种，来决定要对 factory 进行什么操作。
+			</p>
+		</section>
+		<section>
+			<h2>ES6</h2>
+			<p>
+				ES6 使用 export {} 或 export default 来导出模块（暴露接口），使用 import 来使用模块。
+				<pre><code class="javascript">
+// foo.js
+export default {
+	log: function() {
+		console.log('hello world');
+	}
+}
+
+// index.js
+import foo from './foo.js';
+foo.log();
+				</code></pre>
+				<div class="tip">
+					ES6 不同于前几个规范，前几个规范是运行时加载，将 js 文件当作一个对象，每次加载（require）都会执行一遍 js 文件里的代码然后获得一个全新的对象。而 ES6 是编译时加载，在 javascript
+					代码执行前就静态分析依赖关系，通过 import 关键字获得一个指针，指向同一个对象。
+				</div>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] W3 School &lt;script&gt;标签 <a
+						href="http://www.w3school.com.cn/tags/tag_script.asp">http://www.w3school.com.cn/tags/tag_script.asp</a>
+				</div>
+				<div>[2] n͛i͛g͛h͛t͛i͛r͛e͛ defer和async的区别 <a
+						href="https://segmentfault.com/q/1010000000640869">https://segmentfault.com/q/1010000000640869</a></div>
+				<div>[3] 阮一峰 浏览器加载 CommonJS <a
+						href="http://www.ruanyifeng.com/blog/2015/05/commonjs-in-browser.html">http://www.ruanyifeng.com/blog/2015/05/commonjs-in-browser.html</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

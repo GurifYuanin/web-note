@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>循环</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">循环</h1>
+		</hgroup>
+		<section>
+			<h2>for & while & do-while</h2>
+			<p>
+				for 循环是 javascript 中常用的循环方式之一，一般用于循环遍历数组。
+				<pre><code class="javascript">
+var arr = [1, 2, 3, 4, 5];
+for (var i = 0; i < arr.length; i++) {
+	console.log(arr[i]);
+}
+// => 1 2 3 4 5
+				</code></pre>
+				while 和 do-while 同理。
+				<pre><code class="javascript">
+var arr = [1, 2, 3, 4, 5];
+var i = 0;
+while(i < arr.length) {
+	console.log(arr[i]);
+	i++;
+}
+
+var i = 0;
+do {
+	console.log(arr[i]);
+	i++;
+} while (i < arr.length);
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>for (key in object)</h2>
+			<p>
+				for...in 用于遍历对象的可枚举属性。
+				<pre><code class="javascript">
+var obj = {
+	key1: 'hello',
+	key2: 'world'
+}
+for (var key in obj) {
+	console.log(obj[key]);
+}
+// => 'hello'
+// => 'world'
+				</code></pre>
+				for...in 可以循环出继承而来的可枚举属性，更多时候，我们希望过滤掉这些属性。
+				<pre><code class="javascript">
+for (var key in obj) {
+	if (obj.hasOwnProperty(key)) {
+		// ...
+	}
+}
+				</code></pre>
+				for...in 也可以对数组进行遍历，key 即为数组的下标，但无法保证遍历的顺序，并且有可能遍历到非数字下标的属性。
+				<pre><code class="javascript">
+var arr = [1, 2, 3, 4, 5];
+for (var key in arr) {
+	console.log(arr[key]);
+}
+// => 1 2 3 4 5
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>for (value of object)</h2>
+			<p>
+				for...of 可用于遍历部署了 Symbol.iterator 属性的数据。
+				<h3>Symbol.iterator 属性</h3>
+				<p>
+					Symbol.iterator 是数据结构的一个属性，本身是一个函数，调用后获得该数据结构的迭代器。<br>
+					类比在 Java 中对链表的迭代：
+					<pre><code class="Java">
+LinkedList&lt;String&gt; list = new LinkedList&lt;String&gt;(); // 创建一个链表对象
+Iterator&lt;String&gt; iterator = list.iterator(); // 获得该链表的迭代器
+while (iterator.hasNext()) { // 检查是否到链表尾部
+	System.out.println(iterator.next()); // 不是到尾部，取出链表的一个元素
+}
+					</code></pre>
+					在 javascript 中，Symbol.iterator 属性模拟了这个迭代过程，可以手写一个迭代器。
+					<pre><code class="javascript">
+var obj = {
+	data: [1, 2, 3, 4, 5], // 被迭代的数据
+	[Symbol.iterator]: function () {
+		var that = this;
+		var index = 0;
+		return { // 利用闭包模拟出迭代器的效果
+			next: function () {
+				return index < that.data.length ?
+				{value: that.data[index++], done: false} :
+				{value: undefined, done: true}
+			}
+		}
+	}
+}
+
+var iterator = obj[Symbol.iterator](); // 获得 obj 的迭代器
+var entry = null;
+while (!(entry = iterator.next()).done) {
+	console.log(entry.value);
+}
+					</code></pre>
+					每次的使用 next() 方法类似于 Java 的 iterator.next() ，不过最终使用的是返回的对象的 done 属性来判断是否遍历结束，当 done 为 true 时表示已经遍历结束。
+					<h3>原生 Iterator 接口</h3>
+					<p>
+						以下对象中自带 Symbol.iterator 属性：
+						<ul>
+							<li>Array</li>
+							<li>Map</li>
+							<li>Set</li>
+							<li>String</li>
+							<li>TypedArray</li>
+							<li>arguments</li>
+							<li>NodeList</li>
+						</ul>
+						可以在控制台查看该属性：
+						<pre><code class="javascript">
+console.log([][Symbol.iterator]);
+						</code></pre>
+						<figure>
+							<img src="../../images/loop_for_in.jpg" alt="">
+							<figcaption>[][Symbol.iterator] 为一个函数</figcaption>
+						</figure>
+					</p>
+					<h3>使用 for...of</h3>
+					<p>
+						具有 Symbol.iterator 属性的对象可以使用 for...of 来进行遍历。
+						<pre><code class="javascript">
+var arr = [1, 2, 3, 4, 5];
+for (value of arr) {
+	console.log(value);
+}
+// => 1 2 3 4 5
+						</code></pre>
+						其等价于：
+						<pre><code class="javascript">
+var arr = [1, 2, 3, 4, 5];
+var iterator = arr[Symbol.iterator]();
+var entry = null;
+while (!(entry = iterator.next()).done) {
+	console.log(entry.value);
+}
+// => 1 2 3 4 5
+						</code></pre>
+					</p>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 阮一峰 ES6入门 <a
+						href="http://es6.ruanyifeng.com/#docs/iterator">http://es6.ruanyifeng.com/#docs/iterator</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

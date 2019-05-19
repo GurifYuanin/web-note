@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Generator</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">Generator</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				Generator 函数是 ES6 的新特性，可以更方便地进行同步操作与异步编程。
+			</p>
+		</section>
+		<section>
+			<h2>Genrator 函数</h2>
+			<p>
+				学习 Genrator 函数需要知道以下概念：
+				<ul>
+					<li>function* ：声明函数时，function 关键字跟一个符号<span class="definition"> * </span>，表示是 Genrator 函数</li>
+					<li>yield 语句：用于暂停（suspend）执行 Generator 函数</li>
+					<li>yield* 语句：用于暂停（suspend）执行 Generator 函数，并将另一个 Generator 函数引入内部</li>
+					<li>next 方法：用于开始 Generator 函数</li>
+				</ul>
+				<h3>function*</h3>
+				<p>
+					function 后附带一个<span class="definition"> * </span>表示该函数是 Generator 函数，该函数有以下特性：
+					<ul>
+						<li>调用后返回一个 Generator 对象，其大概长这样：</li>
+						<pre><code class="javascript">
+{
+	[[GeneratorStatus]]: "suspended", // 表示该对象的状态，目前已经 suspended （暂停 / 悬挂）
+	__proto__: { // 其原型为 Generator 对象
+		__proto__: {
+			next: f,
+			return: f,
+			throw: f,
+			...
+		}
+	},
+	...
+}
+						</code></pre>
+						<li>调用后不会马上执行代码，需要使用返回的对象的 next 方法来执行内部代码</li>
+						<pre><code class="javascript">
+function* gen () {
+	console.log('hello world');
+}
+var instance = gen(); // 没事发生
+instance.next(); // => 输出 hello world
+						</code></pre>
+					</ul>
+				</p>
+				<h3>yield</h3>
+				<p>
+					在 Generator 函数使用 yield 语句就类似于添加一个断点，让函数执行到该位置，然后暂停执行，等下一个 next 方法使用时继续执行，整个执行顺序为：
+					<ol>
+						<li>调用 Generator 函数，返回对象（为了方便，称之为 g 对象）</li>
+						<li>使用 g.next()，从函数开头执行到第一个 yield，并且会执行跟在 yield 后面的代码，然后退出执行（但还没有将后面代码的返回值赋值给等号左侧）</li>
+						<pre><code class="javascript">
+var number1 = 0, number2 = 0;
+function* gen () {
+	number2 = yield number1 = 1;
+}
+
+var instance = gen();
+console.log(number1); // => 0
+console.log(number2); // => 0
+
+instance.next();
+console.log(number1); // => 1，number1 已经被改变
+console.log(number2); // => 0，number2 还没被改变
+						</code></pre>
+					</ol>
+				</p>
+				<h3>next</h3>
+				<p>
+					g 的 next 方法可以让暂停的 Generator 函数继续执行下去，直到遇到下一个 yield 或 return。
+					<h4>next 的参数</h4>
+					<ul>
+						<li>当直接使用 g.next() 时，暂停位置的 yield 语句返回值为 undefined，即将 undefined 赋值给等号左边</li>
+						<li>当使用 g.next(参数) 时，暂停位置的 yield 语句返回值为传入的参数，即将参数赋值给等号左边</li>
+						<pre><code class="javascript">
+var number1 = 0, number2 = 0;
+function* gen () {
+	number1 = yield;
+	number2 = yield;
+}
+var g = gen();
+g.next(); // 运行到第一行，但未赋值给 number1
+g.next(); // => number1 为 undefined、number2 为 0
+g.next(1); // => number1 为 undefined、number2 为 1
+						</code></pre>
+					</ul>
+					<h4>next 的返回值</h4>
+					使用 next 方法得到的返回值为一个对象：
+					<pre><code class="javascript">
+{
+	value: ...,
+	done: ...
+}
+					</code></pre>
+					<ul>
+						<li>value：即 yield 运算符其后的表达式的最终结果</li>
+						<li>done：表示 Generator 函数是否已经执行结束，未结束时为 false，在函数内执行了 return 语句或 g.return() 时该标志为 true</li>
+					</ul>
+					<pre><code class="javascript">
+function* gen () {
+	yield 1 + 1;
+}
+var result = gen().next();
+console.log(result); // => { value: 2, done: false }
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>Generator 对象</h2>
+			<p>
+				执行 Generator 函数后返回一个 Generator 对象，该对象有以下特性或方法：
+				<ul>
+					<li>是一个遍历器对象（iterator）</li>
+					<li>next</li>
+					<li>throw</li>
+					<li>return</li>
+				</ul>
+				<h3>可迭代</h3>
+				<p>
+					Generator 对象是一个遍历器对象，因此 Generator 对象可以被 for...of 循环。
+					<pre><code class="javascript">
+for (var value of instance) {
+	console.log(value);
+}
+// => 1 2 3
+					</code></pre>
+					同时，对象上有一个 [Symbol.iterator] 属性，执行后得到自己。
+					<pre><code>
+function* gen () {
+	yield 1;
+	yield 2;
+	yield 3;
+	return 4;
+}
+var instance = gen();
+console.log(instance[Symbol.iterator]);
+console.log(instance[Symbol.iterator]() === instance); // => true
+					</code></pre>
+					<figure>
+						<img src="../../images/generator_symbol_iterator.jpg" alt="">
+					</figure>
+					return 的值不会进入循环体，因为此时调用 next 方法的返回值是<span class="definition"> {value: 4, done: true} </span>，for...of
+					判断认为已经遍历结束，因此不会输出 4 。
+				</p>
+				<h3>throw 方法</h3>
+				<p>
+					throw 用于向在函数内的当前 yield 所在地方抛出一个异常，然后让内部去捕捉。
+					<pre><code class="javascript">
+function* gen () {
+	try {
+		yield;
+	} catch (e) {
+		console.log('内部捕捉到了异常！');
+	}
+}
+var instance = gen();
+instance.next(); // 运行到 yield 所在行
+instance.throw(); // => 内部捕捉到了异常
+					</code></pre>
+					当 yield 所在的地方没有使用 try...catch 去捕捉时，由于没有异常没有被处理，就会程序中断，直接报错。
+					<pre><code class="javascript">
+function* gen () {
+	yield;
+	try {
+		yield;
+	} catch (e) {
+		console.log('内部捕捉到了异常！');
+	}
+}
+var instance = gen();
+instance.next(); // 运行到第一个 yield 所在行
+instance.throw(); // => 报错 Uncaught undefined
+					</code></pre>
+					<h4>参数</h4>
+					使用 throw 方法可以传入一个参数，该参数将作被捕捉时的错误对象，即 catch(e){...} 的 e。
+					<pre><code class="javascript">
+function* gen () {
+	try {
+		yield;
+	} catch (e) {
+		console.log(e);
+	}
+}
+var instance = gen();
+instance.next();
+instance.throw('传递进去的参数'); // => 传递进去的参数
+					</code></pre>
+					<h4>只捕捉一次</h4>
+					正常地，一个 catch 只能捕捉一次异常的抛出。
+					<pre><code class="javascript">
+function* gen () {
+	try {
+		yield;
+	} catch (e) {
+		console.log('正常处理了异常');
+	}
+}
+var instance = gen();
+instance.next();
+instance.throw(); // => 正常处理了异常
+instance.throw(); // => Uncaught undefined
+					</code></pre>
+					<h4>暗搓搓地执行了 next 方法</h4>
+					实际上执行 throw 方法后，如果异常能被捕捉，Generator 对象会暗搓搓执行一次 next 方法。
+					<pre><code class="javascript">
+function* gen () {
+	try {
+		yield;
+	} catch (e) {
+		console.log('正常处理了异常');
+	}
+	console.log('人生还是要继续进行的');
+}
+var instance = gen();
+instance.next();
+instance.throw(); // => 正常处理了异常 人生还是要继续进行的
+					</code></pre>
+				</p>
+				<h3>return 方法</h3>
+				<p>
+					当函数内部执行了 return 语句进行返回时，g.next() 返回 {value: 返回值, done: true}，表示 Generator 已经执行完毕，即使 return 使后面还有代码。
+					<pre><code class="javascript">
+function* gen () {
+	return 1;
+	yield;
+}
+var instance = gen();
+console.log(instance.next()); // => {value: 1, done: true}
+					</code></pre>
+					Generator 对象的 return 方法可以提前进行返回，结束程序的执行。
+					<pre><code class="javascript">
+function* gen () {
+	yield 1;
+	yield 2;
+}
+var instance = gen();
+instance.return();
+console.log(instance.next()); // {value: undefined, done: true}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>异步</h2>
+			<p>
+				在 Generator 函数中运行 yield 语句时，会将跟在 yield 后面的计算结果返回，然后暂停执行该函数。我们可以利用该特性，配合<a
+					href="./promise.html">Promise</a>来写异步执行的函数。
+				<pre><code class="javascript">
+function* gen () {
+	yield new Promise(function(resolve, reject){
+		// 非常费时间的代码
+		setTimeout(function() {
+			resolve('返回的数据');
+		}, 3000);
+	});
+	// 后续代码
+}
+
+var instance = gen();
+instance.next().value.then(function(data) {
+	// 正常时的处理
+	console.log(data);
+	instance.next(); // 执行后续代码
+}).catch(function(){
+	// 出错时的处理
+})
+				</code></pre>
+				<figure>
+					<img src="../../images/generator_async.gif" style="border: solid 1px #444;">
+					<figcaption>控制台 3s 后输出内容</figcaption>
+				</figure>
+				这种方法其实和直接使用 promise 效果一样，但可以在 generator 函数内写多个 yield，然后使用 instance.next() 进行多次的异步操作。
+				<pre><code class="javascript">
+function* gen () {
+	yield new Promise(function(resolve, reject){
+		setTimeout(function() {
+			resolve('1s');
+		}, 1000);
+	});
+	yield new Promise(function(resolve, reject){
+		setTimeout(function() {
+			resolve('2s');
+		}, 1000);
+	});
+}
+
+var instance = gen();
+instance.next().value.then(function(data) {
+	console.log(data);
+	instance.next().value.then(function(data) {
+		console.log(data);
+});
+				</code></pre>
+				<figure>
+					<img src="../../images/generator_async_2.gif" alt="">
+				</figure>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 阮一峰 ES6入门 <a
+						href="http://es6.ruanyifeng.com/#docs/generator">http://es6.ruanyifeng.com/#docs/generator</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

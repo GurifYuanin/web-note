@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>TP5.1</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">Thinkphp5.1</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				ThinkPHP 是一个免费开源的，快速、简单的面向对象的轻量级 PHP 开发框架<sup>[1]</sup><br>
+				Thinkphp5.1 官方开发手册：<a
+					href="https://www.kancloud.cn/manual/thinkphp5_1#/catalog">https://www.kancloud.cn/manual/thinkphp5_1#/catalog</a>
+			</p>
+		</section>
+		<section>
+			<h2>安装（Git 方式）</h2>
+			<p>
+				<pre><code class="python">
+# 下载项目仓库
+git clone https://github.com/top-think/think 项目名
+# 进入项目
+cd 项目名
+# 下载框架仓库
+git clone https://github.com/top-think/framework thinkphp
+				</code></pre>
+				环境要求（不满足要求则无法使用框架）：
+				<ol>
+					<li>PHP 版本 >= 5.6.0</li>
+					<li>PHP 开启 PDO 和 MBstring 拓展</li>
+				</ol>
+				检查方法：
+				<ol>
+					<li>
+						打开 cmd ，进入 PHP 安装目录，执行<span class="definition"> php -v </span>查看 PHP 版本<br>
+						<figure>
+							<img src="../../images/php_version.jpg">
+						</figure>
+					</li>
+					<li>
+						创建 PHP 文件，写入 <span class="definition"> &lt;?php phpinfo() ?&gt; </span>，保存后执行
+						<figure>
+							<img width="100%" src="../../images/pdo.jpg">
+							<img width="100%" src="../../images/mbstring.jpg">
+						</figure>
+					</li>
+				</ol>
+			</p>
+		</section>
+		<section>
+			<h2>目录结构</h2>
+			<p>
+				<div id="catalogFrame">
+					<img src="../../images/dir.png">application：应用程序目录<br>
+					<div>
+						<img src="../../images/dir.png">common：公共模块目录<br>
+						<img src="../../images/dir.png">模块名<br>
+						<div>
+							<img src="../../images/php.png">common.php：该模块下的公共函数（只有该模块可以使用）<br>
+							<img src="../../images/dir.png">controller<br>
+							<div>
+								<img src="../../images/php.png">控制器名.php
+							</div>
+							<img src="../../images/dir.png">model<br>
+							<div>
+								<img src="../../images/php.png">模型名.php
+							</div>
+							<img src="../../images/dir.png">view<br>
+							<div>
+								<img src="../../images/php.png">视图名.php
+							</div>
+						</div>
+						<img src="../../images/php.png">common.php：所有模块的公共函数（所有模块都可以使用）<br>
+						<img src="../../images/php.png">command.php<br>
+						<img src="../../images/php.png">tags.php<br>
+					</div>
+					<img src="../../images/dir.png">config<br>
+					<div>
+						<img src="../../images/dir.png">模块名：配置后只作用于该模块<br>
+						<img src="../../images/php.png">app.php：应用程序配置<br>
+						<img src="../../images/php.png">cache.php：缓存配置<br>
+						<img src="../../images/php.png">cookie.php：cookie 配置<br>
+						<img src="../../images/php.png">database.php：数据库配置<br>
+						<img src="../../images/php.png">log.php：日志配置<br>
+						<img src="../../images/php.png">session.php：会话配置<br>
+						<img src="../../images/php.png">template.php：模版配置<br>
+						<img src="../../images/php.png">trace.php<br>
+					</div>
+					<img src="../../images/dir.png">route：路由规则目录<br>
+					<div>
+						<img src="../../images/php.png">route.php<br>
+					</div>
+					<img src="../../images/dir.png">public：网站根目录<br>
+					<div>
+						<img src="../../images/php.png">index.php：网站入口文件<br>
+						<img src="../../images/php.png">router.php<br>
+						<img src="../../images/apache.png">.htaccess：apache 重写文件<br>
+					</div>
+					<img src="../../images/dir.png">thinkphp：框架系统目录<br>
+					<img src="../../images/dir.png">extend<br>
+					<img src="../../images/dir.png">runtime：程序运行时产生的文件<br>
+					<div>
+						<img src="../../images/dir.png">log<br>
+						<img src="../../images/dir.png">temp<br>
+					</div>
+					<img src="../../images/dir.png">vendor<br>
+					<img src="../../images/php.png">build.php<br>
+					<img src="../../images/json.png">composer.json<br>
+					<img src="../../images/txt.png">LICENSE.txt<br>
+					<img src="../../images/read.png">README.md<br>
+					<img src="../../images/php.png">think<br>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>入口</h2>
+			<p>
+				TP5.1 采用单一入口模式进行项目部署和访问，public 为公共可访问的目录，默认有一个 index.php 作为入口地址。
+				<pre><code class="php">
+&lt;?php
+// [ 应用入口文件 ]
+namespace think;
+
+// 加载基础文件
+require __DIR__ . '/../../thinkphp/base.php';
+
+// 支持事先使用静态方法设置 Request 对象和 Config 对象
+// 定义程序的地址
+define('APP_PATH', __DIR__ . <span class="strong">'/../../application/'</span>);
+// 定义配置的地址
+define('CONF_PATH', __DIR__ . <span class="strong">'/../../application/config/'</span>);
+
+// 执行应用并响应
+Container::get('app')->run()->send();
+				</code></pre>
+				随后访问 /public/index.php 即进入该单页面应用（SPA）。
+				<p class="tip">
+					可以修改或者创建另一个入口，设置好程序地址和配置地址即可。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>配置</h2>
+			<p>
+				ThinkPHP遵循惯例重于配置的原则，系统会按照下面的顺序来加载配置文件（后者会覆盖前者）：<sup>[1]</sup>
+				<ol>
+					<li>惯例配置：即 thinkphp/convention.php ，默认配置，勿修改</li>
+					<li>
+						应用配置：即 config 下的文件，该应用程序有效
+						<pre><code class="php">
+&lt;?php
+	// 在入口文件定义配置文件目录地址
+	define('CONF_PATH', __DIR__ . '/../../application/config/');
+?&gt;
+						</code></pre>
+					</li>
+					<li>模块配置：即 application/模块名/config 下的文件，该模块有效</li>
+					<li>
+						动态配置：即使用 Config 类进行动态配置，运行时有效
+						<pre><code class="php">
+&lt;?php
+	use think\facade\Config
+	class 控制器名 {
+		public function 方法名() {
+			// 使用静态方法
+			Config::get(key); // 读取配置
+			Config::set(key, value); // 设置配置
+			Config::has(key); // 判断是否已配置
+
+			// 使用助手函数
+			config(key); // 读取配置
+			config(key, value); // 设置配置
+		}
+	}
+?&gt;
+						</code></pre>
+					</li>
+				</ol>
+
+			</p>
+		</section>
+		<section>
+			<h2>数据库</h2>
+			<p>
+				<h3>数据库配置</h3>
+				通过对<span class="definition"> config/database.php </span>进行设置，此处只举常用的配置项
+				<pre><code class="php">
+&lt;?php
+	return [
+		// 数据库类型
+		// mysql -> Mysql
+		// sqlsrv -> SqlServer
+		// sqlite -> SqLite
+		// pgsql -> PgSQL
+		'type'            => 'mysql',
+		// 服务器地址
+		'hostname'        => '127.0.0.1',
+		// 数据库名
+		'database'        => 'mydb',
+		// 用户名
+		'username'        => 'root',
+		// 密码
+		'password'        => '123456',
+		// 端口，Mysql 默认为 3306
+		'hostport'        => '3306',
+		// 数据库表前缀，进行 Db::table() 进行表操作时需要添加该前缀
+		'prefix'          => 'tp_',
+
+		// 等价于
+		// dsn 方式
+		'dsn'             => 'mysql://root:123456@127.0.0.1:3306/mydb',
+	];
+?&gt;
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>模型（Model）</h2>
+			<p>
+				<h3>约定</h3>
+				<p>
+					数据库表、字段使用下划线命名法，模型名、方法使用帕斯卡命名法。一个模型对应一个表。
+					<pre><code class="php">
+// 数据库表：my_database_table
+CREATE TABLE my_database_table (
+	user_id char(10) PRIMARY KEY
+)
+
+// 模型：MyDatabaseTable.php
+&lt;?php
+	class MyDatabaseTable {
+		public function getUserId($value) {
+			return $value;
+		}
+	}
+?&gt;
+					</code></pre>
+				</p>
+				<h3>创建模型</h3>
+				<p>
+					在<span class="definition"> application/控制器名/model </span>下创建<span class="definition"> 模型名.php </span>，使用模型可以实现
+					<ol>
+						<li>进行表操作时，指定字段自动填写</li>
+						<li>获取与设置表数据时自动对数据进行加工</li>
+					</ol>
+					<pre><code class="php">
+&lt;?php
+	namespace application\模块名\model;
+	use think\Model;
+	use traits\model\SoftDelete;
+	class 模型名 extends Model {
+		protected $pk = '主码字段名'; // 设置主码名，不设置时默认为 id
+		protected $pk = ['主码1', '主码2', ...]; // 多字段作为主码时使用数组
+
+		use SoftDelete; // 使用软删除，删除数据时自动设置字段 delete_time 从 NULL 变为当前时间戳
+		protected $deleteTime = '删除数据时刻字段'; // 不使用 delete_time 而使用该字段
+
+		// 创建数据时自动设置字段 create_time 为当前时间戳
+		// 更新数据时自动设置字段 update_time 为当前时间戳
+		protected $autoWriteTimestamp = true; // 打开自动补全时间戳字段
+		protected $createTime = '插入数据时刻字段'; // 不使用 create_time 而使用该字段
+		protected $updateTime = '更新数据时刻字段'; // 不适用 update_time 而使用该字段
+
+		// 对查询数据加工，$value 为数据库原始数据，返回处理后的数据
+		public function get列名Attr ($value){
+			return ...;
+		}
+		// 对插入数据加工，$value 为数据插入的原始数据，插入处理后的数据
+		public function set列名Attr ($value) {
+			return ...;
+		}
+	}
+?&gt;
+					</code></pre>
+				</p>
+				<h3>使用模型</h3>
+				<p>
+
+					<pre><code class="php">
+&lt;?php
+	namespance application\模块名\View;
+	use think\Controller;
+	use app\模块名\model\模型名;
+	class 控制器名 extends Controller {
+		/* 静态方法 */
+		// 查询并获取第一条记录，返回模型对象（一维）
+		模型名 :: get(value); // SELECT * FROM 模型名 WHERE 主码 = value
+		模型名 :: get([key => value]); // SELECT * FROM 表名 WHERE key = value
+		模型名 :: where([key => value]) -> find();
+		// 查询并获取所有记录，返回模型对象（二维）
+		模型名 :: all([key => value]); // SELECT * FROM 表名 WHERE key = value
+		模型名 :: where([key => value]) -> select();
+		// 查询并获取某个字段的值
+		模型名 :: get(value) -> value('name'); // SELECT name FROM 表名 WHERE 主码 = value
+		// 查询并获得某列所有值的一维数组
+		模型名 :: all([key => value]) -> column('name'); // SELECT name FROM 表名 WHERE key = value
+		// 聚合查询
+		模型名 :: 聚合函数(); SELECT 聚合函数(*) FROM 表名
+		// 插入一条数据，返回插入的模型对象（一维）
+		模型名 :: create([key => value]); // INSERT 表名 (key) VALUES (value)
+		// 更新数据，返回更新的数组
+		模型名 :: update([last => next], [key => value]); // UPDATE 表名 SET last = next WHERE key = value
+		// 删除数据，返回受影响条数
+		模型名 :: destroy(value); // DELETE 表名 WHERE 主码 = value
+		模型名 :: destroy([key => value]); // DELETE 表名 WHERE key = value
+
+		/* 实例化对象方法 */
+		$instance = new 模型名;
+		// 插入一条记录，返回模型对象（一维）
+		$instance -> save([key => value]); // INSERT 表名 (key) VALUES (value)
+		// 插入多条记录，返回模型对象（二维）
+		$instance -> saveAll([
+			[key1 => value1],
+			[key2 => value2]
+		]);
+		// 更新：先查找，再更新
+		$instance = 模型名 :: get([key => value]);
+		$instance -> 列名 = 值;
+		$instance -> save(); // UPDATE 表名 SET 列名 = 值 WHERE key = value
+		// 删除：先查询，再删除，返回受影响行数
+		$instance = 模型名 :: get([key => value]);
+		$instance -> delete(); // DELETE 表名 WHERE key = value
+	}
+?&gt;
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>视图（View）</h2>
+			<p>
+				<h3>创建视图模版</h3>
+				<p>
+					在<span class="definition"> application/模块名/view </span>下创建<span class="definition"> 模版.html </span>，用户进行请求时
+					TP5 会先将模版进行编译，编译后的文件放在<span class="definition"> runtime/temp </span>下。
+					<div class="tip">编译即指对<span class="definition"> {} </span>内的内容进行解析，可在<span class="definition">
+							config/template.php </span>修改模版配置</div>
+					<pre><code class="html">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+	&lt;meta charset="UTF-8"&gt;
+	&lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;!-- 使用变量：echo isset($变量名) ? $变量名 : 'value' --&gt;
+	{$变量名|default="value"}
+	&lt;!-- 使用函数，### 为占位符：echo 函数名($变量名, 其他形参) --&gt;
+	{$变量名|函数名=###,其他形参}
+
+	&lt;!-- 导入模版 --&gt;
+	{include file="路径/模版名"}
+	&lt;!-- 继承模版 --&gt;
+	{extend name="路径/模版名"}
+	&lt;!-- 挖坑 --&gt;
+	{block name="坑id"}默认值{/block}
+	&lt;!-- 使用坑 --&gt;
+	{block name="坑id"}往坑里填入的数据{/block}
+	&lt;!-- 使用坑，并引用使用默认值 --&gt;
+	{block name="坑id"}{__block__}{/block}
+
+	&lt;!-- 循环渲染 --&gt;
+	&lt;!-- 方法1 --&gt;
+	{volist name="数组名" id="元素名" offset=开始偏移 length=遍历长度 empty="$变量名" key="索引名"}
+		{$索引名}{$元素名} &lt;!-- 用 $索引名 来获取 index --&gt;
+	{/volist}
+	&lt;!-- 方法2 --&gt;
+	{foreach $数组名 as $元素名 key="键名"}
+		{$键名}{$元素名} &lt;!-- 用 $键名 来获取数组的键名，$元素名 来获取键值 --&gt;
+	{/foreach}
+	{for start="startIndex" end="endIndex" step="步长" name="索引名"}
+		{$索引名}
+	{/for}
+	&lt;!-- 方法3 --&gt;
+	{switch name="$变量"}
+		{case value="选项1|选项2..."}{/case}	&lt;!-- 自动加了 break --&gt;
+		{default/}
+	{/switch}
+
+	&lt;!-- 选择渲染 --&gt;
+	&lt;!-- 运算：eq、neq、gt、ngt、lt、nlt、range、in、notin、between --&gt;
+	{运算 name="变量|值1" value="$变量|值2, ..."}{else/}{/运算}
+	{defined name="变量"}{else/}{defined}
+	{if condition="(判断1) AND|OR (判断2)..."}{else/}{/if}
+&lt;/body&gt;
+&lt;/html&gt;
+				</code></pre>
+					可以在<span class="definition"> config/template.php </span>设置渲染替换
+					<pre><code class="php">
+&lt;?php
+return [
+	tpl_replace_string => [ srcStr => desStr ]
+];
+?&gt;
+					</code></pre>
+					在模版中使用 srcStr ，最终编译时会将其替换为 desStr。
+				</p>
+				<h3>调用模版</h3>
+				<p>
+					<pre><code class="php">
+&lt;?php
+	namespace application\模块名\controller;
+	use think\Controller;
+	class 控制器名 extends Controller {
+		// 向模版传递变量 $key = value
+		$this->assign(key, value);
+		// 调用模版
+		return $this->fetch('模块名/模版名');
+	}
+?&gt;
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>控制器（Controller）</h2>
+			<p>
+				Thinkphp 是单入口文件的模式，在 pathinfo 模式下，进行如下 URL 的访问：
+				<pre><code class="html">
+协议://域名:端口/index.php/模块名/控制器名/方法名/形参名/形参值?key=value
+				</code></pre>
+				实际上最终访问<span class="definition"> application/模块名/controller/控制器名.php </span>，将形参值传入并执行方法
+				<pre><code class="php">
+&lt;?php
+	namespace application\模块名\controller;
+	use think\Controller;
+	class 控制器名 extends Controller {
+		public function 方法名 ($形参名) {
+			echo $形参名; // 读取形参值
+			echo input('key'); // 读取 value
+		}
+	}
+?&gt;
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>路由</h2>
+			<p>
+				<h3>开启路由后的工作流程：</h3>
+				<ol>
+					<li>用户在浏览器输入源 URL ，发送请求</li>
+					<li>服务器接收到该请求，检查该 URL 是否符合事先注册好的路由规则</li>
+					<li>如果符合，则进行相应操作，得到新的 URL</li>
+					<li>返回新的 URL 对应的资源（但不会将新 URL 显示在浏览器的地址栏）</li>
+				</ol>
+				<div class="tip">注册路由后，如果用户试图直接输入新 URL 来访问目标资源，将直接报错</div>
+				<h3>开启路由：</h3>
+				<ul>
+					<li>Thinkphp5.1 默认开启了路由：不符合路由规则的请求就不进行路由，正常响应</li>
+					<li>配置 config/app.php 的 'url_route_must' 项为 true 来开启强制路由模式：不符合路由规则的请求会直接报错</li>
+				</ul>
+				<h3>注册路由规则：</h3>
+				<ol>
+					<li>
+						全局配置：到 route 目录下对 route.php 文件（也可以自定义文件）进行设置
+						<pre><code class="php">
+&lt;?php
+return [
+	// 将 index.php/main/1 路由到 index.php/index/Index/people/id/1
+	'main/:id' => 'index/Index/people'
+];
+?&gt;
+						</code></pre>
+					</li>
+					<li>
+						动态配置
+						<pre><code class="php">
+&lt;?php
+	class 控制器名 extends \think\facade\Route {
+		public function 方法名() {
+			Route::rule('路由表达式','路由地址','请求类型');
+		}
+	}
+?&gt;
+						</code></pre>
+					</li>
+				</ol>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] ThinkPHP5.1完全开发手册 <a
+						href="https://www.kancloud.cn/manual/thinkphp5_1">https://www.kancloud.cn/manual/thinkphp5_1</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

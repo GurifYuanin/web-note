@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>DOM</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">DOM</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				DOM（Document object model）：文档对象模型，是 HTML 和 XML 文档的编程接口，它提供了对文档的结构化的表述，并定义了一种方式可以使从程序中对该结构进行访问。<sup>[1]</sup>
+				<figure>
+					<img src="../../images/dom_relation.jpg" alt="">
+					<figcaption>JS 通过 DOM 访问 HTML 页面</figcaption>
+				</figure>
+				<div class="tip">
+					能进行 DOM 操作不一定是使用 Javascript 语言，但此处只涉及 Javascript 。
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>接口</h2>
+			<p>
+				DOM 有以下常用接口类：
+				<table>
+					<tr>
+						<th>类名</th>
+						<th>获得方式</th>
+						<th>解释</th>
+					</tr>
+					<tr>
+						<td>Node</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>NodeList</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Element</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>HTMLElement</td>
+						<td>元素.getElementById 等</td>
+						<td>元素 / 节点</td>
+					</tr>
+					<tr>
+						<td>HTMLCollection</td>
+						<td>元素.getElementsByTagName 等</td>
+						<td>元素数组 / 节点数组</td>
+					</tr>
+					<tr>
+						<td>HTMLDivElement(等)</td>
+						<td>document.createElement('div')</td>
+						<td>具体标签的元素</td>
+					</tr>
+					<tr>
+						<td>Text</td>
+						<td>元素节点遍历</td>
+						<td>文本节点</td>
+					</tr>
+					<tr>
+						<td>Comment</td>
+						<td>元素节点遍历</td>
+						<td>注释节点，即&lt;!----&gt;</td>
+					</tr>
+				</table>
+				其父子级关系为：
+				<figure>
+					<img src="../../images/dom_extends.jpg" alt="">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>DOM 操作</h2>
+			<p>
+				<h3>节点属性</h3>
+				<p>
+					<h4>三个重要属性</h4>
+					节点对象有三个重要属性：
+					<table>
+						<tr>
+							<th>属性名</th>
+							<th>属性值</th>
+							<th>解释</th>
+							<th>读写</th>
+						</tr>
+						<tr>
+							<td>nodeName</td>
+							<td>
+								<div>元素（HTMLElement）：标签名</div>
+								<div>属性（Attribute）：属性名</div>
+								<div>文本（Text）：#text</div>
+								<div>注释（Comment）：#comment</div>
+								<div>文档（document）： #document</div>
+							</td>
+							<td>节点名</td>
+							<td>只读</td>
+						</tr>
+						<tr>
+							<td>nodeValue</td>
+							<td>
+								<div>元素（HTMLElement）：null</div>
+								<div>属性（Attribute）：属性值</div>
+								<div>文本（Text）：文本内容</div>
+								<div>注释（Comment）：注释内容</div>
+								<div>文档（document）：null</div>
+							</td>
+							<td>节点值</td>
+							<td>读写</td>
+						</tr>
+						<tr>
+							<td>nodeType</td>
+							<td>
+								<div>元素（HTMLElement）：1</div>
+								<div>属性（Attribute）：2</div>
+								<div>文本（Text）：2</div>
+								<div>注释（Comment）：8</div>
+								<div>文档（document）：9</div>
+							</td>
+							<td>节点类型</td>
+							<td>只读</td>
+						</tr>
+					</table>
+					<h4>其他属性</h4>
+					既可以使用<span class="definition"> 节点.属性名 </span>来获得属性，也可以使用<span class="definition"> 元素.getAttribute(属性名)
+					</span>来获得属性的值，这两种方法虽然获得都是目标上的同一个属性值，但意义完全不同，详情参见<a href="./头疼的兼容.html#IE"> 头疼的兼容 </a>。
+				</p>
+				<h3>创建元素节点</h3>
+				<p>
+					使用 document.createElement 创建元素，传入两个参数：
+					<table>
+						<tr>
+							<th>参数</th>
+							<th>解释</th>
+							<th>类型</th>
+							<th>是否必须</th>
+						</tr>
+						<tr>
+							<td>标签名</td>
+							<td>必须是 HTML 已有的标签，如 div、a</td>
+							<td>string</td>
+							<td>是</td>
+						</tr>
+						<tr>
+							<td>{is: 自定义标签名}</td>
+							<td>自定义标签名是事先使用 customElements.define 定义好的标签</td>
+							<td>string</td>
+							<td>否</td>
+						</tr>
+					</table>
+					<pre><code class="javascript">
+document.createElement('div');
+					</code></pre>
+				</p>
+				<h3>创建文本节点 & 注释节点</h3>
+				<p>
+					使用 document.createTextNode 创建文本节点，传入一个参数作为文本值。
+					<pre><code class="javascript">
+document.createTextNode('hello world');
+					</code></pre>
+					使用 document.createComment 创建注释节点，传入一个参数作为注释文字。
+					<pre><code class="javascript">
+document.createComment('hello world');
+					</code></pre>
+					<figure>
+						<img src="../../images/dom_comment_text.jpg">
+					</figure>
+				</p>
+				<h3>克隆节点</h3>
+				<p>
+					<pre><code class="javascript">
+var el = document.createElement('div');
+// 对 el 进行一通操作
+// ...
+// 方法一
+var newEl = el.cloneNode();
+// 方法二
+var newEl = document.importNode(el);
+					</code></pre>
+					cloneNode 和 importNode 都可以追加一个布尔值的参数，默认为 false ，表示不递归克隆，设置为 true 后递归克隆元素下的所有节点，
+				</p>
+				<h3>追加节点</h3>
+				<p>
+					<h4>追加到首位</h4>
+					使用 prepend 方法追加元素作为第一个子元素。
+					<pre><code class="javascript">
+parentNode.prepend(childNode);
+					</code></pre>
+					<h4>添加到末位</h4>
+					使用 createElement 创建的元素节点，通过 appendChild 可以将元素追加到子节点中，追加作为当前节点的<span class="different"> 最后一个子节点 </span>。
+					<script></script>
+					<pre><code class="html">
+&lt;div id="parent"&gt;
+	&lt;span id="child1"&gt;hello&lt;/span&gt;
+	&lt;span id="child2"&gt;world&lt;/span&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	var child3 = document.createElement('span');
+	child3.id = 'child3';
+	child3.innerText = '!';
+	document.getElementById('parent').appendChild(child3);
+&lt;/script&gt;
+					</code></pre>
+					<figure>
+						<img src="../../images/dom_append_child.jpg" alt="">
+						<figcaption>追加结果</figcaption>
+					</figure>
+					<h4>添加到指定位置</h4>
+					使用 insertBefore 或 insertAfter 方法可以将元素插入到指定的子节点的前后。
+					<pre><code class="html">
+&lt;div id="parent"&gt;
+	&lt;span id="child1"&gt;hello&lt;/span&gt;
+	&lt;span id="child3"&gt;!&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+	var child2 = document.createElement('span');
+	child2.innerText = 'world';
+	child2.id = 'child2';
+	document.getElementById('parent').insertBefore(child2, document.getElementById('child3'));
+	// 等价于
+	document.getElementById('parent').insertAfter(child2, document.getElementById('child1'));
+&lt;/script&gt;
+					</code></pre>
+					<h4>移动节点</h4>
+					当从文档中获得节点（而不是 document.createElement 创建出来），再插入到文档的另一个位置，原来位置的节点将消失，即节点移动到新的位置上。
+					<pre><code class="html">
+&lt;div id="parent"&gt;
+	&lt;span id="child1"&gt;hello&lt;/span&gt;
+	&lt;span id="child2"&gt;world&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+	document.getElementById('parent').appendChild(document.getElementById('child1'));
+&lt;/script&gt;
+					</code></pre>
+					<div class="show">
+						<div>结果为：</div>
+						<div id="parent">
+							<span id="child1">hello</span>
+							<span id="child2">world</span>
+						</div>
+						<script>
+							document.getElementById('parent').appendChild(document.getElementById('child1'));
+						</script>
+					</div>
+				</p>
+				<h3>删除节点</h3>
+				<p>
+					使用 removeChild 删除当前节点的一个<span class="different"> 子节点 </span>。
+					<pre><code class="html">
+
+&lt;div id="parent"&gt;
+	&lt;span id="child"&gt;&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+	var parent = document.getElementById('parent');
+	var child = document.getElementById('child');
+	parent.removeChild(child);
+&lt;/script&gt;
+
+					</code></pre>
+					删除子节点后，该子节点的所有后代节点也会被一并删除。
+					<h4>删除自己</h4>
+					<p>
+						当获得一个元素节点时，并且想删除该节点，可以使用元素遍历的方法获得父节点，再使用 removeChild 删除自己。
+						<pre><code class="javascript">
+var child = document.getElementById('child')
+var parent = child.parentNode;
+parent.removeChild(child);
+						</code></pre>
+					</p>
+				</p>
+				<h3>遍历</h3>
+				<p>
+					利用节点之间的父子、兄弟关系来进行遍历。
+					<table>
+						<tr>
+							<th>属性名</th>
+							<th>解释</th>
+						</tr>
+						<tr>
+							<td>parentNode</td>
+							<td>获得父节点</td>
+						</tr>
+						<tr>
+							<td>childNodes</td>
+							<td>获得所有子节点 / 节点数组</td>
+						</tr>
+						<tr>
+							<td>lastChild</td>
+							<td>获得最后一个子节点</td>
+						</tr>
+						<tr>
+							<td>nextSibling</td>
+							<td>下一个兄弟节点</td>
+						</tr>
+						<tr>
+							<td>previousSibling</td>
+							<td>上一个兄弟节点</td>
+						</tr>
+					</table>
+					需要注意的是，换行也算做一个文本节点，比如：
+					<pre><code class="html">
+&lt;div id="parent"&gt;
+	&lt;span id="child"&gt;hello world&lt;/span&gt;
+&lt;/div&gt;
+&lt;script&gt;
+	document.getElementById('parent').childNodes;
+	// 实际上获得了 3 个子节点：
+	// 值为 "↵		" 的节点（Text）
+	// 值为 hello world 的 span 节点（HTMLElement）
+	// 值为 "↵		" 的节点（Text）
+&lt;/script&gt;
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] MDN DOM <a
+						href="https://developer.mozilla.org/zh-CN/docs/Web/API/Document_Object_Model/Introduction">https://developer.mozilla.org/zh-CN/docs/Web/API/Document_Object_Model/Introduction</a>
+				</div>
+				<div>[2] 菜鸟教程 XML DOM 简介 <a
+						href="http://www.runoob.com/dom/dom-intro.html">http://www.runoob.com/dom/dom-intro.html</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

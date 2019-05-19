@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>TCP</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">TCP</h1>
+		</hgroup>
+		<section>
+			<h2>报文格式</h2>
+			<p>
+				TCP 报文长度为 20B + 40B(可选)。
+				<figure>
+					<img src="../../images/tcp_segment_structure.jpg">
+				</figure>
+				TCP 拿到数据后，先将数据进行切割（如果数据需要被切割的话），然后按照字节（Byte）对切割后的数据进行编号。比如要发送 5500 字节的数据，切割后变成 1 ~ 1000，1001 ~ 2000，2001 ~
+				3000，3001 ~ 4000，4001 ~ 5000，5001 ~ 5500 6 个部分，需要发 6 次 TCP 报文。第一次发送 TCP 报文的时候：
+				<ul>
+					<li>序号(seq)：第一次发送数据，seq 为 1000 + 一个随机数，比如随机数为 500，seq 就发 1500，第二次发送的时候 seq 发 2500，第三次 3500 ...</li>
+					<li>确定序号(ack)：如果之前对方有发送数据过来，则填之前收到的报文的 seq + 1，表示 seq + 1 之前的数据我都收到了</li>
+					<li>数据偏移：因为可选部分长度是不确定的，所以需要这样一个字段，用来表示整个报文数据部分在哪里开始，比如此次如果不需要可选项，则发 0101，也就是十进制的 5 ，表示 5 * 32 bit = 160bit =
+						20B</li>
+					<li>保留位：TCP 规定留着以后用的，所以填 0 就行了</li>
+					<li>滑动窗口大小：表示我这边还有多少滑动窗口，用来告诉对面要控制传输</li>
+					<li>校验和：奇偶校验</li>
+					<li>紧急指针：</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>三次握手</h2>
+			<p>
+				<div>SYN：同步序列编号（Synchronize Sequence Numbers）。是TCP/IP建立连接时使用的握手信号。<sup>[1]</sup></div>
+				<div>ACK (Acknowledgement）：确认字符，在数据通信中，接收站发给发送站的一种传输类控制字符。<sup>[2]</sup></div>
+				<ol>
+					<li>客户端发送 SYN 报文，seq 为一个随机数，假设为 x</li>
+					<li>服务器端发送 ACK 报文，seq 为另一个随机数，假设为 y，ack 为 前面一个报文的 x + 1</li>
+					<li>客户端发送 SYN 报文，seq y + 1，ack 为 y + 1 </li>
+				</ol>
+				三个步骤如果有一个没进行则不会建立连接。
+				<h3>为什么要三次握手，两次不行？</h3>
+				<p>
+					<h4>一种解释</h4>
+					<ul>
+						<li>第一次握手，客户端向服务器发送报文，服务器端收到后可以知道：1、我可以收到客户端发送的报文</li>
+						<li>第二次握手，服务器向客户端发送报文，客户端收到后可以知道：1、服务器可以收到我的报文 2、我可以收到服务器的报文</li>
+						<li>第三次握手，客户端向服务器发送报文，服务器端收到后可以知道：1、客户端可以收到我发送的报文</li>
+					</ul>
+					将以上综合起来，最终结果，对于客户端：
+					<ul>
+						<li>我可以发送报文，然后服务器收到（第二次握手）</li>
+						<li>服务器可以发送报文，然后我收到（第二次握手）</li>
+					</ul>
+					对于服务器端：
+					<ul>
+						<li>我可以发送报文，然后客户端收到（第三次握手）</li>
+						<li>客户端可以发送报文，然后我收到（第一次握手）</li>
+					</ul>
+					如果少了第三次握手，那么服务器端怎么知道从服务器端发送的报文客户端能否收到？
+					<h4>另一种解释</h4>
+					如果只有两次握手就建立连接，就有可能出现以下情况：
+					<ol>
+						<li>客户端发起第一次握手，但是因为网络阻塞，报文在半路塞车（只是塞车没有丢失）</li>
+						<li>客户端等了一段时间后认为报文发送失败，重新发了次报文，这次没有塞车</li>
+						<li>服务器端收到第一次握手请求，认为可以建立连接，发起第二次握手建立连接</li>
+						<li>客户端和服务器端愉快地传输数据</li>
+						<li>数据传完后，客户端通过四次握手断开连接</li>
+						<li>最开始塞车的第一次握手报文这个时候终于路通了，送到了服务器端，服务器以为客户端又要建立 TCP 连接，于是重新建立一个连接，发起第二次握手，然而此时客户端并不想传数据，服务器端建立了个<span
+								class="definition">空连接</span></li>
+					</ol>
+					此时如果是三次握手，最开始塞车的握手请求还需要进行第三次握手才建立 TCP 连接，否则服务器端将不会建立连接，减轻了服务器端的压力。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>四次挥手</h2>
+			<p>
+				TCP 是全双工（A <-> B）、半关闭的，所以关闭连续需要四次挥手，这里称主动发起关闭方为 A ，接收方为 B 。
+					<ol>
+						<li>A 向 B 发 FIN 报文，表示"我(单方面)没有消息要发给你，所以打算断开连接了"</li>
+						<li>B 向 A 发送 ACK 报文，表示"收到了请求，同意你(单方面)断开连接"</li>
+						<span class="different">B 继续向 A 发送还没发送完的数据</span>
+						<li>B 向 A 发送 FIN 报文，表示"我也没有消息要发给你了，也打算断开连接了"</li>
+						<span class="different">B 会等待 A 发送 ACK 报文(第四次挥手)，如果等不到，则认为发送失败，重新发送 FIN 报文</span>
+						<li>A 向 B 发送 ACK 报文，表示"那么我们都没有消息需要发送，都断开连接吧"</li>
+						<span class="different">A 等待 2 个 MSL，如果这个时间内没有收到 B 的消息，则认为 B 成功收到自己的 ACK ，自己这边也可以断开连接了</span>
+					</ol>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 百度百科 SYN <a
+						href="https://baike.baidu.com/item/SYN/8880122?fr=aladdin">https://baike.baidu.com/item/SYN/8880122?fr=aladdin</a>
+				</div>
+				<div>[2] 百度百科 ACK <a
+						href="https://baike.baidu.com/item/ACK/3692629?fr=aladdin">https://baike.baidu.com/item/ACK/3692629?fr=aladdin</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

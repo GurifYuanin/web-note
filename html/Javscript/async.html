@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>async</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">async</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				async 函数实质是自动执行的<a href="./process.html"> promise </a> + <a href="./Generator.html"> generator </a>函数，使用关键字<span
+					class="definition"> async </span>来声明 async 函数，使用 await 关键字来声明是异步操作。
+			</p>
+		</section>
+		<section>
+			<h2>写法</h2>
+			<p>
+				在 generator 函数中，可以配合 promise 写异步操作，再配合执行器实现异步的链式（按顺序）执行。
+				<pre><code class="javascript">
+const gen = function* () {
+	const a = yield new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve('我是 a');
+		}, 1000);
+	});
+	const b = yield new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve('我是 b');
+		}, 1000);
+	});
+	const c = yield new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve('我是 c');
+		}, 1000);
+	});
+}
+
+const instance = gen();
+let str = '';
+instance.next().value.then(data => {
+  str += data;
+  instance.next().value.then(data => {
+    str += data;
+    instance.next().value.then(data => {
+      str += data;
+      console.log(str);
+    });
+  });
+});
+// 3s 后输出
+// => 我是 a我是 b我是 c
+				</code></pre>
+				而使用 async 则可以简写这种操作：
+				<pre><code class="javascript">
+const asyncFun = async function () {
+	const a = await new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve('我是 a');
+		}, 1000);
+	});
+	const b = await new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve('我是 b');
+		}, 1000);
+	});
+	const c = await new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve('我是 c');
+		}, 1000);
+	});
+	return a + b + c;
+}
+asyncFun().then(result => {
+	console.log(result);
+});
+// 3s 后输出
+// => 我是 a我是 b我是 c
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>实质</h2>
+			<p>
+				async 函数实际上是将 await 后的值转化为 fulfilled 状态的 promise 对象（如果本来就是 promise 对象就不用转），然后等待该对象从 pending 状态转化为 fulfilled 或
+				rejected ，将该 promise 对象的 resolve 值赋值给左边的变量，再执行下一条指令。并且最后的返回值也是一个 promise 对象，如果返回值不是 promise 对象也将被转化为 promise 对象。
+				<pre><code class="javascript">
+async function asyncFun () {
+	const a = await 1;
+	const b = await 2;
+	const c = await 3;
+	return a + b + c;
+}
+asyncFun().then(data => {
+	console.log(data);
+});
+// => 6
+				</code></pre>
+				以上代码实际上相当于：
+				<pre><code class="javascript">
+async function asyncFun () {
+	const a = await new Promise((resolve, reject) => {
+		resolve(1);
+	});
+	const b = await new Promise((resolve, reject) => {
+		resolve(2);
+	});
+	const c = await new Promise((resolve, reject) => {
+		resolve(3);
+	});
+	return a + b + c;
+}
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>用法</h2>
+			<p>
+				<h3>依次异步</h3>
+				<p>
+					当有多个异步操作时，又想保持这些异步操作依次执行，这时就十分适合使用 async 函数，只有前一个异步操作完成后yield异步操作才会开始。
+					<pre><code class="javascript">
+async function asyncFun (arr) {
+	let data;
+	for (let el of arr) {
+		data = await new Promise((resolve, reject) => {
+			// 耗时间的异步操作
+			setTimeout(() => {
+				resolve(el);
+			}, 1000);
+		});
+		console.log(data);
+	}
+}
+asyncFun([1, 2, 3]);
+// => 1（1s 后）
+// => 2（2s 后）
+// => 3（3s 后）
+					</code></pre>
+				</p>
+				<h3>同时异步</h3>
+				<p>
+					当想要同时执行多个，则在传入之前就执行 promise 里的代码，再将 pormise 数组传入。
+					<pre><code class="javascript">
+async function asyncFun (arr) {
+	let data;
+	for (let el of arr) {
+		data = await el;
+		console.log(data);
+	}
+}
+asyncFun([1, 2, 3].map(el => {
+	return new Promise((resolve, reject) => {
+		// 耗时间的异步操作
+		setTimeout(() => {
+			resolve(el);
+		}, 1000);
+	});
+}));
+// => 1（1s 后）
+// => 2（1s 后）
+// => 3（1s 后）
+					</code></pre>
+					或者改写 async 函数内代码的书写方式，方法同理，都是在执行 map 方法时就把执行每一个耗时间的异步操作，于是 await 指令（for...of 内）的作用就只剩下等待异步操作完成然后赋值给 data 变量。
+					<pre><code class="javascript">
+async function asyncFun (arr) {
+	const newArr = arr.map(el => {
+		return new Promise((resolve, reject) => {
+			// 耗时间的异步操作
+			setTimeout(() => {
+				resolve(el);
+			}, 1000);
+		});
+	});
+	let data;
+	for (let el of newArr) {
+		data = await el;
+		console.log(data);
+	}
+}
+asyncFun([1, 2, 3]);
+// => 1（1s 后）
+// => 2（1s 后）
+// => 3（1s 后）
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 阮一峰 async 函数 <a href="http://es6.ruanyifeng.com/#docs/async">http://es6.ruanyifeng.com/#docs/async</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

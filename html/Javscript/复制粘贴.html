@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>复制粘贴</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">复制粘贴</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				通过 javascript 实现复制粘贴的需求。
+			</p>
+		</section>
+		<section>
+			<h2>clipboardData</h2>
+			<p>
+				IE（包括 Edge）有一套剪切板操作的 API ，并且只有 IE 专属，通过这套 API 可以很方便地进行剪切板操作。
+				<figure>
+					<img src="../../images/copy_parse_clipboard.jpg" alt="">
+					<figcaption>window.clipboardData</figcaption>
+				</figure>
+				<h3>设置剪切板内容</h3>
+				<p>
+					使用 window.clipboardData.setData(type, text) 来设置剪切板数据：
+					<ul>
+						<li>type：数据的类型，只支持 'url' 和 'text'</li>
+						<li>text：数据，字符串类型</li>
+					</ul>
+					返回 true 表示设置成功，返回 false 表示设置失败。
+					<pre><code class="javascript">
+var isSuccess = window.clipboardData.setData('text', 'hello world');
+alert(isSuccess ? '设置成功！' : '设置失败！');
+					</code></pre>
+				</p>
+				<h3>读取剪切板内容</h3>
+				<p>
+					使用 window.clipboardData.getData(type) 来读取剪切板的数据。
+					<pre><code class="javascript">
+var data = window.clipboardData.getData('text');
+alert(data);
+					</code></pre>
+				</p>
+				<h3>清除剪切板内容</h3>
+				<p>
+					存在两种方式清除剪切板内容：
+					<ul>
+						<li>使用 window.clipboardData.clearData(type)</li>
+						<li>使用 window.clipboardData.setData(type, '')</li>
+					</ul>
+					<pre><code class="javascript">
+window.clipboardData.clearData('text');
+window.clipboardData.setData('text', '');
+					</code></pre>
+				</p>
+				<h3>兼容检测</h3>
+				<p>
+					当进行如下类型检测的时候，发现一个坑点：
+					<pre><code class="javascript">
+if (window.clipboardData) {
+	alert('浏览器支持 clipboardData');
+} else {
+	alert('浏览器不支持 clipboardData');
+}
+					</code></pre>
+					当 HTML 文档存在 id 为 clipboardData 时，window.clipboardData 可以获得该元素，使得以上兼容检测认为浏览器支持 clipboardData，另一方面，直接给 window
+					创建全局变量 clipboardData 也同样会误导类型检测，所以最好写成以下：
+					<pre><code class="javascript">
+if (window.clipboardData instanceof DataTransfer) {
+	alert('浏览器支持 clipboardData');
+} else {
+	alert('浏览器不支持 clipboardData');
+}
+					</code></pre>
+				</p>
+				<div class="tip">
+					IE 由于存在该直接操作剪切板的 API，所以相应操作都十分容易，接下来介绍非 IE 如何实现复制粘贴需求。
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>jquery.zclip</h2>
+			<p>
+				借助 jquery.zclip 插件（基于 Zero Clipboard），可以实现所有浏览器的复制粘贴问题，原理是当按下某个 DOM 元素的时候触发事件创建一个不可见的 .swf
+				文件，进而实现复制粘贴的功能，所以使用该插件需要浏览器支持 flash。
+				<ol>
+					<li>下载文件：jquery 和 jquery.zclip，导入到 HTML 中</li>
+					<pre><code class="javascript">
+&lt;script src="jquery.js"&gt;&lt;/script&gt;
+&lt;script src="jquery.zclip.js"&gt;&lt;/script&gt;
+					</code></pre>
+					<li>使用插件</li>
+					<pre><code class="javascript">
+$('body').zcip({
+	path: 'ZeroClipboard.swf',
+	copy: function () {
+		return '复制到剪切板的数据';
+	},
+	beforeCopy: function () {
+		// 复制前触发的函数
+	},
+	afterCopy: function () {
+		// 复制后触发的函数
+	},
+	clickAfter: true, // 是否允许该元素触发鼠标点击事件
+	setHandCursor: true, // 是否允许鼠标样式
+	setCSSEffects: true // 是否允许悬浮（hover）和激活（active）时元素的样式
+})
+					</code></pre>
+				</ol>
+			</p>
+		</section>
+		<section>
+			<h2>execCommand('copy')</h2>
+			<p>
+				使用 document.execCommand('copy') 执行复制操作，可以将当前被选中的文本复制到剪切板，此处我们借助文本域（textarea）的 select 方法，来实现复制指定字符串。
+				<pre><code class="javascript">
+var data = '我是即将进入剪切板的数据';
+var textarea = document.createElement('textarea'); // 创建一个文本域，用于暂放被复制的数据
+textarea.value = data; // 往文本域中放入数据
+document.body.appendChild(textarea); // 将文本域追加到文档中
+textarea.select(); // 选中文本域内的所有文本
+document.execCommand('copy'); // 执行复制操作
+document.body.removeChild(textarea); // 移除文本域
+				</code></pre>
+				<ul>
+					<li>写的时候最好使用文本域（textarea）而不是文本框（input type="text"），因为文本框会消除掉换行（\n）而文本域不会。</li>
+					<li>该方法毫无疑问不会保留文本的样式</li>
+				</ul>
+				<h3>浏览器兼容</h3>
+				<p>
+					移动端的浏览器除了 FF 和 Chrome for Android 基本不支持，PC 端的浏览器基本支持。
+					<table>
+						<tr>
+							<th>浏览器</th>
+							<th>最低支持版本</th>
+						</tr>
+						<tr>
+							<td>Chrome</td>
+							<td>43</td>
+						</tr>
+						<tr>
+							<td>IE</td>
+							<td>9</td>
+						</tr>
+						<tr>
+							<td>FF</td>
+							<td>41</td>
+						</tr>
+						<tr>
+							<td>Opera</td>
+							<td>29</td>
+						</tr>
+						<tr>
+							<td>Safri</td>
+							<td>10</td>
+						</tr>
+					</table>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>复制功能</h2>
+			<p>
+				综上，不依赖插件的情况下实现一个复制功能的代码为：
+				<pre><code class="javascript">
+function copy(message) {
+	if (DataTransfer && window.clipboardData instanceof DataTransfer) {
+		// IE
+		window.clipboardData.setData('text', message);
+	} else {
+		// 非 IE
+		var area = document.createElement('textarea'); // 用于临时暂存复制的代码的文本域
+		document.body.appendChild(area);
+		area.value = message;
+		area.select(); // 选中
+		document.execCommand('copy'); // 复制
+		document.body.removeChild(area);
+	}
+	
+}
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>禁用复制</h2>
+			<p>
+				复制大抵分两种，右键-复制 以及 Ctrl + C。
+				<h3>禁用右键</h3>
+				<p>
+					有多种方法禁用右键。
+					<ol>
+						<li>通过 mousedown 事件检查是不是右键，然后 alert 窗口打断右键的菜单窗口，关于 event.button 参见 <a href="./事件.html#鼠标事件">鼠标事件</a>。</li>
+						<pre><code class="javascript">
+document.body.onmousedown = function (event) {
+	if (event.button != 1) {
+		alert('我不允许你复制！嘤嘤嘤！');
+	}
+};
+						</code></pre>
+						<li>通过取消 contextmenu 的默认操作，使得菜单窗口不出现</li>
+						<pre><code class="javascript">
+document.body.oncontextmenu = function (event) {
+	event.preventDefault() // 非IE
+	event.returnValue = false; // IE
+	return false;
+};
+						</code></pre>
+					</ol>
+				</p>
+				<h3>禁用 copy 和 parse</h3>
+				<p>
+					部分 HTML 元素上的存在 copy 事件，当进行复制的时候（无论是 右键-复制 还是 Ctrl + C）触发，通过取消默认操作使得无法进行复制。粘贴也是同理。
+					<pre><code class="javascript">
+document.body.oncopy = function (event) {
+	event.preventDefault() // 非IE
+	event.returnValue = false; // IE
+	return false;
+};
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] patricklodder Github <a
+						href="https://github.com/patricklodder/jquery-zclip">https://github.com/patricklodder/jquery-zclip</a></div>
+				<div>[2] MDN document.execCommand <a
+						href="https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand">https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>正则表达式</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">正则表达式</h1>
+		</hgroup>
+		<section>
+			<h2>正则对象</h2>
+			<p>
+				<h3>创建</h3>
+				<p>
+					存在两种方法创建正则对象：字面量、使用 new 关键字。
+					<pre><code class="javascript">
+// 以下几种方法创建出来的正则对象都是等价的
+var exp1 = /abc/g;
+var exp2 = new RegExp('abc', 'g');
+var exp3 = new RegExp(/abc/g);
+var exp3 = new RegExp(/abc/, 'g');
+					</code></pre>
+				</p>
+				<h3>属性</h3>
+				<p>
+					正则对象有以下属性成员：
+					<table>
+						<tr>
+							<th>属性名</th>
+							<th>属性值</th>
+							<th>类型</th>
+						</tr>
+						<tr>
+							<td>lastIndex</td>
+							<td>下次匹配开始的位置，相当于执行了"被匹配字符串.substring(lastIndex)"</td>
+							<td>整型</td>
+						</tr>
+						<tr>
+							<td>global</td>
+							<td>是否有修饰符 g</td>
+							<td>布尔型</td>
+						</tr>
+						<tr>
+							<td>ignoreCase</td>
+							<td>是否使用了修饰符 i</td>
+							<td>布尔型</td>
+						</tr>
+						<tr>
+							<td>multiline</td>
+							<td>是否使用了修饰符 m</td>
+							<td>布尔型</td>
+						</tr>
+						<tr>
+							<td>unicode</td>
+							<td>是否使用了修饰符 u</td>
+							<td>布尔型</td>
+						</tr>
+						<tr>
+							<td>sticky</td>
+							<td>是否使用了修饰符 y</td>
+							<td>布尔型</td>
+						</tr>
+						<tr>
+							<td>dotAll</td>
+							<td>是否使用了修饰符 s</td>
+							<td>布尔型</td>
+						</tr>
+						<tr>
+							<td>flags</td>
+							<td>返回所有使用的修饰符</td>
+							<td>字符串</td>
+						</tr>
+						<tr>
+							<td>source</td>
+							<td>正则表达式内容，结果相当于 toString() 方法</td>
+							<td>字符串</td>
+						</tr>
+					</table>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>组成部分</h2>
+			<p>
+				正则表达式包括两部分：
+				<ul>
+					<li>表达式内容</li>
+					<li>修饰符</li>
+				</ul>
+				<h3>表达式内容</h3>
+				<p>
+					<table>
+						<tr>
+							<th>字符</th>
+							<th>全名</th>
+							<th>匹配</th>
+						</tr>
+						<tr>
+							<td>\数字</td>
+							<td>反向引用</td>
+							<td>引用和前一个分组的结果一样的字符串</td>
+						</tr>
+						<tr>
+							<td>\. 或 \/ 或 \[ 或 \\ 或 \+ 或 \* 或 \? 或 \^ 或 \$</td>
+							<td></td>
+							<td>匹配去掉左侧 \ 的右侧字符</td>
+						</tr>
+						<tr>
+							<td>. 或 [^\n\r\u2028\u2029]</td>
+							<td></td>
+							<td>除了 \n(换行符) 和 \r(回车符) 和 \u2028(行分隔符) 和 \u2029(段分隔符) 外的任意字符</td>
+						</tr>
+						<tr>
+							<td>[]</td>
+							<td></td>
+							<td>方框内任意一个字符</td>
+						</tr>
+						<tr>
+							<td>[^]</td>
+							<td></td>
+							<td>不是方框内任意一个字符的一个字符</td>
+						</tr>
+						<tr>
+							<td>|</td>
+							<td></td>
+							<td>前一个字符或者后一个字符</td>
+						</tr>
+						<tr>
+							<td>()</td>
+							<td></td>
+							<td>将若干个字符分为一个组</td>
+						</tr>
+						<tr>
+							<td>\w 或 [a-zA-Z]</td>
+							<td>word</td>
+							<td>任意单词</td>
+						</tr>
+						<tr>
+							<td>\W或 [^a-zA-Z]</td>
+							<td>not word</td>
+							<td>任意非单词</td>
+						</tr>
+						<tr>
+							<td>\d 或 [0-9]</td>
+							<td>digit</td>
+							<td>任意数字</td>
+						</tr>
+						<tr>
+							<td>\D 或 [^0-9]</td>
+							<td>not digit</td>
+							<td>任意非数字</td>
+						</tr>
+						<tr>
+							<td>\s</td>
+							<td>whitespace</td>
+							<td>空格、\t(tab)、\n(换行符)、\r(回车符)、\v(垂直制表符)、\f(换页符)</td>
+						</tr>
+						<tr>
+							<td>\S</td>
+							<td>not whitespace</td>
+							<td>非 \s</td>
+						</tr>
+						<tr>
+							<td>\b</td>
+							<td>boundary</td>
+							<td>左边界、右边界</td>
+						</tr>
+						<tr>
+							<td>\B</td>
+							<td>not boundary</td>
+							<td>非边界</td>
+						</tr>
+						<tr>
+							<td>^</td>
+							<td></td>
+							<td>左边界</td>
+						</tr>
+						<tr>
+							<td>$</td>
+							<td></td>
+							<td>右边界</td>
+						</tr>
+						<tr>
+							<td>+ 或者 {1,}</td>
+							<td></td>
+							<td>至少一个前面的字符</td>
+						</tr>
+						<tr>
+							<td>* 或者 {0,}</td>
+							<td></td>
+							<td>任意个前面的字符</td>
+						</tr>
+						<tr>
+							<td>? 或者 {0,1}</td>
+							<td></td>
+							<td>0 或者 1 个前面的字符</td>
+						</tr>
+						<tr>
+							<td>+? 或 *?</td>
+							<td></td>
+							<td>非贪心匹配，尽可能少匹配</td>
+						</tr>
+						<tr>
+							<td>{x}</td>
+							<td></td>
+							<td>x 个前面的字符</td>
+						</tr>
+						<tr>
+							<td>{x,y}</td>
+							<td></td>
+							<td>x 或 x + 1 或 x + 2 或 ... 或 y - 1 或 y 个前面的字符</td>
+						</tr>
+						<tr>
+							<td>字符串A(?=字符串B)</td>
+							<td>positive lookahead</td>
+							<td>匹配 "字符串A字符串B" ，但字符串B不会作为匹配结果的一部分</td>
+						</tr>
+						<tr>
+							<td>字符串A(?!字符串B)</td>
+							<td>negative lookahead</td>
+							<td>匹配 "字符串A且后面没有字符串B" ，相当于 /字符串A/ 的结果集减去 /字符串A字符串B/ 的结果集</td>
+						</tr>
+						<tr>
+							<td>(?&lt;=字符串A)字符串B</td>
+							<td>positive lookbehind</td>
+							<td>匹配 "字符串A字符串B" ，但字符串A不会作为匹配结果的一部分</td>
+						</tr>
+						<tr>
+							<td>(?&lt;!字符串A)字符串B</td>
+							<td>negative lookahead</td>
+							<td>匹配 "字符串B且前面没有字符串A" ，相当于 /字符串B/ 的结果集减去 /字符串A字符串B/ 的结果集</td>
+						</tr>
+					</table>
+					<h4>分组 和 \数字</h4>
+					正则表达式可以使用小括号来设置一个分组：
+					<pre><code class="javascript">
+new RegExp('(abc)def(hij)');
+					</code></pre>
+					abc 是分组 1 ，hij 是分组 2 ，在正则表达式中使用 \数字 来对前面的匹配分组进行再次引用：
+					<pre><code class="javascript">
+/(abc)def\1/.test('abcdefabc'); // => true
+					</code></pre>
+					它是对结果的引用，比如：
+					<pre><code class="javascript">
+/(\d{3}) = \1/.test('123 = 123'); // => true
+/(\d{3}) = \1/.test('456 = 456'); // => true
+					</code></pre>
+					<h4>分组 和 $数字</h4>
+					使用字符串的 replace 方法时，使用 $数字 来对获得分组的引用，比如将所有 &lt;tag&gt; 变成 &gt;tag&lt;，将所有 &lt;/tag&gt; 变成 &gt;/tag&lt;：
+					<pre><code class="javascript">
+'&lt;html>&lt;head>&lt;/head>&lt;body>&lt;/body>&lt;/html>'.replace(/&lt;(\/?\w+)>/g, '>$1&lt;');
+// => "&gt;html&lt;&gt;head&lt;&gt;/head&lt;&gt;body&lt;&gt;/body&lt;&gt;/html&lt;"
+					</code></pre>
+				</p>
+				<h3>修饰符</h3>
+				<p>
+					<table>
+						<tr>
+							<th>修饰符</th>
+							<th>全名</th>
+							<th>解释</th>
+						</tr>
+						<tr>
+							<td>g</td>
+							<td>global</td>
+							<td>全局匹配</td>
+						</tr>
+						<tr>
+							<td>i</td>
+							<td>case insensitive</td>
+							<td>忽视大小写 / 大小写不敏感</td>
+						</tr>
+						<tr>
+							<td>m</td>
+							<td>multilline</td>
+							<td>多行匹配</td>
+						</tr>
+						<tr>
+							<td>u</td>
+							<td>unicode</td>
+							<td>unicode 模式，可以识别 unicode 编码大于 FFFF 的字符</td>
+						</tr>
+						<tr>
+							<td>s</td>
+							<td>dotAll 模式</td>
+							<td>使用后元字符 . 表示任意字符</td>
+						</tr>
+						<tr>
+							<td>y</td>
+							<td>sticky</td>
+							<td>类似 g，但保证匹配结果与上次匹配结果的结束位置粘连</td>
+						</tr>
+					</table>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>test</h2>
+			<p>
+				正则对象用于测试能否匹配字符串。
+				<table>
+					<tr>
+						<th>用法</th>
+						<th>功能</th>
+						<th>返回值</th>
+					</tr>
+					<tr>
+						<td>正则表达式.test(字符串)</td>
+						<td>检查字符串是否与正则表达式匹配</td>
+						<td>Boolean</td>
+					</tr>
+				</table>
+				<pre><code class="javascript">
+/.+/.test('hello'); // => true
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>exec</h2>
+			<p>
+				正则对象用于获得匹配的字符串，分为两个版本，带有修饰符 g 和无修饰符 g：
+				<table>
+					<tr>
+						<th>版本</th>
+						<th>解释</th>
+						<th>查找不到时的返回值</th>
+					</tr>
+					<tr>
+						<td>有 g</td>
+						<td>每次匹配都从上次位置结束的位置（lastIndex）开始，如果已经到字符串尾部，返回 null，下次从头开始匹配</td>
+						<td>null</td>
+					</tr>
+					<tr>
+						<td>无 g</td>
+						<td>每次匹配都从头开始，查找不到则返回 null</td>
+						<td>null</td>
+					</tr>
+				</table>
+				<pre><code class="javascript">
+var exp = new RegExp('1');
+var expg = new RegExp('1', 'g');
+var str = '1a1a1a';
+
+exp.exec(str);
+exp.exec(str);
+exp.exec(str);
+// 三次结果都是
+[
+	0: "1"
+	groups: undefined
+	index: 0
+	input: "1a1a1a"
+	length: 1
+]
+expg.exec(str); // => ["1", index: 0, input: "1a1a1a", groups: undefined]
+expg.exec(str); // => ["1", index: 2, input: "1a1a1a", groups: undefined]
+expg.exec(str); // => ["1", index: 4, input: "1a1a1a", groups: undefined]
+				</code></pre>
+				如果匹配成功，返回值是一个数组对象，有以下成员：
+				<ul>
+					<li>0：匹配的完整结果</li>
+					<li>1：第一个分组的匹配结果</li>
+					<li>2：第二个分组的匹配结果</li>
+					<li>3：...</li>
+					<li>groups：所在分组</li>
+					<li>index：即正则对象的 lastIndex</li>
+					<li>input：完整的字符串</li>
+					<li>length：数组长度</li>
+				</ul>
+				<pre><code class="javascript">
+/^(1)(2)$/.exec('12');
+// =>
+[
+	0: "12"
+	1: "1"
+	2: "2"
+	groups: undefined
+	index: 0
+	input: "12"
+	length: 3
+]
+				</code></pre>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 菜鸟教程 正则表达式<a href="http://www.runoob.com/js/js-regexp.html">http://www.runoob.com/js/js-regexp.html</a>
+				</div>
+				<div>[2] 阮一峰 ES6入门 <a
+						href="http://es6.ruanyifeng.com/#docs/regex#s-%E4%BF%AE%E9%A5%B0%E7%AC%A6%EF%BC%9AdotAll-%E6%A8%A1%E5%BC%8F">http://es6.ruanyifeng.com/#docs/regex#s-%E4%BF%AE%E9%A5%B0%E7%AC%A6%EF%BC%9AdotAll-%E6%A8%A1%E5%BC%8F</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

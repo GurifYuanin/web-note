@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>XMLHttpRequest</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">XMLHttpRequest</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				XHLHttpRequest 是微软的 IE 最早引入的通信接口。
+				<div class="tip">使用 xhr 发送请求请务必按照以下顺序进行创建和配置等操作，否则可能执行出错。</div>
+			</p>
+		</section>
+		<section>
+			<h2>创建 xhr 对象</h2>
+			<p>
+				<pre><code class="javascript">
+var xhr = new XHRHttpRequest();
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>开始</h2>
+			<p>
+				使用 xhr 的 open 方法开始请求，接受 5 个参数：
+				<table>
+					<tr>
+						<th>参数</th>
+						<th>解释</th>
+						<th>类型</th>
+						<th>是否可选</th>
+						<th>例子</th>
+					</tr>
+					<tr>
+						<td>http方法</td>
+						<td>http 请求方法</td>
+						<td>String</td>
+						<td>否</td>
+						<td>'GET'</td>
+					</tr>
+					<tr>
+						<td>URL</td>
+						<td>接受请求的地址</td>
+						<td>String</td>
+						<td>否</td>
+						<td>'https://www.google.com.hk/'</td>
+					</tr>
+					<tr>
+						<td>async</td>
+						<td>是否进行异步请求</td>
+						<td>Boolean</td>
+						<td>是，默认为 true</td>
+						<td>true</td>
+					</tr>
+					<tr>
+						<td>username</td>
+						<td>认证用户名</td>
+						<td>String</td>
+						<td>是</td>
+						<td>'root'</td>
+					</tr>
+					<tr>
+						<td>password</td>
+						<td>认证密码</td>
+						<td>String</td>
+						<td>是</td>
+						<td>'123456'</td>
+					</tr>
+				</table>
+				<pre><code class="javascript">
+xhr.open('GET', 'https://www.google.com.hk/');
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>配置</h2>
+			<p>
+				<h3>设置请求头</h3>
+				<p>
+					使用 setRequestHeader 方法添加 xhr 的请求头字段，可以添加标准的首部字段，也可以添加自定义的字段。
+					<pre><code class="javascript">
+xhr.setRequestHeader('Content-Type', 'application/json'); // 设置请求主体的数据类型
+xhr.setRequestHeader('my-key', 'my-value'); // 自定义字段
+
+// 发送的 http 报文的报文头将携带
+Content-Type: application/json
+my-key: my-value
+					</code></pre>
+					但需要注意的是，按照标准，如果设置了以下请求头，xhr 将被终止（Terminate）。
+					<ul>
+						<li>Accept-Charset</li>
+						<li>Accept-Encoding</li>
+						<li>Access-Control-Request-Headers</li>
+						<li>Access-Control-Request-Method</li>
+						<li>Connection</li>
+						<li>Content-Length</li>
+						<li>Cookie</li>
+						<li>Cookie2</li>
+						<li>Date</li>
+						<li>DNT</li>
+						<li>Expect</li>
+						<li>Host</li>
+						<li>Keep-Alive</li>
+						<li>Origin：发起请求的源地址</li>
+						<li>Referer</li>
+						<li>TE</li>
+						<li>Trailer</li>
+						<li>Transfer-Encoding</li>
+						<li>Upgrade</li>
+						<li>User-Agent</li>
+						<li>Via</li>
+					</ul>
+					比如你设置了 Origin 字段，该字段表示进行 xhr 的源 IP 地址，在 chrome 浏览器上，出于安全考虑，会拒绝设置该头，但还是会发送 http 请求。
+					<figure>
+						<img src="../../images/xhr_header_origin.jpg" alt="">
+						<figcaption>chrome 提示该请求头是不安全的</figcaption>
+					</figure>
+				</p>
+				<h3>设置响应数据类型</h3>
+				<p>
+					XMLHttpRequest level2 支持以下响应数据类型：
+					<ul>
+						<li>空（默认)：文本字符串</li>
+						<li>text：文本字符串</li>
+						<li>blob：二进制数据</li>
+						<li>json：json 对象</li>
+						<li>document：获得 html 文档，只有在 javascript 全局环境下该值才有效</li>
+						<li>arraybuffer：二进制数据数组</li>
+					</ul>
+					<pre><code class="javascript">
+xhr.responseType = 'json';
+					</code></pre>
+				</p>
+				<h3>设置超时时间</h3>
+				<p>
+					timeout 属性用于设定请求超时时间，在发出请求后指定时间内若无响应，则请求失败，单位为毫秒(ms)。
+					<pre><code class="javascript">
+xhr.timeout = 3000; // 3s 后若无响应则认为超时
+					</code></pre>
+					默认情况下不设置超时，即无限等待下去，直到获得响应。
+				</p>
+				<h3>是否携带认证信息</h3>
+				<p>
+					withCredentials 属性用于设置发送 xhr 时是否携带认证信息（cookie 等），默认为 false。
+					<pre><code class="javascript">
+xhr.widthCredentials = true;
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>钩子</h2>
+			<p>
+				<h3>状态改变</h3>
+				<p>
+					被创建后的 xhr 对象在不同阶段存在不同状态，使用 readyState 属性读取：
+					<table>
+						<tr>
+							<th>属性值</th>
+							<th>意义</th>
+							<th>阶段</th>
+						</tr>
+						<tr>
+							<td>0</td>
+							<td>UNSENT</td>
+							<td>xhr 对象被创建，并且 open 方法还未被调用</td>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td>OPENED</td>
+							<td>open 方法被调用</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>HEADERS_RECEIVED </td>
+							<td>完成了请求重定向并且接收到了响应头部</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>LOADING</td>
+							<td>响应主体正在接收中</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>DONE</td>
+							<td>响应主体已经完全接受到</td>
+						</tr>
+					</table>
+					可以使用 onreadystatechange 钩子来监听 readyState 的变化，这也是 XMLHttpRequest level1 就支持的钩子（唯一）。
+					<pre><code class="javascript">
+xhr.onreadystatechange = function (event) {
+	if (xhr.readyState === 4 && xhr.status === 200) {
+		// 响应主体已经完全接受到，并且响应状态码为 200
+	}
+}
+					</code></pre>
+					其中 readyState 表示 xhr 请求进行的阶段，status 表示 http 请求返回的状态码。
+				</p>
+				<h3>加载阶段</h3>
+				<p>
+					XMLHttpRequest level2 新增了三个关于加载的钩子：
+					<ul>
+						<li>onloadstart：使用 send 方法后触发</li>
+						<li>onload：响应主体接收后触发，即 readyState 等于 4 时触发（无论状态码 status 是什么）</li>
+						<li>onloadend：请求结束后触发</li>
+					</ul>
+					<pre><code class="javascript">
+xhr.onload = function () {
+	console.log(xhr.response);
+}
+					</code></pre>
+				</p>
+				<h3>上下传进度</h3>
+				<p>
+					加载事件分为两部分，上传与下载，都是每 50ms 触发一次
+					<ul>
+						<li>xhr.upload.onprogress：添加上传钩子，调用了 send 并且 readyState 还未达到 2 时每 50ms 触发一次</li>
+						<li>xhr.onprogress：添加下载钩子，xhr.readystate 等于 3 时每 50ms 触发一次</li>
+					</ul>
+					在事件处理程序内，通过事件对象提供的几个属性，可以计算出加载的进度。
+					<ul>
+						<li>event.lengthComputable：响应内容长度是否可以计算获得</li>
+						<li>event.total：响应内容总长度</li>
+						<li>evnet.loaded：当前已经加载的长度</li>
+					</ul>
+					<pre><code class="javascript">
+xhr.onprogress = function (event) {
+	console.log('当前加载进度：' + event.loaded / event.total * 100 + '%');
+}
+					</code></pre>
+				</p>
+				<h3>超时失败</h3>
+				<p>
+					超时情况下，触发的事件。
+					<pre><code class="javascript">
+xhr.ontimeout = function (event) {
+	console.log(event);
+}
+					</code></pre>
+				</p>
+				<h3>取消请求钩子</h3>
+				<p>
+					使用 onabort 钩子，当调用<a href="#发送请求" class="self">abort</a>方法时触发。
+					<pre><code class="javascript">
+xhr.onabort = function (e) {
+	console.log('你取消了请求');
+}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>发送请求</h2>
+			<p>
+				看完前面一堆后（根据需求配置钩子），终于可以使用 send 方法发送 http 请求，传入参数作为请求体的内容，默认为 null 。
+				<div class="tip">send 方法的参数是请求体内容，所以当请求方法为 GET 或 HEAD 时，无论传入什么参数，都会被设置为 null（因为 GET 和 HEAD 方法没有报文体）。</div>
+				<pre><code class="javascript">
+xhr.send('hello world'); // 报文主体为 hello world
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>响应数据</h2>
+			<p>
+				<div class="tip">
+					获得响应数据应该在 onreadystatechange 或 onload 钩子里写，当响应数据加载完时才可以操作数据，否则将获得空字符串或 null 等。
+				</div>
+				<h3>responseText</h3>
+				<p>
+					responseText 用于获取字符串类型的数据，只有当 responseType 不设置（即为 ""）时或为 text 时候才能使用，否则会报错。
+					<pre><code class="javascript">
+xhr.responseType = 'json';
+xhr.onload = function (e) {
+	console.log(xhr.responseText);
+}
+					</code></pre>
+					<figure>
+						<img src="../../images/xhr_response_type_error_text.jpg" alt="">
+						<figcaption>这里设置响应数据为 json 格式，强行读取 responseText 导致出错</figcaption>
+					</figure>
+				</p>
+				<h3>responseXML</h3>
+				<p>
+					responseXML 用于获取 xml 格式的数据，只有当 responseType 不设置（即为 ""）时或为 text 或为 document 时才能使用，否则将报错
+					<figure>
+						<img src="../../images/xhr_response_type_error_xml.jpg" alt="">
+					</figure>
+				</p>
+				<h3>response</h3>
+				<p>
+					response 用于获得响应主体的数据，类型根据之前设置的 responseType 而不同。
+					<pre><code class="javascript">
+xhr.responseType = 'json';
+xhr.onload = function () {
+	var json = xhr.response;
+	console.log(typeof json); // => object
+	// 取到数据后可直接使用，而不用 JSON.parse
+	for (var key in json) {
+		console.log(json[key]);
+	}
+}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>取消请求</h2>
+			<p>
+				当请求发出后，可以使用 abort 方法中断本次请求。
+				<pre><code class="javascript">
+xhr.abort();
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>拓展</h2>
+			<p>
+				HTML5 提供了一个 FormData，使用 FormData 构造出来的对象等价于 html 标签创建的表单，比如在 html 文档中有以下代码：
+				<pre><code class="html">
+&lt;form action="http://www.isempty.site" method="GET"&gt;
+	用户名：&lt;input id="usr" type="text" name="usr" value="root"&gt;&lt;br&gt;
+	密码：&lt;input id="pwd" type="password" name="pwd" value="123456"&gt;&lt;br&gt;
+	&lt;input id="file" name="file" type="file"&gt;&lt;br&gt;
+	&lt;input type="submit" value="提交"&gt;
+	&lt;input type="reset" value="重置"&gt;
+&lt;/form&gt;
+				</code></pre>
+				<div class="show">
+					<form action="http://www.isempty.site" method="GET">
+						用户名：<input id="usr" type="text" name="usr" value="root"><br>
+						密码：<input id="pwd" type="password" name="pwd" value="123456"><br>
+						<input id="file" name="file" type="file"><br>
+						<input type="submit" value="提交">
+						<input type="reset" value="重置">
+					</form>
+				</div>
+				使用 xhr 进行异步请求，可以不需要用户点击<span class="definition"> 提交按钮 </span>就发送请求，以下实现和上面的点击<span class="definition"> 提交按钮
+				</span>是等价的：
+				<pre><code class="javascript">
+&lt;script&gt;
+	var formData = new FormData(); // 创建一个表单对象
+	// 设置表单键值
+	formData.append('usr', document.getElementById('usr').value);
+	formData.append('pwd', document.getElementById('pwd').value);
+	formData.append('file', document.getElementById('file').files[0]);
+
+	// 使用 xhr 进行异步请求
+	var xhr = new XMLHttpRequest();
+	xhr.open('http://www.isempty.site', 'GET');
+	xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			console.log(xhr.responseText);
+		}
+	}
+	xhr.send(formData);
+&lt;/script&gt;
+				</code></pre>
+
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] W3C XMLHttpRequest <a
+						href="https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html">https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html</a>
+				</div>
+				<div>[2] 阮一峰 <a
+						href="http://www.ruanyifeng.com/blog/2012/09/xmlhttprequest_level_2.html">http://www.ruanyifeng.com/blog/2012/09/xmlhttprequest_level_2.html</a>
+				</div>
+				<div>[3] Link to sectionReceiving binary data using JavaScript typed arrays <a
+						href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Sending_and_Receiving_Binary_Data">https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Sending_and_Receiving_Binary_Data</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

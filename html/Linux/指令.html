@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Linux指令</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">Linux指令</h1>
+		</hgroup>
+		<section>
+			<h2>文件 & 目录</h2>
+			<p>
+				<h3>文件</h3>
+				<p>
+					<h4>创建文件</h4>
+					<div class="command">
+						touch 文件名
+					</div>
+					<h4>删除文件</h4>
+					<ul>
+						<li>-i：交互式删除文件，每次删除一个文件都要询问一次</li>
+						<li>-f：强制删除文件，不询问也不显示删除信息</li>
+						<li>-r：递归删除</li>
+					</ul>
+					<div class="command">
+						rm 文件名
+					</div>
+				</p>
+				<h3>目录</h3>
+				<p>
+					<h4>创建目录</h4>
+					递归（-p）、赋权（-m 数字数字数字）创建一个目录。
+					<div class="command">
+						mkdir [-m 数字数字数字] [-p] 目录名
+					</div>
+					<h4>删除目录</h4>
+					递归（-p）删除空目录（若非空则失败）。
+					<div class="command">
+						rmdir [-p] 目录名
+					</div>
+					递归删除目录。
+					<div class="command">
+						rm -r 目录名
+					</div>
+				</p>
+				<h3>文件 & 目录</h3>
+				<p>
+					<h4>移动 & 重命名</h4>
+					<div class="command">
+						mv 源路径 目标路径
+					</div>
+					<h4>复制</h4>
+					<ul>
+						<li>-r：递归复制</li>
+						<li>-i：交互式复制，若目标文件存在则询问是否覆盖</li>
+						<li>-p：连同属性（权限等）也复制过去</li>
+						<li>-d：若源是 link，则复制 link 所链接的文件</li>
+						<li>-a：相当于 -dpr 一起使用</li>
+					</ul>
+					<div class="command">
+						cp 源路径 目标目录
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>权限</h2>
+			<p>
+				<h3>用户 & 群组 & 其他人</h3>
+				<p>
+					<ul>
+						<li>用户：即一个用户，登陆 linux 是作为一个用户登陆，比如（CentOS）以下表示以 root 用户登陆 localhost 这台机器，当前路径是 / 。</li>
+						<pre><code class="shell">
+[root@localhost /]#
+						</code></pre>
+						<li>群组：一个群组包含多个成员，一个成员可以属于多个群组</li>
+						<li>其他人：对于一个群组而言，如果某个用户不在这个组内，则称这个用户是其他人</li>
+					</ul>
+				</p>
+				<h3>档案权限</h3>
+				<p>
+					一个档案会对以下三者进行权限判定：用户、群组、其他人。一个档案的一个所属关系存在三种权限开关：读、写、执行。所以对于一个档案，查看权限获得 9 (3 乘 3)个参数：
+					<pre><code class="shell">
+# 使用 ls 查看当前路径下的所有档案
+$ ls -l
+l<span class="strong">rwxrwxrwx</span>. 1 root root 7 Oct 31 23:20 bin -> usr/bin
+...
+					</code></pre>
+					<h4>档案类型</h4>
+					第一个字符代表档案的类型：
+					<ul>
+						<li>d：directory，目录</li>
+						<li>-：文件</li>
+						<li>l：link，链接</li>
+						<li>b：装置文件里面的可供储存的接口设备</li>
+						<li>c：装置文件里面的串行端口设备</li>
+					</ul>
+					<h4>权限</h4>
+					之后的 9 个字符分别代表：
+					<ul>
+						<li>r：档案所属 用户 的 读 权限(read)</li>
+						<li>w：档案所属 用户 的 写 权限(write)</li>
+						<li>x：档案所属 用户 的 执行 权限(execute)</li>
+						<li>r：档案所属 群组 的 读 权限(read)</li>
+						<li>w：档案所属 群组 的 写 权限(write)</li>
+						<li>x：档案所属 群组 的 执行 权限(execute)</li>
+						<li>r：档案所属 其他人 的 读 权限(read)</li>
+						<li>w：档案所属 其他人 的 写 权限(write)</li>
+						<li>x：档案所属 其他人 的 执行 权限(execute)</li>
+					</ul>
+					当没有该权限的时候，就会显示为一个<span class="different"> - </span>符号，比如：
+					<pre><code class="shell">
+d<span class="strong">r-xr-xr-x</span>. 13 root root 0 Nov 1 00:09 sys
+					</code></pre>
+					一个用户如果是该文档的所有者，就看前三个符号，如果属于该文档的所属群组中的一员，则看中间三个符号，如果是群组外的一员则看最后三个符号，当然也可以既是所有者同时也属于所属群组。
+					<h4>节点</h4>
+					之后第二列的数字表示有多少档名链接到此节点。
+					<h4>所属用户 & 所属群组</h4>
+					每个档案会属于一个用户和一个群组，第三列显示所属的用户名，第四列显示所属群组的名字。
+					<pre><code class="shell">
+dr-xr-xr-x. 13 <span class="strong">root root</span> 0 Nov 1 00:09 sys
+					</code></pre>
+					<h4>其他</h4>
+					剩下的分别代表该文档的大小（byte），修改日期，文档名字。
+				</p>
+				<h3>改变权限</h3>
+				<p>
+					<h4>改变档案所属用户</h4>
+					chown：change owner ，用来设置档案所属用户。
+					<div class="command">
+						chown 用户名 档案路径
+					</div>
+					当然群组和用户都得存在，不然会执行失败。
+					<h4>改变档案所属群组</h4>
+					chgrp：change group ，用来设置档案的所属群组。
+					<div class="command">
+						$ chgrp 群组名 档案路径
+					</div>
+					当然群组和档案都得存在，不然会执行失败。
+					<h4>改变档案权限开关</h4>
+					chmod：change mode，用来设置权限开关，有两种使用方法，一是使用命令方式：
+					<div class="command">
+						chmod 目标 动作 权限 档案路径
+					</div>
+					<ul>
+						<li>目标可以设置为：a（all，所有人）、u（user，用户）、g（group，群组）、o（other，其他人）。</li>
+						<li>动作：=（设置为）、+（添加权限）、-（减少权限）</li>
+						<li>权限：r（read，读取）、w（write，写）、x（excute，执行）</li>
+					</ul>
+					比如要设置 test 档案所属用户的权限为读写但不可执行，则执行以下命令：
+					<pre><code class="shell">
+$ chmod u=rw test
+					</code></pre>
+					第二种是使用数字模式，输入三位的数字，每个数字是 0 - 7：
+					<div class="command">
+						chmod 数字数字数字 档案路径
+					</div>
+					将每个数字翻译为 2 进制，每一位对应一个权限开关，比如 770 对应 111 111 000，说明设置所属用户读写执行权限、所属组读写执行权限、其他人没有权限。
+					<pre><code class="shell">
+$ chmod 770 test
+					</code></pre>
+				</p>
+				<h3>rwx 的意义</h3>
+				<p>
+					<h4>文件</h4>
+					<ul>
+						<li>r：读取（查看）文件内容</li>
+						<li>w：写入（修改）文件的内容</li>
+						<li>x：执行文件</li>
+					</ul>
+					<h4>目录</h4>
+					<ul>
+						<li>r：查看目录下有哪些档案，但只能看到档案名，不能看到详细信息，也不能进入该目录</li>
+						<li>w：编辑目录操作，包括</li>
+						<ul>
+							<li>重命名目录</li>
+							<li>移动目录位置</li>
+							<li><span class="different">创建、删除、移动</span>该目录下的文件</li>
+						</ul>
+						<li>x：进入该目录</li>
+					</ul>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>查找</h2>
+			<p>
+				<h3>find</h3>
+				find 用于查找<span class="different">文件名</span>，并允许对查找出来的文件进行操作。
+				<h4>根据名字查找</h4>
+				<pre><code class="shell">
+$ find . -name '*.jpg'
+				</code></pre>
+				<h4>根据文件类型查找</h4>
+				<ul>
+					<li>d：directory，目录</li>
+					<li>f：file，文件</li>
+					<li>l：link，符号连接</li>
+				</ul>
+				<pre><code class="shell">
+$ find . -f
+				</code></pre>
+				<h4>找出并进行操作</h4>
+				找出文件格式为 jpg 的图片并删除它们。
+				<pre><code class="shell">
+$ find . -name '*.jpg' -exec rm {} \;
+				</code></pre>
+				<h3>grep</h3>
+				grep 用于对字符串进行正则匹配，同时它可以对<span class="different">文件内容</span>进行正则，也可以对目录下的所有文件进行正则。
+				<h4>递归查找目录</h4>
+				-E 表示 '[0-9]+' 为正则表达式，-r 表示递归查找当前目录（.），-n 表示查找结果显示行数。
+				<pre><code class="shell">
+$ grep -E '[0-9]+' . -r -n
+				</code></pre>
+				<h3>tree</h3>
+				tree 用于树状现实目录结构，先安装 tree 工具，再进行使用。
+				<pre><code class="shell">
+$ brew install tree
+				</code></pre>
+				<div class="command">
+					tree [路径] [-L 深度]
+				</div>
+				现实当前目录深度为 2 的目录结构。
+				<pre><code class="shell">
+$ tree . -L 2
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>进程管理</h2>
+			<p>
+				<h3>ps</h3>
+				ps（Process Status）用于打印当前进程状态，常用命令为 ps -ef。
+				<ul>
+					<li>-e：现实所有进程</li>
+					<li>-f：format，格式化输出结果</li>
+				</ul>
+				<pre><code class="shell">
+$ ps -ef
+UID PID PPID C STIME TTY TIME CMD
+...
+				</code></pre>
+				<ul>
+					<li>UID：user id</li>
+					<li>PID：process id</li>
+					<li>PPID：parent process id</li>
+					<li>C：CPU 占用率</li>
+					<li>STIME：system time，进程启动时的系统时间</li>
+					<li>TTY：登入者的终端机位置</li>
+					<li>TIME：CPU 执行了多久该进程（没有被 CPU 执行时不计时）</li>
+					<li>CMD：command，启动该进程的命令</li>
+				</ul>
+				<h3>top</h3>
+				top 用于实时现实进程状态。
+				<pre><code class="shell">
+$ top
+top - 10:36:58 up 40 days, 9:47, 2 users, load average: 0.00, 0.01, 0.05
+Tasks: 72 total, 1 running, 71 sleeping, 0 stopped, 0 zombie
+%Cpu(s): 0.0 us, 0.0 sy, 0.0 ni,100.0 id, 0.0 wa, 0.0 hi, 0.0 si, 0.0 st
+KiB Mem : 1883708 total, 606076 free, 201860 used, 1075772 buff/cache
+KiB Swap: 0 total, 0 free, 0 used. 1480728 avail Mem
+
+PID USER PR NI VIRT RES SHR S %CPU %MEM TIME+ COMMAND
+...
+				</code></pre>
+				<ul>
+					<li>
+						第一行：系统基本信息
+						<ul>
+							<li>10:36:58：当前系统时间</li>
+							<li>40 days, 9:47：操作系统已经启动 40 天 9 时 47 分</li>
+							<li>2 users：当前两个用户登录系统</li>
+							<li>load average: 0.00, 0.01, 0.05：负载均衡情况</li>
+						</ul>
+					</li>
+					<li>
+						第二行：Task，任务 / 进程信息
+						<ul>
+							<li>2 total：当前系统 72 个进程</li>
+							<li>1 running, 71 sleeping, 0 stopped, 0 zombie：1 个进程正在执行，71 个在睡眠，0 个已停止，0 个僵尸进程</li>
+						</ul>
+					</li>
+					<li>
+						第三行：%Cpu(s)，cpu 占用<span class="different">百分比</span>
+						<ul>
+							<li>us：user space，用户空间</li>
+							<li>sy：内核空间</li>
+							<li>ni：改变过优先级的进程占用CPU的百分比</li>
+							<li>id：ideal，空闲</li>
+							<li>wa：io 等待</li>
+							<li>hi：hard interrupt，硬中断</li>
+							<li>si：soft interrupt，软中断</li>
+						</ul>
+					</li>
+					<li>
+						第四行：内存状态信息
+						<ul>
+							<li>1883708 total：总大小</li>
+							<li>606076 free：剩余大小</li>
+							<li>201860 used：已使用</li>
+							<li>1075772 buff/cache：缓存</li>
+						</ul>
+					</li>
+					<li>
+						第五行：交换分区信息
+					</li>
+					<li>
+						第六行：进程列头
+						<ul>
+							<li>PID：process id</li>
+							<li>user：进程所有者</li>
+							<li>PR：进程优先级</li>
+							<li>NI：nice 值</li>
+							<li>VIRT</li>
+							<li>RES：</li>
+							<li>SHR</li>
+							<li>S：status，进程状态</li>
+							<li>%CPU：cpu 占用百分比</li>
+							<li>%MEM：内存占用百分比</li>
+							<li>TIME+：cpu 时间</li>
+							<li>COMMAND：启动进程时执行的命令</li>
+						</ul>
+					</li>
+				</ul>
+				<h4>排序</h4>
+				top 默认按照 CPU% 进行排序，使用 top 命令后输入<span class="different">x</span>（加粗）和<span
+					class="different">b</span>（反转底色）高亮显示排序列，使用<span class="different">
+					<</span>或 <span class="different">>
+				</span>切换其他列排序。
+				<h3>lsof</h3>
+				list open file，显示所有 linux 打开的文件，常用 -i 参数，用于查询网络地址，比如查询 80 端口的文件。
+				<pre><code class="shell">
+$ lsof -i:80
+COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME
+...
+				</code></pre>
+				<div class="tip">
+					一些文件可能查询不出来，因为当前用户权限不足，如果希望查得所有文件，使用 root 权限。
+				</div>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 鸟哥的linux私房菜 <a
+						href="http://cn.linux.vbird.org/linux_basic/linux_basic.php">http://cn.linux.vbird.org/linux_basic/linux_basic.php</a>
+				</div>
+				<div>[2] 竹子 top 指令<a
+						href="https://www.cnblogs.com/peida/archive/2012/12/24/2831353.html">https://www.cnblogs.com/peida/archive/2012/12/24/2831353.html</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

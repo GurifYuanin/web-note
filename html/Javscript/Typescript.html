@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Typescript</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">Typescript</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				Typescript 是 Javscript 的超集，即对 Javascript 的拓展，以 .ts 为后缀名。
+				<div class="tip">
+					由于是超集，因此在 ts 里 Javascript 原生代码都不会报错，而是会原样编译为 js 文件。
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>安装 & 使用</h2>
+			<p>
+				<h3>npm</h3>
+				<p>
+					全局安装 typescript。
+					<pre><code class="shell">
+$ npm install -g typescript
+					</code></pre>
+				</p>
+				<h3>使用</h3>
+				<p>
+					将 ts 文件编译为 js 文件，文件名默认与 ts 文件一样，且编译后的 js 文件在 ts 文件同级目录下。
+					<pre><code class="shell">
+$ tsc 文件匹配
+					</code></pre>
+					监听编译，当目标文件改变时自动进行编译。
+					<pre><code class="shell">
+$ tsc -w 文件匹配
+					</code></pre>
+					使用配置文件所指定的进行编译，从当前目录开始向根找 tsconfig.json 文件。
+					<pre><code class="shell">
+$ tsc
+					</code></pre>
+				</p>
+				<h3>tsconfig.json</h3>
+				<p>
+					以下为 ts 编译的部分配置项，完整的选项查看<a href="http://www.typescriptlang.org/docs/handbook/compiler-options.html"> ts
+						官方文档</a>。
+					<pre><code class="json">
+{
+	"compileOnSave": true, // 文件修改时自动编译
+	// 编译选项，必需
+	"compilerOptions": {
+	"outFile": "src/js/main.js", // 编译后输出的 js 文件
+	"target": "es5", // 编译后的 js 版本
+		"allowJs": false, // 是否连同 js 文件也编译
+		"module": "commonjs", // 模块语法
+		"noImplicitAny": true, // 编译器无法推断出类型时是否报错
+		"removeComments": true, // 是否删除注释
+		"preserveConstEnums": true, // 是否保留 enum
+		"sourceMap": true, // 编译后生成一个 .map 文件，用于映射 ts 和 js 文件
+		"lib": ["es2015", "dom"] // 安装额外的库文件
+	},
+	"files": [
+		"index.ts" // 指定具体文件编译
+	],
+	"include": [
+	    "src/ts/*.ts" // 使用 glob 匹配文件编译
+	],
+	"exclude": [
+	    "node_modules" // 使用 glob 匹配文件不编译
+	]
+}
+					</code></pre>
+				</p>
+				<h3>typings files</h3>
+				<p>
+					ts 默认会按照以下路径去寻找第三方库文件（jquery、node 等）：
+					<ol>
+						<li>node_modules/@types</li>
+						<li>../../node_modules/@types</li>
+						<li>../../../../node_modules/@types</li>
+						<li>...</li>
+					</ol>
+					你也可以在 tsconfig.json 中进行修改：
+					<pre><code class="json">
+{
+	"compilerOptions": {
+		"types": ["node"], // 方式一，按照上面路径去寻找 node 环境的库
+		"typeRoots": ["node_modules/@types"] // 方式二，寻找 node_modules/@types 下的所有库
+	}
+}
+					</code></pre>
+					然后需要做的是下载需要的库
+					<pre><code class="shell">
+npm install --save-dev @type/node
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>类型检测</h2>
+			<p>
+				使用 ts 可以对变量类型、参数类型、函数返回值类型进行类型检测。
+				<pre><code class="typescript">
+let 变量名: 数据类型 = 值;
+
+function 函数名(形参名: 数据类型): 数据类型 {
+	// ...
+}
+				</code></pre>
+				使用<span class="definition"> :数据类型 </span>来进行检测，数据类型有：
+				<ul>
+					<li>any：不限制类型</li>
+					<li>null：即 null</li>
+					<li>undefined：即 undefined</li>
+					<li>void：对于变量表示 null 或 undefined，对于函数表示无返回值</li>
+					<li>number：浮点数字</li>
+					<li>boolean：布尔型</li>
+					<li>string：字符串</li>
+					<li>Array&lt;数据类型&gt;：所有元素都是指定数据类型的数组</li>
+					<li>[数据类型1, 数据类型2, ...]：所有元素一一对应的数组</li>
+					<li>object：一切对象</li>
+					<li>class（类）</li>
+					<li>Date、RegExp 等：对应的对象实例</li>
+				</ul>
+				如果当不符合类型检测，在编译时将报错。（只是报错，剩下的依旧乖乖编译完成）
+				<pre><code class="javscript">
+// 编译前
+const s: number = 'a';
+s = 'b';
+// 编译后
+var s = 'a';
+s = 'b';
+// 报错内容
+index.ts(1,7): error TS2322: Type '"a"' is not assignable to type 'number'.
+index.ts(2,1): error TS2540: Cannot assign to 's' because it is a constant or a read-only property.
+				</code></pre>
+				可以使用类对数据进行类型检查。
+				<pre><code class="javascript">
+class Dog {
+	name: string;
+	height: number;
+}
+const aDog: Dog = {
+	name: '二狗子',
+	height: 50
+};
+				</code></pre>
+				<h3>枚举</h3>
+				<p>
+					ts 新增了关键字 enum 用于创建枚举类型。
+					<pre><code class="typescript">
+enum 名 {键 = 值};
+// 例子
+enum e {key = 'value'};
+e.key // => value
+// 等价于
+var e = {
+	key: 'value'
+}
+					</code></pre>
+					其中<span class="definition"> 键 </span>是字符串类型，类似于 {} 的键，<span class="definition"> 值 </span>是字符串或数字，不写时默认从 0
+					开始递增。
+					<pre><code class="typescript">
+enum Name {Jack, Tom};
+Name.Jack // => 0
+Name.Tom // => 1
+					</code></pre>
+					当值为数值时，枚举类型其实是一种双向映射，既可以用<span class="definition"> 名.键 </span>来获取<span class="definition"> 名.值
+					</span>，也可以用<span class="definition"> 名[值] </span>来获取<span class="definition"> 名.键 </span>
+					<pre><code class="typescript">
+// 编译前
+enum e {key = 1};
+// 编译后
+var e;
+(function (e) {
+    e[e["key"] = 1] = "key";
+})(e || (e = {}));
+// 编译后等价于
+var e = {
+	key: 1,
+	1: 'key'
+}
+
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>类</h2>
+			<p>
+				创建、使用类和接口：
+				<ul>
+					<li>class 与 extends</li>
+					<li>interface 与 implements</li>
+				</ul>
+				新增修饰符：
+				<ul>
+					<li>private：private 成员，只允许内部访问（无法通过 实例.成员名 来访问），不会继承给子类</li>
+					<li>protected：protected 成员，只能内部访问，但会继承给子类</li>
+					<li>abstract：定义抽象类</li>
+				</ul>
+				<h3>class</h3>
+				<p>
+					ts 的类与 ES6 的类类似，且更趋近于其他高级语言，以不同语言写一个加法类（默认返回 1 + 1）。
+					<h4>Java</h4>
+					<pre><code class="java">
+class Add {
+	int a = 1;
+	int b = 1;
+	Add (int a, int b) {
+		this.a = a;
+		this.b = b;
+	}
+	int getSum () {
+		return a + b;
+	}
+}
+					</code></pre>
+					<h4>ES6</h4>
+					<pre><code class="javascript">
+class Add {
+	constructor (a = 1, b = 1) {
+		this.a = a;
+		this.a = b;
+	}
+	getSum () {
+		return this.a + this.b;
+	}
+}
+					</code></pre>
+					<h4>Typescript</h4>
+					<pre><code class="typescript">
+class Add {
+	a: number = 1;
+	b: number = 1;
+	constructor (a: number, b: number) {
+		this.a = a;
+		this.b = a;
+	}
+	getSum (): number {
+		return this.a + this.b;
+	}
+}
+					</code></pre>
+				</p>
+				<h3>接口</h3>
+				<p>
+					接口是 ES6 未具有的语法，功能与其他高级语言基本类似。
+					<h4>创建接口</h4>
+					在接口内，<span class="definition"> : </span>前添加<span class="definition"> ? </span>表示接口被实现的时候该成员可以省略，否则该成员必须被创建。
+					<pre><code class="typescript">
+interface Person {
+	name: string;
+	money?: number;
+	walk (distence: number);
+}
+					</code></pre>
+					<h4>使用接口</h4>
+					实现接口的时候最低限度（最精简）如下，因为 money 变量是可选的，所以可以省略不实现。
+					<pre><code class="typescript">
+class Me implements Person {
+	name;
+	walk(){}
+}
+					</code></pre>
+					最完整版本应该是：
+					<pre><code class="typescript">
+class Me implements Person {
+	name: string = 'wahaha';
+	money: number = 0;
+	constructor () {}
+	walk (distence: number) {
+		console.log('你走了' + distence + '步');
+	}
+}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>函数</h2>
+			<p>
+				ts 对函数拓展了以下特性：
+				<ul>
+					<li>支持形参和返回值的类型检查</li>
+					<li>支持泛型</li>
+					<li>支持重载</li>
+				</ul>
+				<h3>类型检查</h3>
+				<p>
+					检查参数的类型和返回值的类型，声明和使用时不符合类型时将报错，并且默认不能省略。若允许省略，则在 : 前添加一个 ?，且该可选参数必须在必须参数之后。
+					<pre><code class="typescript">
+function add(a: number, b: number, c?: number): number {
+	return a + b;
+}
+
+add(1, '2');
+// 因为 '2' 是字符串而不是数字，所以报错
+// error TS2345: Argument of type '"2"' is not assignable to parameter of type 'number'.
+					</code></pre>
+				</p>
+				<h3>泛型</h3>
+				<p>
+					泛型是指声明函数的时候不确定类型，先用<span class="definition"> T </span>占位，函数被调用时进行指定，此时函数在执行中才确定类型：<span class="definition">
+						函数名<类型>(参数) </span>。以下的 getArr 函数返回一个长度为 10，元素类型任意，数组被传入的参数填充的数组：
+					<pre><code class="javascript">
+function getArr&lt;T>(element: T): Array&lt;T> {
+	let arr = new Array();
+	for (let i = 0; i < 10; i++) {
+		arr.push(element);
+	}
+	return arr;
+}
+
+const arr1 = getArr(1); // => [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
+const arr2 = getArr('1'); // => [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ]
+					</code></pre>
+					这种方法不等价于使用 any ，因为 any 表示任意一种类型，因此可以随意使用。而 T 表示任意一种类型都有可能，但在未确定之前不能随便使用，例如写法以下会报错：
+					<pre><code class="javascript">
+function getLength&lt;T>(arr: T): number {
+	return arr.length;
+}
+// error TS2339: Property 'length' does not exist on type 'T'.
+					</code></pre>
+					arr 是泛型（T），但不一定是数组（Array）、字符串（string）等这些有 length 属性的类型，所以不允许直接使用 arr.length。
+				</p>
+				<h3>重载</h3>
+				<p>
+					ts 实现重载的方法，需要在函数声明之前定义好参数可能传入的类型，实际声明时不对参数进行类型检测，在函数内再进行类型检查。
+					<pre><code class="typescript">
+function sum (a: Array&lt;number>, b: Array&lt;number>) :number; // 预期：当传入数组时，将所有元素求和
+function sum (a: number, b: number): number; // 预期：当传入数字时，相加后返回
+function sum (a, b) {
+	// 然而还是要自己进行类型判断
+	if (Array.isArray(a) && Array.isArray(b)) {
+		return a.reduce((a, b) => a + b) + b.reduce((a, b) => a + b);
+	} else {
+		return a + b;
+	}
+}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>模块化</h2>
+			<p>
+				<h3>模块</h3>
+				<p>
+					ts 的模块与 ES6 基本一致，都是使用 export 导出模块，使用 import 导入模块。
+				</p>
+				<h3>命名空间</h3>
+				<p>
+					在 ts 中，可以使用命名空间（namespace）可以避免命名冲突问题，以下代码不会报错，因为两个 a 分别属于各自的命名空间。
+					<pre><code class="typescript">
+namespace A {
+	const a = 1;
+}
+namespace B {
+	const a = 2;
+}
+					</code></pre>
+					<h4>对比块级作用域</h4>
+					命名空间不等价于<span class="definition"> 块级作用域 </span>，因为块级作用域使得作用域外无法读取作用域内的变量或函数，而使用命名空间则更像是<span
+						class="definition"> 命名前缀法 </span>。
+					<pre><code class="typescript">
+// 在 javascript 中，以下会报错
+{
+	const a = 1;
+}
+console.log(a);
+
+// 在 typescript 中，可以这样写
+namespace A {
+	const a = 1;
+}
+console.log(A.a);
+					</code></pre>
+					<h4>命名空间 + 模块</h4>
+					使用 import 给命名空间所暴露的接口进行重命名，方便后续使用。
+					<pre><code class="typescript">
+namespace A {
+	export class a {}
+}
+import a = A.a;
+// 之后可以直接使用 a 而不用每次都带上 A.
+let instance = new a();
+					</code></pre>
+					<h4>想太多</h4>
+					以下情况属于想太多。
+					<pre><code class="typescript">
+namespace A {
+	const num = 1;
+}
+namespace A {
+	console.log(num);
+}
+// error TS2304: Cannot find name 'num'.
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] TypeScript Handbook（中文版） <a
+						href="https://www.runoob.com/manual/gitbook/TypeScript/_book/index.html">https://www.runoob.com/manual/gitbook/TypeScript/_book/index.html</a>
+				</div>
+				<div>[2] Typescript Wiki <a
+						href="http://www.typescriptlang.org/docs/handbook/tsconfig-json.html">http://www.typescriptlang.org/docs/handbook/tsconfig-json.html</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

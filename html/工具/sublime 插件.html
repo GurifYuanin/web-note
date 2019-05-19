@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>sublime plugin</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">sublime 插件</h1>
+		</hgroup>
+		<section>
+			<h2>颜色</h2>
+			<p>
+				<h3>ColorHighter：颜色即时显示</h3>
+				<p>
+					ColorHight 为 CSS 颜色即使显示工具，其显示的条件有三种：
+					<ul>
+						<li>默认状态：search_colors_in</li>
+						<li>悬浮状态：hover</li>
+						<li>选中状态：selection</li>
+					</ul>
+				</p>
+				<h3>ColorPicker：颜色拾取器</h3>
+				<p>
+					安装 ColorPicker 后，默认调出颜色拾取器的默认快捷键为
+					<div class="command"> Ctrl + Shift + C </div>
+					可以向<span class="definition"> Preference >Keys Setting </span>添加<span class="definition"> { "keys":
+						["ctrl+shift+p"], "command": "color_pick" } </span>修改快捷键。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>空格</h2>
+			<p>
+				<h3>空格显示：TrailingSpaces</h3>
+				<p>
+					使用 TrailingSpaces 工具可以让你看见页面上的所有空格，逼死强迫症患者。
+					<figure>
+						<img src="../../images/sublime_plugin_space.jpg" alt="">
+					</figure>
+				</p>
+				<h3>空格删除</h3>
+				<p>
+					向<span class="definition"> Preference >Keys Setting </span>添加<span class="definition"> { "keys":
+						["ctrl+shift+t"], "command": "delete_trailing_spaces" } </span>修改快捷键，此后可以直接使用该快捷键删除所有多余的空格。
+				</p>
+				<h3>删除该插件</h3>
+				<p>
+					使用 Ctrl + Shift + P 调出 sublime 指令窗口，输入 package control: remove package，选择 TrailingSpaces 删除插件，删除后感觉世界一片美好(狗头)。
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>提示</h2>
+			<p>
+				<h3>边界显示：BracketHighlighter</h3>
+				<p>
+					使用 BracketHighlighter 插件，当光标停留在某个文本上的时候，会自动寻找该文本的前后方框（大括号、小括号、单双引号、标签等）。
+				</p>
+				<figure>
+					<img src="../../images/sublime_plugin_bracket.jpg" alt="">
+				</figure>
+				<h3>文件名提示：AutoFileName</h3>
+				<p>
+					使用 AutoFileName 插件，当输入 url 路径的时候，会自动提示可供选择的文件及目录。
+					<figure>
+						<img src="../../images/sublime_plugin_autofilename.jpg" alt="">
+					</figure>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>界面</h2>
+			<p>
+				<h3>汉化：ChineseLocalizations</h3>
+				<p>
+					使用 ChineseLocalizations 插件可以对工具栏进行汉化。
+					<figure>
+						<img src="../../images/sublime_plugin_chinese.jpg" alt="">
+					</figure>
+				</p>
+				<h3>右键菜单增强：SideBarEnhancements</h3>
+				<p>
+					使用 SideBarEnhancements 为右键菜单添加功能。
+					<figure>
+						<img src="../../images/sublime_plugin_sidebar.jpg" alt="">
+					</figure>
+				</p>
+				<h3>主题</h3>
+				<p>
+					在 Package Controler: Install Package 后输入 theme ，自行选择主题下载。
+					<figure>
+						<img src="../../images/sublime_plugin_downlonad_theme.jpg" alt="">
+					</figure>
+					随后在 Preference > Theme 中选择喜欢的主题。
+					<figure>
+						<img src="../../images/sublime_plugin_use_theme.jpg" alt="">
+					</figure>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>代码</h2>
+			<p>
+				<h3>HTML / XML + CSS 代码拾取器：Emmet</h3>
+				<p>
+					Emmet 提供了快捷的代码书写方式，写完一段简短的代码后按 Tab 将自动生成所有代码。
+					<pre><code class="javascript">
+// 创建 html 模版
+!
+
+// 创建 html 标签
+标签 #id|.class *数量 关系 标签 {文本}
+
+// 创建 css 样式
+css属性首字母: css值首字母
+					</code></pre>
+					<figure>
+						<img src="../../images/sublime_plug_emmet.gif" alt="">
+					</figure>
+				</p>
+				<h3>代码校验：SublimeLinter</h3>
+				<p>
+					SublimeLinter 提供了一系列代码校验功能，需要配合 Node 和 Ruby 环境，先下载 SublimeLinter 插件，再安装以下内容：
+					<table>
+						<tr>
+							<th>Sublime</th>
+							<th>Node</th>
+							<th>Ruby</th>
+							<th>功能</th>
+							<th>配置文件</th>
+						</tr>
+						<tr>
+							<td>SublimeLinter-jsHint</td>
+							<td>npm install -g jshint</td>
+							<td></td>
+							<td>javascript 代码语法校验</td>
+							<td>.jshintrc</td>
+						</tr>
+						<tr>
+							<td>SublimeLinter-jscs</td>
+							<td>npm install jscs -g</td>
+							<td></td>
+							<td>javascript 代码书写规范校验</td>
+							<td>.jscsrc</td>
+						</tr>
+						<tr>
+							<td>SublimeLinter-csslint</td>
+							<td>npm install csslint -g</td>
+							<td></td>
+							<td>css 语法校验</td>
+							<td>.csslint</td>
+						</tr>
+						<tr>
+							<td>SublimeLinter-contrib-scss-lint</td>
+							<td></td>
+							<td>gem install scss_lint</td>
+							<td>scss 语法校验</td>
+							<td>.scss-lint.yml</td>
+						</tr>
+					</table>
+					配置方式为，在项目的根目录下创建一个 .xxx 的配置文件（参见上表），写入配置项，该项目的代码将以此文件为配置参数。
+				</p>
+				<h3>javascript 代码格式化：JSFormat</h3>
+				<p>
+					安装 JSFormat 后，再向<span class="definition"> Preference > Key Settings </span>设置快捷键：
+					<div class="command">{ "keys": ["ctrl+shift+f"], "command": "js_format"}</div>
+					再使用快捷键格式化所有 javascript 代码。
+				</p>
+				<h3>css 代码格式化：CSScomb</h3>
+				<p>
+					安装 CSScomb 后还需要安装 npm 包 csscomb
+					<pre><code class="shell">
+npm install -g csscomb
+					</code></pre>
+					然后使用快捷键（默认是 Ctrl + Shift + C）使 CSS 属性排序。
+					<div class="command">Ctrl + Shift + C</div>
+				</p>
+				<h3>代码注释：Docblockr</h3>
+				<p>
+					下载 Docblockr 可以使代码注释更加方便。
+					<figure>
+						<img src="../../images/sublime_plugin_doc.gif" alt="">
+					</figure>
+				</p>
+				<h3>Markdown 实时预览：OmniMarkupPreviewer</h3>
+				<p>
+					使用 OmniMarkupPreviewer 通常有两种操作：
+					<ul>
+						<li>Ctrl + Shift + M：开启一个小型服务器，用于实时预览 Markdown 文件</li>
+						<li>Ctrl + Shift + E：将 .md 文件渲染 .html 文件</li>
+					</ul>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>代码校验配置</h2>
+			<p>
+				<h3>jshint</h3>
+				<p>
+					<pre><code class="json">
+{
+	"esversion": 6, // es 版本
+}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Emmet Documentation cheat-sheet <a
+						href="https://docs.emmet.io/cheat-sheet/">https://docs.emmet.io/cheat-sheet/</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

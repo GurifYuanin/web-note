@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=2.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/jquery-3.2.1-compressed.js"></script>
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+  <style>
+    .border {
+      width: 200px;
+      height: 200px;
+      border: 1px solid black;
+      background-color: white;
+    }
+  </style>
+  <title>1px</title>
+</head>
+
+<body>
+  <aside id="sidebar">
+    <section id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </section>
+  </aside>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <article id="container">
+    <hgroup>
+      <h1 id="title">1px</h1>
+    </hgroup>
+    <section>
+      <h2>存在问题</h2>
+      <p>
+        参照<a href="./viewport.html">viewport</a>，当使用一些手机时，dpr 大于 1，设置边框为 1 时：
+        <pre><code class="css">
+.border {
+  border: solid 1px black;
+}
+        </code></pre>
+        实际上渲染的边框宽度并非 1px，比如当 dpr 为 2 时，边框厚度为 2px，因此需要解决方案，当检查到时 retina 屏时调整样式使得边框显示为 1px。
+        <pre><code class="javascript">
+console.log(window.devicePixelRatio);
+        </code></pre>
+        <div class="show">
+          <div style="background-color: white; padding: 50px">
+            <div class="border"></div>
+          </div>
+        </div>
+      </p>
+    </section>
+    <section>
+      <h2>渐变方式</h2>
+      <p>
+        假设边框颜色为黑色，那么使用以下样式在 dpr 为 2 时生成 1px 的边框。
+        <pre><code class="css">
+.border-background-image {
+  border: none;
+  background-image: linear-gradient(180deg, black, black 50%, transparent 50%),
+    linear-gradient(270deg, black, black 50%, transparent 50%),
+    linear-gradient(0deg, black, black 50%, transparent 50%),
+    linear-gradient(90deg, black, black 50%, transparent 50%);
+  background-size: 100% 1px, 100% 1px, 100% 1px, 100% 1px;
+  background-repeat: no-repeat;
+  background-position: top, right, bottom, left;
+}         
+        </code></pre>
+        缺点是该方法下无法设置 border-radius。
+      </p>
+    </section>
+    <section>
+      <h2>box-shadow</h2>
+      <p>
+        使用不加模糊的 box-shadow，这是因为对于 border-width，0.5px 不会生效，但对于 box-shadow，0.5px 可以生效，这样就可以满足 dpr 为 2 时的情况。
+        <pre><code class="css">
+.border-box-shadow {
+  box-shadow: 0 0 0 0.5px black;
+}
+        </code></pre>
+        优点是可以设置圆角。
+      </p>
+    </section>
+    <section>
+      <h2>伪元素</h2>
+      <p>
+        使用伪元素，宽高为原来元素的 2 倍，然后再通过缩放缩小到原来一半，来达到边框厚度缩小一半的目的。
+        <pre><code class="css">
+.border-fake-element {
+  position: relative;
+}
+.border-fake-element::after {
+  content: '';
+  width: 200%;
+  height: 200%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px solid black;
+  transform: scale(0.5, 0.5);
+}
+        </code></pre>
+        缺点是原来元素必须是相对（relative）定位，优点是可以设置圆角。
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] nihaojob 移动web 1像素边框 瞧瞧大公司是怎么做的 <a
+            href="https://segmentfault.com/a/1190000007604842">https://segmentfault.com/a/1190000007604842</a></div>
+      </p>
+    </section>
+  </article>
+</body>
+
+</html>

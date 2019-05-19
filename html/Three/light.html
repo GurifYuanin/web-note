@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>light</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+	<script src="../../js/three.min.js"></script>
+	<script src="../../js/three-init.js"></script>
+	<script src="../../js/OrbitControls.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">light</h1>
+		</hgroup>
+		<section>
+			<h2>Light</h2>
+			<p>
+				Light 是一个抽象类，被所有其他的灯光类所继承，其他灯光类拥有 Light 所定义的成员和方法。
+				<h3>color</h3>
+				<p>
+					灯光的颜色。
+				</p>
+				<h3>intensity</h3>
+				<p>
+					灯光的强度
+				</p>
+				<div class="show">
+					<div id="light-demo-container"></div>
+					<div>light.color <input id="light-demo-color" type="color" value="#ffffff"></div>
+					<div>light.intensity <input id="light-demo-intensity" type="range" min="0" max="10" step="0.1" value="1">
+						<span id="light-demo-intensity-show">1.0</span></div>
+					<script>
+						(function () {
+							var renderer = initRenderer(document.getElementById('light-demo-container'));
+							var camera = initCamera();
+							var scene = initScene();
+							var pointLight = new THREE.PointLight();
+							var pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
+							pointLight.position.set(1, 1, 1);
+							var mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshLambertMaterial({ color: 0xf92472 }));
+							scene.add(mesh, pointLight, pointLightHelper);
+							new THREE.OrbitControls(camera, renderer.domElement);
+							(function render() {
+								renderer.render(scene, camera);
+								requestAnimationFrame(render);
+							})();
+							document.getElementById('light-demo-color').onchange = function () {
+								pointLight.color = value2color(this.value);
+								pointLightHelper.update();
+							}
+							document.getElementById('light-demo-intensity').onchange = function () {
+								pointLight.intensity = Number.parseFloat(this.value);
+								scene.remove(pointLightHelper);
+								pointLightHelper = new THREE.PointLightHelper(pointLight, Number.parseFloat(this.value));
+								scene.add(pointLightHelper);
+								document.getElementById('light-demo-intensity-show').innerText = this.value;
+							}
+						})();
+					</script>
+				</div>
+				<div class="tip">
+					需要注意的是，并不是所有物体都会受灯光影响，一些简单材质（如
+					MeshBasicMaterial）只显示自身颜色，不接受灯光，这里使用的是点光源（PointLight）和兰伯特材质（MeshLambertMaterial）。
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>PointLight</h2>
+			<p>
+
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p></p>
+		</section>
+	</article>
+</body>
+
+</html>

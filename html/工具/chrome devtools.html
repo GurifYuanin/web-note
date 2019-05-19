@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>chrome devtools</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">chrome devtools</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				Chrome 开发者工具（developer tools）是一套内置于 Google Chrome 中的 Web 开发和调试工具，可用来对网站进行迭代、调试和分析。<sup>[1]</sup>
+				<div>
+					<h3>下载</h3>
+					<p>
+						chrome devtools 内嵌于 chrome 浏览器，可在 google 官网下载 chrome 浏览器。
+					</p>
+					<h3>打开</h3>
+					<p>
+						可以使用以下三种方式打开 chrome devtools 。
+						<figure>
+							<img src="../../images/chrome_devtools_open.jpg" alt="加载失败">
+						</figure>
+					</p>
+					<h3>功能</h3>
+					<p>
+						chrome devtools 有以下面板功能：
+						<ul>
+							<li>Elements（DOM元素）</li>
+							<li>Console（控制台）</li>
+							<li>Sources（资源）</li>
+							<li>Network（网络/时间线）</li>
+							<li>Performance（行为）</li>
+							<li>Memory（内存）</li>
+							<li>Application（应用程序）</li>
+							<li>Security（安全）</li>
+							<li>Audits（审计）</li>
+						</ul>
+					</p>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>Elements</h2>
+			<p>
+				Elements 面板用于观察当前文档 DOM 的所有元素及其样式，同时可以对元素（内部文本、class 等）和样式属性进行即时修改。
+				<figure>
+					<img src="../../images/chrome_devtools_elements.jpg" alt="加载失败">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>Console</h2>
+			<p>
+				Console 允许开发者使用 Console API 来协助开发。开发者可以从控制台看到日志诊断消息来调试 web 应用，也可以通过 API 与 chrome devtools 进行交互。
+				<figure>
+					<img src="../../images/chrome_devtools_console.jpg" alt="加载失败">
+				</figure>
+				<div>
+					<h3>Console Setting</h3>
+					<p>
+						点击右上角的“齿轮”，对控制台进行设置。
+						<figure>
+							<img src="../../images/chrome_devtools_console_setting.jpg" alt="加载失败">
+						</figure>
+					</p>
+				</div>
+				<div>
+					<h3>执行环境</h3>
+					<p>
+						可以选择其他框架或拓展程序作为执行环境，默认为 Top ，即页面的顶部。（通常也不需要修改）
+					</p>
+				</div>
+				<div>
+					<h3>过滤</h3>
+					<p>
+						可以对控制台的输出内容进行过滤。
+						<ul>
+							<li>在 Filter 输入框输入文本后，与文本无法字符串匹配的输出消息将被隐藏</li>
+							<li>选择右侧下拉列表，勾选不同的复选框显示与隐藏指定类型的输出</li>
+						</ul>
+					</p>
+				</div>
+				<div>
+					<h3>Console API</h3>
+					<p>
+						在控制台可以直接使用 javascrpt API （可以使用<span class="definition"> shift + enter </span>组合键来进行换行），写完代码后按<span
+							class="definition"> enter </span>运行，其后第二三行显示“输出”和“返回值”。
+						<figure>
+							<img src="../../images/chrome_devtools_js.jpg" alt="加载失败">
+						</figure>
+						<p>
+							<h4>输出</h4>
+							使用 Console API 可以在控制台进行输出，所有的输出 API 接受多个参数，输出时将多个参数连接起来，中间用空格隔开（同时也支持格式化输出）。
+							<ul>
+								<li>console.log|info(string)：普通消息输出</li>
+								<li>console.warn(string)：警告消息输出</li>
+								<li>console.error(string)：错误消息输出</li>
+								<li>console.assert(boolean, string)：若前一个判断条件为 false ，则输出后面字符串为错误消息，若为 true ，则不做任何输出</li>
+								<li>console.dir(element)：以对象的形式打印输出一个 DOM 元素</li>
+							</ul>
+							<figure>
+								<img src="../../images/chrome_devtools_console_output.jpg" alt="加载失败">
+							</figure>
+							<figure>
+								<img src="../../images/chrome_devtools_console_dir.jpg" alt="加载失败">
+							</figure>
+						</p>
+						<p>
+							<h4>可视化数据结构</h4>
+							table() 用于可视化数据结构，可以将参数按照表格的方式显示出来。
+							<pre><code class="javascrpt">
+console.table([{a:1, b:2, c:3}, {d:4, e:5, f:6}]);
+console.table({a: 1, b: 2, c: 3});
+							</code></pre>
+							<figure>
+								<img src="../../images/chrome_devtools_console_table.jpg" alt="加载失败">
+							</figure>
+						</p>
+						<p>
+							<h4>计时</h4>
+							使用 console.time(stringId) 开始计时，传入的字符串作为计时器的 ID 。<br>
+							使用 console.timeEnd(stringId) 停止计时，传入的字符串作为计时器的 ID 。<br>
+							停止计时时显示一共所花时间。
+							<figure>
+								<img src="../../images/chrome_devtools_console_time.jpg" alt="加载失败">
+							</figure>
+						</p>
+						<p>
+							<h4>选择元素</h4>
+							<ul>
+								<li>$(selector)：选出符合选择器规则的第一个元素，相当于 querySelector() </li>
+								<li>$$(selector)：选出符合选择器规则的所有元素，相当于 querySelectorAll() </li>
+								<li>$x(XPath)：选出符合XPath规则的所有元素</li>
+							</ul>
+							<figure>
+								<img src="../../images/chrome_devtools_console_$.jpg" alt="加载失败">
+							</figure>
+						</p>
+						<p>
+							<h4>事件</h4>
+							<ul>
+								<li>monitorEvents(element, eventType)：为元素添加指定类型事件，触发后在控制台显示事件信息</li>
+								<li>unmonitorEvents(element, eventType)：移除事件</li>
+							</ul>
+							<figure>
+								<img src="../../images/chrome_devtools_console_monitor.jpg" alt="加载失败">
+							</figure>
+						</p>
+						<p>
+							<h4>清屏</h4>
+							可以使用 clear() 对控制台的所有消息进行清空。
+						</p>
+					</p>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>Sources</h2>
+			<p>
+				<h3>Page</h3>
+				<p>
+					Sources 面板的 page 部分可以直接查看站点获取到的所有资源，同时允许对 CSS 和 javascript 文件进行编辑，修改后，页面即时渲染。
+					<figure>
+						<img src="../../images/chrome_devtools_console_sources.gif" alt="加载失败">
+					</figure>
+					你可以直接查看到源代码，并利用断点功能，在代码左侧点击一下，代码执行到此处的时候将暂时中断，实现更高效地进行调试（debug）。
+					<figure>
+						<img src="../../images/chrome_devtools_source_debug.jpg" alt="加载失败">
+					</figure>
+				</p>
+				<h3>snippet</h3>
+				<p>
+					snippet 功能可以对反复使用的代码进行保存，第二次使用时可以直接运行脚本（Ctrl + S 保存 snippet， Ctrl + Enter 运行 snippet）。
+					<figure>
+						<img src="../../images/chrome_devtools_console_snippet.gif" alt="加载失败">
+					</figure>
+					snippet 是永久保存的，除非手动删除（右键 -> remove），你可以在其他网页中按 Ctrl + Enter 直接执行。
+				</p>
+				<h3>chrome 脚本</h3>
+				<p>
+					有时候 snippet 不够过瘾，因为需要打开控制台然后手动按快捷键 Ctrl + Enter，我们可以直接开发 chrome 扩展插件，即 js 脚本，脚本可以直接控制页面的 DOM 。开发一个脚本插件有以下步骤：
+					<ol>
+						<li>创建脚本文件夹，文件夹名任意，该文件夹用于存放脚本所需的文件</li>
+						<pre><code class="shell">
+$ mkdir my-chrome-plugin
+$ cd my-chrome-plugin
+						</code></pre>
+						<li>创建 manifest.json 文件，该文件类似一个配置文件，用于说明你的脚本的一些信息</li>
+						<pre><code class="json">
+{
+  "name": "my-chrome-plugin", // 脚本的名字
+  "manifest_version": 2, // manifest.json 的版本
+  "version": "1.0", // 脚本的版本
+  "description": "我的脚本", // 脚本的描述
+  "browser_action": {
+    "default_icon": "./icon.png" // 脚本的图标
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.baidu.com/*"], // 匹配网页，符合匹配的网页自动运行该脚本
+      "js": ["./index.js"] // 脚本文件的路径
+    }
+  ]
+}
+						</code></pre>
+						<li>写脚本文件，即 content_scripts 的 js 所指向的文件，当网页 URL 符合 matches 时自动执行脚本</li>
+						<pre><code class="javascript">
+// 写需要执行的脚本，可以直接获取 DOM
+window.addEventListener('load', function() {
+	alert('hello world');
+});
+						</code></pre>
+						<li>补充需要的资源，这里指向了一个 ./icon.png 的图标，你需要补充图标文件</li>
+						<li>加载到 chrome 作为拓展脚本</li>
+						<figure>
+							<img src="../../images/chrome_extend_script.jpg" alt="">
+							<figcaption>打开拓展程序</figcaption>
+						</figure>
+						<figure>
+							<img src="../../images/chrome_extend_script_save.jpg" alt="">
+							<figcaption>导入脚本</figcaption>
+						</figure>
+					</ol>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>Network</h2>
+			<p>
+				<h3>查看时间线</h3>
+				<p>
+					Network 面板用于记录页面资源的加载情况，按照时间线（Timeline）的形式呈现出来。<br>
+					打开 Network 面板后，按 F5 刷新页面后，开始捕捉页面资源加载情况。
+					<figure>
+						<img src="../../images/chrome_devtools_console_network.jpg" alt="加载失败">
+					</figure>
+				</p>
+				<h3>检查单个请求</h3>
+				<p>
+					点击某个请求后，network 可以让我们直接查看单个请求的详细信息，如请求头、响应头、响应主体等。
+					<figure>
+						<img src="../../images/chrome_network.jpg" alt="">
+					</figure>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>Performance</h2>
+			<p>
+				Performance 面板可用于诊断页面运行过程中的行为（事件/响应/动画）。<br>
+				打开 Performance 面板后，按<span class="definition"> Ctrl + E </span>开始记录，对页面进行一些操作，点击<span class="definition"> stop
+				</span>按钮停止记录。
+				<figure>
+					<img src="../../images/chrome_devtools_console_performance.jpg" alt="加载失败">
+				</figure>
+				<ul>
+					<li>FPS（Fram per second） 记录栏表示帧每秒，绿色部分越高帧率越多，用户体验也越好。顶端出现红色则表示帧率过低</li>
+					<li>CPU 记录栏用于记录 CPU 的占用率，可下面的 Aggregated Time 查看对 CPU 的占用分布</li>
+					<li>事件记录调度栏，x 轴表示事件，y 轴表示事件栈，即顶层事件调用底层事件。</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>Application</h2>
+			<p>
+				Application 面板可以对本地存储（缓存/数据库）进行管理。
+				<figure>
+					<img src="../../images/chrome_devtools_application.jpg" alt="加载失败">
+				</figure>
+				<figure>
+					<img src="../../images/chrome_devtools_application_demo.jpg" alt="加载失败">
+					<figcaption><a target="_blank" href="../../demo/chrome_devtools_application.html"> localStroage 样例</a>(该页面设置了一个
+						key=value 的 session)</figcaption>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>Memory</h2>
+			<p>
+				Memory 面板可以审查 javascript 运行过程中的内存问题。
+				<figure>
+					<img src="../../images/chrome_devtools_memory.jpg" alt="加载失败">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>其他</h2>
+			<p>
+				chrome devtools 可以更改显示设备为移动设备，方便不同设备的调试。
+				<figure>
+					<img style="max-width: 100%;" src="../../images/chrome_devtools_device.gif" alt="加载失败">
+				</figure>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Kayce Basques Chrome 开发者工具 <a
+						href="https://developers.google.com/web/tools/chrome-devtools/?hl=zh-cn">https://developers.google.com/web/tools/chrome-devtools/?hl=zh-cn</a>
+				</div>
+				<div>[2] Chrome devtools 中文手册 <a
+						href="https://leeon.gitbooks.io/devtools/content/learn_basic/overview.html">https://leeon.gitbooks.io/devtools/content/learn_basic/overview.html</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

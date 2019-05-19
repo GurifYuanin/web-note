@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>canvas</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+	<style>
+		.canvas-block {
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+	<script>
+		$(function () {
+			$('.canvas-block').attr({
+				width: '100px',
+				height: '100px'
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">canvas</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				canvas 是 HTML5 新增的标签，使用该标签和脚本可以绘制线条、形状、渐变、文字等。
+			</p>
+		</section>
+		<section>
+			<h2>坐标</h2>
+			<p>
+				canvas 的坐标系统与<a href="./svg.html">svg</a>一样，左上角为坐标原点，向右为 x 轴正方向，向下为 y 轴正方向。
+				<pre><code class="html">
+&lt;!-- 在 HTML 中 width 和 height 是画布大小 --&gt;
+&lt;canvas id="canvas" width="100px" height="100px"&gt;&lt;/canvas&gt;
+				</code></pre>
+				&lt;canvas&gt; 标签只是个容器，内容的绘制需要借助 javascript 来控制。
+				<pre><code class="javascript">
+var canvas = document.getElementById('canvas'); // 获取元素
+var context = canvas.getContext('2d'); // 获取 context
+// javascript 中 width 和 height 是图像大小
+context.height = '100px';
+context.width = '100px';
+// 使用 context 进行绘图
+// ...
+				</code></pre>
+				获得 context 对象后就可以开始绘图了。可以绘制的内容有：
+				<ul>
+					<li>矩形</li>
+					<li>路径</li>
+					<li>文本</li>
+					<li>渐变</li>
+					<li>图像</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>参数与方法</h2>
+			<p>
+				canvas 在绘制前，可以设置一些前置参数和方法
+				<ul>
+					<li>getContext('2d' | '3d')：获得上下文对象</li>
+					<li>strokeStyle = color：描边颜色，默认为 #000</li>
+					<li>fillStyle = color：填充颜色，默认为 #000</li>
+					<li>lineDashOffset = length：描边偏移</li>
+					<li>lineWidth = length：线条宽度</li>
+					<li>lineCap = butt | round | square：线条末端样式，默认为 butt</li>
+					<li>lineJoin = bevel | round | miter：线条连接处样式，默认为 miter</li>
+					<li>miterLimit = length：斜接面限制比例的的数字</li>
+					<li>globalAlpha = number：全局（整个 canvas）的透明度</li>
+					<li>setLineDash([x1, x2, x3...])：设置虚线样式，传入一个数组</li>
+					<li>getLineDash()：获得虚线样式</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>矩形</h2>
+			<p>
+				关于矩形有三个方法：
+				<ul>
+					<li>fillRect(x, y, width, height)：绘制一个填充矩形</li>
+					<li>strokeRect(x, y, width, height)：绘制一个矩形边框</li>
+					<li>clearRect(x, y, width, height)：清除矩形区域的内容</li>
+				</ul>
+				<pre><code class="javascript">
+context.fillRect(25, 25, 50, 50);
+context.strokeRect(0, 0, 100, 100);
+context.clearRect(0, 0, 50, 50);
+				</code></pre>
+				<div class="show">
+					<canvas class="canvas-block" id="canvas-rect"></canvas>
+					<script>
+						$(function () {
+							var rect = document.getElementById('canvas-rect').getContext('2d');
+							rect.fillRect(25, 25, 50, 50);
+							rect.strokeRect(0, 0, 100, 100);
+							rect.clearRect(0, 0, 50, 50);
+						});
+					</script>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>路径</h2>
+			<p>
+				<ol>
+					<li>标记开始与结束路径的绘制：</li>
+					<ul>
+						<li>beginPath()：开始绘制，当前点为起始点</li>
+						<li>closePath()：结束绘制，将当前点和起始点连接</li>
+					</ul>
+					<li>开始绘制路径：</li>
+					<ul>
+						<li>moveTo(x, y)：将当前点移动到 (x, y)</li>
+						<li>lineTo(x, y)：将当前点移动到 (x, y) 并绘制一条路径</li>
+						<li>rect(x, y, width, height)：绘制一段矩形路径，该方法自动 beginPath() 、 closePath() 和 moveTo(0, 0)</li>
+						<li>arc(x, y, radius, startAngle, endAngle, anticlockwise)：绘制圆心在 (x, y)，半径为 radius 的从 startAngle 到 endAngle
+							的扇形，anticlockwise 为 true 时逆时针，false 时顺时针</li>
+						<li>arcTo(x1, y1, x2, y2, radius)：根据两个控制点 (x1, y1) 和 (x2, y2) 以及圆弧半径来绘制一段圆弧</li>
+						<li>
+							bezierCurveTo(cx1, cy1, cx2, cy2, x, y)，类似于 svg 的C cx1 cy1 cx2 cy2 x y ，绘制一段贝塞尔曲线
+							<figure>
+								<img src="../../images/svg_C.jpg">
+							</figure>
+						</li>
+						<li>
+							quadraticCurveTo(cx, cy, x, y)，类似于 svg 的 Q cx cy x y，绘制一段贝塞尔曲线
+							<figure>
+								<img src="../../images/svg_Q.jpg">
+							</figure>
+						</li>
+					</ul>
+					<li>路径是没有实际形状的，需要使用以下方法来绘制：</li>
+					<ul>
+						<li>stroke()：描边路径</li>
+						<li>fill()：填充路径，若没有 closePath()，则自动闭合路径</li>
+					</ul>
+				</ol>
+				<pre><code class="javascript">
+// 绘制三角形
+line.beginPath();
+line.moveTo(0, 0);
+line.lineTo(0, 100);
+line.lineTo(100, 100);
+line.closePath();
+line.stroke();
+
+// 绘制 30° 的扇形
+arc.beginPath();
+arc.moveTo(50, 50);
+arc.arc(50, 50, 50, 0, (Math.PI / 180) * 30, false);
+arc.closePath();
+arc.stroke();
+
+// 绘制贝塞尔曲线
+bezier.beginPath();
+bezier.moveTo(0, 0);
+bezier.bezierCurveTo(10, 20, 30, 40, 0, 100);
+bezier.quadraticCurveTo(10, 20, 100, 0);
+bezier.closePath();
+bezier.stroke();
+
+// 绘制矩形
+rect.rect(0, 0, 100, 100);
+rect.stroke();
+				</code></pre>
+				<div class="show">
+					<canvas class="canvas-block" id="canvas-line"></canvas>
+					<canvas class="canvas-block" id="canvas-arc"></canvas>
+					<canvas class="canvas-block" id="canvas-bezier"></canvas>
+					<canvas class="canvas-block" id="canvas-rectpath"></canvas>
+					<script>
+						$(function () {
+							var line = document.getElementById('canvas-line').getContext('2d');
+							line.beginPath();
+							line.moveTo(0, 0);
+							line.lineTo(0, 100);
+							line.lineTo(100, 100);
+							line.closePath();
+							line.stroke();
+
+							var arc = document.getElementById('canvas-arc').getContext('2d');
+							arc.beginPath();
+							arc.moveTo(50, 50);
+							arc.arc(50, 50, 50, 0, (Math.PI / 180) * 30, false); // 顺时针绘 30°
+							arc.closePath();
+							arc.stroke();
+
+							var bezier = document.getElementById('canvas-bezier').getContext('2d');
+							bezier.beginPath();
+							bezier.moveTo(0, 0);
+							bezier.bezierCurveTo(10, 20, 30, 40, 0, 100);
+							bezier.quadraticCurveTo(10, 20, 100, 0);
+							bezier.closePath();
+							bezier.stroke();
+
+							var rect = document.getElementById('canvas-rectpath').getContext('2d');
+							rect.rect(0, 0, 100, 100);
+							rect.stroke();
+						});
+					</script>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>文本</h2>
+			<p>
+				<ul>
+					<li>font = 'size font-family'：设置字体大小和字体，默认为 10px sans-serif</li>
+					<li>textAlign = start | end | left | right | center：设置水平对齐方式，默认为 start</li>
+					<li>text-Baseline = top | handing | middle | alphabetic | ideographic | bottom：设置垂直对齐方式，默认为 alphabetic</li>
+					<li>direction = ltr | rtl | inherit：设置文字方向，默认为 inherit</li>
+					<li>fillText(text, x, y, maxWidth)：在 (x, y) 处绘制实心 text</li>
+					<li>strokeText(text, x, y, maxWidth)：在 (x, y) 处绘制描边 text</li>
+				</ul>
+				<pre><code class="javascript">
+text.font = '1rem Arial';
+text.strokeText('hello world', 0, 20);
+text.fillText('hello world', 0, 40);
+				</code></pre>
+				<div class="show">
+					<canvas class="canvas-block" id="canvas-text"></canvas>
+					<script>
+						$(function () {
+							var text = document.getElementById('canvas-text').getContext('2d');
+							text.font = '1rem Arial';
+							text.strokeText('hello world', 0, 20);
+							text.fillText('hello world', 0, 40);
+						});
+					</script>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>渐变</h2>
+			<p>
+				<ol>
+					<li>创建渐变对象（设置渐变类型）</li>
+					<ul>
+						<li>createLinearGradient(x1, y1, x2, y2)：绘制线性渐变，从 (x1, y1) 渐变到 (x2, y2)</li>
+						<li>createRadialGradient(x1, y1, r1, x2, y2, r2)：绘制径向渐变，从 (x1, y1) 的半径为 r1 的圆渐变到 (x2, y2) 的半径为 r2 的圆</li>
+					</ul>
+					<li>添加颜色过度点</li>
+					<ul>
+						<li>addColorStop(percentage, color)：在 percentage 处添加一个 color 过度点</li>
+					</ul>
+					<li>将渐变对象赋值给 fillStyle 或 strokeStyle</li>
+					<li>绘制图形</li>
+				</ol>
+				<pre><code class="javascript">
+var linear = document.getElementById('canvas-linear').getContext('2d');
+var linearObject = linear.createLinearGradient(0, 0, 100, 0);
+linearObject.addColorStop(0, 'white');
+linearObject.addColorStop(0.5, 'red');
+linearObject.addColorStop(1, 'black');
+linear.fillStyle = linearObject;
+linear.fillRect(0, 0, 100, 100);
+
+var radial = document.getElementById('canvas-radial').getContext('2d');
+var radialObject = radial.createRadialGradient(50, 50, 25, 50, 50, 100);
+radialObject.addColorStop(0, 'white');
+radialObject.addColorStop(0.5, 'red');
+radialObject.addColorStop(1, 'black');
+radial.fillStyle = radialObject;
+radial.fillRect(0, 0, 100, 100);
+				</code></pre>
+				<div class="show">
+					<canvas class="canvas-block" id="canvas-linear"></canvas>
+					<canvas class="canvas-block" id="canvas-radial"></canvas>
+					<script>
+						$(function () {
+							var linear = document.getElementById('canvas-linear').getContext('2d');
+							var linearObject = linear.createLinearGradient(0, 0, 100, 0);
+							linearObject.addColorStop(0, 'white');
+							linearObject.addColorStop(0.5, 'red');
+							linearObject.addColorStop(1, 'black');
+							linear.fillStyle = linearObject;
+							linear.fillRect(0, 0, 100, 100);
+
+							var radial = document.getElementById('canvas-radial').getContext('2d');
+							var radialObject = radial.createRadialGradient(50, 50, 25, 50, 50, 100);
+							radialObject.addColorStop(0, 'white');
+							radialObject.addColorStop(0.5, 'red');
+							radialObject.addColorStop(1, 'black');
+							radial.fillStyle = radialObject;
+							radial.fillRect(0, 0, 100, 100);
+						});
+					</script>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>图像</h2>
+			<p>
+				<ol>
+					<li>插入图像之前需要获得被插入的图像</li>
+					<ul>
+						<li>
+							使用 Image 构造函数
+							<pre><code class="javascript">
+var img = new Image();
+img.src = 'image.jpg';
+img.onload = function() {
+	// ...
+}
+							</code></pre>
+						</li>
+						<li>
+							使用 &lt;img&gt; 或 &lt;video&gt; 标签，前者获得一张图片元素，后者获得视频中的一帧
+							<pre><code class="javascript">
+var img = document.getElementById();
+							</code></pre>
+						</li>
+					</ul>
+					<li>开始绘图</li>
+					<ul>
+						<li>drawImage(image, x, y, width, height)：将源图缩放为宽高分别为 width 和 height，然后移动到 (x, y) 上</li>
+						<li>drawImage(image, startX, startY, sliceWidth, sliceHeight, finalX, finalY, finalWidth, finalHeight)：从
+							(startX, startY) 开始裁切宽高分别为 sliceWidth 和 sliceHeight 的图像，缩放为宽高分别为 finalWidth 和 finalHeight ，然后移动到 (finalX,
+							finalY) 上</li>
+					</ul>
+				</ol>
+				<pre><code class="javascript">
+var img1 = document.getElementById('canvas-img1').getContext('2d');
+var img2 = document.getElementById('canvas-img2').getContext('2d');
+var putin = new Image();
+putin.src = '../../images/putin.jpg';
+putin.setAttribute('crossOrigin', 'anonymous');
+putin.onload = function () {
+	img1.drawImage(putin, 0, 0, 100, 100);
+	img2.drawImage(putin, 0, 0, 220, 220, 0, 0, 50, 50);
+};
+				</code></pre>
+				<div class="show">
+					<figure>
+						<img src="../../images/putin.jpg">
+						<figcaption>原图</figcaption>
+					</figure>
+					<figure>
+						<canvas class="canvas-block" id="canvas-img1"></canvas>
+						<canvas class="canvas-block" id="canvas-img2"></canvas>
+					</figure>
+					<script>
+						$(function () {
+							var img1 = document.getElementById('canvas-img1').getContext('2d');
+							var img2 = document.getElementById('canvas-img2').getContext('2d');
+							var putin = new Image();
+							putin.src = '../../images/putin.jpg';
+							putin.onload = function () {
+								img1.drawImage(putin, 0, 0, 100, 100);
+								img2.drawImage(putin, 0, 0, 220, 220, 0, 0, 50, 50);
+							};
+						});
+					</script>
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>保存为图片</h2>
+			<p>
+				使用 toDataURL 方法，可以将 canvas 画布上的内容直接转化为 Data URI 字符串，该方法接受两个参数。
+				<table>
+					<tr>
+						<th>参数</th>
+						<th>解释</th>
+						<th>类型</th>
+						<th>是否可选</th>
+						<th>默认值</th>
+						<th>可选项</th>
+					</tr>
+					<tr>
+						<td>type</td>
+						<td>格式</td>
+						<td>String</td>
+						<td>可选</td>
+						<td>image/png</td>
+						<td>图片格式的 mime-type</td>
+					</tr>
+					<tr>
+						<td>encoderOptions</td>
+						<td>图片格式为 image/jpeg 或 image/webp的情况下的图片质量</td>
+						<td>Number</td>
+						<td>可选</td>
+						<td>0.92</td>
+						<td>0 - 1</td>
+					</tr>
+				</table>
+				<div class="show">
+					<div>
+						画布内容：
+						<canvas id="canvas-todatauri" width="40" height="40" style="border: solid 1px #00ccff;"></canvas>
+					</div>
+					<div>
+						选择输出类型：
+						<select id="canvas-todatauri-select">
+							<option value="image/png">image/png</option>
+							<option value="image/jpeg">image/jpeg</option>
+							<option value="image/webp">image/webp</option>
+						</select>
+					</div>
+					<div>
+						图片质量：
+						<input id="canvas-todatauri-range" value="0.92" type="range" min="0" max="1" step="0.01">
+						<span id="canvas-range-container"></span>
+					</div>
+					<div>
+						输出结果：
+						<span id="canvas-todatauri-container" style="word-break: break-all;"></span>
+					</div>
+					<script>
+						window.addEventListener('load', function () {
+							var canvas = document.getElementById('canvas-todatauri');
+							var ctx = canvas.getContext('2d');
+							ctx.fillStyle = '#00ccff';
+							ctx.fillRect(0, 0, 20, 20);
+							ctx.font = '1rem Arial';
+							ctx.fillText('hello', 0, 40);
+							var container = document.getElementById('canvas-todatauri-container');
+							var select = document.getElementById('canvas-todatauri-select');
+							var range = document.getElementById('canvas-todatauri-range');
+							var rangeContainer = document.getElementById('canvas-range-container');
+							function update() {
+								rangeContainer.innerText = range.value;
+								var dataURI = canvas.toDataURL(select.value, Number(range.value));
+								document.getElementById('oepn-canvas-datauri').href = dataURI;
+								container.innerText = dataURI;
+							}
+							update();
+							select.onchange = update;
+							range.onchange = update;
+						});
+					</script>
+				</div>
+				<div class="tip">
+					你可以直接将输出结果复制到浏览器来查看图片：
+					<a id="oepn-canvas-datauri" href="javascript:void(0);" target="_blank"
+						title="你可能无法从该锚点打开链接，因为 chrome 60 开始为了安全考虑禁止直接跳转到 dataURI 地址。你可以使用右键的方式在新窗口打开链接。">打开新窗口</a>
+				</div>
+				<h3>下载到本地</h3>
+				<p>
+					写一个方法实现将 canvas 画布的内容下载到本地。
+					<pre><code class="javascript">
+/**
+ * [downloadCanvas 将 canvas 元素上的画布内容保存并弹出图片下载]
+ * @param  {[HTMLCanvasElement]} canvasEl [canvas 元素]
+ * @param  {[String]} type     [图片类型]
+ * @param  {[String]} filename [图片文件名]
+ */
+function downloadCanvas(canvasEl, type, filename) {
+	var data = canvasEl.toDataURL(type); // 获得 Data URI
+	var a = document.createElement('a'); // 创建一个 a 元素
+  	var event = document.createEvent('MouseEvents'); // 创建点击事件
+  	event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+  	a.download = filename; // 设置图片文件的名字
+  	a.href = data;
+  	a.dispatchEvent(event); // 触发点击事件
+}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] MDN canvas <a
+						href="https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes">https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes</a>
+				</div>
+				<div>[2] 菜鸟教程 canvas <a
+						href="http://www.runoob.com/html/html5-canvas.html">http://www.runoob.com/html/html5-canvas.html</a></div>
+				<div>[3] MDN HTMLCanvasElement.toDataURL() <a
+						href="https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLCanvasElement/toDataURL">https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLCanvasElement/toDataURL</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

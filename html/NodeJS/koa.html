@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>koa</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">koa</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				<code>Koa 是一个新的 web 框架，由 Express 幕后的原班人马打造， 致力于成为 web 应用和 API 开发领域中的一个更小、更富有表现力、更健壮的基石。 通过利用 async 函数，Koa 帮你丢弃回调函数，并有力地增强错误处理。 Koa 并没有捆绑任何中间件， 而是提供了一套优雅的方法，帮助您快速而愉快地编写服务端应用程序。<sup>[1]</sup></code>
+				简而言之就是：
+				<ul>
+					<li>基于 node 搭建一个小型服务器</li>
+					<li>使用 ES6 语法，语法简洁</li>
+					<li>快速方便</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>安装 & 使用</h2>
+			<p>
+				使用 npm 安装：
+				<pre><code class="shell">
+npm install koa
+				</code></pre>
+				创建一个 js 文件，写入：
+				<pre><code class="javascript">
+const Koa = require('koa');
+const app = new Koa();
+app.use(async ctx => {
+	ctx.body = 'hello world';
+});
+app.listen(8888);
+				</code></pre>
+				在 node 环境下执行脚本，搭建本地服务器，监听端口为 8888。
+				<pre><code class="shell">
+node koa_hello_world.js
+				</code></pre>
+				<figure>
+					<img src="../../images/koa_hello_world_demo.jpg">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2></h2>
+			<p>
+
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Koa 官网 <a href="https://koa.bootcss.com/#application">https://koa.bootcss.com/#application</a></div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

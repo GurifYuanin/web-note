@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>bootstrap</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">bootstrap</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				Bootstrap 是一组用于网站和网络应用程序开发的开源前端框架（HTML、CSS、Javascript）。旨在使动态网页和Web应用的开发更加容易<sup>[1]</sup>。<br>
+				Bootstrap 可应用于响应式布局开发、移动设备优先的 Web 项目。<br>
+				<figure>
+					<img style="margin: 5% 10%; width: 80%;" src="../../images/bootstrap_further.jpg" alt="加载失败">
+					<figcaption class="description">From：<a class="description"
+							href="http://v3.bootcss.com/">http://v3.bootcss.com/</a></figcaption>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>下载与引入</h2>
+			<p>
+				<ul>
+					<li>下载（任选一种）</li>
+					<ul>
+						<li>Bootstrap 官网：<a href="https://getbootstrap.com/">https://getbootstrap.com/</a></li>
+						<li>国内 CDN：<a href="https://www.staticfile.org/">https://www.staticfile.org/</a></li>
+						<li>npm：npm install bootstrap</li>
+						<li>gem：gem 'bootstrap', '~> 4.0.0'</li>
+					</ul>
+					<li>引入（jquery.js 需在 bootstrap.js 前面）</li>
+					<ol>
+						<li>核心 CSS 文件：&lt;link rel="stylesheet" href="bootstrap.min.css"&gt;</li>
+						<li>jquery 文件：&lt;script src="jquery.min.js"&gt;&lt;/script&gt;</li>
+						<li>弹窗、提示、下拉菜单组件：&lt;script src="popper.min.js"&gt;&lt;/script&gt;</li>
+						<li>核心 javascript 文件：&lt;script src="bootstrap.min.js"&gt;&lt;/script&gt;</li>
+					</ol>
+				</ul>
+				如果下载的 bootstrap.js 是 compiled ，则需要引用 jquery 和 popper （即步骤 2 和 3），反之则不需要。
+			</p>
+		</section>
+		<section>
+			<h2>容器</h2>
+			<p>
+				bootstrap 提供了两个容器类：
+				<ul>
+					<li>container</li>
+					<li>container-fluid</li>
+				</ul>
+				container 使元素固定宽度（默认100%）并支持响应式布局。<br>
+				container-fluid 使元素宽度始终等于浏览器视窗（viewport）宽度。<br>
+				<pre><code class="html">
+&lt;body&gt;
+	&lt;div class="container" style="
+		background-color: #bbb;
+		height: 100px;
+	"&gt;container&lt;/div&gt;
+	&lt;div class="container-fluid" style="
+		background-color: #eee;
+		height: 100px;
+	"&gt;container-fluid&lt;/div&gt;
+&lt;/body&gt;
+				</code></pre>
+				<figure>
+					<img style="width 80%;" src="../../images/container_demo.jpg">
+				</figure>
+				bootstrap.css 部分源码：
+				<pre><code class="CSS">
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.container-fluid {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+				</code></pre>
+				从 bootstrap.css 源码看到， bootstrap 为容器设置了 15px 的左右内边距。
+			</p>
+		</section>
+		<section>
+			<h2>网格布局</h2>
+			<p>
+				bootstrap 的网格布局将一行划分为十二列，一个元素可以根据要求占据多个列（每个元素左右外边距各为 15px ），同一列无法全部容纳时候，多余元素自动归入下一列。<br>
+				bootstrap 提供了两种方式的网格布局方式：
+				<pre><code class="html">
+&lt;!-- 自适应方式 --&gt;
+&lt;div class="row"&gt;
+	&lt;div class="col"&gt;第一列&lt;/div&gt;
+	&lt;div class="col"&gt;第二列&lt;/div&gt;
+	...
+	&lt;div class="col"&gt;第n列&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- 按权重方式 --&gt;
+&lt;div class="row"&gt;
+	&lt;div class="col-设备-所占列数"&gt;&lt;/div&gt;
+	...
+	&lt;div class="col-设备-所占列数"&gt;&lt;/div&gt;
+&lt;/div&gt;
+				</code></pre>
+				<li>自适应方式，使子元素在减去每个元素的外边距后，每个子元素自动等分父元素宽度。</li>
+				<figure style="text-align: center;">
+					<img style="width: 80%; border: 1px solid #000" src="../../images/bootstrap_adapt.jpg" alt="加载失败">
+				</figure>
+				<li>按权重方式，先判断父元素宽度是否大于指定设备宽度，如果大于则同行布局，反之则跨行布局，之后再根据"所站列数"按权重设置子元素宽度（列数总和为 12 ）。</li>
+				<figure style="text-align: center;">
+					<table style="margin: auto;">
+						<tr>
+							<th>类名</th>
+							<th>描述</th>
+						</tr>
+						<tr>
+							<td>col-所占列数</td>
+							<td>适用任何设备</td>
+						</tr>
+						<tr>
+							<td>col-sm-所占列数</td>
+							<td>平板（父元素宽度 >= 576px）</td>
+						</tr>
+						<tr>
+							<td>col-md-所占列数</td>
+							<td>桌面显示器（父元素宽度 >= 768px）</td>
+						</tr>
+						<tr>
+							<td>col-lg-所占列数</td>
+							<td>大桌面显示器（父元素宽度 >= 992px）</td>
+						</tr>
+						<tr>
+							<td>col-xl-所占列数</td>
+							<td>超大桌面显示器（父元素宽度 >= 1200px）</td>
+						</tr>
+					</table>
+					<figure>
+						<img src="../../images/bootstrap_grid.jpg">
+					</figure>
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>文字</h2>
+			<p>
+				bootstrap 对常用标签的样式进行了预设。
+				<ul>
+					<li>
+						body
+						<ul>
+							<li>外边距为 0 </li>
+							<li>颜色 #212529</li>
+							<li>字体：-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple
+								Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"</li>
+						</ul>
+					</li>
+					<li>
+						p
+						<ul>
+							<li>上外边距为 0 </li>
+							<li>下外边距为 1 rem</li>
+						</ul>
+					</li>
+					<li>
+						h1 ~ h6
+						<ul>
+							<li>上外边距为 0 </li>
+							<li>下外边距为 0.5 rem</li>
+							<li>字体大小分别为 2.5 rem, 2 rem, 1.75 rem, 1.5 rem, 1.25 rem, 1 rem</li>
+						</ul>
+					</li>
+					<li>
+						为有 title 属性的 abbr 标签
+						<ul>
+							<li>点状下划线</li>
+							<li>悬浮时鼠标形状为 help </li>
+						</ul>
+					</li>
+					<li>
+						code
+						<ul>
+							<li>内边距为 0.2 rem 0.4 rem</li>
+							<li>字体大小为 90% </li>
+							<li>颜色为 #bd4147</li>
+							<li>背景颜色为 #f8f9fa</li>
+							<li>边缘圆角为 0.25 rem</li>
+						</ul>
+					</li>
+					<li>
+						kbd
+						<ul>
+							<li>内边距为 0.2 rem 0.4 rem</li>
+							<li>字体大小为 87.5% </li>
+							<li>颜色为 #fff(纯白)</li>
+							<li>背景颜色为 #212529</li>
+							<li>边缘圆角为 0.2 rem</li>
+						</ul>
+					</li>
+				</ul>
+				<figure>
+					<p style="margin-top: 0; margin-bottom: 1rem;">p</p>
+					<div style="font-weight: bold; margin-top: 0; margin-bottom: 0.5rem; font-size: 2.5rem;">h1</div>
+					<div style="font-weight: bold; margin-top: 0; margin-bottom: 0.5rem; font-size: 2rem;">h2</div>
+					<div style="font-weight: bold; margin-top: 0; margin-bottom: 0.5rem; font-size: 1.75rem;">h3</div>
+					<div style="font-weight: bold; margin-top: 0; margin-bottom: 0.5rem; font-size: 1.5rem;">h4</div>
+					<div style="font-weight: bold; margin-top: 0; margin-bottom: 0.5rem; font-size: 1.25rem;">h5</div>
+					<div style="font-weight: bold; margin-top: 0; margin-bottom: 0.5rem; font-size: 1rem;">h6</div>
+					<abbr style="text-decoration: underline dotted; cursor: help; border-bottom: 0;" title="abbr">abbr</abbr><br>
+					<code
+						style="padding: 0.2rem 0.4rem; font-size: 90%; color: #bd4147; background-color: #f8f9fa; border-radius: 0.25rem;">code</code><br>
+					<kbd style="padding: 0.2rem 0.4rem; font-size: 87.5%; color: #fff;
+	  background-color: #212529; border-radius: 0.2rem;">kbd</kbd>
+				</figure>
+
+			</p>
+		</section>
+		<section>
+			<h2>颜色</h2>
+			<p>
+				bootstrap 预设了一组前景色和背景色的类。
+				<ul>
+					<li>
+						前景色（该类只预设了前景色，背景色需自行设置）
+						<ul>
+							<li style="color: #868e96">text-muted/text-secondary #868e96 柔和文本/二级标题</li>
+							<li style="color: #007bff">text-primary #007bff 重要文本</li>
+							<li style="color: #28a745">text-success #28a745 执行成功</li>
+							<li style="color: #17a2b8">text-info #17a2b8 信息提示文本</li>
+							<li style="color: #ffc107">text-warning #ffc107 警告文本</li>
+							<li style="color: #dc3545">text-danger #dc3545 危险操作文本</li>
+							<li style="color: #fff; background-color: #000; width: 20em;">text-white #fff 纯白色文本</li>
+							<li style="color: #f8f9fa; background-color: #000; width: 20em;">text-light #f8f9fa 浅灰色文本</li>
+							<li style="color: #343a40">text-dark #343a40 深色文本</li>
+						</ul>
+					</li>
+					<li>
+						背景色（该类只预设了背景色，前景色需自行设置）
+						<ul>
+							<li style="width: 20em; color: #fff;background-color: #868e96">bg-secondary #868e96 二级标题背景</li>
+							<li style="width: 20em; color: #fff;background-color: #007bff">bg-primary #007bff 重要信息背景</li>
+							<li style="width: 20em; color: #fff;background-color: #28a745">bg-success #28a745 执行成功背景</li>
+							<li style="width: 20em; color: #fff;background-color: #17a2b8">bg-info #17a2b8 信息提示背景</li>
+							<li style="width: 20em; color: #fff;background-color: #ffc107">bg-warning #ffc107 警告背景</li>
+							<li style="width: 20em; color: #fff;background-color: #dc3545">bg-danger #dc3545 危险操作背景</li>
+							<li style="width: 20em; color: #000;background-color: #fff;">bg-white #fff 纯白色背景</li>
+							<li style="width: 20em; color: #000;background-color: #f8f9fa;">bg-light #f8f9fa 浅灰色背景</li>
+							<li style="width: 20em; color: #fff;background-color: #343a40">bg-dark #343a40 深色背景</li>
+						</ul>
+					</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>消息提示框</h2>
+			<p>
+				bootstrap 提供了一组预设消息提示框的类，完整用法如下（提示框颜色与背景色种类相同）：
+				<pre><code class="html">
+&lt;div class="alert alert-success alert-dismissable fade show"&gt;
+	关我之前请读这条&lt;a class="alert-link" href="#"&gt;信息&lt;/a&gt;
+	&lt;button type="button" class="close" data-dismiss="alert"&gt;x&lt;/button&gt;
+&lt;/div&gt;
+				</code></pre>
+				<img style="width: 80%;" src="../../images/bootstrap_alert.jpg" alt="加载失败"><br>
+				<img src="../../images/bootstrap_demo.gif" alt="加载失败">
+			</p>
+		</section>
+		<section>
+			<h2>表格</h2>
+			<p>
+				bootstrap 提供了一组表格样式的类。
+				<ul>
+					<li>
+						整体（可叠加使用，添加在 table 标签上）
+						<ul>
+							<li>
+								table（基本表格）<br>
+								<img style="width: 150px;" src="../../images/bootstrap_table.jpg" alt="加载失败">
+							</li>
+							<li>
+								table-striped（条纹表格）<br>
+								<img style="width: 150px;" src="../../images/bootstrap_table-striped.jpg" alt="加载失败">
+							</li>
+							<li>
+								table-bordered（带边框表格）<br>
+								<img style="width: 150px;" src="../../images/bootstrap_table-bordered.jpg" alt="加载失败">
+							</li>
+							<li>
+								table-dark（暗色表格）<br>
+								<img style="width: 150px;" src="../../images/bootstrap_table-dark.jpg" alt="加载失败">
+							</li>
+						</ul>
+					</li>
+					<li>
+						悬浮特效（添加在 table 标签上）
+						<ul>
+							<li>
+								table-hover<br>
+								<img style="width: 50%;" src="../../images/bootstrap_table-hover.gif" alt="加载失败">
+							</li>
+						</ul>
+					</li>
+					<li>
+						表头颜色（添加在 th 标签上）
+						<ul>
+							<li>table-dark（深色）</li>
+							<li>table-light（浅色）</li>
+						</ul>
+					</li>
+					<li>
+						带颜色的行（添加在 tr 标签上）
+						<ul>
+							<li>table-primary</li>
+							<li>table-success</li>
+							<li>table-danger</li>
+							<li>table-info</li>
+							<li>table-warning</li>
+							<li>table-active</li>
+							<li>table-secondary</li>
+							<li>table-light</li>
+							<li>table-dark</li>
+						</ul>
+					</li>
+					<li>
+						响应式表格：屏幕过小时底部自动增加一个滚动条（添加在父级标签上）
+						<ul>
+							<li>table-responsive-sm（< 576 px）</li> <li>table-responsive-md（< 768 px）</li> <li>table-responsive-lg（<
+											992 px）</li> <li>table-responsive-xl（< 1200px）</li> </ul> </li> </ul> </p> </section> <section>
+												<h2>按钮</h2>
+												<p>
+													bootstrap 提供了一组按钮类。
+													<ul>
+														<li>
+															设置为按钮：<br>
+															btn（基本按钮）+
+															<ul>
+																<li>
+																	设置为纯色按钮：
+																	<ul>
+																		<li>btn-primary</li>
+																		<li>btn-secondary</li>
+																		<li>btn-success</li>
+																		<li>btn-info</li>
+																		<li>btn-warning</li>
+																		<li>btn-danger</li>
+																		<li>btn-dark</li>
+																		<li>btn-light</li>
+																		<li>btn-link</li>
+																	</ul>
+																</li>
+																<li>
+																	设置为边框按钮：
+																	<ul>
+																		<li>btn-outline-primary</li>
+																		<li>btn-outline-secondary</li>
+																		<li>btn-outline-success</li>
+																		<li>btn-outline-info</li>
+																		<li>btn-outline-warning</li>
+																		<li>btn-outline-danger</li>
+																		<li>btn-outline-dark</li>
+																		<li>btn-outline-light</li>
+																		<li>btn-outline-link</li>
+																	</ul>
+																</li>
+															</ul>
+														</li>
+														<li>
+															设置按钮大小：
+															<ul>
+																<li>btn-lg（大按钮）</li>
+																<li>不添加（默认）</li>
+																<li>btn-sm（小按钮）</li>
+															</ul>
+														</li>
+														<li>
+															设置为块级按钮：btn-block
+														</li>
+														<li>
+															设置按钮状态：
+															<ul>
+																<li>active（激活）</li>
+																<li>disabled（禁用）</li>
+															</ul>
+														</li>
+														<li>
+															设置为按钮组（添加在父元素上）：btn-group
+															<ul>
+																<li>
+																	设置按钮组大小：
+																	<ul>
+																		<li>btn-group-sm</li>
+																		<li>btn-group-lg</li>
+																		<li>btn-group-xs</li>
+																	</ul>
+																</li>
+																<li>
+																	设置按钮组方向：
+																	<ul>
+																		<li>不添加（默认水平）</li>
+																		<li>btn-group-vertical（垂直）</li>
+																	</ul>
+																</li>
+															</ul>
+														</li>
+													</ul>
+												</p>
+		</section>
+		<section>
+			<h2>进度条</h2>
+			<p>
+				bootstrap 提供了一组设置进度条的类。
+				<pre><code class="html">
+&lt;!-- 模版 --&gt;
+&lt;父标签 class="progress"&gt;
+	&lt;进度条标签 class="progress-bar" style="width: 进度%"&gt;进度条内部标签&lt;/进度条标签&gt;
+&lt;/父标签&gt;
+
+&lt;!-- 实例 --&gt;
+&lt;div class="progress"&gt;
+	&lt;div class="progress-bar" style="width: 50%"&gt;50%&lt;/div&gt;
+&lt;/div&gt;
+				</code></pre>
+				<figure>
+					<img src="../../images/bootstrap_progress.jpg">
+				</figure>
+				<ul>
+					<li>
+						设置进度条颜色（添加在进度条标签上）：
+						<ul>
+							<li>bg-success</li>
+							<li>bg-info</li>
+							<li>bg-warning</li>
+							<li>bg-danger</li>
+						</ul>
+					</li>
+					<li>
+						设置进度条样式（添加在进度条标签上）：
+						<ul>
+							<li>progress-bar-striped<（静止条纹）</li> <li>progress-bar-striped progress-bar-animated（滚动条纹）</li>
+						</ul>
+
+					</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>下拉列表</h2>
+			<p>
+				bootstrap 提供了一组设置下拉列表的类。（点击按钮后显示下拉列表）
+				<pre><code class="html">
+&lt;div class="dropdown"&gt;
+	&lt;button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"&gt;按钮文字&lt;/button&gt;
+	&lt;div class="dropdown-menu"&gt;
+		&lt;div class="dropdown-divider"&gt;&lt;/div&gt;
+		&lt;div class="dropdown-header"&gt;标题&lt;/div&gt;
+		&lt;a class="dropdown-item" href="#"&gt;开启项&lt;/a&gt;
+		&lt;a class="dropdown-item disabled" href="#"&gt;禁止项&lt;/a&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+				</code></pre>
+				<figure>
+					<img src="../../images/bootstrap_dropdown_code.jpg" alt="加载失败">
+				</figure>
+				<figure>
+					<img src="../../images/bootstrap_dropdown.jpg" alt="加载失败">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>折叠</h2>
+			<p>
+				bootstrap 提供了一组设置折叠的类。
+				<pre><code class="html">
+&lt;button data-toggle="collapse" data-target="#被折叠部分ID">折叠按钮&lt;/button&gt;
+&lt;div id="被折叠部分ID" class="collapse show"&gt;
+被折叠部分
+&lt;/div&gt;
+				</code></pre>
+				<figure>
+					<img src="../../images/bootstrap_collapse_code.jpg" alt="加载失败">
+					<br>
+				</figure>
+				<figure>
+					<img src="../../images/bootstrap_collapse.gif" alt="加载失败">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>导航条</h2>
+			<p>
+				bootstrap 提供了一组设置导航条的类。
+				<pre><code class="html">
+&lt;nav class="navbar navbar-expand-sm fixed-top bg-dark navbar-dark"&gt;
+	&lt;a class="navbar-brand" href="#"&gt;logo&lt;/a&gt;
+	&lt;ul class="navbar-nav"&gt;
+	  	&lt;li class="nav-item"&gt;
+			&lt;a class="nav-link" href="#"&gt;链接&lt;/a&gt;
+		&lt;/li&gt;
+	 &lt;/ul&gt;
+	 &lt;form class="form-inline"&gt;
+	 	&lt;input class="form-control" type="text"&gt;
+	 	&lt;button class="btn btn-success" type="submit"&gt;按钮&lt;/button&gt;
+	 &lt;/form&gt;
+	&lt;span class="navbar-text"&gt;
+	非链接文本
+	&lt;/span&gt;
+&lt;/nav&gt;
+				</code></pre>
+				<figure>
+					<img src="../../images/bootstrap_nav_code.jpg">
+				</figure>
+				<figure>
+					<img src="../../images/bootstrap_nav.jpg">
+				</figure>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 维基百科 bootstrap <a
+						href="https://zh.wikipedia.org/wiki/Bootstrap">https://zh.wikipedia.org/wiki/Bootstrap</a></div>
+				<div>[2] 菜鸟教程 Bootstrap4 教程 <a
+						href="http://www.runoob.com/bootstrap4/bootstrap4-tutorial.html">http://www.runoob.com/bootstrap4/bootstrap4-tutorial.html</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>响应式图片</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">响应式图片</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				响应式图片的作用在于：
+				<ul>
+					<li>在不同设备获取不同<span class="definition">大小</span>的图片，比如在手机端打开网页，往往不需要太高分辨率的图片</li>
+					<li>在不同设备获得不同<span class="definition">尺寸</span>的图片，使得图片可以进行恰当的布局</li>
+				</ul>
+				比如 PC 端的浏览器一般宽度大于高度，而手机端高度大于宽度，如果使用横幅比例的图片，在 PC 端查看一切正常，但在手机端查看，就会出现以下情况：
+				<figure>
+					<img src="../../images/responsive_image_size.jpg" alt="">
+				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>实现方法</h2>
+			<p>
+				先在服务器生成多个不同尺寸的图片，然后在 HTML 页面上通过在 img 元素上新增 srcset、sizes 属性使浏览器自动根据设置的属性加载合适的图片。
+				<h3>sizes</h3>
+				<p>
+					sizes 使用多个媒体查询来自适应地设置该图片<span class="definition">槽</span>的宽度。
+					<pre><code class="html">
+&lt;img sizes="媒体查询1 槽宽度1,
+	媒体查询2 槽宽度2,
+	...,
+	默认槽宽度">
+					</code></pre>
+					浏览器先检查媒体查询，找出哪一个为真，为真的话就设置图片的槽宽度为其后的值。比如以下情况如果在 375px 的手机上看的话，槽宽度为 400px 。
+					<pre><code class="html">
+&lt;img sizes="(max-device-width: 400px) 400px,
+	(max-device-width: 1000px) 1000px,
+	1600px">			
+					</code></pre>
+					<div class="tip">
+						槽宽度，相当于在 css 中设置 width: xxx，但不能使用百分比，如果没有设置 css 的 width 属性，那么图片宽度等于槽宽度；如果设置了 css 的 width 属性，那么最终显示效果以 css
+						样式为标准。
+					</div>
+				</p>
+				<h3>srcset</h3>
+				<p>
+					知道了槽宽度后，浏览器再去查看 img 元素上的 srcset 属性，格式如下：
+					<pre><code class="html">
+&lt;img srcset="图片路径1 图片真实宽度1,
+	图片路径2 图片真实宽度2,
+	...,
+	图片路径n 图片真实宽度n">
+					</code></pre>
+					浏览器会比较图片 srcset 属性上每个真实宽度和槽宽度，选择图片真实宽度和槽宽度差值最小的一张图片进行加载，且每次变换屏幕宽高的时候都会去判断。比如以下情况，如果槽宽度为 400px，浏览器比较后那么会选择
+					../../images/400x400.jpg 作为显示图片去加载。
+					<pre><code class="html">
+&lt;img srcset="../../images/400x400.jpg 400w,
+	 ../../images/1000x600.jpg 1000w,
+	 ../../images/1600x900.jpg 1600w">		
+					</code></pre>
+				</p>
+				<h3>默认加载</h3>
+				<p>
+					响应式图片存在兼容问题，在不兼容 srcset 和 sizes 属性的浏览器下，这两个属性会被浏览器无视，应该设置 src 属性作为默认显示图片。
+					<pre><code class="html">
+&lt;img src="../../images/400x400.jpg">
+					</code></pre>
+				</p>
+				<h3>综上</h3>
+				<p>
+					综上，完整的响应式图片应该是如下：
+					<pre><code class="html">
+&lt;img sizes="(max-device-width: 400px) 400px,
+	(max-device-width: 1000px) 1000px,
+	1600px"
+	srcset="../../images/400x400.jpg 400w,
+	 ../../images/1000x600.jpg 1000w,
+	 ../../images/1600x900.jpg 1600w"
+	src="../../images/400x400.jpg">
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>细节问题</h2>
+			<p>
+				在使用响应式图片时的细节问题。
+				<h3>DPR</h3>
+				<p>
+					在 PC 端可能响应式图片一切正常，但到手机端它的图片选择就失去了控制，这是因为在计算槽宽度的时候，假设在 iphone6 查看网页，当前设备宽度为 375px，DPR 是 2，那么会选择哪一张图片？
+					<pre><code class="html">
+&lt;img sizes="(max-device-width: 375px) 399px,
+			399px"
+	srcset="../../images/399x400.jpg 399w,
+			../../images/400x400.jpg 400w,
+			../../images/401x400.jpg 401w">
+					</code></pre>
+					正常来说，满足 "(max-device-width: 375px) 399px" 的规则，那么得到的槽宽度应该是 399px ，所以选择最接近的图片 399x400.jpg。实际上，得到的槽宽度是 399px *
+					DRP = 798px，因此选择最接近的图片 401x400.jpg 。
+					<figure>
+						<img src="../../images/responsive_image_dpr_01.jpg">
+					</figure>
+				</p>
+				<h3>值相等</h3>
+				<p>
+					当两个图片真实宽度和槽宽度的差值相等的时候，选择偏大的图片，比如以下情况：
+					<pre><code class="html">
+&lt;img sizes="400.5px"
+	 srcset="../../images/399x400.jpg 399w,
+	 ../../images/400x400.jpg 400w,
+	 ../../images/401x400.jpg 401w">
+					</code></pre>
+					<div class="show">
+						<img sizes="400.5px" srcset="../../images/399x400.jpg 399w,
+									 ../../images/400x400.jpg 400w,
+									 ../../images/401x400.jpg 401w">
+					</div>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>兼容</h2>
+			<p>
+				<iframe style="width: 100%; min-height: 800px;" src="https://caniuse.com/#search=srcset"> </iframe>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] MDN 响应式图片 <a
+						href="https://developer.mozilla.org/zh-CN/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images">https://developer.mozilla.org/zh-CN/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

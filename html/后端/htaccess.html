@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>.htaccess</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/jquery-3.2.1-compressed.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">.htaccess</h1>
+		</hgroup>
+		<section>
+			<h2>定义</h2>
+			<p>
+				.htaccess（Hypertext Access，超文本入口）文件提供了针对目录改变配置的方法<sup>[1]</sup>，其流程为（以 https://host.cn/blog/user/main.html 为例）：
+				<ol>
+					<li>用户在浏览器输入<span class="definition"> https://host.cn/blog/user/main.html </span>，向服务器发起请求</li>
+					<li>
+						服务器收到请求后查找服务器上有没有<span class="definition"> .htaccess </span>文件，其查找顺序为：根目录 -> 当前目录，查找到的所有文件都会生效（即当前目录的<span
+							class="definition"> .htaccess </span>文件作用于当前目录及所有子目录）
+						<ol>
+							<li>/.htaccess</li>
+							<li>/blog/.htaccess</li>
+							<li>/blog/user/.htaccess</li>
+						</ol>
+					</li>
+					<li>查找到文件后根据<span class="definition"> .htaccess </span>文件里的内容进行相应操作</li>
+				</ol>
+				.htaccess 官方文档：<a
+					href="http://man.chinaunix.net/newsoft/ApacheManual/howto/htaccess.html">http://man.chinaunix.net/newsoft/ApacheManual/howto/htaccess.html</a>
+			</p>
+		</section>
+		<section>
+			<h2>开启</h2>
+			<p>
+				apache 的配置文件<span class="definition"> http.conf </span>默认关闭使用 .htaccess
+				<pre><code class="apache">
+AllowOverride None
+				</code></pre>
+				如果要开启，需要修改为：
+				<pre><code class="apache">
+AllowOverride All
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>功能</h2>
+			<p>
+				<h3>URL 重写</h3>
+				<p>
+					使用 URL 重写之前，需要配置 apache 服务器，修改配置文件<span class="definition"> http.conf </span>
+					<pre><code class="apache">
+#LoadModule rewrite_module modules/mod_rewrite.so
+					</code></pre>
+					改为
+					<pre><code class="apache">
+LoadModule rewrite_module modules/mod_rewrite.so
+					</code></pre>
+					即将注释删除，开启重写模块，然后在<span class="definition"> .htaccess </span>文件写入
+					<pre><code class="apache">
+# 判断是否开启重写模块
+&lt;IfModule mod_rewrite.c&gt;
+  Options +FollowSymlinks -Multiviews
+
+  # 开启重写功能（开关）
+  RewriteEngine On
+
+  # 设置重写范围（过滤）
+  RewriteCond 测试字符串 正则表达式1 [标识符] 属性测试
+
+  # 设置重写规则（重写）
+  RewriteRule 正则表达式2 新URL [标识符]
+&lt;/IfModule&gt;
+					</code></pre>
+					其过程为：
+					<ol>
+						<li>客户端向服务器发起 URL 请求</li>
+						<li>
+							服务器接收到请求，如果符合属性测试，根据测试字符串提取出字符串
+							<ol>
+								<li>如果有正则表达式1，则将提取出的测试字符串与之匹配，匹配成功的进入下一步，匹配失败则不进行重写</li>
+								<li>如果无正则表达式1，则进入下一步</li>
+							</ol>
+						</li>
+						<li>
+							将提取出的字符串与正则表达式2进行匹配，生成新的 URL，返回新 URL 的资源，但新 URL 不显示在浏览器上
+						</li>
+					</ol>
+					<div class="tip">
+						<ul>
+							<li>可以写多个<span class="definition"> </span>规则，表示其中一个满足就可以进行重写，然后无视后面的<span class="definition"> RewriteCond
+								</span></li>
+							<li>进行重写后的 URL 请求不用对再过一遍重写模块，而是直接返回服务器上的该资源</li>
+						</ul>
+					</div>
+					<h4>测试字符串</h4>
+					测试字符串用于提取请求 URL 中的信息，可以包含服务器变量，用<span class="definition"> %{服务器变量名} </span>来引用，服务器变量包括<span
+						class="definition"> HTTP头部信息、服务器内部信息、日期和时间、特殊变量 </span>。<br>
+					<h5>服务器变量（常用部分）：</h5>
+					<ul>
+						<li>REQUEST_FILENAME：请求的全部路径和参数</li>
+						<li>HTTP_REFERER：发起请求的网站</li>
+					</ul>
+					例如有一个网站<span class="definition"> www.mysite.cn/index.html </span> ，其内容为：
+					<pre><code class="html">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+	&lt;meta charset="UTF-8"&gt;
+	&lt;title&gt;demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;img src="http://www.othersite.cn/images/pic.jpg"&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+					</code></pre>
+					该网页向另一个网站<span class="definition"> www.othersite.cn </span>请求一个<span class="definition"> pic.jpg
+					</span>的图片，那么此时的<span class="definition"> %{REQUEST_FILENAME} </span>就为<span class="definition"> /images/pic
+					</span>，<span class="definition"> HTTP_REFERER </span>为<span class="definition"> www.mysite.cn </span>。<br>
+					<h4>属性测试（可以通过 "!" 来进行取反操作）：</h4>
+					测试属性用于过滤不符合的 URL 请求，被过滤的请求将不进行重写。
+					<ul>
+						<li>-d：是一个目录（directory）</li>
+						<li>-f：是一个普通文件（file）</li>
+						<li>-F：是一个存在的文件，并且通过子请求</li>
+						<li>-h、-l、-L：是一个链接</li>
+						<li>-s：是一个普通文件，并带有大小</li>
+						<li>-U：是一个存在的 URL，并且通过子请求</li>
+						<li>-x：具有可执行权限</li>
+					</ul>
+					例如写了<span class="definition"> RewriteCond %{REQUEST_FILENAME} !-f </span>，则只有进行文件请求时才会进行重写，不符合该规则（例如目录）将被无视。
+					<h4>标识符（常用部分，使用时可以使用多个标识符并用 "," 隔开）：</h4>
+					<ul>
+						<li>NC：no case，无视大小写</li>
+						<li>L：last，最后一个规则，若该匹配条件成功，则不进行后面的匹配</li>
+						<li>R：redirect，强制重定向</li>
+						<li>QSA：qsappend，正则表达式2匹配成功后，在产生的新 URL 后追加源 URL 的查询参数</li>
+					</ul>
+				</p>
+				<h3>文档重定向</h3>
+				<p>
+					直接将 URL 定向到新的 URL。
+					<pre><code class="apache">
+# 将 "源路径/目标文档" 定向到 "目标路径/目标文档""
+Redirect 源路径/目标文档 目标路径/目标文档
+
+# 将 "源路径" 下的所有文档定向到 "目标路径"
+Redirect 源路径 目标路径
+					</code></pre>
+					例如站点<span class="definition"> site.cn </span>进行以下设置：
+					<pre><code class="apache">
+Redirect /dir /main
+
+浏览器输入 -> 最终获得资源
+http://site.cn/dir -> http://site.cn/main
+http://site.cn/dir/index.php -> http://site.cn/main/index.php
+http://site.cn/other/dir -> http://site.cn/other/dir
+					</code></pre>
+				</p>
+				<h3>定义错误页面</h3>
+				<p>
+					<pre><code class="apache">
+# 出现错误后跳转到对应 URL
+ErrorDocument 状态码 URL
+# 出现错误后页面显示对应字符串
+ErrorDocument 状态码 "字符串"
+					</code></pre>
+				</p>
+				<h3>用户过滤</h3>
+				<p>
+					对向服务器请求的用户进行过滤
+					<pre><code class="apache">
+order allow,deny
+
+# 设置允许请求的 IP 地址
+allow from IP地址
+
+# 允许所有请求
+allow from all
+
+# 设置拒绝请求的 IP 地址
+deny form IP 地址
+
+# 拒绝所有请求
+deny from all
+					</code></pre>
+				</p>
+				<h3>缺省页面</h3>
+				<p>
+					设置当前目录的缺省页面
+					<pre><code class="apache">
+# 优先级从左到右
+DirectoryIndex 文件1 文件2 ...
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>缺点</h2>
+			<p>
+				开启<span class="definition"> .htaccess </span>有以下缺点：<sup>[1]</sup>
+				<ol>
+					<li>性能：用户进行请求时，每次都需要从根目录到当前目录读取所有<span class="definition"> .htaccess </span>文件，不可避免地将降低服务器性能</li>
+					<li>安全：由于允许用户修改服务器的配置，可能会导致未加限制的修改</li>
+				</ol>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] Apache指南: .htaccess文件 <a
+						href="http://man.chinaunix.net/newsoft/ApacheManual/howto/htaccess.html">http://man.chinaunix.net/newsoft/ApacheManual/howto/htaccess.html</a>
+				</div>
+				<div>[2] Apache Module mod_rewrite <a
+						href="http://httpd.apache.org/docs/current/mod/mod_rewrite.html">http://httpd.apache.org/docs/current/mod/mod_rewrite.html</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>
