@@ -9,7 +9,7 @@
 为方便检索，不同类型的笔记将进行分类，浏览者可根左边的导航条进行检索与浏览。您可以点击标题切换为夜间阅读模式。
 
 在线文档可在 Github Page 上直接查看：
-[https://gurifyuanin.github.io/web-note/html/index.html](https://gurifyuanin.github.io/web-note/html/index.html)
+[https://gurifyuanin.github.io/web-note/html/其他/index.html](https://gurifyuanin.github.io/web-note/html/其他/index.html)
              
 ## 开发
 
