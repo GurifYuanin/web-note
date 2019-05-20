@@ -7,10 +7,10 @@ function Notify() {
   this.timeout = null;
 }
 
-Notify.prototype.info = function (options) {
+Notify.prototype.info = function (options = {}) {
   options.duration = options.duration || 2000;
-  var win = this.win;
-  var color = '#2db7f5';
+  const win = this.win;
+  const color = '#2db7f5';
   win.innerText = options.content;
   win.style.opacity = '1';
   win.style.transition = 'all 1s';

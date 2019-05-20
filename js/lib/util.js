@@ -1,3 +1,5 @@
+const SINGLE_TAG_ELEMENTS = ['img', 'input'];
+
 // 复制到剪切板
 function copy(message) {
   const area = document.createElement('textarea'); // 用于临时暂存复制的代码的文本域
@@ -16,8 +18,8 @@ function copy(message) {
 
 // 返回元素 string
 function wrapByTag(children, tag, attributes) {
-  var isSingleChildren = Object.prototype.toString.call(children).toLowerCase() === '[object string]';
-  var isSingleTagElement = SINGLE_TAG_ELEMENTS.indexOf(tag) >= 0;
+  const isSingleChildren = Object.prototype.toString.call(children).toLowerCase() === '[object string]';
+  const isSingleTagElement = SINGLE_TAG_ELEMENTS.indexOf(tag) >= 0;
   if (!tag) {
     if (!children) {
       throw new ReferenceError('缺少参数');
@@ -28,9 +30,9 @@ function wrapByTag(children, tag, attributes) {
       throw new TypeError('标签类型应该为 string');
     }
   }
-  var stringifiedAttributes = '';
+  let stringifiedAttributes = '';
   if (attributes && Object.prototype.toString.call(attributes).toLowerCase() === '[object object]') {
-    for (var key in attributes) {
+    for (let key in attributes) {
       if (attributes.hasOwnProperty(key) && attributes[key]) {
         stringifiedAttributes += ' ' + key + '="' + attributes[key] + '"';
       }
@@ -44,12 +46,12 @@ function wrapByTag(children, tag, attributes) {
 }
 
 // 数组去重
-function filterRepeat(arr) {
-  var result = [];
+function filterRepeatArray(arr) {
+  const result = [];
   if (window.Set) {
-    result = [...new Set(arr)];
+    result.push(...new Set(arr));
   } else {
-    for (var i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
       if (result.indexOf(arr[i]) === -1) {
         result.push(el);
       }
@@ -69,4 +71,44 @@ function flatArray(arr) {
     }
   }
   return result;
+}
+
+// 去除多余的字符
+function filterName(str) {
+  return str.replace(/[\s$@#&;()/.'"]/g, '');
+}
+
+// 获得文件名后缀（不含 .）
+function getSuffix(filename) {
+  return filename.substring(filename.lastIndexOf('.') + 1);
+}
+
+// 获得文件名
+function getFileName(filename) {
+  const start = filename.lastIndexOf('/') + 1;
+  const end = filename.lastIndexOf('.');
+  return filename.substring(start, end);
+}
+
+
+// 获得视窗大小
+function getViewport(target) {
+  // 使用指定窗口，默认使用当前窗口
+  target = target || window;
+  // 以此检查 IE9+ -> 标准模式 -> 怪异模式
+  return {
+    'width': target.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+    'height': target.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+  };
+}
+
+// 滚动到指定元素位置
+function scrollTo(name = 'body', el) {
+  (el ? el : $('html, body')).animate({
+    scrollTop: $(name).offset().top
+  }, 500);
+}
+
+function isPhone() {
+  return getViewport().width < PHONE_WIDTH;
 }

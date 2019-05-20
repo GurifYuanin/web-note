@@ -36,8 +36,8 @@
   },
   "script": {
     "commit": "git-cz",
-    "dev": "gulp default",
-    "build": "gulp exec"
+    "dev": "gulp",
+    "build": "gulp build"
   },
   "config": {
     "commitizen": {

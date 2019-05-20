@@ -1,11 +1,15 @@
 const path = {
   CWDS: (function () {
     const { pathname } = window.location;
-    return pathname.substring(0, pathname.lastIndexOf('/')).split('/');
+    return pathname.substring(0, pathname.lastIndexOf('/')).split('/').filter(Boolean);
   })(),
   resolve(...paths) {
+    const root = '/';
+    if (paths.length === 0) {
+      return root;
+    }
     const directories = [];
-    const results = path.CWDS.map(cwd => cwd);
+    const results = paths[0].startsWith('/') ? [] : path.CWDS.map(cwd => cwd);
     for (let i = 0; i < paths.length; i++) {
       if (!paths[i]) continue;
       if (paths[i].includes('/')) {
@@ -31,6 +35,6 @@ const path = {
         }
       }
     }
-    return results.join('/');
+    return root + results.join('/');
   }
 }

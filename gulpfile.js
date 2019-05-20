@@ -35,7 +35,7 @@ function compileSass(callback) {
 }
 
 function watchSass(callback) {
-    watch(['./scss/dark.scss', './scss/bright.scss'], compileSass);
+    watch(['./scss/*.scss'], compileSass);
     callback();
 }
 
@@ -63,3 +63,5 @@ function watchJavascript(callback) {
 }
 
 exports.default = parallel(watchSass, watchJavascript);
+
+exports.build = parallel(compileSass, compileJavascript);
