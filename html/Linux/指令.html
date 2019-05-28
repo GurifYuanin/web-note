@@ -344,7 +344,7 @@ PID USER PR NI VIRT RES SHR S %CPU %MEM TIME+ COMMAND
 				<h4>排序</h4>
 				top 默认按照 CPU% 进行排序，使用 top 命令后输入<span class="different">x</span>（加粗）和<span
 					class="different">b</span>（反转底色）高亮显示排序列，使用<span class="different">
-					<</span>或 <span class="different">>
+					</span>或 <span class="different">>
 				</span>切换其他列排序。
 				<h3>lsof</h3>
 				list open file，显示所有 linux 打开的文件，常用 -i 参数，用于查询网络地址，比如查询 80 端口的文件。
@@ -358,6 +358,108 @@ COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME
 				</div>
 			</p>
 		</section>
+		<section>
+			<h2>安全</h2>
+			<p>
+				<h3>ssh-keygen</h3>
+				ssh-keygen 用于生成 ssh 认证秘钥，使用 -t 参数选择生成的秘钥类型：
+				<ul>
+					<li>ras：默认，比较老的算法，最少长度为 2048 位，推荐 4096 位，所有的 ssh 客户端都支持</li>
+					<li>dsa：比较老的算法，一般长度为 1024 位，不推荐</li>
+					<li>ecdsa：比较新的算法，长度只能选择 256、384 或 521 位，推荐 521 位，大多数 ssh 客户端都支持</li>
+					<li>ed25519：比较新的算法，支持的 ssh 客户端还不怎么普遍</li>
+				</ul>
+				使用 -b 参数指定生成的秘钥长度。
+				<div class="command">
+					ssh-keygen -t 类型 -b 长度
+				</div>
+			</p>
+		</section>
+		<section>
+			<h2>远程连接</h2>
+			<p>
+				<h3>ssh</h3>
+				使用 ssh 协议连接到远程主机，最基本的使用方法是：
+				<div class="command">
+					ssh user@host
+				</div>
+				user 是远程主机上的一个用户，host 是域名或 ip，默认请求的端口为 22，也可以使用 -p 参数来指定端口。
+				<div class="command">
+					ssh user@host -t port
+				</div>
+				发起请求后本机会收到远程主机的公钥，第一次连接时会收到以下提示：
+				<pre><code class="shell">
+The authenticity of host 'host (xxx.xxx.xxx.xxx)' can't be established.
+
+RSA key fingerprint is xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx.
+
+Are you sure you want to continue connecting (yes/no)?
+				</code></pre>
+				由于远程主机的公钥太长（参见 ssh-keygen 生成的秘钥），我们不容易判断该公钥是否为远程主机的公钥（可能被中间人修改过），因此将公钥进行 MD5 计算生成秘钥指纹，指纹的长度固定为 128 位，远程主机需要公布秘钥指纹，我们连接的时候再判断是否和公布的指纹一致，如果一致则可以输入 yes 表示信任。
+				<pre><code class="shell">
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'host,12.18.429.21' (RSA) to the list of known hosts.
+				</code></pre>
+				输入确认后，本机电脑会将远程主机的 host 和公钥追加到 ~/.ssh/known_hosts 文件内，该文件的存储的内容为：
+				<pre><code class="known_hosts">
+host,ip 秘钥类型 秘钥
+				</code></pre>
+				加入到 known_hosts 就表示信任该远程主机和公钥，下次再连接到该主机的时候就不会再提醒秘钥指纹。完成以上步骤后需要我们输入密码：
+				<pre><code class="shell">
+Password: (enter password)
+				</code></pre>
+				该密码会被公钥加密，加密后的密码发送到远程主机后，远程主机会使用自己的私钥进行解密，认证成功后就连接成功了。
+				<h3>ssh-copy-id</h3>
+				使用 ssh 连接时每次都需要输入一遍密码，我们可以改用公钥方式进行认证而不用输入密码。本地主机需要生成自己的公私钥。
+				<pre><code class="shell">
+ssh-keygen
+				</code></pre>
+				生成后的秘钥默认为 ~/.ssh/id_rsa（私钥）和 ~/.ssh/rd_rsa.pub（公钥），然后：
+				<ol>
+					<li>
+						复制公钥
+						<pre><code class="shell">
+$ cat ~/.ssh/id_rsa.pub | pbcopy
+						</code></pre>
+					</li>
+					<li>
+						连接到远程主机 user@host
+						<pre><code class="shell">
+$ ssh user@host
+						</code></pre>
+					</li>
+					<li>
+						将公钥追加到远程主机的 ~/.ssh/authorized_keys 后
+						<pre><code class="shell">
+$ mkdir -p ~/.ssh
+$ vim ~/.ssh/authorized_keys
+						</code></pre>
+					</li>
+				</ol>
+				上面三个步骤可以直接使用一个指令完成：
+				<div class="command">
+					ssh-copy-id user@host
+				</div>
+				下次进行 ssh 连接的时候，远程主机会先发送一串随机字符串，本地主机使用自己的私钥进行加密发回去，远程主机使用添加到 ~/.ssh/authorized_keys 的公钥进行解密，解密成功则说明认证成功，整个过程不需要密码，直接一条指令：
+				<pre><code class="shell">
+ssh user@host
+				</code></pre>
+				除此之外，还可以在 ~/.ssh/config 中添加以下内容：
+				<pre><code class="config">
+Host 远程主机别名
+	Hostname host
+	Port port
+	User user
+	IdentityFile ~/.ssh/id_rsa
+				</code></pre>
+				然后直接使用远程主机别名来进行连接。
+				<pre><code class="shell">
+$ ssh 远程主机别名
+# 等价于以下
+$ ssh user@host -p port
+				</code></pre>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
@@ -367,6 +469,10 @@ COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME
 				<div>[2] 竹子 top 指令<a
 						href="https://www.cnblogs.com/peida/archive/2012/12/24/2831353.html">https://www.cnblogs.com/peida/archive/2012/12/24/2831353.html</a>
 				</div>
+				<div>[3] SSH.COM SSH-KEYGEN - GENERATE A NEW SSH KEY<a
+					href="https://www.ssh.com/ssh/keygen/">https://www.ssh.com/ssh/keygen/</a>
+				</div>
+				<div>[4] 阮一峰 SSH原理 <a href="http://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html">http://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html</a></div>
 			</p>
 		</section>
 	</article>

@@ -62,7 +62,7 @@ $(function () {
     ['commonJS', 'package.json', 'path', 'file system', 'process', 'koa', 'webpack', 'plugins', 'loader'],
     ['安装', '实例', '模版', '组件', 'mixins', 'router', 'vuex'],
     ['响应式布局', '响应式图片', 'bootstrap', 'viewport', '1px'],
-    ['抓包工具', 'chrome devtools', 'git', 'sublime 插件'],
+    ['抓包工具', 'chrome devtools', 'git', 'sublime 插件', 'VSCode'],
     ['HTTP', 'TCP'],
     ['CSRF', 'XSS', '同源策略'],
     ['karma', 'Vue Test Utils'],
@@ -503,12 +503,13 @@ $(function () {
 
   $('a').not('.self').attr('target', '_blank'); // 所有链接默认新标签打开
 
-  const $subTitle = $('#container>section>h2'); // 一级子标题
-  const subTitleBlockNumber = 4;
+  const $sectionEls = $('#container>section');
+  const $subTitle = $('#container>section>h2'); // 二级子标题
+  const SUBTITLE_BLOCK_NUMBER = 4;
   let subTitleNav = ''; // 子标题导航 html 字符串
   let subTitleToggleString = ''; // 子标题导航开关
-  for (let i = 1; i <= subTitleBlockNumber; i++) {
-    subTitleToggleString += '<div class="block' + i + '"></div>';
+  for (let i = 1; i <= SUBTITLE_BLOCK_NUMBER; i++) {
+    subTitleToggleString += '<div class="block block' + i + '"></div>';
   }
   subTitleToggleString = '<div id="subTitleToggle">' + subTitleToggleString + '</div>';
 
@@ -516,16 +517,31 @@ $(function () {
   const currentH2 = decodeURI(url.substring(url.indexOf('#') + 1));
   // currentH2 = currentH2.replace(/\?theme=(dark)|(bright)/, '');
   $subTitle.each(function (i, el) {
-    const name = filterName(el.innerHTML);
-    // $(this).html('<a height="50%" id="' + name + '" href="#' + name + '">' + name + '</a>');
+    const $h3TitleEls = $sectionEls.eq(i).children('h3');
+    const h2Title = el.innerText;
+    const filteredH2Title = filterName(h2Title);
     // 子标题包裹为超链接
-    $(this).wrap('<a style="height: 50%; margin: 0; padding: 0; text-decoration: none; color: #000;" id="' + name + '" href="#' + name + '"></a>');
+    $(this).wrap(`<a
+      style="height: 50%; margin: 0; padding: 0; text-decoration: none; color: #000;"
+      id="${filteredH2Title}"
+      href="#${filteredH2Title}"
+    ></a>`);
     // 点击后滑动窗口
     el.onclick = function () {
-      scrollTo('#' + name);
+      scrollTo('#' + filteredH2Title);
     };
-    if (el.innerHTML === currentH2) el.click();
-    subTitleNav += '<div class="subTitleItem">' + el.innerHTML + '</div>';
+    if (h2Title === currentH2) el.click();
+    subTitleNav += `
+      <div class="subTitleItem">
+        ${h2Title}
+        ${$h3TitleEls.length > 0 ? `<div class="subSubTitleItem">
+        ${$h3TitleEls
+          .toArray()
+          .map(h3TitleEl => `<div>${h3TitleEl.innerText}</div>`)
+          .join('')}
+        </div>`: ''}
+      </div>
+    `;
   });
   subTitleNav = '<div id="subTitleNav">' + subTitleNav + '<div class="subTitleItem">返回顶部</div></div>';
   // 右下角子标题导航
@@ -534,11 +550,12 @@ $(function () {
   // 设置跳转事件
   const $subTitleItem = $('.subTitleItem');
   const $subTitleToggle = $('#subTitleToggle');
-  const $subTitleBlock = $('#subTitleToggle div');
+  const $subTitleBlock = $('#subTitleToggle>div.block');
   $subTitleItem.each(function (i, el) {
-    const name = filterName(el.innerHTML);
+    const filteredH2Title = filterName($subTitle.eq(i).text());
+    const targetElId = filteredH2Title ? '#' + filteredH2Title : 'body';
     el.onclick = function () {
-      scrollTo(name === '返回顶部' ? 'body' : '#' + name);
+      scrollTo(targetElId);
     };
   });
   let isLeave = false; // 判断光标是否已经离开导航面板
@@ -633,7 +650,7 @@ $(function () {
         path.resolve(HTML_DIR, nextCategory, nextTitle + '.html')
     }
   );
-  const $refer = $('.refer').length === 0 ? $('section').last() : $('.refer');
+  const $refer = $('.refer');
   $refer.after('<div id="footer" >' +
     '<div class="prePage">上一篇：' + preTitleEl + '</div>' +
     '<div class="nextPage">下一篇：' + nextTitleEl + '</div>' +

@@ -29,11 +29,85 @@
       <h1 id="title">Linux目录结构</h1>
     </hgroup>
     <section>
-      <h2>/etc</h2>
+      <h2>/home</h2>
+      <p>
+        用户家目录，比如用户名为 user，则该用户的家为 /home/user。
+        <pre><code class="shell">
+# 以 user 用户登录后回家，以下两种方式等价
+$ cd ~
+$ cd
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>/etc & /usr/local/etc</h2>
+      <p>
+        /etc 是系统的主要配置文件存放的目录。
+        <ul>
+          <li>passwd, group：文件，用户/组的账号和加密后的口令等信息</li>
+          <li>init.d：目录，Linux 初始化</li>
+          <li>...</li>
+        </ul>
+        /usr/local/etc 是第三方软件配置文件存放的目录。
+      </p>
+    </section>
+    <section>
+      <h2>/usr & /usr/local</h2>
+      <p>
+        Unix Software Resource，Unix 软件资源。
+        <pre><code class="shell">
+$ ls /usr
+bin etc games include lib lib64 libexec local sbin share src tmp
+$ ls /usr/local
+aegis bin etc games include lib lib64 libexec sbin share src vim
+        </code></pre>
+        /usr 和 /usr/local 目录结构类似，/usr 是系统自带的软件，/usr/local 是用户自己下载的第三方软件。
+      </p>
+    </section>
+    <section>
+      <h2>/bin & /sbin/ & /usr/bin</h2>
+      <p>
+        /bin 和 /usr/bin 都是存放指令的目录，/bin 存放一般用户就可以使用的系统指令（cp, ls, ln 等），/sbin 存放 root 用户才能使用的指令（reboot 等），/usr/bin
+        是第三方软件指令（比如 git）。
+      </p>
+    </section>
+    <section>
+      <h2>shell</h2>
+      <p>
+        profile 用于初始化环境变量，bashrc, shrc, zshrc 等用于配置 shell 的参数，如主题颜色。
+        <ul>
+          <li>/etc/profile：任何用户登录后（如 su user）执行的文件</li>
+          <li>/home/`$USER`/.profile：以 $USER 身份登录后执行的文件</li>
+          <li>/etc/bashrc：任何用于登录后启动 bash 后执行的文件</li>
+          <li>/home/`$USER`/.bashrc：以 $USER 身份启动 bash 后执行的文件（每个新窗口都执行一次）</li>
+          <li>/home/`$USER`/.bash_profile：以 $USER 身份启动 bash 后执行的文件（每次会话只执行一次）</li>
+          <li>/home/`$USER`/.zshrc：以 $USER 身份启动 zsh 后执行的文件</li>
+        </ul>
+        <div class="tip">
+          bash, sh, zsh 等属于 shell，bash 是 linux 默认 shell，所以最为常用。
+        </div>
+      </p>
+    </section>
+    <section>
+      <h2>/tmp</h2>
+      <p>
+        Temporary files，存放程序所需的临时文件。
+      </p>
     </section>
     <section>
       <h2>参考文献</h2>
       <p>
+        <div>[1] wido.me 理解 bashrc 和 profile <a
+            href="https://wido.me/sunteya/understand-bashrc-and-profile">https://wido.me/sunteya/understand-bashrc-and-profile</a>
+        </div>
+        <div>
+          [2] 鸟哥的 Linux 私房菜 第六章、Linux 的文件权限与目录配置 <a
+            href="http://cn.linux.vbird.org/linux_basic/0210filepermission_3.php">http://cn.linux.vbird.org/linux_basic/0210filepermission_3.php</a>
+        </div>
+        <div>
+          [3] Filesystem Hierarchy Standard <a
+            href="http://www.pathname.com/fhs/pub/fhs-2.3.pdf">http://www.pathname.com/fhs/pub/fhs-2.3.pdf</a>
+        </div>
       </p>
     </section>
   </article>

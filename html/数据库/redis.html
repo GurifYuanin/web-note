@@ -2,48 +2,48 @@
 <html lang="en">
 
 <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="stylesheet" href="../../css/normalize.css">
-        <link rel="stylesheet" href="../../css/styles/agate.css">
-        <link rel="stylesheet" href="../../css/dark.css">
-        <script src="../../js/jquery-3.2.1-compressed.js"></script>
-        <script src="../../js/highlight.pack.js"></script>
-        <script src="../../js/index.min.js"></script>
-        <title>Redis</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../../css/normalize.css">
+    <link rel="stylesheet" href="../../css/styles/agate.css">
+    <link rel="stylesheet" href="../../css/dark.css">
+    <script src="../../js/jquery-3.2.1-compressed.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/index.min.js"></script>
+    <title>Redis</title>
 </head>
 
 <body>
-        <aside id="sidebar">
-                <section id="catalog">
-                        <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
-                        目录
-                </section>
-        </aside>
-        <div id="showCatalog">
-                <img src="../../images/arrow.png">
-        </div>
-        <article id="container">
-                <hgroup>
-                        <h1 id="title">Redis</h1>
-                </hgroup>
-                <section>
-                        <h2>简介</h2>
-                        <p>
-                                redis 是 key-value 数据库，数据保存在内存上，因此可以实现高效存取。
-                                <div class="show">
-                                        <iframe src="http://47.102.208.48:8081/" frameborder="0"
-                                                style="display: block; width: 100%; min-height: 800px;"></iframe>
-                                </div>
-                        </p>
-                </section>
-                <section>
-                        <h2>安装并启动</h2>
-                        <p>
-                                <h3>macOS</h3>
-                                使用 HomeBrew 安装 redis，安装后启动服务。
-                                <pre><code class="shell">
+    <aside id="sidebar">
+        <section id="catalog">
+            <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+            目录
+        </section>
+    </aside>
+    <div id="showCatalog">
+        <img src="../../images/arrow.png">
+    </div>
+    <article id="container">
+        <hgroup>
+            <h1 id="title">Redis</h1>
+        </hgroup>
+        <section>
+            <h2>简介</h2>
+            <p>
+                redis 是 key-value 数据库，数据保存在内存上，因此可以实现高效存取。
+                <div class="show">
+                    <iframe src="http://47.102.208.48:8081/" frameborder="0"
+                        style="display: block; width: 100%; min-height: 800px;"></iframe>
+                </div>
+            </p>
+        </section>
+        <section>
+            <h2>安装并启动</h2>
+            <p>
+                <h3>macOS</h3>
+                使用 HomeBrew 安装 redis，安装后启动服务。
+                <pre><code class="shell">
 # 安装 redis
 $ brew install redis
 # 启动服务
@@ -58,8 +58,8 @@ $ cat /Users/admin/Library/LaunchAgents/homebrew.mxcl.redis.plist
 &lt;string&gt;/usr/local/etc/redis.conf&lt;/string&gt;
 ...
         </code></pre>
-                                使用 redis-server 命令启动 redis，既可以启动时通过传参的方式进行配置，也可以直接指定配置文件。
-                                <pre><code class="shell">
+                使用 redis-server 命令启动 redis，既可以启动时通过传参的方式进行配置，也可以直接指定配置文件。
+                <pre><code class="shell">
 # 通过传参的形式启动 redis
 $ redis-server --port 6379 --daemonize 'yes'
 
@@ -84,8 +84,8 @@ $ redis-server /usr/local/etc/redis.conf
           `-._        _.-'                                           
               `-.__.-'                                
         </code></pre>
-                                上面显示了服务所在的端口和 pid，我们可以通过 redis-cli 命令连接到数据库（默认连接到 127.0.0.1:6379），然后进行动态修改配置：
-                                <pre><code class="shell">
+                上面显示了服务所在的端口和 pid，我们可以通过 redis-cli 命令连接到数据库（默认连接到 127.0.0.1:6379），然后进行动态修改配置：
+                <pre><code class="shell">
 $ redis-cli [-h host] [-p port] [-a password]
 # 获得所有配置项
 127.0.0.1:6379>CONFIG GET *
@@ -94,21 +94,21 @@ $ redis-cli [-h host] [-p port] [-a password]
 # 设置配置项
 127.0.0.1:6379>CONFIG SET 配置项名 配置项值
         </code></pre>
-                                当遇到<span class="different">(error) ERR Unsupported CONFIG
-                                        parameter:</span>错误时，说明该配置项不能进行动态修改，只能在启动前进行配置。
-                        </p>
-                </section>
-                <section>
-                        <h2>客户端与数据库</h2>
-                        <p>
-                                当使用 redis-cli 进行连接时，该行为便是一个客户端（client）连接到 redis 数据库。
-                                <h3>切换数据库</h3>
-                                redis 默认会开启 16 个数据库，每个数据库用一个编号表示，从 0 开始进行索引。
-                                <pre><code class="shell">
+                当遇到<span class="different">(error) ERR Unsupported CONFIG
+                    parameter:</span>错误时，说明该配置项不能进行动态修改，只能在启动前进行配置。
+            </p>
+        </section>
+        <section>
+            <h2>客户端与数据库</h2>
+            <p>
+                当使用 redis-cli 进行连接时，该行为便是一个客户端（client）连接到 redis 数据库。
+                <h3>切换数据库</h3>
+                redis 默认会开启 16 个数据库，每个数据库用一个编号表示，从 0 开始进行索引。
+                <pre><code class="shell">
 127.0.0.1:6379> SELECT index
         </code></pre>
-                                <h3>客户端操作</h3>
-                                <pre><code class="shell">
+                <h3>客户端操作</h3>
+                <pre><code class="shell">
 # 获得所有客户端信息
 127.0.0.1:6379> CLIENT LIST
 # 检查是否连接成功
@@ -118,92 +118,154 @@ $ redis-cli [-h host] [-p port] [-a password]
 # 断开指定客户端连接
 127.0.0.1:6379> CLIENT KILL ip:port
         </code></pre>
-                                <h3>数据保存到磁盘</h3>
-                                <pre><code class="shell">
+                <h3>数据保存到磁盘</h3>
+                <pre><code class="shell">
 # 同步方式保存数据到磁盘上
 127.0.0.1:6379> SAVE
 # 异步方式保存数据到磁盘上
 127.0.0.1:6379> BGSAVE
         </code></pre>
-                                <h3>时间</h3>
-                                <pre><code class="shell">
+                <h3>时间</h3>
+                <pre><code class="shell">
 # 获得当前时间戳
 127.0.0.1:6379> TIME
 # 获得上次数据保存到磁盘的时间戳
 127.0.0.1:6379> LASTSAVE
         </code></pre>
-                        </p>
-                </section>
-                <section>
-                        <h2>数据类型</h2>
-                        <p>
-                                redis 是 Key-Value 数据库，所有数据可以通过 key 来检索，value 有以下类型：
-                                <ul>
-                                        <li>字符串</li>
-                                        <li>Hash：哈希映射，key-value 键值对</li>
-                                        <li>List：列表，字符串列表，元素允许重复</li>
-                                        <li>Set：集合，字符串集合，元素不能重复</li>
-                                        <li>ZSet：有序集合，带分数的字符串集合，分数为该字符串的顺序，元素不能重复</li>
-                                </ul>
-                                通过以下指令查询 key 的类型。
-                                <pre><code class="shell">
+            </p>
+        </section>
+        <section>
+            <h2>数据类型</h2>
+            <p>
+                redis 是 Key-Value 数据库，所有数据可以通过 key 来检索，value 有以下类型：
+                <ul>
+                    <li>字符串</li>
+                    <li>Hash：哈希映射，key-value 键值对</li>
+                    <li>List：列表，字符串列表，元素允许重复</li>
+                    <li>Set：集合，字符串集合，元素不能重复</li>
+                    <li>ZSet：有序集合，带分数的字符串集合，分数为该字符串的顺序，元素不能重复</li>
+                </ul>
+                通过以下指令查询 key 的类型。
+                <pre><code class="shell">
 127.0.0.1:6379> TYPE key
         </code></pre>
-                                <h3>字符串</h3>
-                                <pre><code class="shell">
+                <h3>字符串</h3>
+                参数解释：
+                <ul>
+                    <li>EX seconds：设置过期时间为 seconds 秒</li>
+                    <li>PX milliseconds：设置过期时间为 milliseconds 毫秒</li>
+                    <li>NX：Not Exists，只有 key 不存在时操作才会生效</li>
+                    <li>XX：只有 key 存在时操作才会生效</li>
+                </ul>
+                <pre><code class="shell">
 # 新增
-127.0.0.1:6379> SET key value
+127.0.0.1:6379> SET key value [EX seconds] [PX milliseconds] [NX|XX]
 # 获取
 127.0.0.1:6379> GET key
-        </code></pre>
-                                <h3>Hash</h3>
-                                <pre><code class="shell">
+                </code></pre>
+                当数据类型为字符串时，可以直接对字符串进行操作：
+                <ul>
+                    <li>STRLEN key：获得字符串长度</li>
+                    <li>APPEND key value：将 value 追加到字符串之后</li>
+                    <li>SETRANGE key offset value：从 offset 位置开始用 value 进行覆盖</li>
+                    <li>GETRANGE key start end：获得从 start 位置开始到 end 位置结束的字符串</li>
+                </ul>
+                当数据类型可以被解析为数字时，可以进行增减操作：
+                <ul>
+                    <li>INCR key：自增整数 1</li>
+                    <li>INCRBY key increment：自增整数 increment</li>
+                    <li>INCRBYFLOAT key increment：自增浮点数 increment</li>
+                    <li>DECR key：自减整数 1</li>
+                    <li>DECRBY key decrement：自减整数 decrement</li>
+                </ul>
+                <h3>Hash</h3>
+                <figure>
+                    <img src="../../images/redis_hash.jpg" alt="">
+                </figure>
+                <pre><code class="shell">
 # 新增 field
 127.0.0.1:6379> HSET key field value
 # 获取 field 的值
 127.0.0.1:6379> HGET key field
-# 获得所有 field 的值
+# 获得所有 value
 127.0.0.1:6379> HGETALL key
 # 获得所有 field
 127.0.0.1:6379> HKEYS key
+# 获得所有 field 和 value
+127.0.0.1:6379> HGETALL key
 # 删除 field
 127.0.0.1:6379> HDEL key field
-# 判断 field 是否存在
-127.0.0.1:6379> HEXISTS key field
-        </code></pre>
-                                <h3>List</h3>
-                                <pre><code class="shell">
-# 新增一个元素
+                </code></pre>
+                除了对 field 和 value 的基本增删外，还可以进行其他操作：
+                <ul>
+                    <li>HLEN key：计算 field 的数量</li>
+                    <li>HEXISTS key field：判断 field 是否存在</li>
+                </ul>
+                <h3>List</h3>
+                新增 / 设置列表元素：
+                <pre><code class="shell">
+# 新增一个元素到列表头
 127.0.0.1:6379> LPUSH key value
-# 设置 index 元素的值
+# 新增一个元素到列表尾
+127.0.0.1:6379> RPUSH key value
+# 设置 index 位置元素的值
 127.0.0.1:6379> LSET key index value
-# 移除一个元素
+# 从列表头开始寻找 pivot，第一次找到后将 value 插入到 pivot 之前（BEFORE）/ 之后（AFTER）
+127.0.0.1:6379> LINSERT key BEFORE|AFTER pivot value
+                </code></pre>
+                删除列表元素：
+                <pre><code class="shell">
+# 移除一个列表头一个元素
 127.0.0.1:6379> LPOP key
+# 移除一个列表尾一个元素
+127.0.0.1:6379> RPOP key
+# 移除列表中所有值为 value 的元素
+127.0.0.1:6379> LREM key 0 value
+# 仅保留列表从 start 到 stop 的元素，删除其他元素
+127.0.0.1:6379> LTRIM key start stop
+                </code></pre>
+                获得列表元素：
+                <pre><code class="shell">
 # 获取列表第 index 个元素
 127.0.0.1:6379> LINDEX key index
 # 获取列表从 start 到 stop 的元素
 127.0.0.1:6379> LRANGE key start stop
-# 保留列表从 start 到 stop 的元素
-127.0.0.1:6379> LTRIM key start stop
-# 获得列表长度
-127.0.0.1:6379> LLEN key
-        </code></pre>
-                                <h3>Set</h3>
-                                push 和 pop 遵循后进先出的原则（栈）。
-                                <pre><code class="shell">
+                </code></pre>
+                其他操作：
+                <ul>
+                    <li>LLEN key：获得列表长度</li>
+                </ul>
+                <h3>Set</h3>
+                <pre><code class="shell">
 # 判断元素是否已经在集合内
 127.0.0.1:6379> SISMEMBER key member
 # 新增元素
 127.0.0.1:6379> SADD key member
 # 获取集合所有元素
 127.0.0.1:6379> SMEMBERS key
+# 随机获取集合内的一个元素
+127.0.0.1:6379> SRANDMEMBER key
 # 移除集合内一个元素
 127.0.0.1:6379> SREM key member
-# 获得集合元素数量
-127.0.0.1:6379> SCARD key
-        </code></pre>
-                                <h3>ZSet</h3>
-                                <pre><code class="shell">
+# 随机移除集合内一个元素
+127.0.0.1:6379> SPOP key
+                </code></pre>
+                除了集合元素的增删操作，还可以进行其他操作：
+                <ul>
+                    <li>SCARD key：cardinality，基数，计算集合内元素数量</li>
+                    <li>SMOVE source destination member：把元素从 source 集合移动到 destination 内</li>
+                </ul>
+                除此之外，集合可以进行布尔运算：
+                <ul>
+                    <li>SINTER key1 key2 ...：交集运算</li>
+                    <li>SINTERSTORE destination key1 key2 ...：交集运算，并将运算结果保存到 destination 中</li>
+                    <li>SUNION key1 key2：并集运算</li>
+                    <li>SUNIONSTORE destination key1 key2：并集运算，并将运算结果保存到 destination 中</li>
+                    <li>SDIFF key1 key2 ...：差集运算，即 key1 减去 key2 再减去 ...</li>
+                    <li>SDIFFSTORE destination key1 key2 ...：差集运算，即 key1 减去 key2 再减去 ...，并将运算结果保存到 destination 中</li>
+                </ul>
+                <h3>ZSet</h3>
+                <pre><code class="shell">
 # 新增元素
 127.0.0.1:6379> ZADD key score member
 # 获得元素的分数
@@ -218,31 +280,31 @@ $ redis-cli [-h host] [-p port] [-a password]
 127.0.0.1:6379> ZREM key member
 # 获得集合元素数量
 127.0.0.1:6379> ZCARD key
-        </code></pre>
-                        </p>
-                </section>
-                <section>
-                        <h2>通用操作</h2>
-                        <p>
-                                <h3>查找 key</h3>
-                                keys 指令对 key（键名）进行匹配，可以使用 * 来表示任意多个任意字符，比如以下表示获得所有 key。
-                                <pre><code class="shell">
+                </code></pre>
+            </p>
+        </section>
+        <section>
+            <h2>通用操作</h2>
+            <p>
+                <h3>查找 key</h3>
+                keys 指令对 key（键名）进行匹配，可以使用 * 来表示任意多个任意字符，比如以下表示获得所有 key。
+                <pre><code class="shell">
 127.0.0.1:6379> KEYS *
         </code></pre>
-                                keys 将会获得所有符合条件的 key，出于性能考虑，应该使用 scan 命令进行扫描，scan 使用一个游标，每次扫描返回若干（取决于 key
-                                的数量）key，并返回游标位置，下次扫描就可以在该位置上继续扫描。
-                                <pre><code class="shell">
+                keys 将会获得所有符合条件的 key，出于性能考虑，应该使用 scan 命令进行扫描，scan 使用一个游标，每次扫描返回若干（取决于 key
+                的数量）key，并返回游标位置，下次扫描就可以在该位置上继续扫描。
+                <pre><code class="shell">
 127.0.0.1:6379> SCAN position
         </code></pre>
-                                上面命令表示从 position 开始扫描，redis 将返回两个结果：扫描后的下一个位置，扫描得到的 key 列表。
-                                <h3>判断 key 是否存在</h3>
-                                <pre><code class="shell">
+                上面命令表示从 position 开始扫描，redis 将返回两个结果：扫描后的下一个位置，扫描得到的 key 列表。
+                <h3>判断 key 是否存在</h3>
+                <pre><code class="shell">
 # 不存在：0
 # 存在：1
 127.0.0.1:6379> EXISTS key
         </code></pre>
-                                <h3>删除 key</h3>
-                                <pre><code class="shell">
+                <h3>删除 key</h3>
+                <pre><code class="shell">
 # 删除指定 key
 127.0.0.1:6379> DEL key
 # 删除当前数据库所有 key
@@ -251,16 +313,16 @@ $ redis-cli [-h host] [-p port] [-a password]
 127.0.0.1:6379> FLUSHALL
         </code></pre>
 
-                                <h3>查询过期时间</h3>
-                                <pre><code class="shell">
+                <h3>查询过期时间</h3>
+                <pre><code class="shell">
 # 毫秒为单位
 127.0.0.1:6379> PTTL key
 # 秒为单位
 127.0.0.1:6379> TTL key
         </code></pre>
-                                <h3>设置过期时间</h3>
-                                设置 key 后默认过期时间为无限，即不过期。
-                                <pre><code class="shell">
+                <h3>设置过期时间</h3>
+                设置 key 后默认过期时间为无限，即不过期。
+                <pre><code class="shell">
 # 设置失败：0
 # 设置成功：1
 # seconds 秒后失效
@@ -272,100 +334,120 @@ $ redis-cli [-h host] [-p port] [-a password]
 # 移除过期时间，使得 key 持久保存
 127.0.0.1:6379> PERSIST key
         </code></pre>
-                                <h3>移动 key 所在数据库</h3>
-                                <pre><code class="shell">
+                <h3>移动 key 所在数据库</h3>
+                <pre><code class="shell">
 127.0.0.1:6379> MOVE key index
         </code></pre>
-                                <h3>修改 key 名</h3>
-                                <pre><code class="shell">
+                <h3>修改 key 名</h3>
+                <pre><code class="shell">
 127.0.0.1:6379> RENAME key new_key
         </code></pre>
-                                <div class="tip">
-                                        指令大小写不敏感，因此既可以 GET key，也可以使用 get key 。
-                                </div>
-                        </p>
-                </section>
-                <section>
-                        <h2>发布与订阅</h2>
-                        <p>
-                                订阅者订阅频道，发布者在某个频道发布消息后，所有订阅者都会收到这个消息。
-                                <h3>订阅频道</h3>
-                                
-                                <pre><code class="shell">
+                <div class="tip">
+                    指令大小写不敏感，因此既可以 GET key，也可以使用 get key 。
+                </div>
+            </p>
+        </section>
+        <section>
+            <h2>发布与订阅</h2>
+            <p>
+                订阅者订阅频道，发布者在某个频道发布消息后，所有订阅者都会收到这个消息。
+                <h3>订阅频道</h3>
+                
+                <pre><code class="shell">
 127.0.0.1:6379> SUBSCRIBE channel
         </code></pre>
-                                <h3>取消订阅频道</h3>
-                                <pre><code class="shell">
+                <h3>取消订阅频道</h3>
+                <pre><code class="shell">
 127.0.0.1:6379> UNSUBSCRIBE channel
         </code></pre>
-                                <h3>向渠道发布消息</h3>
-                                <pre><code class="shell">
+                <h3>向渠道发布消息</h3>
+                <pre><code class="shell">
 127.0.0.1:6379> PUBLISH channel message
         </code></pre>
-                                <div class="tip">
-                                        channel 为渠道名，大小写敏感。
-                                </div>
-                        </p>
-                </section>
-                <section>
-                        <h2>安全</h2>
-                        <p>
-                                <h3>设置密码</h3>
-                                默认情况 redis 服务不需要密码，可以在配置文件里设置认证密码：
-                                <pre><code class="config">
+                <div class="tip">
+                    channel 为渠道名，大小写敏感。
+                </div>
+            </p>
+        </section>
+        <section>
+            <h2>安全</h2>
+            <p>
+                <h3>设置密码</h3>
+                默认情况 redis 服务不需要密码，可以在配置文件里设置认证密码：
+                <pre><code class="config">
 requirepass &lt;password&gt;
         </code></pre>
-                                或者使用 redis-cli 连接到 redis 后设置密码。
-                                <pre><code class="shell">
+                或者使用 redis-cli 连接到 redis 后设置密码。
+                <pre><code class="shell">
 127.0.0.1:6379> CONFIG set requirepass &lt;password&gt;
         </code></pre>
-                                设置后，退出重新连接，此时进行 redis 操作就会要求先进行密码验证。
-                                <pre><code class="shell">
+                设置后，退出重新连接，此时进行 redis 操作就会要求先进行密码验证。
+                <pre><code class="shell">
 127.0.0.1:6379> KEYS *
 (error) NOAUTH Authentication required.
 127.0.0.1:6379> AUTH &lt;password&gt;
         </code></pre>
-                                <div class="tip">
-                                        redis 官方建议：由于 redis 校验密码速度过快（150k/s），因此应该使用强密码，否则容易被破解。或者不设置验证，同时禁止外网连接。
-                                </div>
-                                <h3>允许外网连接</h3>
-                                默认情况，redis 只允许本机连接，在 redis 配置文件里有一行：
-                                <pre><code class="config">
+                <div class="tip">
+                    redis 官方建议：由于 redis 校验密码速度过快（150k/s），因此应该使用强密码，否则容易被破解。或者不设置验证，同时禁止外网连接。
+                </div>
+                <h3>允许外网连接</h3>
+                默认情况，redis 只允许本机连接，在 redis 配置文件里有一行：
+                <pre><code class="config">
 bind 127.0.0.1 ::1
         </code></pre>
-                                bind 表示只允许 127.0.0.1 和 ::1 进行连接，::1 指的是 ipv6 的环回路地址，相当于 ipv4 的
-                                127.0.0.1。如果希望给所有客户端进行连接，则注释掉改行再重启 redis。
-                                <pre><code class="shell">
+                bind 表示只允许 127.0.0.1 和 ::1 进行连接，::1 指的是 ipv6 的环回路地址，相当于 ipv4 的
+                127.0.0.1。如果希望给所有客户端进行连接，则注释掉改行再重启 redis。
+                <pre><code class="shell">
 # 使用配置文件启动 redis
 redis-server /usr/local/etc/redis.conf
 # 连接到指定 ip 和 端口的 redis
 redis-cli -h xxx.xxx.xxx.xxx -p xxxx
         </code></pre>
-                                <h3>连接数</h3>
-                                redis 默认最大连接数为 10000，通过 maxclients 配置项进行修改。
-                                <pre><code class="shell">
+                <h3>连接数</h3>
+                redis 默认最大连接数为 10000，通过 maxclients 配置项进行修改。
+                <pre><code class="shell">
 # 获得配置
 127.0.0.1:6379> CONFIG get maxclients
 # 设置配置
 127.0.0.1:6379> CONFIT set maxclients 10000
-        </code></pre>
-                                或者在启动时通过参数进行配置。
-                                <pre><code class="shell">
+                </code></pre>
+                或者在启动时通过参数进行配置。
+                <pre><code class="shell">
 $ redis-server --maxclients 10000
-        </code></pre>
-                        </p>
-                </section>
-                <section class="refer">
-                        <h2>参考文献</h2>
-                        <p>
-                                <div>[1] runoob redis <a
-                                                href="https://www.runoob.com/redis/redis-tutorial.html">https://www.runoob.com/redis/redis-tutorial.html</a>
-                                </div>
-                                <div>[2] redis commands <a
-                                                href="https://redis.io/commands">https://redis.io/commands</a></div>
-                        </p>
-                </section>
-        </article>
+                </code></pre>
+            </p>
+        </section>
+        <section>
+            <h2>底层实现</h2>
+            <p>
+                Redis 使用 C 语言来实现，并且使用不同数据结构实现了 redis 内的数据类型。
+                <h3>字符串</h3>
+                redis 的 key，field，字符串 value 都使用了该数据结构。
+                <pre><code class="c">
+struct sdshdr {
+    int len; // 有效字符长度
+    int free; // 空闲字符长度
+    char buf[];
+};
+                </code></pre>
+                buf[] 存储字符串内容，比如它可能是这样的：
+                <figure>
+                    <img src="../../images/redis_sds.jpg" alt="">
+                </figure>
+            </p>
+        </section>
+        <section class="refer">
+            <h2>参考文献</h2>
+            <p>
+                <div>[1] runoob redis <a
+                        href="https://www.runoob.com/redis/redis-tutorial.html">https://www.runoob.com/redis/redis-tutorial.html</a>
+                </div>
+                <div>[2] redis commands <a href="https://redis.io/commands">https://redis.io/commands</a></div>
+                <div>[3] Redis 命令参考 <a href="http://redisdoc.com/index.html">http://redisdoc.com/index.html</a></div>
+                <div>[4] Redis 设计与实现<a href="http://redisbook.com/index.html">http://redisbook.com/index.html</a></div>
+            </p>
+        </section>
+    </article>
 </body>
 
 </html>
