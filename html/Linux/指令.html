@@ -344,7 +344,7 @@ PID USER PR NI VIRT RES SHR S %CPU %MEM TIME+ COMMAND
 				<h4>排序</h4>
 				top 默认按照 CPU% 进行排序，使用 top 命令后输入<span class="different">x</span>（加粗）和<span
 					class="different">b</span>（反转底色）高亮显示排序列，使用<span class="different">
-					</span>或 <span class="different">>
+				</span>或 <span class="different">>
 				</span>切换其他列排序。
 				<h3>lsof</h3>
 				list open file，显示所有 linux 打开的文件，常用 -i 参数，用于查询网络地址，比如查询 80 端口的文件。
@@ -356,6 +356,54 @@ COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME
 				<div class="tip">
 					一些文件可能查询不出来，因为当前用户权限不足，如果希望查得所有文件，使用 root 权限。
 				</div>
+			</p>
+		</section>
+		<section>
+			<h2>打包 & 压缩</h2>
+			<p>
+				<ul>
+					<li>打包：将多个文件打包为一个大的文件（档案）</li>
+					<li>压缩：将一个文件通过压缩算法压缩为一个小的文件</li>
+				</ul>
+				<h3>tar</h3>
+				既可以进行打包、压缩文件，也可以解压文件，通过参数来指定进行什么操作，使用时以下参数必须指定其中一个：
+				<ul>
+					<li>c：Create，创建档案</li>
+					<li>r：添加新文件到已有未压缩的档案中</li>
+					<li>t：列出档案内的文件</li>
+					<li>x：提取档案内的文件</li>
+				</ul>
+				如果不指定压缩方式，则只是打包为一个档案，不会进行压缩。通过参数指定压缩方式，选择以下其中一个：
+				<ul>
+					<li>z：gzip</li>
+					<li>j：bzip2</li>
+				</ul>
+				一般还会添加以下两个参数：
+				<ul>
+					<li>v：显示解压或压缩的信息</li>
+					<li>f：指定解压或压缩的文件</li>
+				</ul>
+				<h4>压缩</h4>
+				将 file1 和 file2 使用 gzip 方式压缩为一个 file.tar.gz：
+				<pre><code class="shell">
+$ tar tar -cvzf file.tar.gz file1 file2
+a file1
+a file2
+				</code></pre>
+				<h4>查看</h4>
+				查看 file.tar.gz 里有哪些文件：
+				<pre><code class="shell">
+$ tar -tvzf file.tar.gz
+-rw-r--r-- 0 caiyupeng staff 12 5 31 13:57 file1
+-rw-r--r-- 0 caiyupeng staff 12 5 31 12:21 file2
+				</code></pre>
+				<h4>解压</h4>
+				解压 file.tar.gz 文件：
+				<pre><code class="shell">
+$ tar -xvzf file.tar.gz
+x file1
+x file2
+				</code></pre>
 			</p>
 		</section>
 		<section>
@@ -395,7 +443,8 @@ RSA key fingerprint is xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx.
 
 Are you sure you want to continue connecting (yes/no)?
 				</code></pre>
-				由于远程主机的公钥太长（参见 ssh-keygen 生成的秘钥），我们不容易判断该公钥是否为远程主机的公钥（可能被中间人修改过），因此将公钥进行 MD5 计算生成秘钥指纹，指纹的长度固定为 128 位，远程主机需要公布秘钥指纹，我们连接的时候再判断是否和公布的指纹一致，如果一致则可以输入 yes 表示信任。
+				由于远程主机的公钥太长（参见 ssh-keygen 生成的秘钥），我们不容易判断该公钥是否为远程主机的公钥（可能被中间人修改过），因此将公钥进行 MD5 计算生成秘钥指纹，指纹的长度固定为 128
+				位，远程主机需要公布秘钥指纹，我们连接的时候再判断是否和公布的指纹一致，如果一致则可以输入 yes 表示信任。
 				<pre><code class="shell">
 Are you sure you want to continue connecting (yes/no)? yes
 Warning: Permanently added 'host,12.18.429.21' (RSA) to the list of known hosts.
@@ -440,7 +489,8 @@ $ vim ~/.ssh/authorized_keys
 				<div class="command">
 					ssh-copy-id user@host
 				</div>
-				下次进行 ssh 连接的时候，远程主机会先发送一串随机字符串，本地主机使用自己的私钥进行加密发回去，远程主机使用添加到 ~/.ssh/authorized_keys 的公钥进行解密，解密成功则说明认证成功，整个过程不需要密码，直接一条指令：
+				下次进行 ssh 连接的时候，远程主机会先发送一串随机字符串，本地主机使用自己的私钥进行加密发回去，远程主机使用添加到 ~/.ssh/authorized_keys
+				的公钥进行解密，解密成功则说明认证成功，整个过程不需要密码，直接一条指令：
 				<pre><code class="shell">
 ssh user@host
 				</code></pre>
@@ -460,6 +510,60 @@ $ ssh user@host -p port
 				</code></pre>
 			</p>
 		</section>
+		<section>
+			<h2>文件传输</h2>
+			<p>
+				实现远程和本地的文件传输问题。
+				<h3>管道操作符</h3>
+				使用多个命令，tar 命令打包文件，ssh 连接到远程服务器，再通过管道操作符进行传输。
+				<h4>本地服务器 -> 远程服务器</h4>
+				将本地 ~/Downloads 的 file1 和 file2 传输到远程服务器 host 的 ~/Downloads 下。
+				<pre><code class="shell">
+$ cd ~/Downloads && tar -cvz file1 file2 | ssh user@host 'cd ~/Downloads && tar -xvz'
+				</code></pre>
+				<h4>远程服务器 -> 本地服务器</h4>
+				将远程服务器 ~/Downloads 的 file1 和 file2 传输到本地的 ~/Downloads 下。
+				<pre><code class="shell">
+$ ssh user@host 'cd ~/Downloads && tar -cvz file1 file2' | cd ~/Downloads && tar -xzv
+				</code></pre>
+				<h3>rsync</h3>
+				使用 rsync 命令（需要开启 ssh 服务）实现文件<span class="different">同步</span>，一般会带以下几个参数：
+				<ul>
+					<li>v：显示传输信息</li>
+					<li>z：传出前先压缩，传输后进行解压</li>
+					<li>
+						a：archive option，使用该参数同时顶以下 7 个参数
+						<ul>
+							<li>r：recursive，rsync 默认跳过目录，加上该参数表示不跳过目录，进行递归传输</li>
+							<li>l：link，rsync 默认跳过软链接，加上该参数表示不跳过软链接</li>
+							<li>t：time，保持文件最后修改时间不变</li>
+							<li>p：perserve permissions，保持文件权限不变</li>
+							<li>g：group，保持文件所属群组不变</li>
+							<li>o：owner，保持文件所属用户不变</li>
+							<li>D：preserve devices (root only)，保持文件原始信息不变</li>
+						</ul>
+					</li>
+				</ul>
+				其基本使用方法为（由于是使用 ssh，所以远程主机可以直接使用 ~/.ssh/config 的远程主机别名）：
+				<div class="command">
+					rsync [选项] 本地文件路径 [用户@]远程主机:远程文件路径
+				</div>
+				或者
+				<div class="command">
+					rsync [选项] [用户@]远程主机:远程文件路径 本地文件路径
+				</div>
+				<h4>本地服务器 -> 远程服务器</h4>
+				将本地文件 ~/Downloads/file.tar.gz 同步到远程服务器的 ~/Downloads 下。
+				<pre><code class="shell">
+$ rsync -avz ~/Downloads/file.tar.gz host:~/Downloads/
+				</code></pre>
+				<h4>远程服务器 -> 本地服务器</h4>
+				将远程服务器的 ~/Downloads/file.tar.gz 同步到本地 ~/Downloads 下。
+				<pre><code class="shell">
+$ rsync -avz host:~/Downloads/file.tar.gz ~/Downloads
+				</code></pre>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
@@ -470,9 +574,17 @@ $ ssh user@host -p port
 						href="https://www.cnblogs.com/peida/archive/2012/12/24/2831353.html">https://www.cnblogs.com/peida/archive/2012/12/24/2831353.html</a>
 				</div>
 				<div>[3] SSH.COM SSH-KEYGEN - GENERATE A NEW SSH KEY<a
-					href="https://www.ssh.com/ssh/keygen/">https://www.ssh.com/ssh/keygen/</a>
+						href="https://www.ssh.com/ssh/keygen/">https://www.ssh.com/ssh/keygen/</a>
 				</div>
-				<div>[4] 阮一峰 SSH原理 <a href="http://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html">http://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html</a></div>
+				<div>[4] 阮一峰 SSH原理 <a
+						href="http://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html">http://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html</a>
+				</div>
+				<div>[5] 阮一峰 SSH原理与运用（二）：远程操作与端口转发 <a
+						href="http://www.ruanyifeng.com/blog/2011/12/ssh_port_forwarding.html">http://www.ruanyifeng.com/blog/2011/12/ssh_port_forwarding.html</a>
+				</div>
+				<div>[6] Linux命令大全 tar命令 <a href="http://man.linuxde.net/tar">http://man.linuxde.net/tar</a></div>
+				<div>[7] roc rsync 同步的艺术 <a
+						href="https://segmentfault.com/a/1190000015669114">https://segmentfault.com/a/1190000015669114</a></div>
 			</p>
 		</section>
 	</article>
