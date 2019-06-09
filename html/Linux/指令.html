@@ -375,8 +375,9 @@ COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME
 				</ul>
 				如果不指定压缩方式，则只是打包为一个档案，不会进行压缩。通过参数指定压缩方式，选择以下其中一个：
 				<ul>
-					<li>z：gzip</li>
-					<li>j：bzip2</li>
+					<li>不指定：.tar（只归档不压缩）</li>
+					<li>z：.tar.gz（gzip）</li>
+					<li>j：.bz2（bzip2）</li>
 				</ul>
 				一般还会添加以下两个参数：
 				<ul>
@@ -562,6 +563,11 @@ $ rsync -avz ~/Downloads/file.tar.gz host:~/Downloads/
 				<pre><code class="shell">
 $ rsync -avz host:~/Downloads/file.tar.gz ~/Downloads
 				</code></pre>
+				<h3>wget</h3>
+				通过 HTTP/HTTPS/FTP 协议，从网络上下载文件到本地当前目录下。
+				<div class="command">
+					wget url
+				</div>
 			</p>
 		</section>
 		<section class="refer">

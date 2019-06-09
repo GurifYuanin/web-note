@@ -448,6 +448,37 @@ _a = 1;
 			</p>
 		</section>
 		<section>
+			<h2>包</h2>
+			<p>
+				当一个目录下存在 __init__.py 文件时，就标志这个目录为一个包。
+				<h3>模块引用</h3>
+				这个包内可以放置一些 python 文件作为包的模块，然后通过“包名.文件名”来引用，比如存在以下目录结构。
+				<div id="catalogFrame">
+					<img src="../../images/dir.png">package_name<br>
+					<div>
+						<img src="../../images/python.png">__init__.py<br>
+						<img src="../../images/python.png">file_name.py<br>
+					</div>
+				</div>
+				<pre><code class="python">
+# file_name.py
+def function_name():
+	pass
+
+# 使用包
+from package_name.file_name import function_name
+				</code></pre>
+				<h3>执行一遍</h3>
+				当包内的模块首次被使用时，__init__.py 文件会被先执行一遍，所以可以在 __init__.py 文件内进行初始化。
+				<pre><code class="python">
+if __name__ == '__main__':
+	# 执行执行 __init__.py
+else:
+	# 引用模块
+				</code></pre>
+			</p>
+		</section>
+		<section>
 			<h2>运算符</h2>
 			<p>
 				与一般运算符一样，存在以下不同：

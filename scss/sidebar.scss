@@ -876,6 +876,16 @@ body {
         background-color: #222;
         color: #eee;
     }
+    /* 快捷键 */
+    .hotKey {
+        padding: 2px 4px;
+        margin: 2px;
+        font-size: 90%;
+        color: white;
+        background-color: #333;
+        border-radius: 3px;
+        border: dashed 1px #8e8e8e;
+    }
     /* 参考文献链接*/
     .refer {
         a {

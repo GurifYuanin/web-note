@@ -221,6 +221,64 @@ text-overflow: helloff;
 						</div>
 					</div>
 				</p>
+				<h3>text-align & text-align-last</h3>
+				<p>
+					两者都是处理文字的对齐方式，text-align 处理最后一行之外的文字对齐方式，text-align-last 处理最后一行的文字对齐方式。
+					<ul>
+						<li>left：左对齐</li>
+						<li>right：右对齐</li>
+						<li>center：居中对齐</li>
+						<li>justify：两端对齐</li>
+					</ul>
+					<div class="show">
+						<div>
+							<div>
+								<span>text-align：</span>
+								<span><label for="text-align-left-radio">left</label> <input id="text-align-left-radio"
+										class="text-align-radio" name="text-align" type="radio" value="left"></span>
+								<span><label for="text-align-right-radio">right</label> <input id="text-align-right-radio"
+										class="text-align-radio" name="text-align" type="radio" value="right"></span>
+								<span><label for="text-align-center-radio">center</label> <input id="text-align-center-radio"
+										class="text-align-radio" name="text-align" type="radio" value="center"></span>
+								<span><label for="text-align-justify-radio">justify</label> <input id="text-align-justify-radio"
+										class="text-align-radio" checked name="text-align" type="radio" value="justify"></span>
+							</div>
+							<div>
+								<span>text-align-last：</span>
+								<span><label for="text-align-last-left-radio">left</label> <input id="text-align-last-left-radio"
+										class="text-align-last-radio" name="text-align-last" type="radio" value="left"></span>
+								<span><label for="text-align-last-right-radio">right</label> <input id="text-align-last-right-radio"
+										class="text-align-last-radio" name="text-align-last" type="radio" value="right"></span>
+								<span><label for="text-align-last-center-radio">center</label> <input id="text-align-last-center-radio"
+										class="text-align-last-radio" name="text-align-last" type="radio" value="center"></span>
+								<span><label for="text-align-last-justify-radio">justify</label> <input
+										id="text-align-last-justify-radio" class="text-align-last-radio" checked name="text-align-last"
+										type="radio" value="justify"></span>
+							</div>
+						</div>
+						<div id="text-align-container"
+							style="text-align: justify; text-align-last: justify; border: dotted 1px gray;">
+							一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十
+						</div>
+						<script>
+							(function () {
+								var textAlignContainerEl = document.getElementById('text-align-container');
+								var textAlignRadioEls = document.getElementsByClassName('text-align-radio');
+								var textAlignLastRadioEls = document.getElementsByClassName('text-align-last-radio');
+								for (var i = 0; i < textAlignRadioEls.length; i++) {
+									textAlignRadioEls[i].onchange = function () {
+										textAlignContainerEl.style.textAlign = this.value;
+									}
+								}
+								for (var i = 0; i < textAlignLastRadioEls.length; i++) {
+									textAlignLastRadioEls[i].onchange = function () {
+										textAlignContainerEl.style.textAlignLast = this.value;
+									}
+								}
+							})();
+						</script>
+					</div>
+				</p>
 			</p>
 		</section>
 		<section>

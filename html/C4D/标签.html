@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/jquery-3.2.1-compressed.js"></script>
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+  <title>标签</title>
+</head>
+
+<body>
+  <aside id="sidebar">
+    <section id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </section>
+  </aside>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <article id="container">
+    <hgroup>
+      <h1 id="title">标签</h1>
+    </hgroup>
+    <section>
+      <h2>C4D标签</h2>
+      <p>
+        <h3>摄像机矫正</h3>
+        <div>
+          <span class="itemName">作用对象：</span>
+          <span class="itemValue">摄像机。</span>
+        </div>
+        <div>
+          <span class="itemName">作用：</span>
+          <span class="itemValue">通过参考图像矫正三维空间的 xyz 轴方向。</span>
+        </div>
+        其基本使用方法为：
+        <ol>
+          <li>选择“图像”，导入一张参考图像</li>
+          <li>选择“矫正”，添加线</li>
+          <li>编辑线的位置，使其对准参考图片里的 xyz 轴</li>
+          <li>
+            按住<span class="hotKey">shift</span>点击线条，线条依次变色为红、绿、蓝
+            <ul>
+              <li>红色：表示该线条代表 x 轴</li>
+              <li>绿色：表示该线条代表 y 轴</li>
+              <li>蓝色：表示该线条代表 z 轴</li>
+            </ul>
+          </li>
+        </ol>
+        当矫正状态变成绿色后，表示矫正成功，否则重复添加线和编辑线的工作。
+        <h3>保护</h3>
+        <div>
+          <span class="itemName">作用对象：</span>
+          <span class="itemValue">任意</span>
+        </div>
+        <div>
+          <span class="itemName">作用：</span>
+          <span class="itemValue">锁定物体的位置、缩放、选装属性</span>
+        </div>
+        <h3>合成</h3>
+        <div>
+          <span class="itemName">作用对象：</span>
+          <span class="itemValue">任意</span>
+        </div>
+        <div>
+          <span class="itemName">作用：</span>
+          <span class="itemValue">用于控制物体的一些渲染开关，比如投影、折射、反射</span>
+        </div>
+        <ul>
+          <li>摄像机可见：取消勾选后物体本身不会被渲染出来（但不影响其他比如投影的渲染）</li>
+          <li>
+            投影：
+            <ul>
+              <li>投射投影：取消勾选后自身不会产生投影</li>
+              <li>接收投影：取消勾选后自身不会接收投影</li>
+            </ul>
+          </li>
+          <li>合成背景：</li>
+        </ul>
+        <h3>平滑着色</h3>
+        添加后，物体每三个点之间（三角形）进行平滑渐变着色。如果不添加或者平滑着色角度为 0 ，则每个面着色为纯色。
+      </p>
+    </section>
+    <section>
+      <h2>模拟</h2>
+      <p>
+        模拟三维空间的物体，使物体受物理因素（重力、风力）影响。
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 小N影视特效学习站 在C4D软件学习中，我们需要知道这些常用标签的作用 <a
+            href="https://baijiahao.baidu.com/s?id=1619613158480400789">https://baijiahao.baidu.com/s?id=1619613158480400789</a>
+        </div>
+      </p>
+    </section>
+  </article>
+</body>
+
+</html>

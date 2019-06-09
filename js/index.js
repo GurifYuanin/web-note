@@ -52,10 +52,11 @@ $(function () {
     '算法',
     'Linux',
     'AfterEffect',
+    'C4D',
     '其他'
   ]; // 目录分类
   const items = [
-    ['DOM', 'meta标签', 'href和src', 'link', 'HTML语义化', 'HTML5', '表单元素', 'canvas', 'svg', 'cookie'],
+    ['DOM', 'meta标签', 'href和src', 'link', 'HTML语义化', 'HTML5', '表单元素', 'canvas', 'svg', 'cookie', 'PWA', 'Web Component'],
     ['选择器', '盒式模型', '元素种类', '元素定位', '元素居中', '伪类伪元素', '格式化上下文', 'CSS Hack', 'CSS3', 'CSS怪异现象', '颜色和长度', '百分比'],
     ['数据类型', '数组字符串与对象', '循环', '作用域链', '原型链', '闭包', '事件', '异常', '复制粘贴', 'module', 'Javascript进程', 'RegExp', 'XMLHttpRequest', 'Class', 'JSONP', 'this', 'jquery', 'promise', 'Generator', 'async', 'Typescript'],
     ['three', 'geometry', 'material', 'object', 'scene', 'camera', 'light'],
@@ -71,7 +72,8 @@ $(function () {
     ['树和图', '排序', '队列和栈', '算法规范'],
     ['指令', '目录结构'],
     ['effect'],
-    ['路径匹配', '浏览器渲染', '设计策略', '头疼的兼容', '命名规范', '字符编码', 'bat', '软件设计师', 'pwa']
+    ['对象', '样条', '纹理', '标签', '模拟', '变形器', '造型'],
+    ['路径匹配', '浏览器渲染', '设计策略', '头疼的兼容', '命名规范', '字符编码', 'bat', '软件设计师', '截屏']
   ];
   // 插入侧栏
   let sectionEls = '';
