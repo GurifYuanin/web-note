@@ -488,6 +488,66 @@ let instance = new a();
 				</p>
 			</p>
 		</section>
+		<section>
+			<h2>内置结构</h2>
+			<p>
+				<h3>keyof</h3>
+				<div class="tip">
+					约定俗成：K -> key，表示键名；V -> value，表示键值；T -> type，表示某个类型。From typescript2.1 的特性<a
+						href="https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html">https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html</a>。
+				</div>
+				keyof T 用于枚举出指定对象的 key。
+				<pre><code class="typescript">
+interface Foo {
+	a: string;
+	b: number;
+}
+keyof Foo; // => 'a' | 'b'
+keyof Foo[]; // => "length" | "toString" | "toLocaleString" | "pop" | "push" | "concat" | "join" | "reverse" | "shift" | "slice" |
+"sort" | "splice" | "unshift" | "indexOf" | "lastIndexOf" | ... 13 more ... | "values"
+keyof 'abc'; // => "toString" | "charAt" | "charCodeAt" | "concat" | "indexOf" | "lastIndexOf" | "localeCompare" | "match" |
+"replace" | "search" | "slice" | "split" | "substring" | "toLowerCase" | ... 25 more ... | "sup"
+				</code></pre>
+				<h3>Partial</h3>
+				Partial&lt;T&gt; 用于表示指定对象的任意部分内容，相当于对象内的所有属性都变为可选属性。
+				<pre><code class="typescript">
+type Foo1 = Partial&lt;Foo&gt;
+/*
+=>  {
+	a?: string | undefined;
+	b?: number | undefined;
+}
+*/
+				</code></pre>
+				<h3>Pick</h3>
+				Pick&lt;T, K&gt; 用于表示从指定对象取出指定部分内容，相当于取出对象的子集。
+				<pre><code class="typescript">
+type Foo2 = Pick&lt;Foo, 'a'&gt;
+/*
+=> {
+	a: string;
+}
+*/
+				</code></pre>
+				<h3>Record</h3>
+				Record&lt;K, T&gt; 用于表示用 K 作为对象的键名，用 T 作为所有键值的类型，生成一个类型声明对象。
+				<pre><code class="typescript">
+type Foo3 = Record<'a' | 'b', 123>;
+/*
+=> {
+	a: 123;
+	b: 123;
+}
+*/
+type Foo4 = Record&lt;string, number&gt;;
+/*
+=> {
+	[k: string]: number;
+}
+*/
+				</code></pre>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
