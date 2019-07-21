@@ -34,7 +34,7 @@
     "lodash": "^4.17.10",
     "orchestrator": "^0.3.8"
   },
-  "script": {
+  "scripts": {
     "commit": "git-cz",
     "dev": "gulp",
     "build": "gulp build"

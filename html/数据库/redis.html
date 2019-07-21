@@ -117,21 +117,14 @@ $ redis-cli [-h host] [-p port] [-a password]
 127.0.0.1:6379> QUIT
 # 断开指定客户端连接
 127.0.0.1:6379> CLIENT KILL ip:port
-        </code></pre>
-                <h3>数据保存到磁盘</h3>
-                <pre><code class="shell">
-# 同步方式保存数据到磁盘上
-127.0.0.1:6379> SAVE
-# 异步方式保存数据到磁盘上
-127.0.0.1:6379> BGSAVE
-        </code></pre>
+                </code></pre>
                 <h3>时间</h3>
                 <pre><code class="shell">
 # 获得当前时间戳
 127.0.0.1:6379> TIME
 # 获得上次数据保存到磁盘的时间戳
 127.0.0.1:6379> LASTSAVE
-        </code></pre>
+                </code></pre>
             </p>
         </section>
         <section>
@@ -418,6 +411,22 @@ $ redis-server --maxclients 10000
             </p>
         </section>
         <section>
+            <h2>持久化</h2>
+            <p>
+                将内存的数据写到磁盘里，防止 redis 机器宕机时数据全部丢失，从而导致请求全部打到 db 上。
+                <h3>RDB</h3>
+                fork 一个子进程一次性将数据写入到磁盘。
+                <pre><code class="shell">
+# 同步方式保存数据到磁盘上
+127.0.0.1:6379> SAVE
+# 异步方式保存数据到磁盘上
+127.0.0.1:6379> BGSAVE
+                </code></pre>
+                <h3>AOF</h3>
+                不断地将写请求记录到 AOF buff，再将 AOF buff 的数据写到磁盘上。
+            </p>
+        </section>
+        <section>
             <h2>底层实现</h2>
             <p>
                 Redis 使用 C 语言来实现，并且使用不同数据结构实现了 redis 内的数据类型。
@@ -434,6 +443,17 @@ struct sdshdr {
                 <figure>
                     <img src="../../images/redis_sds.jpg" alt="">
                 </figure>
+            </p>
+        </section>
+        <section>
+            <h2>注意事项</h2>
+            <p>
+                <h3>减少大 Key</h3>
+                大 Key 就是指整个 kv 大小超过 1M。因为 Redis 是单线程，其机制为一个大的 while 循环：
+                <ul>
+                    <li>文件事件：连接请求等</li>
+                    <li>时间事件：定时任务等</li>
+                </ul>
             </p>
         </section>
         <section class="refer">
