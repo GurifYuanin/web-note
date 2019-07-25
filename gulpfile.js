@@ -11,7 +11,8 @@ const sass = require('gulp-sass'), // sass 预编译
     minifycss = require('gulp-minify-css'); // css 压缩
 
 const uglify = require('gulp-uglify-es').default, // js 压缩
-    babel = require('gulp-babel'); // js 编译
+    ts = require('gulp-typescript');
+const tsProject = ts.createProject('tsconfig.json');
 
 const gutil = require('gulp-util');
 
@@ -41,24 +42,23 @@ function watchSass(callback) {
 
 // js 编译和压缩
 function compileJavascript(callback) {
-    src(['js/lib/*.js', 'js/index.js'])
-        .pipe(concat('index.min.js'))
-        .pipe(babel({
-            presets: ['@babel/env']
-        }))
-        .pipe(uglify({
-            mangle: true, // 是否修改变量名
-            compress: true // 是否完全压缩
-        }))
-        .on('error', function (err) {
-            gutil.log(gutil.colors.red('[Error]'), err.toString());
-        })
-        .pipe(dest('js'));
+    tsProject.src()
+             .pipe(tsProject())
+             .js
+             .pipe(concat('index.min.js'))
+             .pipe(uglify({
+                mangle: true, // 是否修改变量名
+                compress: true // 是否完全压缩
+             }))
+             .on('error', function (err) {
+                gutil.log(gutil.colors.red('[Error]'), err.toString());
+             })
+             .pipe(dest('js'));
     callback();
 }
 
 function watchJavascript(callback) {
-    watch('js/index.js', compileJavascript);
+    watch('js/index.ts', compileJavascript);
     callback();
 }
 

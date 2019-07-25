@@ -1,3 +1,8 @@
+import './lib/init';
+import $ from 'jquery';
+import Notify from './lib/notify';
+import * as config from './lib/config';
+
 $(function () {
   // 弹窗提示
   const notify = new Notify();
@@ -21,7 +26,7 @@ $(function () {
   // 添加 icon
   const icon = document.createElement('link');
   icon.setAttribute('rel', 'shortcut icon');
-  icon.setAttribute('href', IMAGES_DIR + 'web-note.ico');
+  icon.setAttribute('href', config.IMAGES_DIR + 'web-note.ico');
   icon.setAttribute('type', 'image/vnd.microsoft.icon');
   document.head.appendChild(icon);
 
@@ -81,8 +86,8 @@ $(function () {
   for (let i = 0; i < category.length; i++) {
     const isArrowDownCategory = category[i].includes(currentTitle);
     const categoryImageSrc = isArrowDownCategory ?
-      (isBright ? arrowUpBrightImage : arrowUpDarkImage) :
-      (isBright ? arrowDownBrightImage : arrowDownDarkImage);
+      (isBright ? config.arrowUpBrightImage : config.arrowUpDarkImage) :
+      (isBright ? config.arrowDownBrightImage : config.arrowDownDarkImage);
     sectionEls += wrapByTag(
       [
         wrapByTag(
@@ -294,8 +299,8 @@ $(function () {
       const imageName = getFileName(img.attr('src'));
       const isArrowDownCategory = imageName === arrowDownBrightFileName || imageName === arrowDownDarkFileName;
       img.attr('src', isArrowDownCategory ?
-        (isBright ? arrowUpBrightImage : arrowUpDarkImage) :
-        (isBright ? arrowDownBrightImage : arrowDownDarkImage));
+        (isBright ? config.arrowUpBrightImage : config.arrowUpDarkImage) :
+        (isBright ? config.arrowDownBrightImage : config.arrowDownDarkImage));
       that.next().slideToggle('slow');
     });
   });
