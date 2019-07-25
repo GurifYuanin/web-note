@@ -18,7 +18,7 @@
   "devDependencies": {
     "@babel/core": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
-    "commitizen": "^3.1.1",
+    "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^2.1.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^5.0.0",
@@ -31,7 +31,7 @@
     "gulp-uglify-es": "^1.0.4",
     "gulp-util": "^3.0.8",
     "gulp-wrap-commonjs": "^0.1.14",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.15",
     "orchestrator": "^0.3.8"
   },
   "scripts": {

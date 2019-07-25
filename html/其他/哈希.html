@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/jquery-3.2.1-compressed.js"></script>
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+  <title>哈希</title>
+</head>
+<body>
+  <aside id="sidebar">
+    <section id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </section>
+  </aside>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <article id="container">
+    <hgroup>
+      <h1 id="title">哈希</h1>
+    </hgroup>
+    <section>
+      <h2>哈希表</h2>
+      <p>
+        如果当前有一堆数据，比如个人信息，个人信息的数据结构为：
+        <pre><code class="typescript">
+class Person {
+  name: string;
+  age: number;
+  gender: number;
+}
+const people = [
+  {
+    name: '小明',
+    age: 18,
+    gender: 0,
+  },
+  {
+    name: '张三',
+    age: 19,
+    age: 1,
+  },
+  // ...
+]
+        </code></pre>
+        当前我们存储了 1000 个人的数据（people），这时候来了一个需求，想要找出名字（name）为”小明“的人的信息，那么该如何存储与查找？哈希表就是使用一个<span class="different">哈希函数</span>，将这 1000 个人的某个字段作为 key 进行计算，比如 Person.name ，计算后得到 value，再将 key 和 value 保存到<span class="different">哈希表</span>中。
+        <pre><code class="typescript">
+function hashFun(name: string): number {
+  // ...
+}
+const HASHTABLE_MAX_SIZE = 1000; // 哈希表大小
+const hashTable = new Array(HASHTABLE_MAX_SIZE);
+for (const person of people) {
+  const key = hashFun(person.name);
+  hashTable[key] = person;
+}
+        </code></pre>
+        此时如果要找到小明，只需要进行以下运算：
+        <pre><code class="typescript">
+const key = hashFun('小明');
+const xiaoming = hashTable[key];
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>闭哈希存储</h2>
+      <p>
+        哈希表存在以下问题：
+        <ul>
+          <li>哈希表的关键在于哈希函数如何计算，当面对不同的值，比如"小明"和"小红"，其计算出来的 key 可能<span class="different">冲突</span>，也就是 key 相同</li>
+          <li>哈希表不可能无限大，即常量 HASHTABLE_MAX_SIZE 大小是有限的，计算出来的 key 得落在哈希表上才能存储</li>
+        </ul>
+        冲突时避免不了的，当 key 冲突时，就得想出解决冲突的方案。
+        <h3>将冲突存储在另一个位置上</h3>
+        当插入一个数据时，比如加入了"小王"，而计算出来的 key 已经有人占用了，那么就将"小王"放在另一个 key 上，比如将 key++，得到新的位置，如果还冲突，那么继续自增 1 直到找到空位置。查找时也遵循同样的策略。
+        <pre><code class="typescript">
+for (const person of people) {
+  // 检查哈希表是否还有空位
+  const occupiedSlotNumber = hashTable.filter(Boolean);
+  if (occupiedSlotNumber === hashTable.length) {
+    throw new Error('哈希表已存满，无法再保存数据');
+  }
+
+  // 进行插入数据
+  let key = hashFun(person.name);
+  while (true) {
+    if (!hashTable[key]) {
+      hashTable[key] = person;
+      break;
+    } else {
+      key++;
+    }
+  }
+}
+        </code></pre>
+        并不总是选择 +1 的策略，可以视具体情况而定。
+        <h3>哈希桶</h3>
+        <span class="different">哈希桶</span>（hash bucket）是指将哈希表分为若干部分，每部分当做一个桶，同时创建一个<span class="different">溢出桶</span>（overflow bucket），如果某个哈希桶装满了就把溢出数据丢这里。
+        <pre><code class="typescript">
+const HASHTABLE_MAX_SIZE = 10; // 哈希表大小为 10
+const BUCKET_NUMBER = 5; // 哈希桶数量为 5，即 0 ~ 4 号桶
+const BUCKET_SIZE = HASHTABLE_MAX_SIZE / BUCKET_NUMBER; // 那么哈希桶的大小就是哈希表大小除以哈希桶数量
+const OVERFLOW_BUCKET_SIZE = 5; // 溢出桶的大小为 5
+
+// 用 name 的长度进行计算不是个好方法，这里仅做示范
+// 对桶数量进行取模后得到 [0, 4] 的整数，决定这个数据放到哪个桶上
+function hashFun(name: string): number {
+  return name.length % BUCKET_NUMBER;
+}
+
+const overflowBucket = new Array(OVERFLOW_BUCKET_SIZE);
+const hashTable = new Array(HASHTABLE_MAX_SIZE);
+
+for (const person of people) {
+  const key = hashFun(person.name);
+  let i = 0;
+  // 先往哈希桶里装数据
+  for (; i < BUCKET_SIZE; i++, key++) {
+    if (!hashTable[key]) {
+      hashTable[key] = person;
+      break;
+    }
+  }
+  // 如果哈希桶已经装满，则向溢出桶装数据
+  if (i === BUCKET_SIZE) {
+    for (let j = 0; i < overflowBucket.length; j++) {
+      if (!overflowBucket[j]) {
+        overflowBucket[j] = person;
+      }
+    }
+  }
+}
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>开哈希存储</h2>
+      <p>
+        当 key 冲突时，在同一个 key 上使用链表结构存储多个数据。
+        <pre><code class="typescript">
+for (const person of people) {
+  const key = hashFun(person.name);
+  if (hashTable[key]) {
+    hashTable[key].push(person);
+  } else {
+    hashTable[key] = [person];
+  }
+}
+        </code></pre>
+        这里以数组暂代链表，这时候如果需要查找"小明"，会先执行一次哈希函数，再沿着链表一个个查找小明。
+        <pre><code class="typescript">
+const key = hashFun('小明');
+if (hashTable[key]) {
+  for (const person of hashTable[key]) {
+    if (person.name === '小明') {
+      const xiaoming = person;
+      break;
+    }
+  }
+}
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>哈希桶</h2>
+      <p></p>
+    </section>
+    <section>
+      <h2>一致性哈希</h2>
+      <p></p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 10.5. Bucket Hashing <a href="https://opendsa-server.cs.vt.edu/ODSA/Books/CS3/html/BucketHash.html">https://opendsa-server.cs.vt.edu/ODSA/Books/CS3/html/BucketHash.html</a></div>
+      </p>
+    </section>
+  </article>
+</body>
+</html>

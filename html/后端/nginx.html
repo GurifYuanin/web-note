@@ -83,6 +83,8 @@ http {
   }
 }
         </code></pre>
+        比如当访问 /css/index.css 时，实际访问的是本地路径 /www/static/css/index.css。
+        <h3>types</h3>
         如果不加 include 和 default_type，nginx 会把所有资源当做 text，浏览器遇到 css 等资源就不会去解析。其中，mime.types 文件为 nginx 配置目录下自带的文件：
         <pre><code class="config">
 types {
@@ -183,6 +185,19 @@ types {
 }
 
         </code></pre>
+        <h3>location 用法</h3>
+        location 块用于匹配 url 的路径部分，其格式为：
+        <pre><code class="nginx">
+location 前缀 内容 {
+  # ...
+}
+        </code></pre>
+        <ul>
+          <li>当不带前缀时，表示匹配以内容开头的路径，比如内容为 /www，那么将匹配 /www/index.html，/www/login，但不匹配 /abc/index.html</li>
+          <li>当带前缀<span class="different"> = </span>时，表示精准匹配，路径必须和内容完全一致才会匹配</li>
+          <li>当带前缀<span class="different"> ~ </span>时，表示大小写不敏感的正则匹配</li>
+          <li>当带前缀<span class="different"> ~* </span>时，表示大小写不敏感的正则匹配</li>
+        </ul>
       </p>
     </section>
     <section>
@@ -244,16 +259,21 @@ more_clear_headers 'X-Frame-Options';
 fastcgi_hide_header 'X-Frame-Options';
         </code></pre>
         <h3>代理多个来源</h3>
-        使用 server.server_name 配置项可以处理不同来源的请求，nginx 会在处理一个请求的时候，先取出请求头 Host，与 server 的 server_name 进行比较，根据优先级决定给哪个 server
+        nginx 可以在一个端口上启动多个 server，然后使用 server.server_name 来处理不同来源的请求（比如多个域名解析到同一个端口），nginx 会在处理一个请求的时候，先取出请求头 Host，与 server 的 server_name 进行比较，根据优先级决定给哪个 server
         来处理。
         <pre><code class="nginx">
 http {
   server {
     listen 80;
-    server_name www.example.com *.example.com www.example.*;
-    location / {
-      # ...
-    }
+    server_name www.example.com;
+  }
+  server {
+    listen 80;
+    server_name *.example.com;
+  }
+  server {
+    listen 80;
+    server_name www.example.*;
   }
 }
         </code></pre>
@@ -262,6 +282,82 @@ http {
           server_name 支持正则，匹配优先级最低。
         </div>
         如果没匹配到任意一个 server，那么会选择 listen 后带 default 的，如果还没有，那么会选择第一个 server。
+        <h3>server_names_max_hash_size</h3>
+        nginx 使用散列表来存储 server_name，该参数用于设置散列表的大小，默认为 512 ，哈希表相关参见<a href="../其他/哈希.html">哈希</a>。
+        <h3>server_names_hash_bucket_size</h3>
+        该参数用于设置散列桶的大小，默认值取决于 CPU 缓存行的大小<sup>[2]</sup>。
+      </p>
+    </section>
+    <section>
+      <h2>Web 开发配置项</h2>
+      <p>
+        <h3>index</h3>
+        index 用于设置首页默认文件，当访问路径为 / 时，会尝试返回该文件，默认为 index.html。
+        <pre><code class="nginx">
+http {
+  server {
+    location / {
+      index index.html index.php;
+    }
+  }
+}
+        </code></pre>
+        <div class="tip">
+          index 可在 http、server、location 配置块内使用。
+        </div>
+        <h3>try_files</h3>
+        try_files 表示当接收请求的时候，按照该参数进行逐个尝试，直到找到有效文件。
+        <pre><code class="nginx">
+http {
+  server {
+    location / {
+      try_files $uri $uri/ index.html
+    }
+  }
+}
+        </code></pre>
+        $uri 变量表示请求路径，比如来了个 /login 请求，那么会先访问 /login，如果找不到文件会再请求 /login/，如果还是找不到那么会请求 index.html。
+        <h3>client_max_body_size：限制上传</h3>
+        nginx 会检查 Content-Length（HTTP 包 body 的长度）的大小，如果这个请求头的大小超过 client_max_body_size，那么就不接收请求并返回一个 413（Request entity too large）的响应，默认值为 1m。
+        <pre><code class="nginx">
+http {
+  server {
+    location / {
+      client_max_body_size 1m;
+    }
+  }
+}
+        </code></pre>
+        <div class="tip">
+          可在 http、server、location 配置块内使用。
+        </div>
+        <h3>限速</h3>
+        limit_rate n 表示限制每秒传输 n 个字节，默认为 0，表示不限速。
+        <br>
+        limit_rate_after m 表示在发送长度超过 m 的数据后才限速。
+        <pre><code class="nginx">
+http {
+  server {
+    location / {
+      limit_rate 1m;
+      limit_rate_after 1m;
+    }
+  }
+}
+        </code></pre>
+        <div class="tip">
+            limit_rate、limit_rate_afeter 可在 http、server、location、if 配置块内使用。
+        </div>
+        <h3>if_modified_since</h3>
+        客户端会对文件进行缓存，下次请求某资源时会带上 If-Modified-Since 请求头表示上次获得的资源的最后修改时间，nginx 会对此进行不同策略：
+        <ul>
+          <li>off：忽视 If-Modified-Since 因而总是返回完整的资源</li>
+          <li>exact：（默认）检查 If-Modified-Since 和本地文件的最后修改时间，如果完全一致则返回 304 。</li>
+          <li>before：检查 If-Modified-Since 和本地文件的最后修改时间，如果早于本地文件，才会返回资源，否则返回 304 。</li>
+        </ul>
+        <div class="tip">
+          if_modified_since 配置项可在 http、server、location 配置块内使用。
+        </div>
       </p>
     </section>
     <section>
@@ -294,14 +390,37 @@ worker_cpu_affinity CPU掩码
     <section>
       <h2>负载均衡</h2>
       <p>
-        <h3>event.accept_mutex</h3>
+        <h3>events.accept_mutex</h3>
         accept_mutex 是 nginx 的负载均衡锁，默认为打开（on），以保证连接 worker 连接负载均衡，设置为关闭（off）后无法保证负载均衡。
-        <h3>event.accept_mutex_delay</h3>
+        <h3>events.accept_mutex_delay</h3>
         当一个 worker 试图去获得 accept 锁但没得到，那么将等待 accept_mutex_delay 毫秒后才会再次请求，默认为 500 毫秒。
-        <h3>event.lock_file</h3>
+        <h3>events.lock_file</h3>
         当编译 nginx 的程序、操作系统等原因导致 nginx 不支持原子锁，nginx 会采用文件来实现原子锁，该配置项就是指定 lock 文件的路径。
         <h3>events.worker_connections</h3>
         每个 nginx worker 进程可同时处理的最大连接数。
+        <pre><code class="nginx">
+events {
+  worker_connections 2048;
+}
+        </code></pre>
+        <h3>upstream</h3>
+        upstream 用来规定一组服务器，nginx 可以代理转发到这些服务器上并且保持负载均衡。
+        <pre><code class="nginx">
+upstream myserver {
+  iphash;
+  server www.example1.com;
+  server www.example2.com;
+  server www.example3.com;
+}
+server {
+  http {
+    location / {
+      proxy_pass http://myserver;
+    }
+  }
+}
+        </code></pre>
+        这里的 server 既可以是域名，也可以是 IP，unix 句柄。iphash 表示先将客户端的 ip 进行计算得到一个 key（数值），再将 key 与服务器数量取模，保证一个客户端总是选择同一台服务器。
       </p>
     </section>
     <section>
@@ -309,6 +428,37 @@ worker_cpu_affinity CPU掩码
       <p>
         <h3>listen xxx deferred</h3>
         listen 后追加 deferred 参数，表示 worker 和客户端即使完成了 TCP 三次握手也不会马上建立连接，只有客户端发来第一个数据时才会唤醒 worker 处理这里连接。
+        <h3>sendfile</h3>
+        启用 linux 的 sendfile 系统来发送文件，默认为关闭。
+        <pre><code class="nginx">
+http {
+  sendfile on;
+}
+        </code></pre>
+        <div class="tip">
+          sendfile 配置项可在 http、server、location 配置块内使用。
+        </div>
+        <h3>文件缓存</h3>
+        该配置项表示是否打开文件缓存，文件缓存可以减少磁盘的操作。
+        <ul>
+          <li>off：默认，关闭缓存</li>
+          <li>
+            max=N：表示最最多缓存 N 个文件，当超出时将采取最近最少使用算法逐出缓存。当选择缓存时，还可以添加以下可选项：
+            <ul>
+              <li>inactive=time：表示当 time 时间内缓存未被用到，则自动逐出，默认为 60s。</li>
+            </ul>
+          </li>
+        </ul>
+        开启文件缓存后，再配合 open_file_cache_valid 配置项，该配置项用于规定多久检查一次缓存是否有效，默认为 60s。
+        <pre><code class="nginx">
+http {
+  open_file_cache max=100 inactive=60s;
+  open_file_cache_valid 60s;
+}
+        </code></pre>
+        <div class="tip">
+           open_file_cache、open_file_cache_valid 配置项可在 http、server、location 配置块内使用。
+        </div>
       </p>
     </section>
     <section class="refer">
@@ -317,6 +467,8 @@ worker_cpu_affinity CPU掩码
         <div>[1] github more_clear_headers <a
             href="https://github.com/openresty/headers-more-nginx-module">https://github.com/openresty/headers-more-nginx-module</a>
         </div>
+        <div>[2] Sever Names <a href="http://nginx.org/en/docs/http/server_names.html">http://nginx.org/en/docs/http/server_names.html</a></div>
+        <div>[3] 陶辉 《深入理解 Nginx 模块开发与架构解析》</div>
       </p>
     </section>
   </article>
