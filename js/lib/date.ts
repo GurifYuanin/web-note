@@ -1,5 +1,5 @@
 // 格式化日期为 yyyy-mm-dd hh:mm:ss
-function formatDate(date) {
+export function formatDate(date) {
   date = date || new Date();
   if (date instanceof Date) {
     // 如果是 Date 对象

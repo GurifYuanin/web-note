@@ -2,7 +2,10 @@ import './lib/init';
 import $ from 'jquery';
 import Notify from './lib/notify';
 import * as config from './lib/config';
-
+import { wrapByTag, filterRepeatArray, getFileName, scrollTo, isPhone, getViewport, filterName, flatArray, copy } from './lib/util';
+import { formatDate } from './lib/date';
+import path from './lib/path';
+import { getChineseName } from './lib/name';
 $(function () {
   // 弹窗提示
   const notify = new Notify();
@@ -107,7 +110,7 @@ $(function () {
         wrapByTag(items[i][j],
           'a',
           {
-            href: path.resolve(HTML_DIR, category[i], items[i][j] + '.html')
+            href: path.resolve(config.HTML_DIR, category[i], items[i][j] + '.html')
           }),
         'div',
         {
@@ -138,7 +141,7 @@ $(function () {
   let selectedSearchItemsIndex = 0; // 高亮选中的搜索条目
 
   // 根据关键字获得搜索结果列表
-  function getSearchResult(keyword) {
+  function getSearchResult(keyword: string) {
     const wrappedElements = []; // html 标签包裹后的条目
     const matchRates = []; // 匹配率，非负数数组，越接近 0 表示匹配率越高
     // 查找匹配的条目
@@ -168,7 +171,7 @@ $(function () {
               ],
               'a',
               {
-                href: path.resolve(HTML_DIR, category[i], el + '.html'),
+                href: path.resolve(config.HTML_DIR, category[i], el + '.html'),
                 target: '_blank'
               }
             ),
@@ -199,7 +202,7 @@ $(function () {
 
   $searchResult.css('display', 'none');
   $searchInput.keyup(function (event) {
-    const keyword = $searchInput.val() || '';
+    const keyword = $searchInput.val().toString() || '';
     let searchResult = keyword.trim() === '' ? '' : getSearchResult(keyword);
     if (searchResult.trim() === '') {
       // 没有键入或者搜索结果为空 搜索结果框隐藏
@@ -297,7 +300,7 @@ $(function () {
       img = that.children();
     that.click(function () {
       const imageName = getFileName(img.attr('src'));
-      const isArrowDownCategory = imageName === arrowDownBrightFileName || imageName === arrowDownDarkFileName;
+      const isArrowDownCategory = imageName === config.arrowDownBrightFileName || imageName === config.arrowDownDarkFileName;
       img.attr('src', isArrowDownCategory ?
         (isBright ? config.arrowUpBrightImage : config.arrowUpDarkImage) :
         (isBright ? config.arrowDownBrightImage : config.arrowDownDarkImage));
@@ -327,7 +330,7 @@ $(function () {
     }, 500);
   }
 
-  $title.after(`<div class="lastModify"><img style="height: 25px;" src="${IMAGES_DIR + 'modify.svg'}"></div>
+  $title.after(`<div class="lastModify"><img style="height: 25px;" src="${config.IMAGES_DIR + 'modify.svg'}"></div>
     <div class="lastModify">共  ${$container.text().replace(/[\s\r\n]/g, '').length} 字</div>
     <div class="lastModify">${document.lastModified}</div>
     <div class="switch">
@@ -363,11 +366,11 @@ $(function () {
   const $itemBlockImg = $('#sidebar h3 img');
   const $codeCopy = $('.codeCopy');
   function toggleTheme() {
-    $theme.attr('href', isBright ? darkCss : brightCss);
-    $codeStyle.attr('href', isBright ? brightCodeStyle : darkCodeStyle);
+    $theme.attr('href', isBright ? config.darkCss : config.brightCss);
+    $codeStyle.attr('href', isBright ? config.brightCodeStyle : config.darkCodeStyle);
     // $line.css('stroke', isBright ? '#fff' : '#000');
-    $hideCatalog.attr('src', isBright ? catalogDarkImage : catalogBrightImage);
-    $itemBlockImg.each(function (i, el) {
+    $hideCatalog.attr('src', isBright ? config.catalogDarkImage : config.catalogBrightImage);
+    $itemBlockImg.each(function (i, el: HTMLImageElement) {
       const { src } = el;
       el.src = isBright ?
         src.substring(0, src.lastIndexOf('.')) + '_dark.png' :
@@ -383,14 +386,14 @@ $(function () {
   //     toggleTheme();
   // }
 
-  function widthAndMargin(start, end, piece, time) {
+  function widthAndMargin(start: number, end: number, piece: number, time: number) {
     // width: start% -> end%
     // margin: 0 4% -> 0 5%
     // piece: 动画分段数量（关键帧数量）
     // time：动画时长（s，秒）
     let valInc = (end - start) / piece;
     let timeInc = time * 1000 / piece;
-    let widthStart, widthInc;
+    let widthStart: number, widthInc: number;
     if (start < end) {
       widthStart = 4;
       widthInc = 1 / piece;
@@ -420,7 +423,7 @@ $(function () {
     }, time * 1000);
   }
   // 折叠目录
-  function hideCatalog(cb) {
+  function hideCatalog(cb?: CallableFunction) {
     $sidebar.animate({ // 侧栏隐藏
       'width': '0',
       'padding': '0'
@@ -455,7 +458,7 @@ $(function () {
   }
   $hideCatalog.attr({
     'title': '点击隐藏侧栏',
-    'src': isBright ? catalogBrightImage : catalogDarkImage
+    'src': isBright ? config.catalogBrightImage : config.catalogDarkImage
   });
   $showCatalog.attr('title', '点击显示侧栏');
   $hideCatalog.click(hideCatalog);
@@ -487,7 +490,7 @@ $(function () {
     }
   });
 
-  let scrollTimer = null;
+  let scrollTimer: NodeJS.Timeout | null = null;
   let lastBodyTop = document.body.getBoundingClientRect().top;
   window.addEventListener('scroll', function (event) {
     if (isPhone()) {
@@ -570,7 +573,7 @@ $(function () {
   let itemInterval = 50; // 导航项动画间隔
   let blockInterval = 100; // 块动画间隔
   // 展开子标题导航
-  function showBlock(event) {
+  function showBlock(event: MouseEvent) {
     let time = 0;
     // 块消失
     for (let i = $subTitleBlock.length; i >= 0; i-- , time += blockInterval) {
@@ -624,7 +627,7 @@ $(function () {
     preCategory = '',
     nextCategory = '';
 
-  const allItems = flatArray(items);
+  const allItems = <unknown> flatArray(items) as string[];
   const index = allItems.includes(currentTitle) ? allItems.indexOf(currentTitle) : 0;
   if (index !== 0) {
     preTitle = allItems[index - 1];
@@ -645,7 +648,7 @@ $(function () {
     {
       href: preTitle === '没有了' ?
         'javascript:void(0)' :
-        path.resolve(HTML_DIR, preCategory, preTitle + '.html')
+        path.resolve(config.HTML_DIR, preCategory, preTitle + '.html')
     }
   );
   const nextTitleEl = wrapByTag(
@@ -654,7 +657,7 @@ $(function () {
     {
       href: nextTitle === '没有了' ?
         'javascript:void(0)' :
-        path.resolve(HTML_DIR, nextCategory, nextTitle + '.html')
+        path.resolve(config.HTML_DIR, nextCategory, nextTitle + '.html')
     }
   );
   const $refer = $('.refer');
@@ -664,7 +667,7 @@ $(function () {
     '</div>');
 
   // 获得元素的宽度
-  function getWidth(el) {
+  function getWidth(el: HTMLElement) {
     let width = window.getComputedStyle ?
       getComputedStyle(el).width :
       el.currentStyle.width;
@@ -674,14 +677,14 @@ $(function () {
       width;
   }
   // 获得每次缩放的增量
-  function getIncreatement(img) {
+  function getIncreatement(img?: HTMLImageElement) {
     return img ?
-      img.naturaWidth ? img.naturaWidth * .2 : getWidth(img) * .2 :
+      img.naturalWidth ? img.naturalWidth * .2 : getWidth(img) * .2 :
       50;
   }
 
   function bothDisapper() {
-    smaller.style.opacity = bigger.style.opacity = 0;
+    smaller.style.opacity = bigger.style.opacity = '0';
     if (disapearTimer) {
       clearTimeout(disapearTimer);
     }
@@ -714,15 +717,15 @@ $(function () {
   }
 
   function enSmaller() {
-    let child = imgContainer.lastChild;
+    let child = imgContainer.lastChild as HTMLImageElement;
     let oldWidth = getWidth(child);
     child.style.width = oldWidth - getIncreatement(child) + 'px';
   }
 
-  function changeImg(flag) {
+  function changeImg(flag: boolean) {
     if (imgContainer.lastChild instanceof HTMLImageElement) {
       const img = imgContainer.lastChild,
-        imgs = $('#container figure>img').toArray();
+        imgs = $('#container figure>img').toArray() as HTMLImageElement[];
       for (let i = 0; i < imgs.length; i++) {
         if (imgs[i].src === img.src) {
           flag ?
@@ -734,9 +737,9 @@ $(function () {
     }
   }
   // 正文内容的图片点击后预览
-  let disapearTimer = null; // bothDdiv 消失的定时器
-  let smallerTimer = null;
-  let biggerTimer = null;
+  let disapearTimer: NodeJS.Timer | null = null; // bothDdiv 消失的定时器
+  let smallerTimer: NodeJS.Timer | null = null;
+  let biggerTimer: NodeJS.Timer | null = null;
   let mask = document.createElement('div');
   let imgContainer = document.createElement('div');
   let closeImg = document.createElement('div');
@@ -744,7 +747,7 @@ $(function () {
   let onlySmaller = document.createElement('div');
   let onlyBigger = document.createElement('div');
   let downloadImg = document.createElement('div');
-  let imgOriginWidth = null;
+  let imgOriginWidth: number | null = null;
   // download
   downloadImg.innerText = '↓';
   downloadImg.setAttribute('title', '下载');
@@ -839,7 +842,7 @@ $(function () {
   const nextImg = document.createElement('div');
   smaller.innerText = '-';
   bigger.innerText = '+';
-  smaller.style.opacity = bigger.style.opacity = 0;
+  smaller.style.opacity = bigger.style.opacity = '0';
   smaller.style.borderRadius = '5px 0 0 5px';
   bigger.style.borderRadius = '0 5px 5px 0';
   smaller.style.marginLeft = '-1px';
@@ -865,7 +868,7 @@ $(function () {
   };
 
   function enBigger() {
-    let child = imgContainer.lastChild;
+    let child = imgContainer.lastChild as HTMLImageElement;
     let oldWidth = getWidth(child);
     child.style.width = oldWidth + getIncreatement(child) + 'px';
   }
@@ -896,7 +899,7 @@ $(function () {
           clearTimeout(disapearTimer);
         }
         smaller.style.display = bigger.style.display = 'block';
-        smaller.style.opacity = bigger.style.opacity = 1;
+        smaller.style.opacity = bigger.style.opacity = '1';
         bigger.style.left = e.pageX + 'px';
         smaller.style.left = e.pageX - 50 + 'px';
         smaller.style.top = bigger.style.top = e.pageY + 'px';
@@ -967,7 +970,17 @@ $(function () {
           access_token: '1b3f5b75ffbb73abc4f717d1bb17eaadae9127f8a35466cd721c9ac'
         },
         dataType: 'json',
-        success: function (data) {
+        success: function (data: {
+          items: {
+            is_ad: boolean,
+            href: string,
+            description: string,
+            title: string,
+          }[],
+          length: number,
+          charset: string,
+          keyword: string
+        }) {
           if (data.items.length > 0) {
             that.attr('has-searched', 'true');
             const list = data.items.filter(function (item) {
@@ -1022,7 +1035,12 @@ $(function () {
 
   // 添加评论区
   // 添加一条评论
-  function addOneComment(el) {
+  function addOneComment(el: {
+    username?: string,
+    create_time: string,
+    floor: number,
+    comment_content: string
+  }) {
     const oneComment = document.createElement('div');
     oneComment.setAttribute('class', 'oneComment');
     const headSection = document.createElement('div');
@@ -1045,7 +1063,7 @@ $(function () {
   let commentListNumber = 0;
   const nowCommentNumber = document.createElement('div');
   nowCommentNumber.setAttribute('class', 'commentListLength');
-  updateListNumber(commentListNumber);
+  updateListNumber();
   $container.append(nowCommentNumber);
 
   const nowComment = document.createElement('div'); // 当前已有评论

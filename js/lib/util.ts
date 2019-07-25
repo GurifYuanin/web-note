@@ -3,7 +3,7 @@ import { PHONE_WIDTH } from './config';
 const SINGLE_TAG_ELEMENTS = ['img', 'input'];
 
 // 复制到剪切板
-export function copy(message) {
+export function copy(message: string) {
   const area = document.createElement('textarea'); // 用于临时暂存复制的代码的文本域
   document.body.appendChild(area);
   if (DataTransfer && window.clipboardData instanceof DataTransfer) {
@@ -19,13 +19,13 @@ export function copy(message) {
 }
 
 // 返回元素 string
-export function wrapByTag(children, tag, attributes) {
+export function wrapByTag(children?: string | string[], tag?: string, attributes?: Record<string, string>) {
   const isSingleChildren = Object.prototype.toString.call(children).toLowerCase() === '[object string]';
   const isSingleTagElement = SINGLE_TAG_ELEMENTS.indexOf(tag) >= 0;
   if (!tag) {
     if (!children) {
       throw new ReferenceError('缺少参数');
-    } else if (isSingleChildren) {
+    } else if (isSingleChildren && !Array.isArray(children)) {
       // 当参数只有一个的时候，children 作为标签类型 tag
       tag = children;
     } else {
@@ -42,20 +42,20 @@ export function wrapByTag(children, tag, attributes) {
   }
   return '<' + tag + stringifiedAttributes + '>' +
     (isSingleTagElement ? '' : (
-      (isSingleChildren ? children : children.join('')) +
+      (isSingleChildren ? children : (Array.isArray(children) ? children.join('') : '')) +
       '</' + tag + '>'
     ));
 }
 
 // 数组去重
-export function filterRepeatArray(arr) {
-  const result = [];
+export function filterRepeatArray<T>(arr: T[]) {
+  const result: T[] = [];
   if (window.Set) {
     result.push(...new Set(arr));
   } else {
     for (let i = 0; i < arr.length; i++) {
       if (result.indexOf(arr[i]) === -1) {
-        result.push(el);
+        result.push(arr[i]);
       }
     }
   }
@@ -63,7 +63,7 @@ export function filterRepeatArray(arr) {
 }
 
 // 数组拍平
-function flatArray(arr) {
+export function flatArray(arr: any): any[] {
   const result = [];
   for (let i = 0; i < arr.length; i++) {
     if (Array.isArray(arr[i])) {
@@ -76,17 +76,17 @@ function flatArray(arr) {
 }
 
 // 去除多余的字符
-export function filterName(str) {
+export function filterName(str: string) {
   return str.replace(/[\s$@#&;()/.'"]/g, '');
 }
 
 // 获得文件名后缀（不含 .）
-export function getSuffix(filename) {
+export function getSuffix(filename: string) {
   return filename.substring(filename.lastIndexOf('.') + 1);
 }
 
 // 获得文件名
-export function getFileName(filename) {
+export function getFileName(filename: string) {
   const start = filename.lastIndexOf('/') + 1;
   const end = filename.lastIndexOf('.');
   return filename.substring(start, end);
@@ -105,7 +105,7 @@ export function getViewport(target?: any) {
 }
 
 // 滚动到指定元素位置
-export function scrollTo(name = 'body', el) {
+export function scrollTo(name: string = 'body', el?: JQuery<HTMLElement>) {
   (el ? el : $('html, body')).animate({
     scrollTop: $(name).offset().top
   }, 500);

@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "jquery": "^3.4.1",
-    "tar": ">=4.4.2"
+    "tar": "^4.4.10"
   },
   "devDependencies": {
     "@types/jquery": "^3.3.30",

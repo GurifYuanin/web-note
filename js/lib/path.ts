@@ -1,4 +1,4 @@
-export const path = {
+export default {
   CWDS: (function () {
     const { pathname } = window.location;
     return pathname.substring(0, pathname.lastIndexOf('/')).split('/').filter(Boolean);

@@ -1,9 +1,18 @@
 {
   "files": [
-    "js/index.ts"
+    "js/index.ts",
+    "js/global.d.ts"
   ],
   "compilerOptions": {
-      "noImplicitAny": true,
-      "target": "es5"
+    "noImplicitAny": true,
+    "target": "es5",
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "module": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es2015"
+    ]
   }
 }
