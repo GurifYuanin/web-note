@@ -209,6 +209,11 @@ var e = {
 }
 
 					</code></pre>
+					另外，如果要获得 enum 的所有 key，不能直接 keyof xxx，而应该：
+					<pre><code class="typescript">
+enum e { key = 1 };
+keyof typeof e
+					</code></pre>
 				</p>
 			</p>
 		</section>
@@ -529,17 +534,27 @@ type Foo2 = Pick&lt;Foo, 'a'&gt;
 }
 */
 				</code></pre>
+				<h3>Omit</h3>
+				Omit&lt;T, K&gt; 与 Pick 相反，用于从指定对象去掉部分内容。
+				<pre><code class="typescript">
+type Foo3 = Omit&lt;Foo, 'a'&gt;
+/*
+=> {
+	b: number
+}
+*/
+				</code></pre>
 				<h3>Record</h3>
 				Record&lt;K, T&gt; 用于表示用 K 作为对象的键名，用 T 作为所有键值的类型，生成一个类型声明对象。
 				<pre><code class="typescript">
-type Foo3 = Record<'a' | 'b', 123>;
+type Foo4 = Record<'a' | 'b', 123>;
 /*
 => {
 	a: 123;
 	b: 123;
 }
 */
-type Foo4 = Record&lt;string, number&gt;;
+type Foo5 = Record&lt;string, number&gt;;
 /*
 => {
 	[k: string]: number;

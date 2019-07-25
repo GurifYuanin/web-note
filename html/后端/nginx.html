@@ -189,7 +189,7 @@ types {
       <h2>反向代理</h2>
       <p>
         <h3>基本使用</h3>
-        使用 127.0.0.1:8080 代理 https://www.baidu.com ，当我们（客户端）访问 127.0.0.1:8080 时，nginx 请求百度，再将请求到的结果返回给客户端。
+        使用 127.0.0.1:8080 代理 https://www.baidu.com ，当我们（客户端）访问 127.0.0.1:8080 时，nginx（代理）请求百度（上游服务器），再将请求到的结果返回给客户端。
         <pre><code class="nginx">
 events {
   worker_connections 2048;
@@ -243,6 +243,25 @@ more_clear_headers 'X-Frame-Options';
         <pre><code class="nginx">
 fastcgi_hide_header 'X-Frame-Options';
         </code></pre>
+        <h3>代理多个来源</h3>
+        使用 server.server_name 配置项可以处理不同来源的请求，nginx 会在处理一个请求的时候，先取出请求头 Host，与 server 的 server_name 进行比较，根据优先级决定给哪个 server
+        来处理。
+        <pre><code class="nginx">
+http {
+  server {
+    listen 80;
+    server_name www.example.com *.example.com www.example.*;
+    location / {
+      # ...
+    }
+  }
+}
+        </code></pre>
+        如果 Host 是 www.example.com，优先级为 www.example.com > *.example.com > www.example.*。
+        <div class="tip">
+          server_name 支持正则，匹配优先级最低。
+        </div>
+        如果没匹配到任意一个 server，那么会选择 listen 后带 default 的，如果还没有，那么会选择第一个 server。
       </p>
     </section>
     <section>
@@ -263,6 +282,7 @@ user username [groupname]
 worker_processes number | auto;
         </code></pre>
         <h3>worker_cpu_affinity</h3>
+        绑定 worker 到指定 CPU 内核。
         <pre><code class="nginx">
 worker_cpu_affinity CPU掩码
         </code></pre>
@@ -272,19 +292,23 @@ worker_cpu_affinity CPU掩码
       </p>
     </section>
     <section>
-      <h2>event 配置项</h2>
+      <h2>负载均衡</h2>
       <p>
-        <h3>events.worker_connections</h3>
-        每个 nginx worker 进程可同时处理的最大连接数。
+        <h3>event.accept_mutex</h3>
+        accept_mutex 是 nginx 的负载均衡锁，默认为打开（on），以保证连接 worker 连接负载均衡，设置为关闭（off）后无法保证负载均衡。
+        <h3>event.accept_mutex_delay</h3>
+        当一个 worker 试图去获得 accept 锁但没得到，那么将等待 accept_mutex_delay 毫秒后才会再次请求，默认为 500 毫秒。
         <h3>event.lock_file</h3>
         当编译 nginx 的程序、操作系统等原因导致 nginx 不支持原子锁，nginx 会采用文件来实现原子锁，该配置项就是指定 lock 文件的路径。
+        <h3>events.worker_connections</h3>
+        每个 nginx worker 进程可同时处理的最大连接数。
       </p>
     </section>
     <section>
-      <h2>负载均衡</h2>
+      <h2>性能优化</h2>
       <p>
-        <h3>accept_mutex</h3>
-        accept_mutex 是 nginx 的负载均衡锁，默认为打开（on），以保证连接 worker 连接负载均衡。
+        <h3>listen xxx deferred</h3>
+        listen 后追加 deferred 参数，表示 worker 和客户端即使完成了 TCP 三次握手也不会马上建立连接，只有客户端发来第一个数据时才会唤醒 worker 处理这里连接。
       </p>
     </section>
     <section class="refer">
