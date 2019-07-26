@@ -1,18 +1,24 @@
 {
   "files": [
-    "js/index.ts",
-    "js/global.d.ts"
+    "js/index.ts"
   ],
   "compilerOptions": {
     "noImplicitAny": true,
-    "target": "es5",
     "esModuleInterop": true,
     "downlevelIteration": true,
+    "strict": true,
     "module": "esnext",
+    "target": "esnext",
     "lib": [
       "dom",
       "dom.iterable",
-      "es2015"
+      "esnext"
     ]
-  }
+  },
+  "include": [
+    "js/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

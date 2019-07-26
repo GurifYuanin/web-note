@@ -1,10 +1,12 @@
 // 初始化语法高亮
-if (hljs) {
-  if (hljs.initHighlightingOnLoad) {
-    hljs.initHighlightingOnLoad();
+import $ from 'jquery';
+
+if (window.hljs) {
+  if (window.hljs.initHighlightingOnLoad) {
+    window.hljs.initHighlightingOnLoad();
   } else {
     $(function () {
-      hljs && hljs.initHighlightingOnLoad();
+      window.hljs && window.hljs.initHighlightingOnLoad();
     });
   }
 }

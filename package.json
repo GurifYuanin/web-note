@@ -13,36 +13,35 @@
     "url": "https://github.com/GurifYuanin/web-note/issues"
   },
   "dependencies": {
+    "amd-loader": "0.0.8",
     "jquery": "^3.4.1",
+    "lodash": "^4.17.15",
     "tar": "^4.4.10"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "@types/jquery": "^3.3.30",
-    "commitizen": "^4.0.3",
-    "cz-conventional-changelog": "^2.1.0",
+    "@types/lodash": "^4.14.136",
+    "@types/node": "^12.6.8",
+    "babelify": "^10.0.0",
+    "browserify": "^16.3.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^5.0.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-html-minify": "^0.0.14",
     "gulp-imagemin": "^5.0.3",
     "gulp-minify-css": "^1.2.4",
     "gulp-sass": "^4.0.1",
-    "gulp-typescript": "^5.0.1",
+    "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify-es": "^1.0.4",
     "gulp-util": "^3.0.8",
-    "gulp-wrap-commonjs": "^0.1.14",
-    "lodash": "^4.17.15",
-    "orchestrator": "^0.3.8",
-    "typescript": "^3.5.3"
+    "tsify": "^4.0.1",
+    "typescript": "^3.5.3",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
   },
   "scripts": {
     "commit": "git-cz",
-    "dev": "gulp",
-    "build": "gulp build"
-  },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-conventional-changelog"
-    }
+    "dev": "NODE_ENV=development gulp",
+    "build": "NODE_ENV=production gulp build"
   }
 }

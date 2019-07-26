@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import { PHONE_WIDTH } from './config';
 
 const SINGLE_TAG_ELEMENTS = ['img', 'input'];
@@ -6,7 +7,7 @@ const SINGLE_TAG_ELEMENTS = ['img', 'input'];
 export function copy(message: string) {
   const area = document.createElement('textarea'); // 用于临时暂存复制的代码的文本域
   document.body.appendChild(area);
-  if (DataTransfer && window.clipboardData instanceof DataTransfer) {
+  if (DataTransfer && window.clipboardData && window.clipboardData instanceof DataTransfer) {
     // IE
     window.clipboardData.setData('text', message);
   } else {
@@ -19,9 +20,9 @@ export function copy(message: string) {
 }
 
 // 返回元素 string
-export function wrapByTag(children?: string | string[], tag?: string, attributes?: Record<string, string>) {
+export function wrapByTag(children?: string | string[], tag?: string, attributes?: Record<string, any>) {
   const isSingleChildren = Object.prototype.toString.call(children).toLowerCase() === '[object string]';
-  const isSingleTagElement = SINGLE_TAG_ELEMENTS.indexOf(tag) >= 0;
+  const isSingleTagElement = tag !== undefined && SINGLE_TAG_ELEMENTS.indexOf(tag) >= 0;
   if (!tag) {
     if (!children) {
       throw new ReferenceError('缺少参数');
@@ -62,19 +63,6 @@ export function filterRepeatArray<T>(arr: T[]) {
   return result;
 }
 
-// 数组拍平
-export function flatArray(arr: any): any[] {
-  const result = [];
-  for (let i = 0; i < arr.length; i++) {
-    if (Array.isArray(arr[i])) {
-      result.push(...flatArray(arr[i]));
-    } else {
-      result.push(arr[i]);
-    }
-  }
-  return result;
-}
-
 // 去除多余的字符
 export function filterName(str: string) {
   return str.replace(/[\s$@#&;()/.'"]/g, '');
@@ -86,7 +74,10 @@ export function getSuffix(filename: string) {
 }
 
 // 获得文件名
-export function getFileName(filename: string) {
+export function getFileName(filename?: string) {
+  if (!filename) {
+    return '';
+  }
   const start = filename.lastIndexOf('/') + 1;
   const end = filename.lastIndexOf('.');
   return filename.substring(start, end);
@@ -106,8 +97,10 @@ export function getViewport(target?: any) {
 
 // 滚动到指定元素位置
 export function scrollTo(name: string = 'body', el?: JQuery<HTMLElement>) {
-  (el ? el : $('html, body')).animate({
-    scrollTop: $(name).offset().top
+  const targetEl = el || $('html, body');
+  const offset = $(name).offset() || { top: 0 };
+  targetEl.animate({
+    scrollTop: offset.top
   }, 500);
 }
 

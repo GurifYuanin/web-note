@@ -4,18 +4,20 @@ const {
     src,
     dest
 } = require('gulp');
-const concat = require('gulp-concat');
 
 const sass = require('gulp-sass'), // sass 预编译
     autoprefixer = require('gulp-autoprefixer'), // css 前缀自动补全
     minifycss = require('gulp-minify-css'); // css 压缩
+const browserify = require('browserify');
+const tsify = require('tsify');
+const source = require('vinyl-source-stream');
+const sourcemaps = require('gulp-sourcemaps');
+const buffer = require('vinyl-buffer');
 
-const uglify = require('gulp-uglify-es').default, // js 压缩
-    ts = require('gulp-typescript');
-const tsProject = ts.createProject('tsconfig.json');
-
+const uglify = require('gulp-uglify-es').default; // js 压缩
 const gutil = require('gulp-util');
 
+const isDev = process.env.NODE_ENV === 'development';
 // sass 编译
 function compileSass(callback) {
     src(['./scss/dark.scss', './scss/bright.scss'])
@@ -42,18 +44,27 @@ function watchSass(callback) {
 
 // js 编译和压缩
 function compileJavascript(callback) {
-    tsProject.src()
-             .pipe(tsProject())
-             .js
-             .pipe(concat('index.min.js'))
-             .pipe(uglify({
-                mangle: true, // 是否修改变量名
-                compress: true // 是否完全压缩
-             }))
-             .on('error', function (err) {
-                gutil.log(gutil.colors.red('[Error]'), err.toString());
-             })
-             .pipe(dest('js'));
+    browserify({
+        basedir: '.',
+        debug: isDev,
+        entries: ['js/index.ts'],
+        cache: {},
+        packageCache: {},
+    })
+    .plugin(tsify)
+    .transform('babelify', {
+        presets: ["@babel/preset-env"],
+        extensions: ['.ts']
+    })
+    .bundle()
+    .on('error', function (err) {
+        gutil.log(gutil.colors.red('[Error]'), err.toString());
+    })
+    .pipe(source('index.min.js'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(uglify())
+    .pipe(dest('js'));
     callback();
 }
 

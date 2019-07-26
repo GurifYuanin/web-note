@@ -1,8 +1,9 @@
 import './lib/init';
+import _ from 'lodash';
 import $ from 'jquery';
 import Notify from './lib/notify';
 import * as config from './lib/config';
-import { wrapByTag, filterRepeatArray, getFileName, scrollTo, isPhone, getViewport, filterName, flatArray, copy } from './lib/util';
+import { wrapByTag, filterRepeatArray, getFileName, scrollTo, isPhone, getViewport, filterName, copy } from './lib/util';
 import { formatDate } from './lib/date';
 import path from './lib/path';
 import { getChineseName } from './lib/name';
@@ -89,8 +90,8 @@ $(function () {
   for (let i = 0; i < category.length; i++) {
     const isArrowDownCategory = category[i].includes(currentTitle);
     const categoryImageSrc = isArrowDownCategory ?
-      (isBright ? config.arrowUpBrightImage : config.arrowUpDarkImage) :
-      (isBright ? config.arrowDownBrightImage : config.arrowDownDarkImage);
+      (isBright ? config.ARROW_UP_BRIGHT_IMAGE : config.ARROW_UP_DARK_IMAGE) :
+      (isBright ? config.ARROW_DOWN_BRIGHT_IMAGE : config.ARROW_DOWN_DARK_IMAGE);
     sectionEls += wrapByTag(
       [
         wrapByTag(
@@ -155,7 +156,7 @@ $(function () {
               [
                 el.replace(reg,
                   wrapByTag(
-                    el.match(reg),
+                    el.match(reg) || 'div',
                     'span',
                     {
                       class: 'filteredHightLight'
@@ -202,7 +203,7 @@ $(function () {
 
   $searchResult.css('display', 'none');
   $searchInput.keyup(function (event) {
-    const keyword = $searchInput.val().toString() || '';
+    const keyword = ($searchInput.val() || '').toString();
     let searchResult = keyword.trim() === '' ? '' : getSearchResult(keyword);
     if (searchResult.trim() === '') {
       // 没有键入或者搜索结果为空 搜索结果框隐藏
@@ -300,10 +301,10 @@ $(function () {
       img = that.children();
     that.click(function () {
       const imageName = getFileName(img.attr('src'));
-      const isArrowDownCategory = imageName === config.arrowDownBrightFileName || imageName === config.arrowDownDarkFileName;
+      const isArrowDownCategory = imageName === config.ARROW_DOWN_BRIGHT_FILENAME || imageName === config.ARROW_DOWN_DARK_FILENAME;
       img.attr('src', isArrowDownCategory ?
-        (isBright ? config.arrowUpBrightImage : config.arrowUpDarkImage) :
-        (isBright ? config.arrowDownBrightImage : config.arrowDownDarkImage));
+        (isBright ? config.ARROW_UP_BRIGHT_IMAGE : config.ARROW_UP_DARK_IMAGE) :
+        (isBright ? config.ARROW_DOWN_BRIGHT_IMAGE : config.ARROW_DOWN_DARK_IMAGE));
       that.next().slideToggle('slow');
     });
   });
@@ -347,7 +348,8 @@ $(function () {
     codeType.setAttribute('class', 'codeType');
     codeCopy.setAttribute('class', 'codeCopy codeDark');
     codeCopy.setAttribute('title', '点击复制代码');
-    const type = el.getAttribute('class').split(' ')[0]; // 取出是哪种类型的代码
+    const elClass = el.getAttribute('class') || '';
+    const type = elClass.split(' ')[0]; // 取出是哪种类型的代码
     codeType.innerText = type;
     codeCopy.onclick = function () {
       copy(el.innerText.substring(1 + type.length).trim());
@@ -366,16 +368,16 @@ $(function () {
   const $itemBlockImg = $('#sidebar h3 img');
   const $codeCopy = $('.codeCopy');
   function toggleTheme() {
-    $theme.attr('href', isBright ? config.darkCss : config.brightCss);
-    $codeStyle.attr('href', isBright ? config.brightCodeStyle : config.darkCodeStyle);
+    $theme.attr('href', isBright ? config.DARK_CSS : config.BRIGHT_CSS);
+    $codeStyle.attr('href', isBright ? config.BRIGHT_CODE_STYLE : config.DARK_CODE_STYLE);
     // $line.css('stroke', isBright ? '#fff' : '#000');
-    $hideCatalog.attr('src', isBright ? config.catalogDarkImage : config.catalogBrightImage);
-    $itemBlockImg.each(function (i, el: HTMLImageElement) {
-      const { src } = el;
-      el.src = isBright ?
+    $hideCatalog.attr('src', isBright ? config.CATALOG_DARK_IMAGE : config.CATALOG_BRIGHT_IMAGE);
+    $itemBlockImg.each(function(i: number, element: HTMLImageElement) {
+      const { src } = element;
+      element.src = isBright ?
         src.substring(0, src.lastIndexOf('.')) + '_dark.png' :
         src.substring(0, src.lastIndexOf('_')) + '.png';
-    });
+    } as any);
     // $('a').each(function(i, el) {
     //     el.href = isBright ? el.href + '?theme=dark' : el.href.replace('?theme=dark', '');
     // });
@@ -423,7 +425,7 @@ $(function () {
     }, time * 1000);
   }
   // 折叠目录
-  function hideCatalog(cb?: CallableFunction) {
+  function hideCatalog(cb?: any) {
     $sidebar.animate({ // 侧栏隐藏
       'width': '0',
       'padding': '0'
@@ -458,7 +460,7 @@ $(function () {
   }
   $hideCatalog.attr({
     'title': '点击隐藏侧栏',
-    'src': isBright ? config.catalogBrightImage : config.catalogDarkImage
+    'src': isBright ? config.CATALOG_BRIGHT_IMAGE : config.CATALOG_DARK_IMAGE
   });
   $showCatalog.attr('title', '点击显示侧栏');
   $hideCatalog.click(hideCatalog);
@@ -573,7 +575,7 @@ $(function () {
   let itemInterval = 50; // 导航项动画间隔
   let blockInterval = 100; // 块动画间隔
   // 展开子标题导航
-  function showBlock(event: MouseEvent) {
+  function showBlock(event: any) {
     let time = 0;
     // 块消失
     for (let i = $subTitleBlock.length; i >= 0; i-- , time += blockInterval) {
@@ -596,7 +598,7 @@ $(function () {
   }
   // 隐藏子标题导航
   document.body.onclick = function (event) {
-    if (event.target.getAttribute('class') !== 'subTitleItem') {
+    if ((event.target as HTMLDivElement).getAttribute('class') !== 'subTitleItem') {
       let time = 0;
       isLeave = true; // 加锁，不让导航项出现
       // 导航项消失
@@ -627,7 +629,7 @@ $(function () {
     preCategory = '',
     nextCategory = '';
 
-  const allItems = <unknown> flatArray(items) as string[];
+  const allItems = _.flattenDeep<string>(items);
   const index = allItems.includes(currentTitle) ? allItems.indexOf(currentTitle) : 0;
   if (index !== 0) {
     preTitle = allItems[index - 1];
@@ -668,13 +670,13 @@ $(function () {
 
   // 获得元素的宽度
   function getWidth(el: HTMLElement) {
-    let width = window.getComputedStyle ?
+    let width: string | null = window.getComputedStyle ?
       getComputedStyle(el).width :
       el.currentStyle.width;
-    width = Number.parseInt(width);
-    return width === 0 ?
+    const parsedWidth = Number.parseInt(width || '0');
+    return parsedWidth === 0 ?
       el.clientWidth || el.scrollWidth || el.offsetWidth || 500 :
-      width;
+      parsedWidth;
   }
   // 获得每次缩放的增量
   function getIncreatement(img?: HTMLImageElement) {
@@ -693,7 +695,7 @@ $(function () {
     }, 1000);
   }
   // 偏移图像
-  function offsetImg(e, flag) {
+  function offsetImg(e: MouseEvent, flag: boolean) {
     var img = imgContainer.lastChild;
     if (img instanceof HTMLImageElement && e) {
       let vw = getViewport();
@@ -701,10 +703,10 @@ $(function () {
       let w = vw.width / 2 - e.clientX;
       h = flag ? h / 2 : Math.sqrt(h);
       w = flag ? w / 2 : Math.sqrt(w);
-      let left = Number.parseInt(img.style.paddingLeft),
-        right = Number.parseInt(img.style.paddingRight),
-        top = Number.parseInt(img.style.paddingTop),
-        bottom = Number.parseInt(img.style.paddingBottom);
+      let left = Number.parseInt(img.style.paddingLeft || '0'),
+        right = Number.parseInt(img.style.paddingRight || '0'),
+        top = Number.parseInt(img.style.paddingTop || '0'),
+        bottom = Number.parseInt(img.style.paddingBottom || '0');
       flag ? left += w - right : left -= w - right;
       flag ? right -= w : right += w;
       flag ? bottom += h - top : bottom -= h - top;
@@ -891,7 +893,7 @@ $(function () {
       const img = document.createElement('img');
       img.setAttribute('class', 'tmpImg');
       img.setAttribute('title', '点击右键打开缩放菜单');
-      img.setAttribute('src', el.attr('src'));
+      img.setAttribute('src', el.attr('src') || '');
       imgContainer.style.display = mask.style.display = 'block';
       // 按下右键弹出选项
       img.oncontextmenu = function (e) {

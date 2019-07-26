@@ -3,13 +3,13 @@ export default {
     const { pathname } = window.location;
     return pathname.substring(0, pathname.lastIndexOf('/')).split('/').filter(Boolean);
   })(),
-  resolve(...paths) {
+  resolve(...paths: string[]) {
     const root = '/';
     if (paths.length === 0) {
       return root;
     }
     const directories = [];
-    const results = paths[0].startsWith('/') ? [] : path.CWDS.map(cwd => cwd);
+    const results = paths[0].startsWith('/') ? [] : this.CWDS.map((cwd: string) => cwd);
     for (let i = 0; i < paths.length; i++) {
       if (!paths[i]) continue;
       if (paths[i].includes('/')) {
