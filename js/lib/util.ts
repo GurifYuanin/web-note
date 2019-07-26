@@ -35,7 +35,7 @@ export function wrapByTag(children?: string | string[], tag?: string, attributes
   }
   let stringifiedAttributes = '';
   if (attributes && Object.prototype.toString.call(attributes).toLowerCase() === '[object object]') {
-    for (let key in attributes) {
+    for (const key in attributes) {
       if (attributes.hasOwnProperty(key) && attributes[key]) {
         stringifiedAttributes += ' ' + key + '="' + attributes[key] + '"';
       }
@@ -83,15 +83,14 @@ export function getFileName(filename?: string) {
   return filename.substring(start, end);
 }
 
-
 // 获得视窗大小
 export function getViewport(target?: any) {
   // 使用指定窗口，默认使用当前窗口
   target = target || window;
   // 以此检查 IE9+ -> 标准模式 -> 怪异模式
   return {
-    'width': target.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
-    'height': target.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+    width: target.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+    height: target.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
   };
 }
 
@@ -100,7 +99,7 @@ export function scrollTo(name: string = 'body', el?: JQuery<HTMLElement>) {
   const targetEl = el || $('html, body');
   const offset = $(name).offset() || { top: 0 };
   targetEl.animate({
-    scrollTop: offset.top
+    scrollTop: offset.top,
   }, 500);
 }
 

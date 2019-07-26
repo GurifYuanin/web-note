@@ -15,10 +15,10 @@ export default class Notify {
     this.timeout = null;
   }
 
-  info(options: {
+  public info(options: {
     duration?: number,
     content?: string,
-    type?: 'error' | 'success' | 'warning'
+    type?: 'error' | 'success' | 'warning',
   } = {}) {
     options.duration = options.duration || 2000;
     const { divEl } = this;
@@ -36,7 +36,7 @@ export default class Notify {
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
-    this.timeout = setTimeout(function () {
+    this.timeout = setTimeout(function() {
       divEl.style.opacity = '0';
     }, options.duration);
   }

@@ -9,6 +9,11 @@
     "type": "git",
     "url": "git@github.com:GurifYuanin/web-note.git"
   },
+  "scripts": {
+    "dev": "NODE_ENV=development gulp",
+    "build": "NODE_ENV=production gulp build",
+    "lint": "tslint -c tslint.json -p tsconfig.json --fix"
+  },
   "bugs": {
     "url": "https://github.com/GurifYuanin/web-note/issues"
   },
@@ -28,20 +33,15 @@
     "browserify": "^16.3.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^5.0.0",
-    "gulp-imagemin": "^5.0.3",
     "gulp-minify-css": "^1.2.4",
     "gulp-sass": "^4.0.1",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify-es": "^1.0.4",
     "gulp-util": "^3.0.8",
     "tsify": "^4.0.1",
+    "tslint": "^5.18.0",
     "typescript": "^3.5.3",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
-  },
-  "scripts": {
-    "commit": "git-cz",
-    "dev": "NODE_ENV=development gulp",
-    "build": "NODE_ENV=production gulp build"
   }
 }

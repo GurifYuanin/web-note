@@ -6,6 +6,8 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
     "strict": true,
     "module": "esnext",
     "target": "esnext",

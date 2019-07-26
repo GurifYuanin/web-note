@@ -11,4 +11,6 @@ declare global {
   }
 }
 
+declare module '*.json';
+
 export { }

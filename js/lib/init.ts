@@ -5,8 +5,10 @@ if (window.hljs) {
   if (window.hljs.initHighlightingOnLoad) {
     window.hljs.initHighlightingOnLoad();
   } else {
-    $(function () {
-      window.hljs && window.hljs.initHighlightingOnLoad();
+    $(function() {
+      if (window.hljs) {
+        window.hljs.initHighlightingOnLoad();
+      }
     });
   }
 }

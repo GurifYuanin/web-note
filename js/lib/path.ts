@@ -1,5 +1,5 @@
 export default {
-  CWDS: (function () {
+  CWDS: (function() {
     const { pathname } = window.location;
     return pathname.substring(0, pathname.lastIndexOf('/')).split('/').filter(Boolean);
   })(),
@@ -11,9 +11,9 @@ export default {
     const directories = [];
     const results = paths[0].startsWith('/') ? [] : this.CWDS.map((cwd: string) => cwd);
     for (let i = 0; i < paths.length; i++) {
-      if (!paths[i]) continue;
+      if (!paths[i]) { continue; }
       if (paths[i].includes('/')) {
-        directories.push(...paths[i].split('/').filter(Boolean))
+        directories.push(...paths[i].split('/').filter(Boolean));
       } else {
         directories.push(paths[i]);
       }
@@ -29,12 +29,12 @@ export default {
             results.pop();
           }
           break;
-        };
+        }
         default: {
           results.push(directory);
         }
       }
     }
     return root + results.join('/');
-  }
-}
+  },
+};

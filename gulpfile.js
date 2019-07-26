@@ -62,7 +62,9 @@ function compileJavascript(callback) {
     })
     .pipe(source('index.min.js'))
     .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(sourcemaps.init({
+        loadMaps: isDev
+    }))
     .pipe(uglify())
     .pipe(dest('js'));
     callback();
