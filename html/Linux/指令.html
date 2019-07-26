@@ -567,6 +567,19 @@ $ rsync -avz host:~/Downloads/file.tar.gz ~/Downloads
 				<div class="command">
 					wget url
 				</div>
+				<h3>curl</h3>
+				curl 请求目标地址并将响应结果打印到控制台。
+				<pre><code class="shell">
+$ curl url
+				</code></pre>
+				使用 -v 参数表示只显示请求头和响应头。
+				<pre><code class="shell">
+$ curl -v url
+				</code></pre>
+				使用 -o 参数表示将请求结果下载到指定文件。
+				<pre><code class="shell">
+$ curl url -o file
+				</code></pre>
 			</p>
 		</section>
 		<section class="refer">
