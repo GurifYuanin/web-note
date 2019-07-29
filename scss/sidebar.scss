@@ -667,8 +667,13 @@ body {
         font-size: 3rem;
         text-align: center;
         white-space: nowrap;
+        cursor: pointer;
+        transition: all .5s;
         @media (max-device-width: 600px) {
             font-size: 2rem;
+        }
+        &:hover {
+            text-shadow: 0 0 .1em, 0 0 .3em;
         }
     }
     /* 每一节 */
@@ -718,6 +723,7 @@ body {
     }
     /* 代码块 */
     .hljs {
+        tab-size: 2;
         position: relative;
         border-radius: 5px;
         margin: 0;

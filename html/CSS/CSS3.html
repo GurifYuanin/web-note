@@ -80,10 +80,24 @@ border-radius: 20%;
 			<h2>背景图片</h2>
 			<p>
 				<ul>
+					<li>background-position：背景定位
+						<ul>
+							<li>top | right | bottom | left | center：上方水平居中 | 右方垂直居中 | 底部水平居中 | 左侧垂直居中 | 中心</li>
+							<li>上面两个关键词相结合，比如 top right 表示右上角</li>
+							<li>x% y%：表示从左上角出发，向右偏移 x%，向下偏移 y%</li>
+							<li>关键词 x 关键词 y：比如 right 50px top 100px，那么表示距离右边界 50px，距离上边界 100px，x 和 y 既可以是固定长度，也可以是百分比</li>
+						</ul>
+					</li>
 					<li>background-image: url('img1'), url('img2')</li>
 					<li>background-size: width height</li>
+					<li>background-clip：背景被裁切的范围
+						<ul>
+							<li>border-box：默认值，背景范围达到 border 外沿</li>
+							<li>padding-box：背景范围达到 padding 外沿</li>
+							<li>content-box：背景范围达到 content 外沿</li>
+						</ul>
+					</li>
 					<li>background-origin: border-box | padding-box | content-box</li>
-					<li>background-clip: border-box | padding-box | content-box</li>
 				</ul>
 				<div class="show-inline-block" style="
 					background-position: left top;
@@ -134,6 +148,9 @@ background: radial-gradient(circle, #000, #fff); /* 径向渐变 */
 					<div class="show-inline-block" style="
 					 	background: radial-gradient(circle, #000, #fff);
 					 "></div>
+				</div>
+				<div class="tip">
+						如果多个色标具有相同的位置，它们会产生一个无限小的过渡区域， 过渡的起止色分别是第一个和最后一个指定值。从效果上看，颜色会在那 个位置突然变化，而不是一个平滑的渐变过程。<sup>[4]</sup>
 				</div>
 			</p>
 		</section>
@@ -204,8 +221,8 @@ text-overflow: helloff;
 				<p>
 					word-break 用于设置文字换行方式。
 					<ul>
-						<li>normal：浏览器默认换行方式</li>
-						<li>break-all：直接换行</li>
+						<li>normal：浏览器默认换行方式，保留单词完整</li>
+						<li>break-all：直接换行，即使是遇到单词也会被打断</li>
 						<li>keep-all：只能在半角空格或连字符处换行</li>
 					</ul>
 					<div class="show">
@@ -220,6 +237,47 @@ text-overflow: helloff;
 						</div>
 					</div>
 				</p>
+				<h3>hyphens</h3>
+				<p>
+					当 word-break 不为 break-all（只要单词遇到边界就被打断到下一行）时，可以通过 hyphens 控制单词换行时的表现：
+					<ul>
+						<li>manual：默认值，表示可以使用连字符 - 来手动控制换行</li>
+						<li>none：表示不允许使用连字符</li>
+						<li>auto：表示自动判断边缘并给单词添加连字符来换行</li>
+					</ul>
+					<div class="show">
+						<input type="text" id="hyphens-input" value="hello worldddddddddd ahahahahahaha ummm" style="width: 100%;">
+						<div id="hyphens-text" style="width: 100px; hyphens: auto; background-color: gray;"></div>
+						<script>
+							(function() {
+								var hyphensInputEl = document.getElementById('hyphens-input');
+								var hyphensTextEl = document.getElementById('hyphens-text');
+								function hyphensInputChangeHandler() {
+									hyphensTextEl.innerText = hyphensInputEl.value;
+								}
+								hyphensInputEl.onkeyup = hyphensInputChangeHandler;
+								hyphensInputChangeHandler();
+							})();
+						</script>
+					</div>
+				</p>
+				<h3>white-space</h3>
+				<p>
+					white-space 定义 html 中如何处理空白符（ ）和换行符（\n 或 &lt;br&gt;）。
+					<ul>
+						<li>normal：默认值，连续的空白符和换行符会被合并为一个空白符，文本内容超过容器的宽度则自动换行</li>
+						<li>nowrap：连续的空白符和换行符会被合并为一个空白符，不换行</li>
+						<li>pre / pre-wrap：不会合并空白符和换行符</li>
+						<li>pre-line：连续的空白符会合并为一个空白符</li>
+					</ul>
+				</p>
+				<h3>tab-size</h3>
+				<p>
+					tab-size 用来定义浏览器如何渲染 tab 字符的长度，默认为 8。
+					<pre><code class="css">
+tab-size: 2;
+					</code></pre>
+				</p>
 				<h3>text-align & text-align-last</h3>
 				<p>
 					两者都是处理文字的对齐方式，text-align 处理最后一行之外的文字对齐方式，text-align-last 处理最后一行的文字对齐方式。
@@ -233,26 +291,40 @@ text-overflow: helloff;
 						<div>
 							<div>
 								<span>text-align：</span>
-								<span><label for="text-align-left-radio">left</label> <input id="text-align-left-radio"
-										class="text-align-radio" name="text-align" type="radio" value="left"></span>
-								<span><label for="text-align-right-radio">right</label> <input id="text-align-right-radio"
-										class="text-align-radio" name="text-align" type="radio" value="right"></span>
-								<span><label for="text-align-center-radio">center</label> <input id="text-align-center-radio"
-										class="text-align-radio" name="text-align" type="radio" value="center"></span>
-								<span><label for="text-align-justify-radio">justify</label> <input id="text-align-justify-radio"
-										class="text-align-radio" checked name="text-align" type="radio" value="justify"></span>
+								<span>
+									<input id="text-align-left-radio" class="text-align-radio" name="text-align" type="radio" value="left">
+									<label for="text-align-left-radio">left</label>
+								</span>
+								<span>
+									<input id="text-align-right-radio" class="text-align-radio" name="text-align" type="radio" value="right">
+									<label for="text-align-right-radio">right</label>
+								</span>
+								<span>
+									<input id="text-align-center-radio" class="text-align-radio" name="text-align" type="radio" value="center">
+									<label for="text-align-center-radio">center</label>
+								</span>
+								<span>
+									<input id="text-align-justify-radio" class="text-align-radio" checked name="text-align" type="radio" value="justify">
+									<label for="text-align-justify-radio">justify</label>
+								</span>
 							</div>
 							<div>
 								<span>text-align-last：</span>
-								<span><label for="text-align-last-left-radio">left</label> <input id="text-align-last-left-radio"
-										class="text-align-last-radio" name="text-align-last" type="radio" value="left"></span>
-								<span><label for="text-align-last-right-radio">right</label> <input id="text-align-last-right-radio"
-										class="text-align-last-radio" name="text-align-last" type="radio" value="right"></span>
-								<span><label for="text-align-last-center-radio">center</label> <input id="text-align-last-center-radio"
-										class="text-align-last-radio" name="text-align-last" type="radio" value="center"></span>
-								<span><label for="text-align-last-justify-radio">justify</label> <input
-										id="text-align-last-justify-radio" class="text-align-last-radio" checked name="text-align-last"
-										type="radio" value="justify"></span>
+								<span>
+									<input id="text-align-last-left-radio" class="text-align-last-radio" name="text-align-last" type="radio" value="left">
+									<label for="text-align-last-left-radio">left</label>
+								</span>
+								<span>
+									<input id="text-align-last-right-radio" class="text-align-last-radio" name="text-align-last" type="radio" value="right">
+									<label for="text-align-last-right-radio">right</label>
+								</span>
+								<span>
+									<input id="text-align-last-center-radio" class="text-align-last-radio" name="text-align-last" type="radio" value="center">
+									<label for="text-align-last-center-radio">center</label>
+								</span>
+								<span>
+									<input id="text-align-last-justify-radio" class="text-align-last-radio" checked name="text-align-last" type="radio" value="justify">
+									<label for="text-align-last-justify-radio">justify</label></span>
 							</div>
 						</div>
 						<div id="text-align-container"
@@ -912,6 +984,27 @@ stretch...
 				</p>
 			</p>
 		</section>
+		<section>
+			<h2>calc</h2>
+			<p>
+				calc 可以对不同单位的数值进行计算，支持加减乘除操作。
+				<div class="show">
+					<input id="calc-input" type="text" value="calc(100% - 100px)" style="width: 100%;">
+					<div id="calc-container" style="background-color: gray; text-align: center;">hello world</div>
+					<script>
+						(function() {
+							const calcInputEl = document.getElementById('calc-input');
+							const calcContainer = document.getElementById('calc-container');
+							function calcInputKeyupHandler() {
+								calcContainer.style.width = calcInputEl.value;
+							}
+							calcInputEl.onkeyup = calcInputKeyupHandler;
+							calcInputKeyupHandler();
+						})();
+					</script>
+				</div>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
@@ -923,6 +1016,7 @@ stretch...
 				<div>[3] A Complete Guide to Flexbox <a
 						href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/">https://css-tricks.com/snippets/css/a-guide-to-flexbox/</a>
 				</div>
+				<div>[4] CSS 图像(第三版) <a href="http://w3.org/TR/css3-images">http://w3.org/TR/css3-images</a></div>
 			</p>
 		</section>
 	</article>

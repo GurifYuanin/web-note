@@ -125,12 +125,12 @@
 					</tr>
 					<tr>
 						<td>:nth-of-type(n)</td>
-						<td>选中第n个元素</td>
+						<td>选中第n个元素，注意 n 从 1 开始索引，而不是 0</td>
 						<td>3</td>
 					</tr>
 					<tr>
 						<td>:nth-child(n)</td>
-						<td>选中父元素的第n个子元素</td>
+						<td>选中父元素的第n个子元素，等价于 nth-of-type</td>
 						<td>3</td>
 					</tr>
 					<tr>
@@ -161,6 +161,55 @@
 					<img src="../../images/love.jpg">
 					<figcaption>LoVeHAte 原则</figcaption>
 				</figure>
+				除此之外，当需要指定 n 时，可以使用 odd 和 even 表示奇偶项，比如给表格添加条纹：
+				<div class="show">
+					<table id="strip-table">
+						<tr>
+							<td>1</td>
+							<td>2</td>
+							<td>3</td>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td>2</td>
+							<td>3</td>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td>2</td>
+							<td>3</td>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td>2</td>
+							<td>3</td>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td>2</td>
+							<td>3</td>
+						</tr>
+					</table>
+					<style>
+						#strip-table td {
+							color: black;
+						}
+						#strip-table tr:nth-of-type(even) {
+							background-color: gray !important;
+						}
+						#strip-table tr:nth-of-type(odd) {
+							background-color: white !important;
+						}
+					</style>
+				</div>
+				<pre><code class="css">
+#strip-table tr:nth-of-type(even) {
+	background-color: gray !important;
+}
+#strip-table tr:nth-of-type(odd) {
+	background-color: white !important;
+}
+				</code></pre>
 			</p>
 		</section>
 		<section>

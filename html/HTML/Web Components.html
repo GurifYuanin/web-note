@@ -52,7 +52,7 @@ customElements.define('autonomous-custom', AutonomousCustom);
 &lt;autonomous-custom&gt;&lt;/autonomous-custom&gt;
         </code></pre>
         <h3>Customized built-in elements</h3>
-        写一个集成自 div 的自定义元素，该元素将拥有 div 元素的特性。
+        写一个继承自 div 的自定义元素，该元素将拥有 div 元素的特性。
         <pre><code class="javascript">
 class CustomizedBuiltIn extends HTMLDivElement {
   constructor() {
@@ -95,11 +95,44 @@ class MyElement extends HTMLElement {
           <li>closed：元素.shadowRoot 将得到 null</li>
         </ul>
         <figure>
-          <img src="../../images/web_components_shadow_root_closed.png" alt="">
+          <img src="../../images/web_components_shadow_root_closed.png">
+          <figcaption>#shadow-root 是 shadowRoot，word-count 是 shadow host</figcaption>
         </figure>
-        如果不进行 attachShadow，那么自定义标签就是个普通的标签，进行 attach 后，在该自定义标签内添加内容都会被忽略掉，只有 shadowRoot.addChild 的元素才会显示出来。
+        如果不进行 attachShadow，那么自定义标签就是个普通的标签。而进行 attachShadow 后，在该自定义标签内添加内容都会被忽略掉，只有 shadowRoot.addChild （挂在 shadowRoot 下的子节点）的元素才会被浏览器渲染出来。
+        <h3>shadowRoot 和 shadow host</h3>
+        假如自定义元素是 $0（比如上面的 word-count 元素），那么存在以下关系：
+        <pre><code class="javascript">
+$0.shadowRoot.host === $0; // => true
+        </code></pre>
         <h3>slot</h3>
-        
+        除了直接在 shadowRoot 上添加节点，还可以定义 slot（插槽）来实现更灵活的组件，name 表示插槽名，自定义组件内的内容可能是 template 内的内容：
+        <pre><code class="html">
+&lt;template id="my-template">
+  &lt;slot name="title">默认标题&lt;/slot>
+  &lt;p>
+    &lt;slot name="content">默认内容&lt;/slot>
+  &lt;/p>
+  &lt;slot name="footer">默认页脚&lt;/slot>
+&lt;/template>
+        </code></pre>
+        <pre><code class="javascript">
+class MyComponent extends HTMLElement {
+  constructor() {
+    super();
+    const templateEl = document.getElementById('my-template');
+    const shadowRoot = this.attachShadow({ mode: 'open' });
+    shadowRoot.appendChild(templateEl.content.cloneNode(true));
+  }
+}
+customElements.define('my-component', MyComponent);
+        </code></pre>
+        使用组件的时候在元素 attribute 上添加 slot="xxx" 来往插槽插入内容，xxx 指插槽名。
+        <pre><code class="html">
+&lt;my-component>
+  &lt;div slot="title">标题内容&lt;/div>
+  &lt;div slot="content">随着经济与技术的发展，abcdefg&lt;/div>
+&lt;/my-component>
+        </code></pre>
       </p>
     </section>
     <section>
@@ -121,7 +154,7 @@ class MyElement extends HTMLElement {
 class CallbackDemo extends HTMLElement {
   constructor() {
     super();
-    console.log('construcotr'); // document.createElement 时触发
+    console.log('constructor'); // document.createElement 时触发
   }
   connectedCallback() {
     console.log('connectedCallback'); // xxx.appendChild 时触发

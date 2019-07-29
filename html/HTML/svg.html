@@ -460,10 +460,8 @@
 							}
 						</style>
 						<script>
-							$(function () {
-								$('.dash-line').attr({
-									'd': 'M 0 0 L 200 0'
-								});
+							window.addEventListener('load', function() {
+								Array.from(document.getElementsByClassName('dash-line')).forEach(path => path.setAttribute('d', 'M 0 0 L 200 0'));
 							});
 						</script>
 					</div>
@@ -485,30 +483,29 @@
 					<div class="show">
 						<div class="dasharray-description">stroke-dasharray="10, 50"</div>
 						<svg class="dash-svg">
-							<path id="dashoffset-path" class="dash-line dash-path dash-animation" stroke-dasharray="10, 50" /></svg>
+							<path id="dashoffset-path" class="dash-line dash-path dash-animation" stroke-dasharray="10, 50" />
+						</svg>
 						stroke-dashoffset = <span id="dashoffset-container">0</span>%<br>
 						<input id="dashoffset-range" type="range" min="0" value="0" max="100">
 						<script>
-							$(function () {
-								var $dashoffset = $('#dashoffset-path');
-								var $container = $('#dashoffset-container');
-								$('#dashoffset-range').change(function () {
-									$dashoffset.attr({
-										'stroke-dashoffset': this.value + '%'
-									});
-									$container.text(this.value);
-								});
+							window.addEventListener('load', function() {
+								var $dashoffset = document.getElementById('dashoffset-path');
+								var $container = document.getElementById('dashoffset-container');
+								document.getElementById('dashoffset-range').onchange = function () {
+									$dashoffset.setAttribute('stroke-dashoffset', this.value + '%');
+									$container.innerText = (this.value);
+								};
 							});
 						</script>
 					</div>
 					<div class="tip">
-						stroke-dashoffset 同样可以设置百分比。
+						stroke-dashoffset 同样可以设置百分比，既可以作为 attribute，也可以写在 style 内。
 					</div>
 				</p>
 				<h3>CSS3 动画</h3>
 				<p>
 					<script>
-						$(function () {
+						window.addEventListener('load', function() {
 							if ((function () {
 								var div = document.createElement('div'),
 									vendors = 'Ms O Moz Webkit'.split(' '),
@@ -526,11 +523,11 @@
 									return false;
 								};
 							})()('transition')) {
-								$('#transition-judge').text('你的浏览器支持 transition！');
-								$('#transition-judge').addClass('successMessage');
+								document.getElementById('transition-judge').innerText = ('你的浏览器支持 transition！');
+								document.getElementById('transition-judge').classList.add('successMessage');
 							} else {
-								$('#transition-judge').text('你的浏览器不支持 transition！');
-								$('#transition-judge').addClass('failMessage');
+								document.getElementById('transition-judge').innerText = ('你的浏览器不支持 transition！');
+								document.getElementById('transition-judge').classList.add('failMessage');
 							}
 						});
 					</script>
@@ -547,19 +544,17 @@
 								stroke-dashoffset="100%" fill-opacity="0" /></svg>
 						<input id="dash-button" type="button" value="显示">
 						<script>
-							$(function () {
-								var percentage = 0;
-								var $animation = $('#dash-animation-path');
+							window.addEventListener('load', function() {
+								var percentage = 100;
+								var $animation = document.getElementById('dash-animation-path');
 								var valueArr = ['隐藏', '显示'];
 								var valueIndex = 0;
-								$('#dash-button').click(function () {
-									$animation.css({
-										'stroke-dashoffset': percentage + '%'
-									});
+								document.getElementById('dash-button').onclick = function () {
+									$animation.style.strokeDashoffset = percentage + '%';
 									this.value = valueArr[valueIndex];
-									percentage = percentage - 100;
+									percentage = 100 - percentage;
 									valueIndex = 1 - valueIndex;
-								});
+								};
 							});
 						</script>
 					</div>
@@ -693,18 +688,40 @@
 					}
 				</style>
 				<script>
-					$(function () {
-						var $path = $('#sai-ya-ren path');
+					window.addEventListener('load', function() {
+						var $path = document.querySelectorAll('#sai-ya-ren path');
 						var percentage = 100;
 						setInterval(function () {
-							$path.css({
-								'stroke-dashoffset': percentage + '%'
-							});
+							$path.forEach(path => path.style.strokeDashoffset = percentage + '%');
 							percentage = 100 - percentage;
-							console.log(percentage);
 						}, 2000);
 					});
 				</script>
+			</p>
+		</section>
+		<section>
+			<h2>复用</h2>
+			<p>
+				<h3>defs</h3>
+				放在 defs 标签内的 svg 图形不会被渲染出来，仅作为声明。
+				<pre><code class="html">
+&lt;svg>
+	&lt;defs>
+		&lt;circle id="my-circle" cx=="50" cy="50" r="25" stroke="black" stroke-width="2" fill="white">&lt;/circle>
+	&lt;/defs>
+&lt;/svg>
+				</code></pre>
+				<h3>use</h3>
+				声明了 svg 图形后，就可以使用 use 标签来复用这些图形。
+				<pre><code class="html">
+&lt;svg>
+	&lt;defs>
+			&lt;circle id="my-circle" cx=="50" cy="50" r="25" stroke="black" stroke-width="2" fill="white">&lt;/circle>
+	&lt;/defs>
+	&lt;use xlink:href="#my-circle">&lt;/use>
+&lt;/svg>
+				</code></pre>
+				xlink:href 既可以指定选择器，也可以是一个 uri。
 			</p>
 		</section>
 		<section class="refer">
