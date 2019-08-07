@@ -1005,6 +1005,33 @@ stretch...
 				</div>
 			</p>
 		</section>
+		<section>
+			<h2>变量</h2>
+			<p>
+				<h3>声明变量</h3>
+				可以声明一个局部可用的变量，局部可用的变量只有在大括号内可以使用，也可以声明全局变量。
+				<pre><code class="css">
+/* 局部变量 */
+div {
+	--var1: 100px;
+}
+/* 全局变量 */
+:root {
+	--var2: 200px;
+}
+				</code></pre>
+				变量名需要以双横线开头，否则不会生效。
+				<h3>使用变量</h3>
+				使用 var(变量名) 来使用变量。
+				<pre><code class="css">
+div {
+	--var1: 100px;
+	width: var(--var1);
+	height: var(--var1);
+}
+				</code></pre>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
