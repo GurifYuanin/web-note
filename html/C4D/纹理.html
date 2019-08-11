@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/styles/agate.css">
   <link rel="stylesheet" href="../../css/dark.css">
-  
+
   <script src="../../js/highlight.pack.js"></script>
   <script src="../../js/index.min.js"></script>
   <title>纹理</title>
@@ -45,6 +45,15 @@
         <figure>
           <img src="../../images/c4d_texture_fresnel.jpg" alt="">
         </figure>
+        <h3>MoGraph</h3>
+        <h4>颜色着色器</h4>
+
+      </p>
+    </section>
+    <section>
+      <h2>颜色</h2>
+      <p>
+        材质的基本颜色。
       </p>
     </section>
     <section>
@@ -55,10 +64,14 @@
         <figure>
           <img src="../../images/c4d_texture_reflection_types.jpg" alt="">
         </figure>
+        <ul>
+          <li>高光 - Blinn（传统）/ 默认高光</li>
+          <li>Beckmann</li>
+        </ul>
         <h3>层颜色</h3>
         即反射颜色。
         <h3>层遮罩</h3>
-        与层颜色进行相加运算，功能上可以作为蒙版对层颜色进行遮罩（白透黑不透），也可以作为多层反射使其颜色进行叠加。
+        与层颜色进行相加运算，当层颜色是黑白时，可以作为蒙版对层颜色进行遮罩（白透黑不透），当层颜色是其他颜色时，也可以作为多层反射使其颜色进行叠加。
         <h3>层菲涅尔</h3>
         <h3>层采样</h3>
       </p>
