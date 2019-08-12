@@ -441,7 +441,7 @@ $ git reflog
 				</p>
 				<h3>合并</h3>
 				<p>
-					将当前所在分支与指定分支进行合并。
+					将当前所在分支与指定分支进行合并，合并后将生成一个新的 commit 节点。
 					<div class="command">
 						git merge 分支名
 					</div>
@@ -527,12 +527,23 @@ $ git remote show origin
 					<div class="command">
 						git pull 远程主机名 远程分支名[:本地分支名]
 					</div>
+					<div class="tip">
+						git pull 本质是 git fetch 和 git merge 两步操作合为一个命令。
+					</div>
+					pull 后将会生成一个 commit 节点，该节点是将远程分支 merge 到本地分支产生的，可以使用 --rebase 参数来将自己的 commit 追加到远程分支上，使其不会生成新 commit 节点。
+					<div class="command">
+						git pull 远程主机名 远程分支名[:本地分支名] --rebase
+					</div>
 				</p>
 				<h3>推送</h3>
 				<p>
 					使用 git push 来将本地分支推送到远程分支，当远程分支名被省略时，则表示推送到和本地分支相同名字的远程分支，如果远程分支不存在，则创建远程分支。
 					<div class="command">
 						git push 远程主机名 本地分支名[:远程分支名]
+					</div>
+					另一种常见用法是：将当前 HEAD 指向的分支推送到远程主机 origin 上，且保持远程分支和 HEAD 指向的分支相同的名字。
+					<div class="command">
+						git push origin HEAD
 					</div>
 					<h4>推送失败</h4>
 					有时会出现远程分支比本地分支更快（more fast）的情况，远程分支上的代码已经更新过，但本地分支上的代码还没获得这些更新，通常有两种解决方案：
