@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+  <title>shell</title>
+</head>
+<body>
+  <aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+      <h1 id="title">shell</h1>
+    </hgroup>
+    <section>
+      <h2>变量</h2>
+      <p>
+        <h3>创建变量</h3>
+        直接赋值即可，注意等号左右两边不能有空格。
+        <pre><code class="shell">
+$ a=1
+        </code></pre>
+        <h3>使用变量</h3>
+        有四种引用方式：
+        <ul>
+          <li>$变量名</li>
+          <li>${变量名}</li>
+          <li>"$变量名"</li>
+          <li>"${变量名}"</li>
+        </ul>
+        也就是说，使用双引号和不使用引号是等价的，都会解析变量，但如果使用单引号，就不会解析变量。
+        <pre><code class="shell">
+$ echo '$a'
+$a
+        </code></pre>
+        <h3>内置变量</h3>
+        <ul>
+          <li>$HOME：指向自己的家，即 ~</li>
+          <li>$PWD：当前路径</li>
+          <li>$OLDPWD：上一次路径，即 -</li>
+          <li>$0：脚本名字</li>
+          <li>$1 $2 ...：执行脚本或函数时的参数</li>
+          <li>$#：参数个数</li>
+        </ul>
+        <h3>引用指令</h3>
+        使用 `` 来引用指令。
+        <pre><code class="shell">
+$ cd `pwd`/src
+# 等价于
+$ cd ./src
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>函数</h2>
+      <p>
+        <h3>声明函数</h3>
+        完整的函数格式为：
+        <pre><code class="shell">
+function function_name() {
+  ...
+}
+        </code></pre>
+        其中可以将可选部分省略：
+        <pre><code class="shell">
+function_name {
+  ...
+}
+        </code></pre>
+        调用函数的入参使用 $n 的方式，参见上面一节。
+        <h3>使用函数</h3>
+        <pre><code class="shell">
+$ function_name 参数1 参数2 ...
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>流程控制</h2>
+      <p>
+        <h3>条件判断</h3>
+        为了方便起见，只使用双中括号来包裹判断条件，判断符也只使用 == 或 != ：
+        <pre><code class="shell">
+$ [[ $a == '1' ]] && echo '$a is 1'
+        </code></pre>
+        完整的条件判断语法是：
+        <pre><code class="shell">
+if [[ $a == '1' ]]; then
+  echo '$a is 1'
+elif [[ $a == '2' ]]; then
+  echo '$a is 2'
+else
+  echo '$a is not 1 andn 2'
+fi
+        </code></pre>
+        其他常用判断有：
+        <ul>
+          <li>[[ -z $xxx ]]：判断 $xxx 是否为空字符串</li>
+          <li>[[ -e $xxx ]]：判断 $xxx 路径是否存在</li>
+          <li>[[ -f $xxx ]]：判断 $xxx 路径的文件是否存在</li>
+          <li>[[ -d $xxx ]]：判断 $xxx 路径的文件夹是否存在</li>
+          <li></li>
+        </ul>
+        <h3>循环</h3>
+        <pre><code class="shell">
+for 变量名 in $数组变量名; do
+  echo $变量名
+done
+        </code></pre>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p></p>
+    </section>
+  </article>
+</body>
+</html>

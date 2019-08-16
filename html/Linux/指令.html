@@ -582,6 +582,34 @@ $ curl url -o file
 				</code></pre>
 			</p>
 		</section>
+		<section>
+			<h2>执行</h2>
+			<p>
+				<h3>source</h3>
+				逐行执行文件里的每行命令。
+				<div class="command">
+					source file
+				</div>
+				<h3>sh & bash & . & 直接执行</h3>
+				/bin/sh 是符合 POSIX 标准的规范，一般指向 /bin/bash。
+				<pre><code class="shell">
+# 执行 a.sh
+$ sh a.sh
+$ bash a.sh
+$ ./a.sh
+$ . a.sh
+				</code></pre>
+				<ul>
+					<li>sh & bash & 直接执行：创建子进程执行文件</li>
+					<li>. ：在当前进程执行</li>
+				</ul>
+				当直接执行时，会查看文件的第一行来决定是采用哪个解释器来执行，比如以下文件无论后缀名是什么，都会选择 python 来执行。
+				<pre><code class="python">
+#! /usr/bin/python
+print 'hello world'
+				</code></pre>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
