@@ -11,7 +11,8 @@
     "svg",
     "cookie",
     "PWA",
-    "Web Component"
+    "Web Component",
+    "ServiceWorker"
   ],
   [
     "选择器",
