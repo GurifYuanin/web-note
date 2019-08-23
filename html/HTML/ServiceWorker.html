@@ -58,15 +58,24 @@ new Cache();
       <h2>ServiceWorker</h2>
       <p>
         ServiceWorker 的作用在于使用 CacheStorage 来事先缓存页面上部分请求，然后拦截页面请求并决定是直接返回缓存还是去服务器拿数据。
+        <figure>
+          <img src="../../images/sw-lifecycle.png" style="background-color: white;">
+          <figcaption>ServiceWorker 生命周期</figcaption>
+        </figure>
         <div class="tip">
           ServiceWorker 只能在 localhost 或 https 上使用。
         </div>
         <h3>注册</h3>
         在网页应用中注册 ServiceWorker。
         <pre><code class="javascript">
-navigator.serviceWorker.register('/sw.js');
+navigator.serviceWorker.register('/sw.js').then(registration => {
+
+});
         </code></pre>
-        ServiceWorker 文件所在路径决定了可以拦截的请求范围，由于 sw.js 在根路径上，所以可以拦截所有请求。
+        register 后 sw.js 文件将永久存在，除非执行了 unregister 操作。
+        <div class="tip">
+            ServiceWorker 文件所在路径决定了可以拦截的请求范围，由于 sw.js 在根路径上，所以可以拦截所有请求。
+        </div>
         <h3>安装</h3>
         <pre><code class="javascript">
 self.addEventListener('install', function(event) {
@@ -85,6 +94,20 @@ self.addEventListener('install', async function(event) {
   event.waitUntil(cacheResult);
 });
         </code></pre>
+        <h3>激活</h3>
+        安装 ServiceWorker 成功后（即 event.waitUntil 入参为 resolve 的 promise），如果本次 sw.js 文件发生了变更，与用户所在的文件存在差异，则旧 ServiceWorker 依旧保持工作状态，当前的新 ServiceWorker 处于 waiting 状态，直到用户关闭页面，新 ServiceWorker 将接手控制权，触发 activate 事件。
+        <pre><code class="javascript">
+// 一般在这一步清除旧的缓存
+self.addEventListener('activate', function(event) {
+  event.waitUntil(self.clients.claim()); // 更新所有 ServiceWorker
+})
+        </code></pre>
+        如果想要直接激活，那么在前一步 install 的时候可以直接跳过等待，之后 ServiceWorker 将在 install 后直接进入 activate 状态，而不用等待页面关闭重新打开。
+        <pre><code class="javascript">
+self.addEventListener('install', async function(event) {
+  self.skipWaiting();
+})
+        </code></pre>
         <h3>拦截请求</h3>
         通过 event.request 获得 Request 对象，查找缓存列表看是否之前已经缓存，如果找到则返回缓存，否则进行正常的请求，并把本次请求加到缓存里。
         <pre><code class="javascript">
@@ -101,6 +124,35 @@ self.addEventListener('fetch', async function(event) {
   }
   event.respondWith(response);
 });
+        </code></pre>
+        <h3>调试</h3>
+        在 chrome 浏览器输入 chrome://inspect/#service-workers 来查看已存在的 ServiceWorker。
+      </p>
+    </section>
+    <section>
+      <h2>Notification</h2>
+      <p>
+        Notification 可以向浏览器发出弹窗通知。
+        <h3>获得权限</h3>
+        发起通知前需要询问是否允许通知，若用户选择允许，则表示该域名可以发起弹窗通知。
+        <pre><code class="javascript">
+Notification.requestPermission(permission => {
+  if (permission === 'granted') {
+    // 允许弹窗通知
+  }
+})
+        </code></pre>
+        <figure>
+          <img src="../../images/sw_notification_request_permission.png" alt="">
+        </figure>
+        <h3>发起通知</h3>
+        直接创建一个 Notification 对象即可发起通知，构造函数接收两个参数：
+        <ul>
+          <li>title：通知标题</li>
+          <li>option：通知选项</li>
+        </ul>
+        <pre><code class="javascript">
+new Notification('Hello world', {})
         </code></pre>
       </p>
     </section>

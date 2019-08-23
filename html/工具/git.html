@@ -567,6 +567,20 @@ $ git push -f 远程主机 本地分支:远程分支
 				</p>
 			</p>
 		</section>
+		<section>
+			<h2>其他</h2>
+			<p>
+				<h3>追责</h3>
+				使用 git blame 来查看谁写了某一文件的代码，比如查看 index.html 谁写的。
+				<div class="command">
+					git blame index.html
+				</div>
+				通过 -L 参数可以只查看从某一行开始的若干行，比如看 index.html 第 100 行开始的 10 行。
+				<div class="command">
+					git blame -L 100,+10 index.html
+				</div>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
