@@ -301,6 +301,38 @@ If-Match: "33a64df551425fcc55e4d42a148795d9f25f89d4"
 						<li>0：愿意目标站点追踪用户个人信息</li>
 					</ul>
 				</p>
+				<h3>Content-Security-Policy</h3>
+				<p>
+						Content-Security-Policy 用于告诉浏览器资源的白名单，不在白名单上的资源会被限制而无法加载，其格式为：
+						<pre><code class="http">
+Content-Security-Policy: 资源种类1: 范围1;资源种类2: 范围2;资源...
+						</code></pre>
+						资源种类有：
+						<ul>
+							<li>script-src：脚本</li>
+							<li>style-src：样式表</li>
+							<li>img-src：图像</li>
+							<li>media-src：媒体文件，即 video 和 audio</li>
+							<li>font-src：字体文件</li>
+							<li>object-src：插件，比如 flash</li>							
+							<li>child-src：iframe</li>
+							<li>manifest-src：manifest 文件</li>
+						</ul>
+						可选择的范围有：
+						<ul>
+							<li>主机 + 路径 + 通配符：比如 example.com，表示只有这个主机的资源可以加载</li>
+							<li>'none'：禁止任何资源加载</li>
+							<li>'self'：只有当前域名的资源可以加载</li>
+							<li>协议：对应协议的资源可以加载，比如 https:</li>
+						</ul>
+						例子：
+						<pre><code class="http">
+Content-Security-Policy: script-src 'self';img-src: 'self';style-src:jsfiddle.net
+						</code></pre>
+						<div class="tip">
+							除此之外，也可以在页面中使用 meta 标签来实现相同的功能 &lt;meta http-equiv="Content-Security-Policy" content="xxx"&gt;
+						</div>
+				</p>
 			</p>
 		</section>
 		<section>

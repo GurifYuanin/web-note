@@ -94,13 +94,14 @@ const blob = new Blob(source: string[], options?: {
         URL.createObjectURL 是一个静态方法，可以将 Blob、File、MediaSource 转化为 DOMString（UTF-16 的字符串）。
         <pre><code class="typescript">
 URL.createObjectURL(source: Blob | File | MediaSource): DOMString;
+// => blob:xxx
         </code></pre>
         <h3>revokeObjectURL</h3>
         URL.revokeObjectURL 用于释放之前已经创建出来的 DOMString，除此之外，关闭浏览器也会自动释放 DOMString。
         <pre><code class="typescript">
 URL.revokeObjectURL(domString: DOMString);
         </code></pre>
-        <h3>下载文件</h3>
+        <h3>下载文本文件</h3>
         <pre><code class="typescript">
 function downText(text: string) {
   const blob = new Blob([text]);
