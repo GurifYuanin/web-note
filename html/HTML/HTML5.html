@@ -454,6 +454,48 @@ if ('WebSocket' in window) {
 				</code></pre>
 			</p>
 		</section>
+		<section>
+			<h2>postMessage</h2>
+			<p>
+				postMessage 可以用于两个不同源的地址进行通信，发送方使用 postMessage 方法发送消息，接收方用 onmessage 事件来接收消息。
+				<div class="command">
+					targetWindow.postMessage(data: any, origin: string, transfer?: Transferable)
+				</div>
+				<div class="tip">
+					以下例子默认发送数据为 data = { hello: 'world' }, origin 为 '*'
+				</div>
+				<h3>iframe</h3>
+				iframe 是子页面，父子页面之间进行通信。
+				<pre><code class="javascript">
+/* 子页面 */
+// 发送消息到父页面 & 从父页面接收消息
+window.parent.postMessage(data, origin);
+window.addEventListener('message', function(event) {
+	console.log(event.data);
+});
+
+/* 父页面 */
+// 发送消息到子页面 & 从子页面接收消息
+const iframeEl = document.getElementById('iframe'); // 获得 iframe 元素
+iframeEl.contentWindow.postMessage(data, origin);
+window.addEventListener('message', function(event) {
+	console.log(event.data);
+});
+				</code></pre>
+				<h3>window.open</h3>
+				<pre><code class="javascript">
+/* 子页面 */
+// 同 iframe
+
+/* 父页面 */
+const openedWindow = window.open('www.example.com');
+openedWindow.postMessage(data, origin);
+window.addEventListener('message', function(event) {
+	console.log(event.data);
+});
+				</code></pre>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
