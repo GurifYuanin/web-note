@@ -268,6 +268,14 @@ UID PID PPID C STIME TTY TIME CMD
 					<li>TIME：CPU 执行了多久该进程（没有被 CPU 执行时不计时）</li>
 					<li>CMD：command，启动该进程的命令</li>
 				</ul>
+				以及 px ux。
+				<ul>
+					<li>u：显示进程的所有者</li>
+					<li>x：显示未附加到终端的进程</li>
+				</ul>
+				<pre><code class="shell">
+$ ps ux
+				</code></pre>
 				<h3>top</h3>
 				top 用于实时现实进程状态。
 				<pre><code class="shell">
@@ -607,6 +615,27 @@ $ . a.sh
 				<pre><code class="python">
 #! /usr/bin/python
 print 'hello world'
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>进程</h2>
+			<p>
+				<h3>sleep</h3>
+				让进程睡眠一段时间。
+				<div class="command">
+					sleep 时间
+				</div>
+				时间为 "数量" + "单位"，单位可选择：
+				<ul>
+					<li>s：秒，默认值</li>
+					<li>m：分钟</li>
+					<li>h：小时</li>
+					<li>d：天</li>
+				</ul>
+				也可以无限时间睡眠：
+				<pre><code class="shell">
+$ sleep infinity
 				</code></pre>
 			</p>
 		</section>
