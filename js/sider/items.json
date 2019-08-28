@@ -115,7 +115,8 @@
     "Collection",
     "python2",
     "pip",
-    "Django"
+    "Django",
+    "nsq"
   ],
   [
     "redis"
