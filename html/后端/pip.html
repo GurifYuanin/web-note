@@ -28,6 +28,19 @@
     <section>
       <h2>下载包</h2>
       <p>
+        <h3>安装包</h3>
+        <div class="command">
+          pip install &lt;package_name&gt;
+        </div>
+        <h3>安装包列表</h3>
+        <div class="command">
+          pip install &lt;package_name&gt; -r requirements.txt
+        </div>
+        requirements.txt 的格式为：
+        <pre><code class="txt">
+package_name==x.x.x
+        </code></pre>
+        需要注意的是，requirements.txt 是需要自己手动维护，当有包更新时候得进行相应地修改。
         <h3>指定用户</h3>
         pip 默认安装到系统目录（/usr/...），使用 --user 参数安装到当前用户目录（~/...）。
         <div class="command">
@@ -43,7 +56,7 @@
 index-url=http://mirrors.aliyun.com/pypi/simple/
 trusted-host=mirrors.aliyun.com
         </code></pre>
-        <h3>安装指定版本</h3>
+        <h3>安装指定版本的包</h3>
         <div class="command">
           pip install &lt;package_name&gt;==x.x.x
         </div>
@@ -57,6 +70,10 @@ trusted-host=mirrors.aliyun.com
     </section>
     <section>
       <h2>查看包</h2>
+      <h3>查看包列表</h3>
+      <div class="command">
+        pip freeze
+      </div>
       <h3>查看包详细信息</h3>
       可以查看到：
       <ul>
@@ -79,6 +96,66 @@ trusted-host=mirrors.aliyun.com
         如要要删除系统文件的包，则使用 root 权限执行该指令。
         <div class="command">
           sudo pip uninstall &lt;package_name&gt;
+        </div>
+      </p>
+    </section>
+    <section>
+      <h2>pipenv</h2>
+      <p>
+        <h3>原理</h3>
+        pipenv 是 pip 和 virtualenv 的结合，在安装包时自动进入 virtualenv 环境（如果不存在则创建）并将安装记录写在 Pipfile 文件内。pipenv 的 virtualenv 目录不在项目下，而在
+        <div class="command">
+          ~/.local/share/virtualenvs/&lt;project_name&gt;-&lt;hash&gt;
+        </div>
+        project_name 为当前所在的项目名字，hash 为随机生成的 8 位数哈希。
+        <pre><code class="shell">
+$ ls ~/.local/share/virtualenvs/&lt;project_name&gt;-&lt;hash&gt;
+bin/ lib/ selfcheck.json
+        </code></pre>
+        <h3>选择 python 版本</h3>
+        刚开始进入项目的时候指定接下来使用的 python 版本，如果不指定则选择默认的版本。
+        <div class="command">
+          pipenv [--three | --two]
+        </div>
+        <h3>安装包</h3>
+        安装依赖包并把包依赖写入 Pipfile 文件内，如果不存在该文件则进行创建。
+        <div class="command">
+          pipenv install &lt;package_name&gt;
+        </div>
+        <h3>安装包列表</h3>
+        根据 Pipfile 文件里的内容安装所有依赖包。
+        <div class="command">
+          pipenv install --dev
+        </div>
+        <h3>删除包</h3>
+        删除包并在 Pipfile 内移除该记录。
+        <div class="command">
+          pipenv  uninstall &lt;package_name&gt;
+        </div>
+        <h3>删除包列表</h3>
+        根据 Pipfile 文件里的内容删除所有依赖包。
+        <div class="command">
+          pipenv clear
+        </div>
+        <h3>创建 Pipfile.lock</h3>
+        <div class="command">
+          pipenv lock
+        </div>
+        <h3>进入 virtualenv</h3>
+        <div class="command">
+          pipenv shell
+        </div>
+        <h3>以 virtualenv 环境执行命令</h3>
+        <div class="command">
+          pipenv run command
+        </div>
+        <h3>检查安全漏洞</h3>
+        <div class="command">
+          pipenv check
+        </div>
+        <h3>显示依赖树</h3>
+        <div class="command">
+          pipen graph
         </div>
       </p>
     </section>

@@ -30,11 +30,31 @@ $(function () {
   }
 
   // 添加 icon
-  const icon = document.createElement('link');
-  icon.setAttribute('rel', 'shortcut icon');
-  icon.setAttribute('href', config.IMAGES_DIR + 'web-note.ico');
-  icon.setAttribute('type', 'image/vnd.microsoft.icon');
-  document.head.appendChild(icon);
+  (function() {
+    const icon = document.createElement('link');
+    icon.setAttribute('rel', 'shortcut icon');
+    icon.setAttribute('href', config.IMAGES_DIR + 'web-note.ico');
+    icon.setAttribute('type', 'image/vnd.microsoft.icon');
+    document.head.appendChild(icon);
+  })();
+  
+  // 点击 sup 标签打开链接
+  (function() {
+    const supEls = $('sup').toArray();
+    const linkEls = $<HTMLAnchorElement>('.refer>div>a').toArray();
+    const links = linkEls.map((a: HTMLAnchorElement) => a.getAttribute('href'));
+    for (let i = 0; i < supEls.length; i++) {
+      const supEl = supEls[i];
+      const supElIndex = Number.parseInt(supEl.innerText.replace(/[\[\]]/g, ''), 10) - 1;
+      const link = links[supElIndex];
+      if (link) {
+        supEl.setAttribute('title', link);
+        supEl.addEventListener('click', (event: MouseEvent) => {
+          window.open(link);
+        });
+      }
+    }
+  })();
 
   let isBright = false; // 是否在日间模式
   const url = window.location.href;

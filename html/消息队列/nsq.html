@@ -213,6 +213,15 @@
           <li>REQ：告诉 nsqd message 必须重新进入队列</li>
           <li>TOUCH：当客户端消费时间超过配置的超时时间 max_msg_timeout，那么可以使用 TOUCH 信号来重置 nsqd 的计时，直到发出 FIN 或 REQ 信号</li>
         </ul>
+        <h3>backoff</h3>
+        当客户端消费 message 失败时（即客户端处于 backoff 状态），应该发送 rdy_count 0 给对应的 nsqd，然后等待一个超时时间（timeout），超时时间结束后发送 rdy_count 1 给 nsqd 进行测试看能否回到全流量的状态。这个超时时间：
+        <ul>
+          <li>可变的，每次 rdy_count 1 测试后如果消息处理器能够成功处理，则超时时间减少，否则超时时间增加</li>
+          <li>当超时时间等于 0 时表示客户端可以正常接收并处理 message</li>
+        </ul>
+        <figure>
+          <img src="http://media.tumblr.com/7adbf06362cc6530153ef35b4dacf2cb/tumblr_inline_mmjev3stkE1qz4rgp.png" alt="">
+        </figure>
       </p>
     </section>
     <section class="refer">

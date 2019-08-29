@@ -512,6 +512,10 @@ body {
     letter-spacing: .25px;
     overflow: hidden;
 
+    sup {
+        cursor: pointer;
+    }
+
     // 屏幕大于等于 600px 时的样式
     @media (min-device-width:$deviceThreshold) {
         width: 65%;

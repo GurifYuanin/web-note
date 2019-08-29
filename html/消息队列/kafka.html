@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>kafka</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+<body>
+  <aside id="sidebar">
+    <section id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </section>
+  </aside>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <article id="container">
+    <hgroup>
+      <h1 id="title">kafka</h1>
+    </hgroup>
+    <section>
+      <h2>基本概念</h2>
+      <p>
+        <h3>Producer & Broker</h3>
+        Broker 即 kafka 集群，它以 topic 为分类存储了生产者（Producer）推送（push）过来的记录（Record）构成消息队列（queue）存储在磁盘中。
+        <h3>Record</h3>
+        Record 是生产者产生的数据，它包含了：
+        <ul>
+          <li>key：记录的键</li>
+          <li>value：记录的值</li>
+          <li>timestamp：生成该记录的时间戳</li>
+        </ul>
+        <h3>Partition</h3>
+        一条消息队列会被分为不同的 Partition，每个 Partition 在物理上是不同的目录，当接收到生产者发送的一条记录时，会根据某种机制决定追加到哪个 Partition 之后。
+        <h3>Consumer</h3>
+        消费者自己决定何时到 Broker 下的哪个 topic 的哪个 Partition 消费记录，消费者会自己维护一个 offset，表示上次消费到 Partition 哪个位置（偏移量）。offset 是由消费者自己维护的，消费者甚至可以根据自己需要进行变更，实现重复消费某个记录。
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] InfoQ 郭俊 Kafka 设计解析（一）：Kafka 背景及架构介绍 <a href="https://www.infoq.cn/article/kafka-analysis-part-1">https://www.infoq.cn/article/kafka-analysis-part-1</a></div>
+        <div>[2] Apache kafka <a href="https://kafka.apache.org/intro">https://kafka.apache.org/intro</a></div>
+      </p>
+    </section>
+  </article>
+</body>
+</html>

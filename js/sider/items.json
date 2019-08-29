@@ -115,8 +115,11 @@
     "Collection",
     "python2",
     "pip",
-    "Django",
-    "nsq"
+    "Django"
+  ],
+  [
+    "nsq",
+    "kafka"
   ],
   [
     "redis"
