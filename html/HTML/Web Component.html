@@ -98,7 +98,7 @@ class MyElement extends HTMLElement {
           <img src="../../images/web_components_shadow_root_closed.png">
           <figcaption>#shadow-root 是 shadowRoot，word-count 是 shadow host</figcaption>
         </figure>
-        如果不进行 attachShadow，那么自定义标签就是个普通的标签。而进行 attachShadow 后，在该自定义标签内添加内容都会被忽略掉，只有 shadowRoot.addChild （挂在 shadowRoot 下的子节点）的元素才会被浏览器渲染出来。
+        如果不进行 attachShadow，那么自定义标签就是个普通的标签。而进行 attachShadow 后，在该自定义标签内添加内容都会被忽略掉，只有 shadowRoot.appendChild （挂在 shadowRoot 下的子节点）的元素才会被浏览器渲染出来。
         <h3>shadowRoot 和 shadow host</h3>
         假如自定义元素是 $0（比如上面的 word-count 元素），那么存在以下关系：
         <pre><code class="javascript">

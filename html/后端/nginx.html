@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/styles/agate.css">
   <link rel="stylesheet" href="../../css/dark.css">
-  
   <script src="../../js/highlight.pack.js"></script>
   <script src="../../js/index.min.js"></script>
   <title>Nginx</title>
@@ -33,9 +32,19 @@
       <p>
         <h3>配置文件</h3>
         <ul>
-          <li>CentOS 由于是 yum 安装，所以 Nginx 配置文件目录为 /etc/nginx/nginx.conf</li>
+          <li>CentOS / Debian 由于是 yum 安装，所以 Nginx 配置文件目录为 /etc/nginx/nginx.conf</li>
           <li>MacOS 上 Nginx 配置文件目录为 /usr/local/etc/nginx/nginx.conf</li>
         </ul>
+        Linux 上应该把配置文件写在 /etc/nginx/sites-enabled 下，比如 /etc/nginx/sites-enabled/test.conf。
+        <pre><code class="nginx">
+server {
+  listen 80;
+  server_name www.test.com;
+  location / {
+    proxy_pass http://127.0.0.1:8080;
+  }
+}
+        </code></pre>
         <div class="tip">
           nginx 使用 # 进行单行注释。
         </div>

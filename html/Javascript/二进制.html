@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>二进制</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+<body>
+  <aside id="sidebar">
+    <section id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </section>
+  </aside>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <article id="container">
+    <hgroup>
+      <h1 id="title">二进制</h1>
+    </hgroup>
+    <section>
+      <h2>Buffer</h2>
+      <p>
+        Buffer 是 Node 内置的一个核心库。
+        <h3>创建</h3>
+        从已有的数据转化为 Buffer 格式。
+        <pre><code class="typescript">
+Buffer.from(source: numer[] | string | Buffer, charset?: string);
+        </code></pre>
+        或者直接开辟指定长度的空间，一个 Buffer 长度的元素表示 00 ~ FF 的数值，alloc 后所有值都会被初始化为 0。
+        <pre><code class="typescript">
+Buffer.alloc(size: number);
+        </code></pre>
+        alloc 完之后就可以对分配出来的 buffer 进行写操作。
+        <pre><code class="typescript">
+buffer.write(source: string, length?: number, offset:? number, charset?: string);
+        </code></pre>
+        为了性能也可以直接 allocUnsafe，表示 alloc 后不进行初始化，因此 buffer 的值不可预期。
+        <pre><code class="typescript">
+Buffer.allocUnsafe(size: number);
+        </code></pre>
+        <h3>转化</h3>
+        将 Buffer 实例对象转化为 string。
+        <pre><code class="typescript">
+const buffer = Buffer.from('hello world');
+
+buffer.toString(charset: string);
+        </code></pre>
+        转化为 JSON，实际上是转化为 { type: 'Buffer', data: number[] }，data 为十进制格式的 buffer 数组。
+        <pre><code class="typescript">
+buffer.toJSON();
+        </code></pre>
+        <h3>遍历</h3>
+        buffer 实例对象可以像数组一样进行遍历。
+        <pre><code class="typescript">
+for (const value of buffer) {
+  console.log(value);
+}
+
+for (let i = 0; i < buffer.length; i++) {
+  console.log(buffer[i]);
+}
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>Blob</h2>
+      <p>
+        Blob 表示不可变的原始数据对象。
+        <pre><code class="typescript">
+const blob = new Blob(source: string[], options?: {
+  type: string,
+  endings: 'transparent' | 'native'
+});
+        </code></pre>
+        type 表示 MIME type，比如 text/html。endings 表示 source 中的 \n 如何被处理。
+        <ul>
+          <li>transparent：默认，保持不变</li>
+          <li>native：自动更换为所在环境适合的换行符</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>URL</h2>
+      <p>
+        <h3>createObjectURL</h3>
+        URL.createObjectURL 是一个静态方法，可以将 Blob、File、MediaSource 转化为 DOMString（UTF-16 的字符串）。
+        <pre><code class="typescript">
+URL.createObjectURL(source: Blob | File | MediaSource): DOMString;
+// => blob:xxx
+        </code></pre>
+        <h3>revokeObjectURL</h3>
+        URL.revokeObjectURL 用于释放之前已经创建出来的 DOMString，除此之外，关闭浏览器也会自动释放 DOMString。
+        <pre><code class="typescript">
+URL.revokeObjectURL(domString: DOMString);
+        </code></pre>
+        <h3>下载文本文件</h3>
+        <pre><code class="typescript">
+function downText(text: string) {
+  const blob = new Blob([text]);
+  const downloadEl = document.createElement('a');
+  downloadEl.style.display = 'none';
+  downloadEl.download = 'text.txt';
+  downloadEl.href = URL.createObjectURL(blob);
+  document.body.appendChild(downloadEl);
+  downloadEl.click();
+  document.body.removeChild(downloadEl);
+}
+        </code></pre>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] Node.js Buffer <a href="http://nodejs.cn/api/buffer.html">http://nodejs.cn/api/buffer.html</a></div>
+      </p>
+    </section>
+  </article>
+</body>
+</html>

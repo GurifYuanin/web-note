@@ -268,6 +268,14 @@ UID PID PPID C STIME TTY TIME CMD
 					<li>TIME：CPU 执行了多久该进程（没有被 CPU 执行时不计时）</li>
 					<li>CMD：command，启动该进程的命令</li>
 				</ul>
+				以及 px ux。
+				<ul>
+					<li>u：显示进程的所有者</li>
+					<li>x：显示未附加到终端的进程</li>
+				</ul>
+				<pre><code class="shell">
+$ ps ux
+				</code></pre>
 				<h3>top</h3>
 				top 用于实时现实进程状态。
 				<pre><code class="shell">
@@ -579,6 +587,63 @@ $ curl -v url
 				使用 -o 参数表示将请求结果下载到指定文件。
 				<pre><code class="shell">
 $ curl url -o file
+				</code></pre>
+				使用 -X method 来指定请求方式。
+				<pre><code class="shell">
+$ curl -X POST url
+				</code></pre>
+				使用 -d data 来让 body 带数据。
+				<pre><code class="shell">
+$ curl -d data url
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>执行</h2>
+			<p>
+				<h3>source</h3>
+				逐行执行文件里的每行命令。
+				<div class="command">
+					source file
+				</div>
+				<h3>sh & bash & . & 直接执行</h3>
+				/bin/sh 是符合 POSIX 标准的规范，一般指向 /bin/bash。
+				<pre><code class="shell">
+# 执行 a.sh
+$ sh a.sh
+$ bash a.sh
+$ ./a.sh
+$ . a.sh
+				</code></pre>
+				<ul>
+					<li>sh & bash & 直接执行：创建子进程执行文件</li>
+					<li>. ：在当前进程执行</li>
+				</ul>
+				当直接执行时，会查看文件的第一行来决定是采用哪个解释器来执行，比如以下文件无论后缀名是什么，都会选择 python 来执行。
+				<pre><code class="python">
+#! /usr/bin/python
+print 'hello world'
+				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>进程</h2>
+			<p>
+				<h3>sleep</h3>
+				让进程睡眠一段时间。
+				<div class="command">
+					sleep 时间
+				</div>
+				时间为 "数量" + "单位"，单位可选择：
+				<ul>
+					<li>s：秒，默认值</li>
+					<li>m：分钟</li>
+					<li>h：小时</li>
+					<li>d：天</li>
+				</ul>
+				也可以无限时间睡眠：
+				<pre><code class="shell">
+$ sleep infinity
 				</code></pre>
 			</p>
 		</section>

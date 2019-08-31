@@ -396,6 +396,23 @@ print os.sys.path;
 PYTHONPATH=/demo1:/demo2:/demo3 ./demo.py
 ['', '/demo1', '/demo2', '/demo3', ...]
 				</code></pre>
+				<h3>virtualenv</h3>
+				由于通过 pip 等包管理工具下载的 python 包会放在同一个地方，比如 ~/Library/Python/2.7/site-packages 或者 /Library/Python/2.7/site-packages，当不同项目依赖不同版本的包时就无法满足需求。
+				<h4>安装</h4>
+				<pre><code class="shell">
+$ pip install virtualenv
+				</code></pre>
+				<h4>使用</h4>
+				在自己的项目下创建一个目录（比如 env）用于装虚拟环境。
+				<pre><code class="shell">
+$ virtualenv env
+				</code></pre>
+				每次开发项目之前先进入虚拟环境，这样使用 pip 等安装的包将安装到 env/lib/pythonX.X/ 下。
+				<pre><code class="shell">
+$ source env/bin/activate
+				</code></pre>
+				<h4>原理</h4>
+				activate 文件实际上是将 env 目录所在路径临时加到 PATH 最前面，这样每次使用 pip 等指令会优先选择 env/bin/ 下的文件，包引用的时候也会优先选择到 env/lib/pythonX.X/ 下。
 				<h3>import</h3>
 				如果要引入其他模块，则可以使用 from...import 或 import 关键字，该关键字会沿着 os.sys.path 进行查找：
 				<pre><code class="python">
@@ -721,6 +738,7 @@ r.encoding = 'utf-8';
 				</div>
 				<div>[5] Github debugtools <a
 						href="https://github.com/edoburu/django-debugtools">https://github.com/edoburu/django-debugtools</a></div>
+				<div>[6] virtualenv <a href="https://virtualenv.pypa.io/en/latest/">https://virtualenv.pypa.io/en/latest/</a></div>
 			</p>
 		</section>
 	</article>

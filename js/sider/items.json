@@ -11,7 +11,8 @@
     "svg",
     "cookie",
     "PWA",
-    "Web Component"
+    "Web Component",
+    "ServiceWorker"
   ],
   [
     "选择器",
@@ -48,7 +49,8 @@
     "promise",
     "Generator",
     "async",
-    "Typescript"
+    "Typescript",
+    "二进制"
   ],
   [
     "three",
@@ -112,7 +114,12 @@
     "nginx",
     "Collection",
     "python2",
+    "pip",
     "Django"
+  ],
+  [
+    "nsq",
+    "kafka"
   ],
   [
     "redis"
@@ -125,7 +132,9 @@
   ],
   [
     "指令",
-    "目录结构"
+    "目录结构",
+    "shell",
+    "docker"
   ],
   [
     "effect",

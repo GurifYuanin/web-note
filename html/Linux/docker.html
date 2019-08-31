@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>docker</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+<body>
+  <aside id="sidebar">
+    <section id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </section>
+  </aside>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <article id="container">
+    <hgroup>
+      <h1 id="title">docker</h1>
+    </hgroup>
+    <section>
+      <h2>Layer</h2>
+      <p>
+        <h3>是什么</h3>
+        Layer 是 docker 提出的概念，它由以下组成：
+        <ul>
+          <li>id：当前 Layer 的 id</li>
+          <li>Layer Metadata：当前 Layer 的元数据，包括运行和构建时的信息，以及父 Layer 的层次信息</li>
+          <li>parent id：指向父 Layer id 的指针，如果当前 Layer 处于最底层，则无该指针</li>
+          <li>主体：记录文件系统的改变</li>
+        </ul>
+        <h3>查看</h3>
+        查看某个 Image 的所有 Layer。
+        <div class="command">
+            docker history image-id
+        </div>
+        查看 Container 或 Image 顶层 Layer 的 Metadata：
+        <div class="command">
+          docker inspect container-id|image-id
+        </div>
+      </p>
+    </section>
+    <section>
+      <h2>Image</h2>
+      <p>
+        <h3>是什么</h3>
+        Image 是将若干个只读 Layer 使用统一文件系统（union file system）技术整合成的文件系统。
+        <h3>查看</h3>
+        <pre><code class="shell">
+$ docker image ls
+        </code></pre>
+        <h3>制作 - 从 base Image</h3>
+        使用 Dockerfile 声明即将创建的 Image，文件内每一行都会生成一层 Layer。
+        <pre><code class="Dockerfile">
+# Use an official Python runtime as a parent image
+FROM python:2.7-slim
+# Set the working directory to /app
+WORKDIR /app
+# Copy the current directory contents into the container at /app
+COPY . /app
+# Install any needed packages specified in requirements.txt
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
+# Make port 80 available to the world outside this container
+EXPOSE 80
+# Define environment variable
+ENV NAME World
+# Run app.py when the container launches
+CMD ["python", "app.py"]
+        </code></pre>
+        然后执行构建自定义的 Image，image-name 是自己指定的 Image 名字，path 是指定 Dockerfile 所在路径。
+        <div class="command">
+          docker image build -t image-name[:tag] path
+        </div>
+        Dockerfile 每一行的结构为：
+        <div class="command">
+          指令 参数
+        </div>
+        指令是大小写不敏感的，但应遵循公共规范保持全大写。Dockerfile 指定后执行 build 阶段会逐行执行指令。
+        <div class="tip">
+          Dockerfile 以 # 表示单行注释。
+        </div>
+        <h4>FROM</h4>
+        FROM 指定以什么 Image 作为基础，Dockerfile 必须以该指令为开头，一般写法为：
+        <div class="command">
+          FROM image-name[:tag]
+        </div>
+        image-name 表示 Image 名字，tag 表示 Image 的版本。
+        <h4>WORKDIR</h4>
+        切换当前工作路径，相当于 cd 操作。
+        <h4>COPY</h4>
+        把 src 下的所有文件等复制到 dest 路径下。
+        <div class="command">
+          COPY src dest
+        </div>
+        <h4>RUN</h4>
+        执行任意的指令，存在以下两种写法：
+        <div class="command">
+          RUN command param1 param2 ...
+          <br>
+          RUN ['command', 'param1', 'param2', ...]
+        </div>
+        <h4>EXPOSE</h4>
+        EXPOSE 用于告诉 docker 在运行时监听的端口。
+        <h4>CMD</h4>
+        CMD 是用于启动 container 所执行的默认操作，用法与 RUN 类型。
+        <h3>制作 - 从 Container</h3>
+        将 Container 转化为 Image，实际上是将顶层的可读写 Layer 转为只读 Layer。
+        <div class="command">
+          docker [container] commit container-id
+        </div>
+        <h3>拉取</h3>
+        docker hub 是 docker 官方维护的 Image 仓库，既有官方发布的 Image，也有大量第三方制作的 Image 提供下载。
+        <div class="command">
+          docker image pull 组名/镜像名
+        </div>
+        比如拉去官方提供的 library/hello-world：
+        <pre><code class="shell">
+$ docker image pull library/hello-world
+        </code></pre>
+        <h3>删除</h3>
+        <div class="command">
+            docker image rm image-id
+        </div>
+      </p>
+    </section>
+    <section>
+      <h2>Container</h2>
+      <p>
+        <h3>是什么</h3>
+        Container 是 1 个 Image + 1 个可读写的 Layer，Container 是个文件，需要先创建（create），再执行（start）。
+        <h3>查看</h3>
+        <div class="command">
+          docker container ls
+        </div>
+        可以添加以下选项：
+        <ul>
+          <li>不添加：默认，只查看在执行中的 Container</li>
+          <li>-a：查看所有 Container</li>
+          <li>-q：只显示 container-id 一列</li>
+        </ul>
+        <h3>创建</h3>
+        <div class="command">
+            docker [container] create image-name|image-id
+        </div>
+        <h3>执行</h3>
+        <div class="command">
+          docker [container] start container-id
+        </div>
+        <h3>创建并执行</h3>
+        <div class="command">
+          docker [container] run image-id|image-name
+        </div>
+        其后可添加的参数有：
+        <ul>
+          <li>-p outer-port/inner-port：表示将内部端口映射到外部端口，比如 -p 8080/80 表示将内部的 80 端口映射到外部的 8080 端口，这样 Container 的服务在 80 端口上运行，外部访问本机的 8080 端口就可以访问到这个服务</li>
+          <li>--name container-name：为 Container 设置名字</li>
+          <li>--rm：容器运行终止后自动删除</li>
+          <li>-t：将 command 的执行结果输出到当前终端</li>
+          <li>command：追加的 command 会在 Container 内执行</li>
+        </ul>
+        运行中的 Container 可以使用 docker exec 向 Container 内传入指令执行：
+        <div class="command">
+          docker [container] exec container-name|container-id command
+        </div>
+        <h3>终止</h3>
+        正常终止：
+        <div class="command">
+          docker stop container-id
+        </div>
+        不友好终止：
+        <div class="command">
+          docker kill container-id
+        </div>
+        <h3>删除</h3>
+        <div class="command">
+          docker container rm container-id
+        </div>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 10张图带你深入理解Docker容器和镜像 <a href="http://dockone.io/article/783">http://dockone.io/article/783</a></div>
+        <div>[2] Jessica G Digging into Docker layers <a href="https://medium.com/@jessgreb01/digging-into-docker-layers-c22f948ed612">https://medium.com/@jessgreb01/digging-into-docker-layers-c22f948ed612</a></div>
+        <div>[3] Dockerfile Referrence <a href="https://docs.docker.com/engine/reference/builder/">https://docs.docker.com/engine/reference/builder/</a></div>
+      </p>
+    </section>
+  </article>
+</body>
+</html>

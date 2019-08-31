@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>pip</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+<body>
+  <aside id="sidebar">
+    <section id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </section>
+  </aside>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <article id="container">
+    <hgroup>
+      <h1 id="title">pip</h1>
+    </hgroup>
+    <section>
+      <h2>下载包</h2>
+      <p>
+        <h3>安装包</h3>
+        <div class="command">
+          pip install &lt;package_name&gt;
+        </div>
+        <h3>安装包列表</h3>
+        <div class="command">
+          pip install &lt;package_name&gt; -r requirements.txt
+        </div>
+        requirements.txt 的格式为：
+        <pre><code class="txt">
+package_name==x.x.x
+        </code></pre>
+        需要注意的是，requirements.txt 是需要自己手动维护，当有包更新时候得进行相应地修改。
+        <h3>指定用户</h3>
+        pip 默认安装到系统目录（/usr/...），使用 --user 参数安装到当前用户目录（~/...）。
+        <div class="command">
+          pip install &lt;package_name&gt; --user
+        </div>
+        <h3>指定pypi源</h3>
+        <div class="command">
+          pip install &lt;package_name&gt; --index-url=http://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
+        </div>
+        --trusted-host 用于表示该域名地址即使不使用 https 也可以信任，这些配置也可以写在配置文件 ~/.pip/pip.conf 中。
+        <pre><code class="config">
+[global]
+index-url=http://mirrors.aliyun.com/pypi/simple/
+trusted-host=mirrors.aliyun.com
+        </code></pre>
+        <h3>安装指定版本的包</h3>
+        <div class="command">
+          pip install &lt;package_name&gt;==x.x.x
+        </div>
+        <h3>升级包</h3>
+        <div class="command">
+          pip install --upgrade &lt;package_name&gt;
+        </div>
+        <h3>安装地址</h3>
+        一般来说，--user 安装地址为：~/.../Python/&lt;version&gt;/site-packages/，而 root 用户安装地址为 /.../Python/&lt;version&gt;/site-packages/。
+      </p>
+    </section>
+    <section>
+      <h2>查看包</h2>
+      <h3>查看包列表</h3>
+      <div class="command">
+        pip freeze
+      </div>
+      <h3>查看包详细信息</h3>
+      可以查看到：
+      <ul>
+        <li>包名、版本号、简介</li>
+        <li>主页、作者、邮箱、协议</li>
+        <li>包所在路径以及包下所有文件的路径</li>
+      </ul>
+      <div class="command">
+        pip show --files &lt;package_name&gt;
+      </div>
+    </section>
+    <section>
+      <h2>删除包</h2>
+      <p>
+        <h3>指定用户</h3>
+        删除执行 uninstall 指令的用户下的包。
+        <div class="command">
+          pip uninstall &lt;package_name&gt;
+        </div>
+        如要要删除系统文件的包，则使用 root 权限执行该指令。
+        <div class="command">
+          sudo pip uninstall &lt;package_name&gt;
+        </div>
+      </p>
+    </section>
+    <section>
+      <h2>pipenv</h2>
+      <p>
+        <h3>原理</h3>
+        pipenv 是 pip 和 virtualenv 的结合，在安装包时自动进入 virtualenv 环境（如果不存在则创建）并将安装记录写在 Pipfile 文件内。pipenv 的 virtualenv 目录不在项目下，而在
+        <div class="command">
+          ~/.local/share/virtualenvs/&lt;project_name&gt;-&lt;hash&gt;
+        </div>
+        project_name 为当前所在的项目名字，hash 为随机生成的 8 位数哈希。
+        <pre><code class="shell">
+$ ls ~/.local/share/virtualenvs/&lt;project_name&gt;-&lt;hash&gt;
+bin/ lib/ selfcheck.json
+        </code></pre>
+        <h3>选择 python 版本</h3>
+        刚开始进入项目的时候指定接下来使用的 python 版本，如果不指定则选择默认的版本。
+        <div class="command">
+          pipenv [--three | --two]
+        </div>
+        <h3>安装包</h3>
+        安装依赖包并把包依赖写入 Pipfile 文件内，如果不存在该文件则进行创建。
+        <div class="command">
+          pipenv install &lt;package_name&gt;
+        </div>
+        <h3>安装包列表</h3>
+        根据 Pipfile 文件里的内容安装所有依赖包。
+        <div class="command">
+          pipenv install --dev
+        </div>
+        <h3>删除包</h3>
+        删除包并在 Pipfile 内移除该记录。
+        <div class="command">
+          pipenv  uninstall &lt;package_name&gt;
+        </div>
+        <h3>删除包列表</h3>
+        根据 Pipfile 文件里的内容删除所有依赖包。
+        <div class="command">
+          pipenv clear
+        </div>
+        <h3>创建 Pipfile.lock</h3>
+        <div class="command">
+          pipenv lock
+        </div>
+        <h3>进入 virtualenv</h3>
+        <div class="command">
+          pipenv shell
+        </div>
+        <h3>以 virtualenv 环境执行命令</h3>
+        <div class="command">
+          pipenv run command
+        </div>
+        <h3>检查安全漏洞</h3>
+        <div class="command">
+          pipenv check
+        </div>
+        <h3>显示依赖树</h3>
+        <div class="command">
+          pipen graph
+        </div>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p></p>
+    </section>
+  </article>
+</body>
+</html>
