@@ -624,6 +624,17 @@ $ . a.sh
 #! /usr/bin/python
 print 'hello world'
 				</code></pre>
+				<h3>script</h3>
+				script 可以执行指令并将输出结果写入到文件中。
+				<div class="command">
+					script [option] file
+				</div>
+				若 file 不指定，则默认为 typescript 文件。可选择的选项有：
+				<ul>
+					<li>-c command：执行指令</li>
+					<li>-a：若不指定，则每次都会覆盖文件，若指定，则为追加写文件</li>
+					<li>-q：quiet</li>
+				</ul>
 			</p>
 		</section>
 		<section>
@@ -645,6 +656,20 @@ print 'hello world'
 				<pre><code class="shell">
 $ sleep infinity
 				</code></pre>
+			</p>
+		</section>
+		<section>
+			<h2>读写</h2>
+			<p>
+				<h3>tee</h3>
+				tee 可以将输入的内容同时输出到屏幕和文件中。
+				<div class="command">
+					input | tee file1 file2 file3 ...
+				</div>
+				使用参数 -a 表示追加而不是覆盖文件。
+				<div class="command">
+					input | tee -a file
+				</div>
 			</p>
 		</section>
 		<section class="refer">
