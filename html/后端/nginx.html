@@ -74,6 +74,7 @@ server {
     <section>
       <h2>本地文件服务器</h2>
       <p>
+        <h3>root</h3>
         使用 root 表示本地资源的位置，比如希望 127.0.0.1:8080 访问本地位置 /www/static。
         <pre><code class="nginx">
 user root;
@@ -93,6 +94,26 @@ http {
 }
         </code></pre>
         比如当访问 /css/index.css 时，实际访问的是本地路径 /www/static/css/index.css。
+        <h3>alias</h3>
+        alias 与 root 功能类似，但只会取出 location 后的路径的最后部分，比如
+        <pre><code class="nginx">
+server {
+  location /www/ {
+    alias /static;
+  }
+}
+        </code></pre>
+        这样一来，如果访问 /www/index.html，实际上访问的是 /static/index.html。
+        <h3>rewrite</h3>
+        rewrite 可以对路径进行重定向。
+        <pre><code class="nginx">
+server {
+  location / {
+    rewrite ^/www/(.*)$ /$1;
+  }
+}
+        </code></pre>
+        如果访问 /www/index.html，实际上会被重定向到 /index.html。
         <h3>types</h3>
         如果不加 include 和 default_type，nginx 会把所有资源当做 text，浏览器遇到 css 等资源就不会去解析。其中，mime.types 文件为 nginx 配置目录下自带的文件：
         <pre><code class="config">
