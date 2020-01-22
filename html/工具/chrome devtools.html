@@ -305,11 +305,28 @@ window.addEventListener('load', function() {
 		</section>
 		<section>
 			<h2>其他</h2>
+			<h3>调试移动端</h3>
 			<p>
 				chrome devtools 可以更改显示设备为移动设备，方便不同设备的调试。
 				<figure>
 					<img style="max-width: 100%;" src="../../images/chrome_devtools_device.gif" alt="加载失败">
 				</figure>
+			</p>
+			<h3>macOS同时安装多个版本chrome</h3>
+			<p>
+				<ul>
+					<li>
+						在 https://www.chromedownloads.net/chrome64osx/ 下载任意版本 chrome，安装的时候选择“保留两者”。比如下载了 chrome40，那么可以重命名为“Google Chrome40”
+					</li>
+					<li>
+						打开 Script Editor.app，编辑以下内容：
+						<pre><code class="shell">
+do shell script "/Applications/Google\\ Chrome40.app/Contents/MacOS/Google\\ Chrome --user-data-dir=/Users/$USER/Library/Application\\ Support/Google/Chrome40 > /dev/null 2>&1 &"
+						</code></pre>
+						如果是 chrome 其他版本，可以把 40 改为对应版本号。
+					</li>
+					<li>保存为 chrome40，文件格式选择“应用程序”。此后就不要直接打开“Google Chrome40”，而是打开该脚本</li>
+				</ul>
 			</p>
 		</section>
 		<section class="refer">

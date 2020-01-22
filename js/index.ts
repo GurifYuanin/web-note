@@ -1,7 +1,5 @@
 import $ from 'jquery';
 import _ from 'lodash';
-import category from './sider/category.json';
-import items from './sider/items.json';
 import * as config from './lib/config';
 import { formatDate } from './lib/date';
 import './lib/init';
@@ -9,8 +7,10 @@ import { getChineseName } from './lib/name';
 import Notify from './lib/notify';
 import path from './lib/path';
 import { copy, filterName, filterRepeatArray, getFileName, getViewport, isPhone, scrollTo, wrapByTag } from './lib/util';
+import category from './sider/category.json';
+import items from './sider/items.json';
 
-$(function () {
+$(function() {
   // 弹窗提示
   const notify = new Notify();
 
@@ -37,7 +37,7 @@ $(function () {
     icon.setAttribute('type', 'image/vnd.microsoft.icon');
     document.head.appendChild(icon);
   })();
-  
+
   // 点击 sup 标签打开链接
   (function() {
     const supEls = $('sup').toArray();
@@ -116,7 +116,7 @@ $(function () {
   const $searchResult = $('#searchResult');
   const $searchClear = $('#searchClear');
   const selectedBackgroundColor = 'rgb(239, 239, 239)';
-  $searchClear.click(function () {
+  $searchClear.click(function() {
     $searchInput.val('');
     $searchResult.slideUp();
   });
@@ -184,7 +184,7 @@ $(function () {
   }
 
   $searchResult.css('display', 'none');
-  $searchInput.keyup(function (event) {
+  $searchInput.keyup(function(event) {
     const keyword = ($searchInput.val() || '').toString();
     let searchResult = keyword.trim() === '' ? '' : getSearchResult(keyword);
     if (searchResult.trim() === '') {
@@ -210,7 +210,7 @@ $(function () {
     const $searchResults = $('#searchResult li');
     switch (event.keyCode) {
       case 13: // 回车键，打开新窗口
-        let index = $searchResults.toArray().findIndex(function (element) {
+        let index = $searchResults.toArray().findIndex(function(element) {
           return element.style.backgroundColor === selectedBackgroundColor;
         });
         if ($searchResults.length > index) {
@@ -278,10 +278,10 @@ $(function () {
   */
   // 点击类别开关子项
   const $itemHeads = $('#sidebar h3'); // catalog
-  $itemHeads.each(function () {
+  $itemHeads.each(function() {
     const that = $(this),
       img = that.children();
-    that.click(function () {
+    that.click(function() {
       const imageName = getFileName(img.attr('src'));
       const isArrowDownCategory = imageName === config.ARROW_DOWN_BRIGHT_FILENAME || imageName === config.ARROW_DOWN_DARK_FILENAME;
       img.attr('src', isArrowDownCategory ?
@@ -298,13 +298,13 @@ $(function () {
   }
   // 将当前浏览的条目展开
   if (currentTitle !== 'index' && !/.+\/html\/$/.test(currentTitle)) {
-    setTimeout(function () {
+    setTimeout(function() {
       scrollTo('#currentItem', $sidebar);
       const el = $('#currentItem > a');
       el.animate({
         'font-size': '1.25rem',
         'font-weight': 900,
-      }, 1000, function () {
+      }, 1000, function() {
         el.animate({
           'font-size': '1rem',
           'font-weight': 'bold',
@@ -324,7 +324,7 @@ $(function () {
   $('#toggle').click(toggleTheme);
 
   // 代码类型提醒
-  $('.hljs').each(function (i, el) {
+  $('.hljs').each(function(i, el) {
     const codeType = document.createElement('div'); // 显示代码的类型（语言）
     const codeCopy = document.createElement('div'); // 赋值代码按钮
     codeType.setAttribute('class', 'codeType');
@@ -333,7 +333,7 @@ $(function () {
     const elClass = el.getAttribute('class') || '';
     const type = elClass.split(' ')[0]; // 取出是哪种类型的代码
     codeType.innerText = type;
-    codeCopy.onclick = function () {
+    codeCopy.onclick = function() {
       copy(el.innerText.substring(1 + type.length).trim());
       notify.info({ content: '已经复制到剪切板' });
     };
@@ -354,7 +354,7 @@ $(function () {
     $codeStyle.attr('href', isBright ? config.BRIGHT_CODE_STYLE : config.DARK_CODE_STYLE);
     // $line.css('stroke', isBright ? '#fff' : '#000');
     $hideCatalog.attr('src', isBright ? config.CATALOG_DARK_IMAGE : config.CATALOG_BRIGHT_IMAGE);
-    $itemBlockImg.each(function (i: number, element: HTMLImageElement) {
+    $itemBlockImg.each(function(i: number, element: HTMLImageElement) {
       const { src } = element;
       element.src = isBright ?
         src.substring(0, src.lastIndexOf('.')) + '_dark.png' :
@@ -386,10 +386,10 @@ $(function () {
       widthInc = -1 / piece;
     }
     for (let i = start, delay = 0; i !== end; i += valInc, widthStart += widthInc, delay += timeInc) {
-      (function () {
+      (function() {
         const percentage = i + '%';
         const margin = '0 ' + widthStart + '%';
-        setTimeout(function () {
+        setTimeout(function() {
           $container.css({
             width: percentage,
             margin,
@@ -398,7 +398,7 @@ $(function () {
       })();
     }
     // 进行最后一次更新
-    setTimeout(function () {
+    setTimeout(function() {
       widthStart += widthInc;
       $container.css({
         width: end + '%',
@@ -411,7 +411,7 @@ $(function () {
     $sidebar.animate({ // 侧栏隐藏
       width: '0',
       padding: '0',
-    }, 'slow', function () {
+    }, 'slow', function() {
       $sidebar.css('display', 'none');
       // 如果是电脑则允许重新展开侧栏
       $showCatalog.css('display', isPhone() ? 'none' : 'block');
@@ -459,7 +459,7 @@ $(function () {
   function isSidebarFull() {
     return $sidebar.css('width') === '100%';
   }
-  window.addEventListener('resize', function () {
+  window.addEventListener('resize', function() {
     const width = getViewport().width;
     if (width < 1000 && $sidebar.css('display') !== 'none' && !isSidebarFull()) {
       hideCatalog();
@@ -476,10 +476,10 @@ $(function () {
 
   let scrollTimer: NodeJS.Timeout | null = null;
   let lastBodyTop = document.body.getBoundingClientRect().top;
-  window.addEventListener('scroll', function (event) {
+  window.addEventListener('scroll', function(event) {
     if (isPhone()) {
       if (scrollTimer) { clearTimeout(scrollTimer); }
-      scrollTimer = setTimeout(function () {
+      scrollTimer = setTimeout(function() {
         const currentBodyTop = document.body.getBoundingClientRect().top;
         if (currentBodyTop > lastBodyTop) {
           $phoneMenu.stop().slideDown();
@@ -490,7 +490,7 @@ $(function () {
       }, 20);
     }
   });
-  $phoneShowCatalog.click(function () {
+  $phoneShowCatalog.click(function() {
     if (!isSidebarFull()) { showCatalog(); }
     scrollTo();
   });
@@ -510,7 +510,7 @@ $(function () {
   // 点击后子标题置顶到窗口
   const currentH2 = decodeURI(url.substring(url.indexOf('#') + 1));
   // currentH2 = currentH2.replace(/\?theme=(dark)|(bright)/, '');
-  $subTitle.each(function (i, el) {
+  $subTitle.each(function(i, el) {
     const $h3TitleEls = $sectionEls.eq(i).children('h3');
     const h2Title = el.innerText;
     const filteredH2Title = filterName(h2Title);
@@ -521,7 +521,7 @@ $(function () {
       href="#${filteredH2Title}"
     ></a>`);
     // 点击后滑动窗口
-    el.onclick = function () {
+    el.onclick = function() {
       scrollTo('#' + filteredH2Title);
     };
     if (h2Title === currentH2) { el.click(); }
@@ -545,10 +545,10 @@ $(function () {
   const $subTitleItem = $('.subTitleItem');
   const $subTitleToggle = $('#subTitleToggle');
   const $subTitleBlock = $('#subTitleToggle>div.block');
-  $subTitleItem.each(function (i, el) {
+  $subTitleItem.each(function(i, el) {
     const filteredH2Title = filterName($subTitle.eq(i).text());
     const targetElId = filteredH2Title ? '#' + filteredH2Title : 'body';
-    el.onclick = function () {
+    el.onclick = function() {
       scrollTo(targetElId);
     };
   });
@@ -561,13 +561,13 @@ $(function () {
     let time = 0;
     // 块消失
     for (let i = $subTitleBlock.length; i >= 0; i-- , time += blockInterval) {
-      setTimeout(function () {
+      setTimeout(function() {
         $subTitleBlock.eq(i).hide('fast');
       }, time);
     }
     // 导航项出现
     for (let i = $subTitleItem.length - 1; i >= 0; i-- , time += itemInterval) {
-      setTimeout(function () {
+      setTimeout(function() {
         if (!isLeave) {
           $subTitleItem.eq(i).fadeIn(100);
         }
@@ -579,23 +579,23 @@ $(function () {
     event.cancelBubble = true; // IE
   }
   // 隐藏子标题导航
-  document.body.onclick = function (event) {
+  document.body.onclick = function(event) {
     if ((event.target as HTMLDivElement).getAttribute('class') !== 'subTitleItem') {
       let time = 0;
       isLeave = true; // 加锁，不让导航项出现
       // 导航项消失
       for (let i = 0; i < $subTitleItem.length; i++ , time += itemInterval) {
-        setTimeout(function () {
+        setTimeout(function() {
           $subTitleItem.eq(i).fadeOut(100);
         }, time);
       }
       // 块出现
       for (let i = 0; i < $subTitleBlock.length; i++ , time += blockInterval) {
-        setTimeout(function () {
+        setTimeout(function() {
           $subTitleBlock.eq(i).show('fast');
         }, time);
       }
-      setTimeout(function () {
+      setTimeout(function() {
         isLeave = false; // 开锁，允许导航项出现
       }, $subTitleItem.length * itemInterval + $subTitleBlock.length * blockInterval);
       isShow = false;
@@ -672,7 +672,7 @@ $(function () {
     if (disapearTimer) {
       clearTimeout(disapearTimer);
     }
-    disapearTimer = setTimeout(function () {
+    disapearTimer = setTimeout(function() {
       smaller.style.display = bigger.style.display = 'none';
     }, 1000);
   }
@@ -737,7 +737,7 @@ $(function () {
   downloadImg.setAttribute('title', '下载');
   downloadImg.setAttribute('class', 'closeImg');
   downloadImg.style.right = '200px';
-  downloadImg.onclick = function () {
+  downloadImg.onclick = function() {
     if (imgContainer.lastChild instanceof HTMLImageElement) {
       const { src } = imgContainer.lastChild;
       const a = document.createElement('a');
@@ -752,14 +752,14 @@ $(function () {
   onlySmaller.setAttribute('title', '缩小');
   onlySmaller.setAttribute('class', 'closeImg');
   onlySmaller.style.right = '150px';
-  onlySmaller.onmousedown = function () {
+  onlySmaller.onmousedown = function() {
     enSmaller();
     if (smallerTimer) {
       clearInterval(smallerTimer);
     }
     smallerTimer = setInterval(enSmaller, 200);
   };
-  onlySmaller.onmouseup = function () {
+  onlySmaller.onmouseup = function() {
     if (smallerTimer) {
       clearInterval(smallerTimer);
     }
@@ -769,14 +769,14 @@ $(function () {
   onlyBigger.setAttribute('title', '放大');
   onlyBigger.setAttribute('class', 'closeImg');
   onlyBigger.style.right = '100px';
-  onlyBigger.onmousedown = function () {
+  onlyBigger.onmousedown = function() {
     enBigger();
     if (biggerTimer) {
       clearInterval(biggerTimer);
     }
     biggerTimer = setInterval(enBigger, 200);
   };
-  onlyBigger.onmouseup = function () {
+  onlyBigger.onmouseup = function() {
     if (biggerTimer) {
       clearInterval(biggerTimer);
     }
@@ -785,7 +785,7 @@ $(function () {
   closeImg.innerText = 'x';
   closeImg.setAttribute('title', '关闭');
   closeImg.setAttribute('class', 'closeImg');
-  closeImg.onclick = function () {
+  closeImg.onclick = function() {
     if (imgContainer.lastChild instanceof HTMLImageElement) {
       imgContainer.removeChild(imgContainer.lastChild);
       imgContainer.style.display = 'none';
@@ -800,7 +800,7 @@ $(function () {
   resetImg.setAttribute('class', 'closeImg');
   resetImg.style.right = '50px';
   resetImg.setAttribute('title', '复原');
-  resetImg.onclick = function () {
+  resetImg.onclick = function() {
     if (imgContainer.lastChild instanceof HTMLImageElement) {
       imgContainer.lastChild.style.padding = '0px';
       if (imgOriginWidth) {
@@ -844,10 +844,10 @@ $(function () {
   nextImg.style.right = '0';
   lastImg.style.display = 'none';
   nextImg.style.display = 'none';
-  lastImg.onclick = function () {
+  lastImg.onclick = function() {
     changeImg(true);
   };
-  nextImg.onclick = function () {
+  nextImg.onclick = function() {
     changeImg(false);
   };
 
@@ -856,11 +856,11 @@ $(function () {
     const oldWidth = getWidth(child);
     child.style.width = oldWidth + getIncreatement(child) + 'px';
   }
-  smaller.onclick = function (e) {
+  smaller.onclick = function(e) {
     enSmaller();
     offsetImg(e, false);
   };
-  bigger.onclick = function (e) {
+  bigger.onclick = function(e) {
     enBigger();
     offsetImg(e, true);
   };
@@ -868,17 +868,17 @@ $(function () {
   document.body.appendChild(bigger);
   document.body.appendChild(lastImg);
   document.body.appendChild(nextImg);
-  $('#container figure>img').each(function () {
+  $('#container figure>img').each(function() {
     const el = $(this);
     el.attr('title', '点击放大');
-    el.click(function () {
+    el.click(function() {
       const img = document.createElement('img');
       img.setAttribute('class', 'tmpImg');
       img.setAttribute('title', '点击右键打开缩放菜单');
       img.setAttribute('src', el.attr('src') || '');
       imgContainer.style.display = mask.style.display = 'block';
       // 按下右键弹出选项
-      img.oncontextmenu = function (e) {
+      img.oncontextmenu = function(e) {
         if (disapearTimer) {
           clearTimeout(disapearTimer);
         }
@@ -895,7 +895,7 @@ $(function () {
       lastImg.style.display = '';
       nextImg.style.display = '';
       imgContainer.appendChild(img);
-      setTimeout(function () {
+      setTimeout(function() {
         imgOriginWidth = getWidth(img);
         img.style.width = imgOriginWidth + 'px';
       }, 0);
@@ -914,11 +914,11 @@ $(function () {
   //     img
   //     div
 
-  (function () {
+  (function() {
     // 点击后 slideUp 和 slideDown
     const $dir = $('#catalogFrame img');
     if ($dir.length) {
-      $dir.click(function () {
+      $dir.click(function() {
         const brother = $(this).next().next();
         if (typeof brother !== 'undefined' && brother.prop('tagName').toUpperCase() === 'DIV') {
           brother.toggle(500);
@@ -933,15 +933,15 @@ $(function () {
         cellpadding: 1,
         cellspacing: 0,
       });
-      $table.each(function () {
+      $table.each(function() {
         $(this).parent().css('overflow', 'auto');
       });
     }
   })();
 
-  (function () {
+  (function() {
     // 点击关键字进行百度搜索
-    $('.different, .definition').click(function () {
+    $('.different, .definition').click(function() {
       const that = $(this);
       const hasSearched = that.attr('has-searched');
       const keyword = that.text();
@@ -967,7 +967,7 @@ $(function () {
         }) {
           if (data.items.length > 0) {
             that.attr('has-searched', 'true');
-            const list = data.items.filter(function (item) {
+            const list = data.items.filter(function(item) {
               return !item.is_ad;
             });
             const searchResultEl = document.createElement('div');
@@ -975,7 +975,7 @@ $(function () {
             const closeEl = document.createElement('span');
             closeEl.innerText = '✘';
             closeEl.setAttribute('class', 'searchResultClose');
-            closeEl.onclick = function (event) {
+            closeEl.onclick = function(event) {
               that.empty();
               that.text(keyword);
               that.removeAttr('has-searched');
@@ -995,7 +995,7 @@ $(function () {
               a.setAttribute('href', list[i].href);
               a.setAttribute('title', list[i].description);
               a.setAttribute('target', '_blank');
-              a.onclick = function (event) {
+              a.onclick = function(event) {
                 event.stopPropagation();
               };
               a.innerHTML = list[i].title;
@@ -1067,7 +1067,7 @@ $(function () {
   appendCommentUsername.setAttribute('class', 'appendCommentUsername');
   appendCommentRandom.innerText = '随机取名';
   appendCommentRandom.setAttribute('class', 'button');
-  appendCommentRandom.onclick = function () { appendCommentUsername.value = getChineseName(); };
+  appendCommentRandom.onclick = function() { appendCommentUsername.value = getChineseName(); };
   appendCommentHead.setAttribute('class', 'commentSection');
   appendCommentHead.innerText = '用户名：';
   appendCommentHead.appendChild(appendCommentUsername);
@@ -1078,7 +1078,7 @@ $(function () {
   appendCommentButtonGroup.style.textAlign = 'center';
   appendCommentSubmit.innerText = '评论';
   appendCommentSubmit.setAttribute('class', 'button button-primary');
-  appendCommentSubmit.onclick = function () {
+  appendCommentSubmit.onclick = function() {
     // 追加一条评论
     if (appendCommentText.value.trim() === '') {
       notify.info({ content: '请选择填写内容再评论', type: 'warning' });
@@ -1110,7 +1110,7 @@ $(function () {
 
   };
   appendCommentClear.innerText = '清空';
-  appendCommentClear.onclick = function () { appendCommentText.value = ''; };
+  appendCommentClear.onclick = function() { appendCommentText.value = ''; };
   appendCommentClear.setAttribute('class', 'button');
 
   appendCommentButtonGroup.appendChild(appendCommentSubmit);

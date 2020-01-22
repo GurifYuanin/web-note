@@ -114,6 +114,9 @@ server {
 }
         </code></pre>
         如果访问 /www/index.html，实际上会被重定向到 /index.html。
+        <div class="tip">
+          rewrite module 使用 PCRE 语言的正则表达式，比如存在一条规则 rewrite ^/path/([^/]*).*$ /$1，如果访问 /path/page/route，那么实际上访问到的是 /page。具体规则可参见 <a href="https://www.debuggex.com/cheatsheet/regex/pcre">https://www.debuggex.com/cheatsheet/regex/pcre</a>
+        </div>
         <h3>types</h3>
         如果不加 include 和 default_type，nginx 会把所有资源当做 text，浏览器遇到 css 等资源就不会去解析。其中，mime.types 文件为 nginx 配置目录下自带的文件：
         <pre><code class="config">
@@ -225,7 +228,7 @@ location 前缀 内容 {
         <ul>
           <li>当不带前缀时，表示匹配以内容开头的路径，比如内容为 /www，那么将匹配 /www/index.html，/www/login，但不匹配 /abc/index.html</li>
           <li>当带前缀<span class="different"> = </span>时，表示精准匹配，路径必须和内容完全一致才会匹配</li>
-          <li>当带前缀<span class="different"> ~ </span>时，表示大小写不敏感的正则匹配</li>
+          <li>当带前缀<span class="different"> ~ </span>时，表示大小写敏感的正则匹配</li>
           <li>当带前缀<span class="different"> ~* </span>时，表示大小写不敏感的正则匹配</li>
         </ul>
       </p>
@@ -341,7 +344,7 @@ http {
 http {
   server {
     location / {
-      try_files $uri $uri/ index.html
+      try_files $uri $uri/ index.html =404;
     }
   }
 }
@@ -361,6 +364,18 @@ http {
         <div class="tip">
           可在 http、server、location 配置块内使用。
         </div>
+        <h3>error_page</h3>
+        error_page 可以在产生某些错误码时返回指定页面。
+        <pre><code class="nginx">
+http {
+  server {
+    location / {
+      error_page 404 /404.html;
+      error_page 500 https://example.com;
+    }
+  }
+}
+        </code></pre>
         <h3>限速</h3>
         limit_rate n 表示限制每秒传输 n 个字节，默认为 0，表示不限速。
         <br>
@@ -491,6 +506,36 @@ http {
         </div>
       </p>
     </section>
+    <section>
+      <h2>变量</h2>
+      <p>
+        <h3>变量操作</h3>
+        <pre><code class="nginx">
+# 设置变量
+set $name "Jack";
+# 读取变量
+set $full_name "Mr $name";
+        </code></pre>
+        <h3>内置变量</h3>
+        <div>
+          <h4>请求路径</h4>
+          <pre><code class="nginx">
+$request = $schema + $host + $realpath_root + $is_args + $args / $query_string
+          </code></pre>
+          <ul>
+            <li>$schema："http" 或 "https"</li>
+            <li>$host：请求地址的主机名/请求头Host/匹配请求的服务器名</li>
+            <li>$realpath_root：绝对路径名</li>
+            <li>$is_args：如果有请求参数，则为 "?"，否则为空</li>
+            <li>$args / $query_string：请求参数</li>
+          </ul>
+          <h4>其他</h4>
+          <ul>
+            <li>$https：如果是 https，则为 "on"，否则则为空</li>
+          </ul>
+        </div>
+      </p>
+    </section>
     <section class="refer">
       <h2>参考文献</h2>
       <p>
@@ -499,6 +544,7 @@ http {
         </div>
         <div>[2] Sever Names <a href="http://nginx.org/en/docs/http/server_names.html">http://nginx.org/en/docs/http/server_names.html</a></div>
         <div>[3] 陶辉 《深入理解 Nginx 模块开发与架构解析》</div>
+        <div>[4] Module nginx_http_core_module <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html?&_ga=2.127317709.1554661531.1579588522-1857348814.1563964534#var_proxy_protocol_port">https://nginx.org/en/docs/http/ngx_http_core_module.html?&_ga=2.127317709.1554661531.1579588522-1857348814.1563964534#var_proxy_protocol_port</a></div>
       </p>
     </section>
   </article>
