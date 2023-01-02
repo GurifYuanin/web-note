@@ -38,6 +38,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify-es": "^1.0.4",
     "gulp-util": "^3.0.8",
+    "node-sass": "^8.0.0",
     "tsify": "^4.0.1",
     "tslint": "^5.18.0",
     "typescript": "^3.5.3",
