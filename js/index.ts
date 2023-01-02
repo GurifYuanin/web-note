@@ -652,7 +652,7 @@ $(function() {
 
   // 获得元素的宽度
   function getWidth(el: HTMLElement) {
-    const width: string | null = window.getComputedStyle ?
+    const width: string | null = Boolean(window.getComputedStyle) ?
       getComputedStyle(el).width :
       el.currentStyle.width;
     const parsedWidth = Number.parseInt(width || '0', 10);
