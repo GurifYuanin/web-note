@@ -541,6 +541,29 @@ Vue.component('my-demo', {
 				<figure>
 					<img src="../../images/vue_component_provide.jpg">
 				</figure>
+				为了让注入的数据变成响应式，可以使用 computed 方法<sup>[3]</sup>：
+				<pre><code class="javascript">
+import { computed } from 'vue'
+
+export default {
+	data() {
+		return {
+			message: 'hello'
+		}
+	},
+	provide() {
+		return {
+			message: computed(() => this.message)
+		}
+	},
+	mounted() {
+		this.message = 'world';
+	}
+}
+
+// 除此之外，在 vue2 中，还需要进行以下配置
+app.config.unwrapInjectedRef = true
+				</code></pre>
 			</p>
 		</section>
 		<section>
@@ -635,6 +658,9 @@ Vue.component('my-demo', {
 						href="https://cn.vuejs.org/v2/guide/components.html">https://cn.vuejs.org/v2/guide/components.html</a></div>
 				<div>[2] Vue.js 动态组件 <a
 						href="https://cn.vuejs.org/v2/guide/components-dynamic-async.html">https://cn.vuejs.org/v2/guide/components-dynamic-async.html</a>
+				</div>
+				<div>[3] 和响应式数据配合使用 <a
+						href="https://cn.vuejs.org/guide/components/provide-inject.html#working-with-reactivity">https://cn.vuejs.org/guide/components/provide-inject.html#working-with-reactivity</a>
 				</div>
 			</p>
 		</section>

@@ -216,6 +216,43 @@ text-overflow: helloff;
 							text-overflow: helloff;
 						">abcdefghijklmnopqrstuvwxyz</div>
 					</div>
+					当想实现多行的 ellipsis 时，可以这样写：
+					<pre><code class="html">
+&lt;div class="container"&gt;
+	&lt;p class="ellipsis"&gt;abcdefghijklmnopqrstuvwxyz&lt;/p&gt;
+&lt;/div&gt;
+&lt;style&gt;
+	.container {
+		display: inline-block;
+		border: solid 1px #000;
+		width: 100px;
+		height: 100px;
+	}
+	.ellipsis {
+	<span class="strong">
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	-webkit-line-clamp: 2; // 最多 2 行，超出用 ... 代替
+	</span>
+
+		word-break: break-all;
+	}
+&lt;/style&gt;
+					</code></pre>
+					<div class="show">
+						<div class="show-inline-block" >
+							<p style="
+							display: -webkit-box;
+							-webkit-box-orient: vertical;
+							-webkit-line-clamp: 2;
+							overflow: hidden;
+							word-break: break-all;
+						">
+								abcdefghijklmnopqrstuvwxyz
+							</p>
+						</div>
+					</div>
 				</p>
 				<h3>word-break</h3>
 				<p>
