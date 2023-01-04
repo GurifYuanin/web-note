@@ -125,11 +125,26 @@ Content-Type: text/html
 			</p>
 		</section>
 		<section>
+			<h2>首部字段</h2>
+			<p>
+				<ul>
+					<li>请求首部字段：请求时使用的首部字段</li>
+					<li>响应首部字段：响应时使用的首部字段</li>
+					<li>通用首部字段：请求首部字段和响应首部字段都会被使用到的首部字段</li>
+					<li>实体首部字段：请求报文和响应报文表示实体内容部分的首部字段。补充了资源内容更新时间等与实体有关的附加信息。</li>
+				</ul>
+			</p>
+		</section>
+		<section>
 			<h2>请求首部字段</h2>
 			<p>
 				<h3>Host</h3>
 				<p>
 					Host 是 HTTP 1.1 新增的字段，表示接受请求的主机名。
+				</p>
+				<h3>User-Agent</h3>
+				<p>
+					User-Agent 表示 HTTP 客户端程序的信息。
 				</p>
 				<h3>Range</h3>
 				<p>
@@ -172,6 +187,22 @@ Range: bytes=0-1
 					<pre><code class="http">
 Refer: www.origin.com/index.html
 					</code></pre>
+				</p>
+				<h3>Authorization</h3>
+				<p>
+					HTTP 授权的授权证书，比如 Basic Authorization：<span class="definition">Authorization: Basic ZGVtbzpwQDU1dzByZA==</span> 。
+				</p>
+				<h3>Connection & Keep-Alive</h3>
+				<p>
+						Connection 用于设置 HTTP 为短连接或长连接，Keep-Alive 用于设置长连接时间
+					<ul>
+						<li>Connection: close -> 短连接，一次请求/响应之后，就会关闭连接</li>
+						<li>Connection: keep-alive -> 长连接，连接永久有效</li>
+						<li>Keep-Alive：timeout=second -> 长连接情况下 second 空闲后断开连接</li>
+					</ul>
+					<div class="tip">
+						HTTP 1.0 默认短连接，HTTP 1.1 默认长连接。
+					</div>
 				</p>
 				<h3>REMOTE_ADDR</h3>
 				<p>
@@ -227,18 +258,6 @@ X-Ua-Compatible: IE=Edge,chrome=1
 &lt;h
 					</code></pre>
 				</p>
-				<h3>Connection & Keep-Alive</h3>
-				<p>
-					Connection 用于设置 HTTP 为短连接或长连接，Keep-Alive 用于设置长连接时间
-					<ul>
-						<li>Connection: close -> 短连接，一次请求/响应之后，就会关闭连接</li>
-						<li>Connection: keep-alive -> 长连接，连接永久有效</li>
-						<li>Keep-Alive：timeout=second -> 长连接情况下 second 空闲后断开连接</li>
-					</ul>
-					<div class="tip">
-						HTTP 1.0 默认短连接，HTTP 1.1 默认长连接。
-					</div>
-				</p>
 				<h3>Expires & Cache-Control</h3>
 				<p>
 					客户端向服务器请求资源，浏览器会帮我们将资源缓存下来（到本地磁盘某个地方），expires 用于告诉浏览器资源可以缓存到什么时候。
@@ -268,7 +287,7 @@ If-Modified-Since: Sun Sep 16 2018 22:58:49 GMT
 					</code></pre>
 					服务器对比这个 If-Modified-Since 和文件的最后修改时间，如果一致，则返回状态码 304 ，否则返回资源。
 				</p>
-				<h3>If-Match & ETag</h3>
+				<h3>ETag & If-Match</h3>
 				<p>
 					Entity Tag，服务器返回的资源携带该头信息，由服务器自己决定值为多少（通过某种方式将资源转化散列值），分为强验证和弱验证。
 					<pre><code class="http">
@@ -282,6 +301,14 @@ ETag: W/"0815"
 If-Match: "33a64df551425fcc55e4d42a148795d9f25f89d4"
 					</code></pre>
 					服务器端就可以通过 If-Match 的值来判断服务器端的资源是否已经改变（弱验证器进行的是模糊匹配），返回资源或者 304。
+				</p>
+				<h3>Cookie & Set-Cookie</h3>
+				<p>
+					在浏览器发出请求时，若不是跨域请求，会自动携带上本地的 Cookie，而服务端也可以使用 Set-Cookie 来让浏览器存储 Cookie。参见<a href="../HTML/cookie.html">cookie</a>。
+				</p>
+				<h3>Location</h3>
+				<p>
+					Location 用于指定客户端重定向到新的 URI。
 				</p>
 				<h3>X-Frame-Options</h3>
 				<p>
@@ -581,7 +608,7 @@ Content-Type: application/json; charset=utf-8
 					</p>
 					<h3>405</h3>
 					<p>
-						405 表示方法不允许。（Method Not Allow
+						405 表示方法不允许。（Method Not Allow）
 					</p>
 					<h3>500</h3>
 					<p>
@@ -622,6 +649,121 @@ Content-Type: application/json; charset=utf-8
 				</p>
 			</p>
 		</section>
+		<section>
+			<h2>http1.x</h2>
+			<p>
+				HTTP 1.x 存在以下问题：<sup>[7]</sup>
+				<ul>
+					<li>（延迟问题）队头阻塞问题（Head of Line Blocking problem）</li>
+					<li>（安全问题）明文传输</li>
+					<li>（无状态）HTTP Header 过大</li>
+					<li>只能由客户端向服务器单向发起请求</li>
+				</ul>
+				<h3>队头阻塞问题</h3>
+				在一次 TCP 连接中，当有多个请求顺序进行时，如果前一个请求被阻塞了，那么后续的请求需要等待其完成，虽然在 Chrome、Firefox 浏览器中，同一域名最多可以一次性开启 6 个 TCP 连接来缓解等待问题，但依旧存在一些问题：
+				<ul>
+					<li>最大连接数是有限的，如果超出 6 个资源请求，那么剩下的资源依旧需要等待</li>
+					<li>开启 TCP 连接需要一定时间，并且因为无线网络在网络带宽的大小和范围上受到更多限制，维护多个 TCP 连接会加剧无线网络不稳定的问题，过多的 TCP 连接也会导致这些连接吞吐量下降</li>
+				</ul>
+				<h3>明文传输</h3>
+				明文传输虽然容易阅读，方便调试，但也会带来一些问题：
+				<ul>
+					<li>安全性问题，更容易解读与被攻击</li>
+					<li>因为二进制更加紧凑，所以明文传输在网络中传输效率不如二进制传输</li>
+					<li>为了处理空格、大写、行尾等，明文传输时更容易出错</li>
+				</ul>
+				<h3>HTTP Header 过大</h3>
+				由于 HTTP 是无状态的连接，每次进行请求或响应时，都会带上很多 HTTP Header，有时候这些 Header 的数量很多，就会增加请求的延迟。
+				<h3>单向请求</h3>
+				只能由客户端向服务端发起请求，不支持服务端推送消息。
+			</p>
+		</section>
+		<section>
+			<h2>http2</h2>
+			<p>
+				为了解决 http1.x 遗留下来的问题，Google 在基于 SPDY 协议提出了 http2，并且拥有以下特点：
+				<ul>
+					<li>多路复用，即只会启动一个 TCP 连接，在这个连接上同时发送多个请求与响应</li>
+					<li>将数据进行二进制压缩传输</li>
+					<li>采用 HPACK 算法对 Header 进行压缩</li>
+					<li>服务端可以向可以向客户端推送数据</li>
+				</ul>
+				<h3>多路复用</h3>
+				为了学习，需要了解以下概念：
+				<table>
+					<tr>
+						<th>名词</th>
+						<th style="min-width: 400px">解释</th>
+						<th>图示</th>
+					</tr>
+					<tr>
+						<td>帧 / Frame</td>
+						<td>
+							<ul style="text-align: left;">
+								<li>请求与响应数据（Header + Body）被打散为多个帧<span class="definition">帧</span>，存放 HTTP Header 的称为<span class="definition">Header
+									帧</span>，而存放实体数据的称为<span class="definition">Data 帧</span>。</li>
+								<li><span class="definition">帧</span>是传输的最小单元。</li>
+								<li><span class="definition">帧头</span>标志着属于哪个<span class="definition">数据流</span></li>
+							</ul>
+						</td>
+						<td>
+							<img src="../../images/http2.0_header_frame.jpg" alt="">
+						</td>
+					</tr>
+					<tr>
+						<td>消息 / Message</td>
+						<td>组成完整的一个请求或者响应的帧序列</td>
+						<td>
+							<img src="../../images/http2.0_message.jpg" alt="">
+						</td>
+					</tr>
+					<tr>
+						<td>字节流 / Stream</td>
+						<td>
+							<ul style="text-align: left;">
+								<li>已建立的 TCP 连接中的双向字节流，一个 TCP 连接拥有多个字节流，一个字节流可以进行多条消息的传输</li>
+								<li>每一个字节流都可以设置权重（1 ~ 255）和对其他流的依赖</li>
+							</ul>
+						</td>
+						<td>
+							<img style="padding-right: 24px;" src="../../images/http2.0_stream.jpg" alt="">
+						</td>
+					</tr>
+				</table>
+				简而言之，http2.0 是将传输数据拆分个多个帧，这些帧在字节流上交错地进行双向传输，每个请求 / 响应之间不会相互阻塞，传输完成后再将帧组合起来。
+				<h3>二进制压缩</h3>
+				数据被装入帧之前会被二进制压缩，随后以二进制的形式进行传输。
+				<div class="tip">二进制的数据不方便查看与调试，因此如果想要查看明文，需要相关软件进行解码。</div>
+				<h3>Header 压缩</h3>
+				HTTP 请求与响应的过程中经常需要传输 Header，很多 Header 在频繁的请求中并不会发生改变。根据 HPACK 算法原理，客户端和服务端都会持续维护一个相同的 Header 字典表，发起新请求时，若对应的 Header 已经在表里，则只需要用传索引号即可代替。
+				<figure>
+					<img src="../../images/http2.0_hpack.jpg" alt="">
+				</figure>
+				<div class="tip">除此之外，还会用哈夫曼编码来压缩整数和字符串，提高压缩率。</div>
+				<h3>服务端推送</h3>
+				顾名思义，即服务端可以主动推送资源给客户端，客户端也可以选择不接收。
+				<h3>http2.0 的问题</h3>
+				<ul>
+					<li>http2.0 基于 TCP 协议传输，需要三次握手确认连接，如果是 https，则还需要 TLS 连接</li>
+					<li>由于 TCP 协议为了保证传输可靠性，当出现丢包问题时，就会停止一切，对出现丢包问题的请求进行重试，直到重试成功为止，这期间其他请求都会被阻塞停止</li>
+					<li>安全问题：多路复用机制允许通过一次 HTTP 连接开启多个会话，连接的分区是纯逻辑的，因此可以用来操纵服务器或在上下文之外发送帧。除此之外，还可能遇到和 TCP 窗口机制类似的攻击（比如零窗口和慢读攻击）</li>
+				</ul>
+			</p>
+		</section>
+		<section>
+			<h2>http3</h2>
+			<p>
+				因为 http2.0 的很多问题都是基于 TCP 协议所导致的，为了解决这些问题，Google 提出了基于 UDP 的 QUIC（Quick UDP Internet Connect）协议。
+				<ul>
+					<li>因为是基于 UDP 协议，所以可以实现 0-RTT 或 1-RTT 建立连接，再通过数据重传、拥塞控制等来保证可靠性传输</li>
+					<li>http3.0 是基于 TLS1.3，减少可以 RTT 个数</li>
+					<li>QUIC 是在用户层实现的，与操作系统或者硬件内置的协议不同，可以快速迭代</li>
+				</ul>
+				<figure>
+					<img src="../../images/http3.0_comparation.webp" alt="">
+				</figure>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
@@ -640,6 +782,9 @@ Content-Type: application/json; charset=utf-8
 				</div>
 				<div>[6] MDN DNT <a
 						href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/DNT">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/DNT</a>
+				</div>
+				<div>[7] HTTP/1 to HTTP/2 to HTTP/3 <a
+						href="https://medium.com/@sandeep4.verma/http-1-to-http-2-to-http-3-647e73df67a8">https://medium.com/@sandeep4.verma/http-1-to-http-2-to-http-3-647e73df67a8</a>
 				</div>
 			</p>
 		</section>

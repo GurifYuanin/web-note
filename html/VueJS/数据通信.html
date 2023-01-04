@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>数据通信</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">数据通信</h1>
+    </hgroup>
+    <section>
+      <h2>props & emit</h2>
+      <p>
+        对于父子组件的通信，可以直接使用 props 和 emit() 来进行。
+      </p>
+    </section>
+    <section>
+      <h2>EventBus</h2>
+      <p>
+        对于兄弟组件，可以使用 EventBus 来实现。EventBus 本质上是创建一个 vue 实例，通过这个 vue 实例订阅和发布事件。
+        <pre><code class="javascript">
+// 先创建一个 event-bus.js 文件
+import Vue from 'vue';
+export const eventBus = new Vue();
+
+// 在 A 组件中订阅事件
+import { eventBus } from './event-bus';
+export default {
+  data() {
+    return {
+      count: 0
+    }
+  },
+  mounted() {
+    // 订阅事件
+    eventBus.$on('click', () => {
+      this.count++;
+    });
+  },
+  beforeDestroy() {
+    // 注意卸载组件前取消订阅
+    eventBus.$off('click');
+  }
+}
+
+// 在 B 组件中发布事件
+import { eventBus } from './event-bus';
+export default {
+  mounted() {
+    eventBus.$emit('click');
+  }
+}
+        </code></pre>
+        如果是简单场景，甚至可以直接不用 event-bus.js 文件，直接使用 this.$root，使用方法与结果是等价的。
+        <pre><code class="javascript">
+export default {
+  mounted() {
+    this.$root.$emit('click');
+  }
+}
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>provide</h2>
+      <p>
+        如果希望父组件向所有子组件传递数据，则可以使用<a href="./组件.html#provide">provide</a>。
+      </p>
+    </section>
+    <section>
+      <h2>vuex</h2>
+      <p>
+        对于数据通信的复杂场景，EventBus 和 provide 可能无法满足，这时候就需要使用<a href="./vuex.html">vuex</a>。
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      <div>[1] Vue事件总线（EventBus）使用详细介绍 <a
+          href="https://zhuanlan.zhihu.com/p/72777951">https://zhuanlan.zhihu.com/p/72777951</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

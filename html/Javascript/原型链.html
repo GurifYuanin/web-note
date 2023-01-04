@@ -127,14 +127,15 @@ function Fruit () {
 	this.feature = '可以吃';
 }
 function Apple () {
-	this.feature = '圆的';
+	this.shape = '圆的';
 }
 Apple.prototype = new Fruit(); // 可以直接将一个对象赋值给构造函数的原型对象
 Apple.prototype.constructor = Apple; // 记得把原型对象的构造函数更改回来
 
 var apple = new Apple();
 
-alert(apple.feature); // => 圆的
+alert(apple.feature); // => 可以吃
+alert(apple.shape); // => 圆的
 alert(apple instanceof Apple); // true
 alert(apple instanceof Fruit); // true
 alert(apple instanceof Object); // true
