@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>前端性能优化</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">前端性能优化</h1>
+    </hgroup>
+    <section>
+      <h2>简介</h2>
+      <p>
+        性能优化，即更快、更流畅地展示页面。
+      </p>
+    </section>
+    <section>
+      <h2>减少请求数</h2>
+      <p>
+        <ul>
+          <li>小文件合并，如雪碧图（将多张小图片合并为一张图片）</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>减小资源体积</h2>
+      <p>
+        <ul>
+          <li>
+            压缩文件
+            <ul>
+              <li>使用打包工具压缩 HTML、CSS、JS、图片视频等文件</li>
+              <li>服务端开启 gzip</li>
+            </ul>
+           </li>
+          <li>
+            抽出第三方库文件，使用 CDN 地址
+            <ul>
+              <li>内容分发网络（CDN）是一组分布在多个不同地理位置的 Web 服务器，多个位置部署服务器，客户端在请求时可以就近获取，缩短请求时间</li>
+              <li>由于对第三方库的版本变更频率较低，因此增加对资源的缓存利用</li>
+            </ul>
+          </li>
+          <li>使用 iconfont 代替图片图标，既提高了图标清晰度（矢量图），也减少文件体积</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>减小 HTTP 请求大小</h2>
+      <p>
+        <ul>
+          <li>减少不必要的 Cookie</li>
+          <li>减少不必要的请求参数</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>减少 DNS 查询时间</h2>
+      <p>
+        <h3>DNS 预解析</h3>
+        一般来说，浏览器会对 DNS 查询结果进行缓存，但不是所有浏览器都会进行这样的行为。可以通过 DNS 预解析来开启和配置指定域名的 DNS 查询。
+        <pre><code class="html">
+&lt;!-- 开启预解析 --&gt;
+&lt;meta http-equiv="x-dns-prefetch-control" content="on" /&gt;
+&lt;!-- 指定域名 --&gt;
+&lt;link rel="dns-prefetch" href="www.example.com" /&gt;
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>懒加载</h2>
+      <p>
+        <ul>
+          <li>图片懒加载：由于图片</li>
+          <li>页面懒加载 / 按需加载：当一个单页应用比较大时，可以将部分暂时不会使用到的页面拆分出来，只有当访问到这些页时才进行加载</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>代码优化</h2>
+      <p>
+        <ul>
+          <li>
+            代码复用
+            <ul>
+              <li>抽离封装公共组件复用</li>
+              <li>提取公共代码，尤其是要避免复制代码的行为</li>
+            </ul>
+          </li>
+          <li>节流与防抖</li>
+          <li>
+            Vue 代码风格改善
+            <ul>
+              <li>尽量用 v-show 替代 v-if</li>
+              <li>少用 watch，且禁止在 watch 进行副作用操作</li>
+              <li>v-for 必须给每个 item 配套 key</li>
+              <li>销毁组件前必须注销掉该组件之前注册过的事件（尤其是使用 EventBus）</li>
+            </ul>
+          </li>
+          <li>
+            降低 CSS 选择器复杂度
+            <ul>
+              <li>减少选择器嵌套层级</li>
+              <li>避免使用通配符，尽量使用高优先级的选择器（id、class 等）</li>
+              <li>减少重复的样式定义，如继承的样式可省略</li>
+            </ul>
+          </li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>服务端渲染 / SSR</h2>
+      <p>
+        服务端渲染能带来的好处：
+        <ul>
+          <li>对 SEO 更友好</li>
+          <li>减少单页应用构建页面的过程</li>
+          <li>由于不需要下载完整个 js 入口文件再渲染页面，SSR 可以更快地看到首屏渲染页面</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>其他</h2>
+      <p>
+        <ul>
+          <li>
+            减少重绘和回流（代价上：回流 > 重绘）
+            <ul>
+              <li>重绘：不改变元素的变动，如 color，浏览器将重新绘制它</li>
+              <li>回流：改变了元素的位置 / 大小等属性，浏览器将重新渲染部分或全部文档</li>
+            </ul>
+          </li>
+          <li>CSS 资源优于 JS 资源加载</li>
+        </ul>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      <div>[1] 主题开关按钮源码地址 <a
+          href="https://codepen.io/stefgeraets/pen/ExfBd">https://codepen.io/stefgeraets/pen/ExfBd</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
