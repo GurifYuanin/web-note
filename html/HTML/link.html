@@ -50,6 +50,16 @@
 &lt;!-- 加载图标 --&gt;
 &lt;link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon" /&gt;
 						</code></pre>
+						<h4>ref.dns-prefetch</h4>
+						可以指定一些域名进行 DNS 预解析。
+						<pre><code class="html">
+&lt;!-- DNS 预解析尽量放在 HTML 文档前面，即 meta charset 之后 --&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;!-- 开启预解析 --&gt;
+&lt;meta http-equiv="x-dns-prefetch-control" content="on" /&gt;
+&lt;!-- 指定域名 --&gt;
+&lt;link rel="dns-prefetch" href="www.example.com" /&gt;
+						</code></pre>
 					</p>
 				</div>
 				<div>
