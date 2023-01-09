@@ -28,7 +28,7 @@
     <section>
       <h2>判断是否使用缓存</h2>
       <p>
-        如果之前已经请求过获得了资源，且符合缓存策略（比如 HTTP Header 中 Expires、Cache-Control）且缓存还未过期，则直接使用本地的缓存。
+        如果之前已经请求过获得了资源，符合缓存策略（比如 HTTP Header 中 Expires、Cache-Control）且缓存还未过期，则直接使用本地的缓存。
       </p>
     </section>
     <section>
@@ -38,7 +38,7 @@
         <ol>
           <li>浏览器自身的 DNS 缓存，比如在 chrome 中可通过<span class="different">chrome://net-internals/#dns</span>查看</li>
           <li>操作系统自身的 DNS 缓存</li>
-          <li>从 hosts 文件中找，在 Mac 中，该文件的路径为<span class="different">/etc/hosts</span></li>
+          <li>从 hosts 文件中找，比如在 Mac 中，该文件的路径为<span class="different">/etc/hosts</span></li>
           <li>如果以上都没找到，则递归地去域名服务器找</li>
         </ol>
       </p>
@@ -62,6 +62,9 @@
       <h2>查询 MAC 地址</h2>
       <p>
         在网络（IP）层，ARP 协议会 IP 地址解析转化为 MAC 地址，最终包装为 IP 报文。
+        <figure>
+          <img src="../../images/ip_structure.jpg" alt="">
+        </figure>
       </p>
     </section>
     <section>
