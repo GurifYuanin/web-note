@@ -337,7 +337,7 @@ Content-Encoding: gzip
 				</p>
 				<h3>Content-Security-Policy</h3>
 				<p>
-						Content-Security-Policy 用于告诉浏览器资源的白名单，不在白名单上的资源会被限制而无法加载，其格式为：
+						Content-Security-Policy 用于告诉浏览器资源的白名单，不在白名单上的资源会被限制而无法加载，其格式为：
 						<pre><code class="http">
 Content-Security-Policy: 资源种类1: 范围1;资源种类2: 范围2;资源...
 						</code></pre>
@@ -366,6 +366,14 @@ Content-Security-Policy: script-src 'self';img-src: 'self';style-src:jsfiddle.ne
 						<div class="tip">
 							除此之外，也可以在页面中使用 meta 标签来实现相同的功能 &lt;meta http-equiv="Content-Security-Policy" content="xxx"&gt;
 						</div>
+				</p>
+				<h3>Strict-Transport-Security</h3>
+				<p>
+					Strict-Transport-Security（HSTS）用于告诉浏览器需要使用 HTTPS 进行通信，并且此后指定时间内所有的 http:// 请求都会重定向到 https:// 上。
+					<pre><code class="http">
+# 此后的 60s 都要用 https:// 通信，且对子域名都生效
+Strict-Transport-Security: max-age=60; includeSubDomains
+					</code></pre>
 				</p>
 			</p>
 		</section>
@@ -640,26 +648,118 @@ Content-Type: application/json; charset=utf-8
 		<section>
 			<h2>https</h2>
 			<p>
-				https = http + ssl。
+				https = http + ssl（Secure Socket Layers / 安全套接字层）。
+				<h3>SSL 的发展历史</h3>
+				<p>
+					<ol>
+						<li>SSL 1.0：未发布。</li>
+						<li>SSL 2.0：1995 年发布。2011 年弃用（存在安全问题）</li>
+						<li>SSL 3.0：1996 年发布。2015 年弃用（存在安全问题）</li>
+						<li>TLS 1.0：2006 年启用。2020 年弃用。</li>
+						<li>TLS 1.1：2008 年发布。</li>
+						<li>TLS 1.2：2018 年发布。</li>
+					</ol>
+					由于 SSL 基本已经弃用，目前使用的为 TLS（Transport Layer Security），但因为习惯了 SSL 的称呼，所以依旧使用 SSL 这个名称。比如 SSL 证书，本质上是 TLS / SSL 证书，可以在 TLS / SSL 协议上使用。
+				</p>
 				<h3>端口</h3>
 				<p>
 					使用端口：443。
 				</p>
-				<h3>加密</h3>
+				<h3>加密方式</h3>
 				<p>
-					对称加密 + 非对称加密的方式。
+					SSL 采用的是对称加密 + 非对称加密的混合加密方式来保证传输的安全性。在进行连接之前，服务器需要自己制作或向认证机构申请一套数字证书（CA），这套证书其实是公钥 + 私钥。
+					<div class="tip">
+						浏览器会检查证书是否有效，比如检查颁发机构、有效时间是否过期，若证书无效，比如在 chrome 中，则会提示<span class="different">你的连接不是私密连接</span>、<span class="different">SSL 证书错误</span>等信息。
+					</div>
+					https 会在首次发起请求时，多一步 ssl 连接（下面的步骤 2、3），其顺序为：
 					<ol>
-						<li>客户端生成一个<span class="different">对称秘钥</span>，使用公钥（公开，所有人都知道的秘钥）进行加密</li>
-						<li>服务器收到加密后的秘钥，使用私钥（只有服务器持有）进行解密，获得<span class="different">对称秘钥</span></li>
-						<li>之后的通信使用该秘钥进行加密和解密</li>
+						<li>客户端首次向服务端发起请求</li>
+						<li>服务端返回证书里的公钥</li>
+						<li>客户端生成一个随机序列（key），使用公钥进行非对称加密，发送给服务端</li>
+						<li>服务端接收到加密后的随机序列，使用私钥进行解密获得 key，后续请求与返回都用 key 来进行对称加解密</li>
 					</ol>
+					<figure>
+						<img src="../../images/ssl_process.jpg" alt="">
+					</figure>
+					<div class="preset-question">https 为什么要采用混合加密方式？</div>
+					<div class="preset-answer">因为非对称的方式加解密时需要耗费更长的时间。</div>
+					<h3>服务端如何开启 SSL</h3>
+					<p>
+						<ol>
+							<li>
+								生成 2048bit 长度的私钥（私钥如果过短，则容易被暴力破解，若果过长，则会将降低加解密速度）
+								<pre><code class="bash">
+# 生成在当前目录下，私钥为 www.example.com.key
+openssl genrsa -out www.example.com.key 2048
+								</code></pre>
+							</li>
+							<li>
+								生成证书请求签名（CSR / Certificate Signing Request），用于后续申请公钥
+								<pre><code class="bash">
+# 生成在当前目录下，证书申请签名为 www.example.com.key
+openssl req -new -sha256 -key www.example.com.key -out www.example.com.csr
+
+# 以下部分为交互式填写的内容
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) []:
+State or Province Name (full name) []:
+Locality Name (eg, city) []:
+Organization Name (eg, company) []:
+Organizational Unit Name (eg, section) []:
+Common Name (eg, fully qualified host name) []:
+Email Address []:
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:
+								</code></pre>
+								<div class="tip">
+									可以使用 <span class="definition">openssl req -text -in www.example.com.csr -noout</span> 来验证证书申请签名是否有效
+								</div>
+							</li>
+							<li>向认证机构（CA / Certificate Authority）申请公钥</li>
+							<li>服务端开启 HTTPS，不同的服务器类型有不同的配置方法，可参考<a href="https://ssl-config.mozilla.org/">https://ssl-config.mozilla.org/</a></li>
+						</ol>
+					</p>
+					<h3>对调试带来的影响</h3>
+					<p>
+						正常情况下，因为 https 多一层加密行为，所以无法把 https 的请求直接打到 http 服务器上（比如通过代理将 https://www.example.com 代理到 http://localhost:8080）。
+						<h4>SwitchyOmega</h4>
+						由于 chrome 插件 SwitchyOmega 是基于 PAC（代理自动配置文件）<sup>[9]</sup>脚本来实现的，而 chrome 在 Chromium 52 之后不再给脚本提供 https 请求的完整路径，所以在代理 https 请求时，无法使用正则、通配符进行匹配<sup>[10]</sup>。
+						<h4>whistle</h4>
+						使用 whistle 代理时，需要下载安装根证书才能代理 https 请求，操作方法见<a href="http://wproxy.org/whistle/webui/https.html">Https</a>。
+						<figure>
+							<img src="../../images/whistle_crt.jpg" alt="">
+						</figure>
+						<h4>charles</h4>
+						charles 在抓取手机的 https 请求时，同样需要在手机上安装证书，才能解析出 https 里报文的明文内容。
+					</p>
+					<h3>对开发带来的影响</h3>
+					<p>
+						<h4>相对协议 URL</h4>
+						在 https 的页面上，如果使用了 http 协议的资源（反过来不会有问题），浏览器会报错甚至无法加载，比如在 chrome 中会报 mixed-content 错误。所以在开发中，建议使用相对协议的方式加载资源。
+						<pre><code class="html">
+&lt;!-- 引用其他域名资源（如 CDN）时 --&gt;
+&lt;script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- 引用本机资源时 --&gt;
+&lt;script src="/index.js"&gt;&lt;/script&gt;
+&lt;img src="/assets/images/picture.jpg"&gt;
+						</code></pre>
+						这样的结果就是，当在 http 页面上，加载的是 http://，而在 https 页面上，加载的则是 https://。
 				</p>
 			</p>
 		</section>
 		<section>
 			<h2>http1.x</h2>
 			<p>
-				HTTP 1.x 存在以下问题：<sup>[7]</sup>
+				HTTP 1.x 存在以下问题：<sup>[11]</sup>
 				<ul>
 					<li>（延迟问题）队头阻塞问题（Head of Line Blocking problem）</li>
 					<li>（安全问题）明文传输</li>
@@ -790,7 +890,19 @@ Content-Type: application/json; charset=utf-8
 				<div>[6] MDN DNT <a
 						href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/DNT">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/DNT</a>
 				</div>
-				<div>[7] HTTP/1 to HTTP/2 to HTTP/3 <a
+				<div>[7] HTTP 与 HTTPS 的区别 <a
+						href="https://www.runoob.com/w3cnote/http-vs-https.html">https://www.runoob.com/w3cnote/http-vs-https.html</a>
+				</div>
+				<div>[8] Enabling HTTPS on your servers <a
+						href="https://web.dev/enable-https/">https://web.dev/enable-https/</a>
+				</div>
+				<div>[9] 代理自动配置文件（PAC）文件 <a
+						href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Proxy_servers_and_tunneling/Proxy_Auto-Configuration_PAC_file">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Proxy_servers_and_tunneling/Proxy_Auto-Configuration_PAC_file</a>
+				</div>
+				<div>[10] Chromium 完整网址限制 <a
+						href="https://github.com/FelisCatus/SwitchyOmega/wiki/Chromium-%E5%AE%8C%E6%95%B4%E7%BD%91%E5%9D%80%E9%99%90%E5%88%B6">https://github.com/FelisCatus/SwitchyOmega/wiki/Chromium-%E5%AE%8C%E6%95%B4%E7%BD%91%E5%9D%80%E9%99%90%E5%88%B6</a>
+				</div>
+				<div>[11] HTTP/1 to HTTP/2 to HTTP/3 <a
 						href="https://medium.com/@sandeep4.verma/http-1-to-http-2-to-http-3-647e73df67a8">https://medium.com/@sandeep4.verma/http-1-to-http-2-to-http-3-647e73df67a8</a>
 				</div>
 			</p>

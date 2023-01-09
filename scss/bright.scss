@@ -51,4 +51,7 @@ $strongBorderColor: #000;
 
 $deviceThreshold: 801px; // 侧栏隐藏阈值
 
+$questionIcon: url("../images/question_dark.svg");
+$questionBackgroundColor: rgb(194, 202, 234);
+
 @import './sidebar.scss';

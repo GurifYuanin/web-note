@@ -798,6 +798,26 @@ body {
         color: $tipColor;
         background-color:  $tipBackgroundColor;
     }
+    .preset-question {
+        border-radius: 10px 10px 0 0;
+    }
+    .preset-answer {
+        border-radius: 0 0 10px 10px;
+    }
+    .preset-question, .preset-answer {
+        padding: 0.5rem 1rem;
+        font-size: 1em;
+        background-color: $questionBackgroundColor;
+    }
+    .preset-question::before {
+        content: "";
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        background-size: cover;
+        background-image: $questionIcon;
+        margin-right: 8px;
+    }
     /* 术语 */
     .definition {
         position: relative;
