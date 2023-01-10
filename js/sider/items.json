@@ -10,7 +10,6 @@
     "canvas",
     "svg",
     "cookie",
-    "PWA",
     "Web Component",
     "ServiceWorker"
   ],
@@ -63,14 +62,10 @@
   ],
   [
     "commonJS",
-    "package.json",
     "path",
     "file system",
     "process",
-    "koa",
-    "webpack",
-    "plugins",
-    "loader"
+    "koa"
   ],
   [
     "安装",
@@ -91,11 +86,25 @@
     "1px"
   ],
   [
+    "浏览器渲染",
+    "浏览器内核",
+    "头疼的兼容",
+    "浏览器截屏",
+    "前端性能优化",
+    "前端监控",
+    "一次HTTP请求"
+  ],
+  [
     "抓包工具",
     "chrome devtools",
     "git",
     "sublime 插件",
-    "VSCode"
+    "VSCode",
+    "webpack",
+    "webpack plugins",
+    "webpack loader",
+    "npm",
+    "pnpm"
   ],
   [
     "HTTP",
@@ -130,7 +139,8 @@
     "树和图",
     "排序",
     "队列和栈",
-    "算法规范"
+    "哈希",
+    "算法题编程规范"
   ],
   [
     "指令",
@@ -157,18 +167,10 @@
   ],
   [
     "路径匹配",
-    "浏览器渲染",
-    "浏览器内核",
     "设计策略",
-    "头疼的兼容",
     "命名规范",
     "字符编码",
-    "bat",
-    "软件设计师",
-    "截屏",
-    "哈希",
-    "前端性能优化",
-    "前端监控",
-    "一次HTTP请求"
+    "批处理命令",
+    "软件设计师"
   ]
 ]

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>pnpm</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">pnpm</h1>
+    </hgroup>
+    <section>
+      <h2>为什么选择 pnpm</h2>
+      <p>
+        pnpm 主要解决 npm 存在的两大问题<sup>[1]</sup>：
+        <ul>
+          <li>隐式依赖造成的隐患</li>
+          <li>相同包重复下载</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>隐式依赖</h2>
+      <p>
+        <h3>npm3 之前</h3>
+        <p>
+          在 npm3 之前，下载依赖包采取的是最原始的依赖书嵌套的形式，以 express 为例子，其 node_modules 目录结构为：
+          <figure>
+            <img src="../../images/npm2_node_modules.jpg" alt="">
+          </figure>
+          虽然这种结构能够保留 npm 包之间的依赖关系，但也存在一些问题：
+          <ul>
+            <li>嵌套层级过深，不方便检索，且在一些操作系统上，文件路径过长时会出错</li>
+            <li>对于重复依赖的基础库进行多次下载，比如上图所示的 <span class="definition">mime-types</span>。</li>
+          </ul>
+        </p>
+        <h3>npm3 以后</h3>
+        <p>
+          在 npm3 及以后，包管理形式进行了变更，主要的操作为尽可能地将依赖包往顶层目录提。
+          <figure>
+            <img src="../../images/npm3_node_modules.jpg" alt="">
+          </figure>
+          对于公共依赖的包，因为提取到了顶层，所以都能使用到，而对于不同版本的依赖，比如 koa 依赖的<span class="definition">accepts</span>由于和顶层路径的包版本不一样，所以单独放在自己的 node_modules 下。
+        </p>
+        <h3>隐式依赖问题</h3>
+        <p>
+          由于 npm 包的引用机制，在项目中的源代码即使没有在 package.json 中显式地声明依赖，但只要其他依赖库使用到了，也可以顺利地使用。
+          <figure>
+            <img src="../../images/npm_problem1.jpg" alt="">
+          </figure>
+          上面的项目代码中使用了 accepts 包，由于 express 依赖了该库，所以在代码可以正常运行，这会留下隐患，比如在后续的开发中移除了 express 并且其他包也不依赖 accepts ，那么项目将报错。
+        </p>
+        <h3>pnpm 的解决方法</h3>
+        <p>
+          同样下载 express 包，pnpm 的目录结构如下：
+          <figure>
+            <img src="../../images/pnpm1.jpg" alt="">
+            <figcaption>箭头表示软链</figcaption>
+          </figure>
+          由于使用了软链，所以不会造成重复下载公共依赖包的情况，并且 node_modules 层级下只有在 package.json 声明的 express 包，所以代码中 require('accepts') 在开发阶段就能发现错误。
+          <div class="tip">
+            pnpm 利用了 npm 包的引用机制，如上图 express 中没有 node_modules，因此会检索 ../node_modules 寻找依赖包，此时就访问到了软链 accepts 等，最终找到 .pnpm 下的包。
+          </div>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>重复下载</h2>
+      <p>
+        pnpm 不仅能解决单个项目里重复下载的问题，还能解决跨项目相同包的重复下载情况，其原理为 pnpm 对下载的包进行全局存储，项目里的 node_modules 通过硬链接指到相同的地方。
+        <figure>
+          <img src="../../images/pnpm2.jpg" alt="">
+        </figure>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      <div>[1] Motivation <a
+          href="https://pnpm.io/motivation">https://pnpm.io/motivation</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
