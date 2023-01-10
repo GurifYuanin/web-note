@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>软链与硬链</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">软链与硬链</h1>
+    </hgroup>
+    <section>
+      <h2>前置知识</h2>
+      <p>
+        在操作系统中，通过文件名是如何寻找到存储的数据：
+        <figure>
+          <img src="../../images/unix_file_system.jpg" alt="">
+        </figure>
+        可以通过 <span class="definition">ls -li</span> 来查询权限和 inode 地址。
+        <figure>
+          <img src="../../images/ls_li.jpg" alt="">
+          <figcaption>第一列即为 inode 地址</figcaption>
+        </figure>
+      </p>
+    </section>
+    <section>
+      <h2>软链</h2>
+      <p>
+        软链实际上是存储了文件名的文件。
+        <figure>
+          <img src="../../images/soft_link.jpg" alt="">
+        </figure>
+        由于只是单纯的指向，所以当目标文件被移动或删除时，软链会指空。
+        <figure>
+          <img src="../../images/soft_link_demo.jpg" alt="">
+        </figure>
+      </p>
+    </section>
+    <section>
+      <h2>硬链</h2>
+      <p>
+        硬链是同一 inode 的不同文件路径。
+        <figure>
+          <img src="../../images/hard_link.jpg" alt="">
+        </figure>
+        当原文件的路径被删除时，由于硬链还引用 inode，形成完整的文件结构，所以依旧可以访问到数据，只有全部硬链都被删除时，数据才会删除。
+        <figure>
+          <img src="../../images/hard_link_demo.jpg" alt="">
+        </figure>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      <div>[1] Q & A: The difference between hard and soft links <a
+          href="https://linuxgazette.net/105/pitcher.html">https://linuxgazette.net/105/pitcher.html</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
