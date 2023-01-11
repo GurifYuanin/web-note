@@ -224,7 +224,7 @@ cat.say(); // => 报错，因为 cat 实例没有从 Animal.prototype 获得方�
 				</p>
 				<h3>继承父类构造函数和原型（丢失自身原型链）</h3>
 				<p>
-					通过 new 关键字创建的实例，执行构造函数默认会将其上下文（this）对象返回，也可以显式地返回一个对象，此时就变成了工厂模式。
+					通过 new 关键字创建的实例，执行构造函数默认会将其上下文（this）对象返回，也可以显式地返回一个对象，此时就变成了<a href="../其他/设计模式.html#工厂模式">工厂模式</a>。
 					<pre><code class="javascript">
 function Foo(name) {
 	return {

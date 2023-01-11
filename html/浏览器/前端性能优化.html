@@ -104,7 +104,19 @@
               <li>提取公共代码，尤其是要避免复制代码的行为</li>
             </ul>
           </li>
-          <li>节流与防抖</li>
+          <li>
+            对高频重复的请求进行节流（throttle）与防抖（debounce）处理
+            <ul>
+              <li>节流：事件触发后，规定时间内只会触发一次</li>
+              <figure>
+                <img src="../../images/throttle.jpg" alt="">
+              </figure>
+              <li>防抖：规定时间内，若事件被触发多次，那么只有最后一次会执行</li>
+              <figure>
+                <img src="../../images/debounce.jpg" alt="">
+              </figure>
+            </ul>
+          </li>
           <li>
             Vue 代码风格改善
             <ul>

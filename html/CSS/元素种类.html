@@ -168,7 +168,7 @@
 							<li>要点四
 						</ul>
 					</div>
-					解决方法三：让父元素 letter-spacing 活 word-spacing 为负数，子元素不变。letter-spacing 表示字母间距，word-spacing 表示单词间距。
+					解决方法三：让父元素 letter-spacing 或 word-spacing 为负数，子元素不变。letter-spacing 表示字母间距，word-spacing 表示单词间距。
 					<pre><code class="html">
 &lt;ul class="inline-block-ul letter-spacing">
 	&lt;li>要点一&lt;/li>
@@ -181,7 +181,7 @@
 		letter-spacing: -3px;
 	}
 	.letter-spacing > li {
-		letter-spacing: 0px;
+		letter-spacing: 0px; // 文本的 letter-spacing 需要改为正常值，所以在这里用 0px 覆盖 -3px
 	}
 &lt;/style>
 					</code></pre>
@@ -291,6 +291,7 @@ selector {
 	&lt;div style="background-color: #888">3&lt;/div>
 	&lt;div style="background-color: #888">4&lt;/div>
 	&lt;div style="background-color: #222">5&lt;/div>
+	&lt;div style="background-color: #333"&gt;6&lt;/div&gt;
 &lt;/div>
 					</code></pre>
 					<div class="show">
@@ -301,6 +302,7 @@ selector {
 							<div style="background-color: #888">3</div>
 							<div style="background-color: #888">4</div>
 							<div style="background-color: #222">5</div>
+							<div style="background-color: #333">6</div>
 						</div>
 					</div>
 					<span class="different">grid-template-rows: 50px 50px;</span>只设置了两行，第三行没有被涉及到，此时就会去看 grid-auto-rows

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>设计模式</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">设计模式</h1>
+    </hgroup>
+    <section>
+      <h2>MVVM</h2>
+      <p>
+        Model-View-ViewModel 简称 MVVM，View 中数据的变化反映在 ViewModel 层上，Model 的变化也会通过 ViewModel 更新到 View 上。
+        <ul>
+          <li>View：视图层，可见元素的集合（UI、动画、文本等）</li>
+          <li>ViewModel：绑定 View 中的数据，在 View 和 Model 之间完成数据更新</li>
+          <li>Model：程序的逻辑代码</li>
+        </ul>
+        <figure>
+          <img src="../../images/MVVM.jpg" alt="">
+        </figure>
+      </p>
+    </section>
+    <section>
+      <h2>单例模式</h2>
+      <p>
+        单例模式下，类会自己创建（有且只有）一个对象，全局可以直接访问对象而不需要实例化。详细参见<a href="./设计模式.html#单例模式">设计模式</a>。
+        <pre><code class="javascript">
+class SingleTon {
+  static instance = new SingleTon();
+  constructor() {
+    // 单例对象的构造函数
+  }
+  static getInstance() {
+    return this.instance;
+  }
+}
+
+// 使用公用的单例
+SingleTon.instance === SingleTon.getInstance(); // => true
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>工厂模式</h2>
+      <p>
+        通过一个共用的函数加工创建新的对象并返回。
+      </p>
+    </section>
+    <section>
+      <h2>原型模式</h2>
+      <p>
+        参见<a href="../Javascript/原型链.html#原型模式">原型链</a>。
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] Model-View-ViewModel (MVVM) <a href="https://www.techtarget.com/whatis/definition/Model-View-ViewModel">https://www.techtarget.com/whatis/definition/Model-View-ViewModel</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
