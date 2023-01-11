@@ -316,7 +316,7 @@ http {
         </div>
         如果没匹配到任意一个 server，那么会选择 listen 后带 default 的，如果还没有，那么会选择第一个 server。
         <h3>server_names_max_hash_size</h3>
-        nginx 使用散列表来存储 server_name，该参数用于设置散列表的大小，默认为 512 ，哈希表相关参见<a href="../其他/哈希.html">哈希</a>。
+        nginx 使用散列表来存储 server_name，该参数用于设置散列表的大小，默认为 512 ，哈希表相关参见<a href="../算法/哈希.html">哈希</a>。
         <h3>server_names_hash_bucket_size</h3>
         该参数用于设置散列桶的大小，默认值取决于 CPU 缓存行的大小<sup>[2]</sup>。
       </p>

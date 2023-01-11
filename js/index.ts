@@ -10,6 +10,12 @@ import { copy, filterName, filterRepeatArray, getFileName, getViewport, isPhone,
 import category from './sider/category.json';
 import items from './sider/items.json';
 
+// 让页面中的脚本也可以调用 Notify 等方法
+Object.assign(window, {
+  Notify,
+  $
+});
+
 $(function() {
   // 弹窗提示
   const notify = new Notify();
@@ -329,19 +335,19 @@ $(function() {
     const codeCopy = document.createElement('div'); // 赋值代码按钮
     codeType.setAttribute('class', 'codeType');
     codeCopy.setAttribute('class', 'codeCopy codeDark');
-    codeCopy.setAttribute('title', '点击复制代码');
     const elClass = el.getAttribute('class') || '';
     const type = elClass.split(' ')[0]; // 取出是哪种类型的代码
     codeType.innerText = type;
-    codeCopy.onclick = function() {
-      copy(el.innerText.substring(1 + type.length).trim());
-      notify.info({ content: '已经复制到剪切板' });
-    };
     const container = document.createElement('div');
     container.setAttribute('class', 'codeTypeCopyContainer');
     container.appendChild(codeType);
     container.appendChild(codeCopy);
-    el.prepend(container);
+    container.setAttribute('title', '复制代码');
+    container.onclick = function () {
+      copy(el.innerText.trim());
+      notify.info({ content: '已经复制到剪切板' });
+    };
+    el.before(container);
   });
 
   // 文章标题点击后变换样式

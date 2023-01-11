@@ -725,60 +725,69 @@ body {
             background-color: $linkHover;
         }
     }
-    /* 代码块 */
-    .hljs {
-        tab-size: 2;
+    pre {
         position: relative;
-        border-radius: 5px;
-        margin: 0;
-        padding: 0 10%;
-        @media (max-device-width: $deviceThreshold) {
-            padding: 0 2.5%;
-        }
-        // 强调代码
-        .strong {
-            display: inline-block;
-            margin: 5px;
-            padding: 5px;
-            border: dotted 1px $strongBorderColor;
+        /* 代码块 */
+        .hljs {
+            tab-size: 2;
+            position: relative;
             border-radius: 5px;
+            margin: 0;
+            padding: 8px 10% 0 10%;
 
-            background-color: $strongBackgroundColor;
-        }
-        .codeTypeCopyContainer {
-            overflow: hidden;
-            padding: 5px 0;
-            margin-right: -10%;
             @media (max-device-width: $deviceThreshold) {
-                margin-right: -2.5%;
+                padding: 0 2.5%;
+            }
+
+            // 强调代码
+            .strong {
+                display: inline-block;
+                margin: 5px;
+                padding: 5px;
+                border: dotted 1px $strongBorderColor;
+                border-radius: 5px;
+
+                background-color: $strongBackgroundColor;
             }
         }
-        // 代码类型
-        .codeType {
-            float: right;
-
-            font-family: initial;
-            text-align: right;
-        }
-        .codeCopy {
-            float: right;
-            background-image: url('../images/copy_bright.svg');
-            background-repeat: no-repeat;
-            background-size: 25px 25px;
-            background-origin: content-box;
-
-            height: 25px;
-            width: 25px;
-
+        .codeTypeCopyContainer {
+            position: absolute;
+            overflow: hidden;
+            padding: 10px;
+            z-index: 1;
+            line-height: 20px;
+            transition: opacity .5s;
             cursor: pointer;
+
+            // 代码类型
+            .codeType {
+                float: right;
+                margin-left: 5px;
+                font-family: initial;
+                text-align: right;
+            }
+
+            .codeCopy {
+                float: right;
+                background-image: url('../images/copy_bright.svg');
+                background-repeat: no-repeat;
+                background-size: 20px;
+                background-origin: content-box;
+
+                height: 20px;
+                width: 20px;
+            }
+
+            .codeDark {
+                background-image: url('../images/copy_dark.svg') !important;
+            }
+
             &:hover {
                 opacity: .5;
             }
         }
-        .codeDark {
-            background-image: url('../images/copy_dark.svg') !important;
-        }
     }
+
     /* 代码展示区 */
     .show {
         overflow: auto;

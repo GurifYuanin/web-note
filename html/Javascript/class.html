@@ -199,8 +199,9 @@ System.out.println((new MyClass()).num); // => 1
 						</code></pre>
 						在 Javascript 中，直接在类声明后添加静态成员，之后只能使用<span class="definition"> 类名.成员名 </span>来获取。
 						<pre><code class="javascript">
-class MyClass {}
-MyClass.num = 1;
+class MyClass {
+	static num = 1;
+}
 console.log(MyClass.num); // => 1
 console.log((new MyClass()).num); // => undefined
 						</code></pre>
@@ -218,6 +219,18 @@ MyClass.say(); // => 我是静态的
 new MyClass().say(); // => Uncaught TypeError: (intermediate value).say is not a function
 						</code></pre>
 					</p>
+					<h4>静态属性 ≠ 实例属性</h4>
+					static 修饰的属性或方法是挂在类上，而在构造函数中通过 this.xxx = xxx 则是挂在创建出来的实例对象上，两者可以同名且相互独立。
+					<pre><code class="javascript">
+class MyClass {
+	static num = 1;
+	constructor() {
+		this.num = 2;
+	}
+}
+console.log(MyClass.num); // => 1
+console.log(new MyClass().num); // => 2
+					</code></pre>
 				</p>
 			</p>
 		</section>

@@ -51,7 +51,10 @@
 &lt;div <span class="strong">id="demo-id" class="demo-class" title="demo-title" prefix="demo-prefix"</span>&gt;&lt;/div&gt;
 &lt;script&gt;
 	var div = document.getElementById('demo-id');
-	console.dir(div);
+	div.prefix // => 得到 undefined，因为访问的是 property
+	div.getAttribute('prefix') // => 得到 demo-prefix
+
+	console.dir(div); // 将所有 property 打印出来
 &lt;/script&gt;
 					</code></pre>
 					<figure>

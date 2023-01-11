@@ -1,9 +1,9 @@
 [
   [
     "DOM",
-    "meta标签",
-    "href和src",
-    "link",
+    "meta 标签",
+    "link 标签",
+    "href 和 src",
     "HTML语义化",
     "HTML5",
     "表单元素",
@@ -20,12 +20,13 @@
     "元素定位",
     "元素居中",
     "伪类伪元素",
+    "设计策略",
     "格式化上下文",
     "CSS Hack",
     "CSS3",
     "CSS怪异现象",
     "颜色和长度",
-    "百分比"
+    "认识 CSS 的百分比"
   ],
   [
     "数据类型",
@@ -37,19 +38,20 @@
     "事件",
     "异常",
     "复制粘贴",
-    "module",
+    "模块化",
     "Javascript进程",
     "RegExp",
-    "ajax和fetch",
+    "ajax 和 fetch",
     "Class",
     "JSONP",
     "this",
-    "jquery",
     "promise",
     "Generator",
     "async",
-    "Typescript",
-    "二进制"
+    "Typescript"
+  ],
+  [
+    "jquery"
   ],
   [
     "three",
@@ -64,6 +66,7 @@
     "commonJS",
     "path",
     "file system",
+    "处理原始数据",
     "process",
     "koa"
   ],
@@ -74,7 +77,7 @@
     "组件",
     "数据通信",
     "mixins",
-    "router",
+    "vue-router",
     "vuex",
     "vue3"
   ],
@@ -168,10 +171,10 @@
   ],
   [
     "路径匹配",
-    "设计策略",
     "命名规范",
     "字符编码",
     "批处理命令",
-    "软件设计师"
+    "软件设计师",
+    "设计模式"
   ]
 ]
