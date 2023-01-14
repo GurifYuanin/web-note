@@ -413,17 +413,27 @@ vm.object = Object.assign({}, vm.object, {
 		<section>
 			<h2>渲染原理<sup>[2]</sup></h2>
 			<p>
-				<ol>
-					<li>首次渲染时，使用 render 函数构建一个虚拟 DOM（VNode）</li>
-					<li>通过 getter&setter/ Proxy 监听到数据变更，构建新的虚拟 DOM</li>
-					<li>使用 diff 算法对比两个虚拟 DOM，将发生的节点更新到浏览器 DOM 上</li>
-				</ol>
-				其中 diff 算法进行了优化：
-				<ul>
-					<li>只比较同一层级，不跨级比较</li>
-					<li>tag 不相同，则直接删掉重建，不再深度比较</li>
-					<li>tag 和 key 两者都相同，则认为是相同节点，不再深度比较</li>
-				</ul>
+				<h3>diff 算法</h3>
+				<p>
+					<ol>
+						<li>首次渲染时，使用 render 函数构建一个虚拟 DOM（VNode）</li>
+						<li>通过 getter&setter/ Proxy 监听到数据变更，构建新的虚拟 DOM</li>
+						<li>使用 diff 算法对比两个虚拟 DOM，将发生的节点更新到浏览器 DOM 上</li>
+					</ol>
+					其中对 diff 算法进行了优化：
+					<ul>
+						<li>只比较同一层级，不跨级比较</li>
+						<li>tag 不相同，则直接删掉重建，不再深度比较</li>
+						<li>tag 和 key 两者都相同，则认为是相同节点，不再深度比较</li>
+					</ul>
+				</p>
+				<h3>渲染时机</h3>
+				<p>
+					当监听到数据的变化，Vue 开启一个队列，并将同一事件循环内发生的所有数据变化缓冲起来（去除重复的数据变更），等同步任务完成后进行 DOM 更新，之后再去触发 nextTick 事件。
+					<figure>
+						<img src="../../images/nextTick.jpg" alt="">
+					</figure>
+				</p>
 			</p>
 		</section>
 		<section class="refer">

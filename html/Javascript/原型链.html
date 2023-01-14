@@ -56,11 +56,11 @@ var instance = createObject(); // 调用函数创建对象
 			<p>
 				构造函数本质依旧是函数，使用了 new 运算符创建新对象，该对象被赋予构造函数的作用域，然后执行一遍构造函数里的代码，执行过程中 this 指针指向最终被创建的新对象。
 				<pre><code class="javascript">
-function Obj () {
+function Foo () {
 	this.property = value;
 	this.function = function() {};
 }
-var instance = new Obj(); // 使用 new 创建新对象
+var instance = new Foo(); // 使用 new 创建新对象
 				</code></pre>
 				使用构造函数的方法的特点，每个通过 new 创建出的对象是相互独立的，每个对象里面的属性都需要创建一遍。但有时我们需要不同实例拥有同一个属性。例如
 				<pre><code class="javascript">
@@ -82,18 +82,13 @@ alert(person1.say === person2.say); // => false
 		<section>
 			<h2>原型模式</h2>
 			<p>
-				需要留意，在 javascript 中：
+				在 javascript 中：
 				<ul>
-					<li>每个函数都有一个<span class="definition"> prototype </span>属性（指针）</li>
-					<li>每个对象都有一个<span class="definition"> [[prototype]] </span>属性（指针）</li>
+					<li>每个函数都有一个 prototype 属性：即函数的原型对象。（该对象初始时只拥有一个属性 constructor ，constructor 属性指回了函数）</li>
+					<li>每个函数、对象都有一个 [[prototype]] 属性：指向和创建该对象的函数的原型对象。</li>
 				</ul>
 				<div class="tip">
-					<span class="definition"> prototype </span>指向一个对象（称之为原型对象），该对象初始时只拥有一个属性<span class="definition"> constructor
-					</span>，<span class="definition"> constructor </span>属性指回了<span class="definition"> prototype </span>所在的函数。
-				</div>
-				<div class="tip">
-					<span class="definition"> [[prototype]] </span>指向和创建该对象的函数的<span class="definition"> prototype
-					</span>属性指向的原型对象。该属性无法直接访问（但在 Firefox、Safari 和 chrome 中，可以使用<span class="definition"> __proto__ </span>来进行访问）。
+					在 Firefox、Safari 和 chrome 中，可以使用<span class="definition"> __proto__ </span>来进行访问 [[prototype]] 。
 				</div>
 				<figure>
 					<img style="width: 100%;" src="../../images/prototype_chain.jpg" alt="加载失败">
@@ -102,14 +97,14 @@ alert(person1.say === person2.say); // => false
 				由于每个对象都有<span class="definition"> [[prototype]] </span>属性，该属性指向了一个共同的对象，因此我们可以给自定义的构造函数的<span
 					class="definition"> prototype </span>设置公共属性，之后每次创建新的实例后，创建出来的实例都能拥有相同属性。
 				<pre><code class="javascript">
-function Obj () {
+function Foo () {
 
 }
-Obj.prototype.say = function() {
+Foo.prototype.say = function() {
 	alert('hello world');
 }
-var person1 = new Obj();
-var person2 = new Obj();
+var person1 = new Foo();
+var person2 = new Foo();
 alert(person1.say === person2.say); // => true
 				</code></pre>
 			</p>

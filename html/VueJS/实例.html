@@ -126,6 +126,15 @@ var 实例名 = new Vue({
 		数据属性名: 数据值
 	}
 });
+
+// 组件中，因为组件会被引用多次，所以 data 是一个函数
+export default {
+	data() {
+		return {
+			// ...
+		};
+	}
+}
 				</code></pre>
 				<h3>使用数据</h3>
 				在 javascript 中通过 实例名.数据属性名 来引用数据值

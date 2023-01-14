@@ -276,7 +276,7 @@ Expires: Sun Sep 16 2018 22:58:49 GMT
 						<li>must-revalidate: 如果页面过期，则去服务器进行获取</li>
 					</ul>
 				</p>
-				<h3>If-Modified-Since & Last-Modified</h3>
+				<h3>Last-Modified & If-Modified-Since</h3>
 				<p>
 					客户端向服务器请求资源，服务器返回的报文会带有 Last-Modified 头部信息，表示该资源最后修改时间。
 					<pre><code class="http">
@@ -853,7 +853,10 @@ A challenge password []:
 				<h3>http2.0 的问题</h3>
 				<ul>
 					<li>http2.0 基于 TCP 协议传输，需要三次握手确认连接，如果是 https，则还需要 TLS 连接</li>
-					<li>由于 TCP 协议为了保证传输可靠性，当出现丢包问题时，就会停止一切，对出现丢包问题的请求进行重试，直到重试成功为止，这期间其他请求都会被阻塞停止</li>
+					<li>由于 TCP 协议为了保证传输可靠性，发送方会把数据包保留在缓冲区并设定一个超时定时器，如果超时时间内被应答了则释放数据包的缓冲区，反之如果超时时间内还未应答则进行重发，直到超过最大次数。当丟包过多时，就会占用缓冲区，这期间其他请求都会被阻塞停止</li>
+					<figure>
+						<img src="../../images/tcp_reliable.jpg" alt="">
+					</figure>
 					<li>安全问题：多路复用机制允许通过一次 HTTP 连接开启多个会话，连接的分区是纯逻辑的，因此可以用来操纵服务器或在上下文之外发送帧。除此之外，还可能遇到和 TCP 窗口机制类似的攻击（比如零窗口和慢读攻击）</li>
 				</ul>
 			</p>
