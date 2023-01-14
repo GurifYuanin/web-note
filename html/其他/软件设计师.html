@@ -485,7 +485,7 @@ A → B|C|DEF
 						<li>逻辑内聚：逻辑上分为同一类就放同意模块中</li>
 						<li>时间性内聚：将相近时间点运行的程序，放在同一个模块中（是时间相近，不是时间顺序）</li>
 						<li>过程 / 程序内聚：依一组会依照固定顺序运行的程序放在同一个模块中</li>
-						<pre><code class="node">
+						<pre><code class="nodejs">
 var fs = require('fs');
 function readFileAsString(path) {
 	fs.stat(path, function(err, stats) {

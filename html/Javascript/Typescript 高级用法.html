@@ -147,7 +147,7 @@ export {};
         约定俗成：K -> key，表示键名；V -> value，表示键值；T -> type，表示某个类型。From typescript2.1 的特性<a
           href="https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html">https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html</a>。
       </div>
-      keyof T 用于枚举出指定对象的 key。
+      keyof T 用于枚举出指定类型的 key。
       <pre><code class="typescript">
 interface Foo {
   a: string;
@@ -158,10 +158,15 @@ keyof Foo[]; // => "length" | "toString" | "toLocaleString" | "pop" | "push" | "
 "sort" | "splice" | "unshift" | "indexOf" | "lastIndexOf" | ... 13 more ... | "values"
 keyof 'abc'; // => "toString" | "charAt" | "charCodeAt" | "concat" | "indexOf" | "lastIndexOf" | "localeCompare" | "match" |
 "replace" | "search" | "slice" | "split" | "substring" | "toLowerCase" | ... 25 more ... | "sup"
-            </code></pre>
-      <h3>Partial</h3>
-      Partial&lt;T&gt; 用于表示指定对象的任意部分内容，相当于对象内的所有属性都变为可选属性。
-      <pre><code class="typescript">
+        </code></pre>
+        如果想要枚举出类型的 value，则可以这样写：
+        <pre><code class="typescript">
+type valueof<T> = T[keyof T];
+valueof&lt;Foo&gt;; // => string | number
+        </code></pre>
+        <h3>Partial</h3>
+        Partial&lt;T&gt; 用于将类型内的所有属性都变为可选属性。
+        <pre><code class="typescript">
 type Foo1 = Partial&lt;Foo&gt;
 /*
 =>  {
@@ -169,30 +174,30 @@ type Foo1 = Partial&lt;Foo&gt;
   b?: number | undefined;
 }
 */
-            </code></pre>
-      <h3>Pick</h3>
-      Pick&lt;T, K&gt; 用于表示从指定对象取出指定部分内容，相当于取出对象的子集。
-      <pre><code class="typescript">
+        </code></pre>
+        <h3>Pick</h3>
+        Pick&lt;T, K&gt; 用于表示从指定类型取出指定部分内容，相当于取出对象的子集。
+        <pre><code class="typescript">
 type Foo2 = Pick&lt;Foo, 'a'&gt;
 /*
 => {
   a: string;
 }
 */
-            </code></pre>
-      <h3>Omit</h3>
-      Omit&lt;T, K&gt; 与 Pick 相反，用于从指定对象去掉部分内容。
-      <pre><code class="typescript">
+        </code></pre>
+        <h3>Omit</h3>
+        Omit&lt;T, K&gt; 与 Pick 相反，用于从指定类型去掉部分内容。
+        <pre><code class="typescript">
 type Foo3 = Omit&lt;Foo, 'a'&gt;
 /*
 => {
   b: number
 }
 */
-            </code></pre>
-      <h3>Record</h3>
-      Record&lt;K, T&gt; 用于表示用 K 作为对象的键名，用 T 作为所有键值的类型，生成一个类型声明对象。
-      <pre><code class="typescript">
+        </code></pre>
+        <h3>Record</h3>
+        Record&lt;K, T&gt; 用于表示用 K 作为对象的键名，用 T 作为所有键值的类型，生成一个类型声明对象。
+        <pre><code class="typescript">
 type Foo4 = Record<'a' | 'b', 123>;
 /*
 => {
@@ -206,7 +211,7 @@ type Foo5 = Record&lt;string, number&gt;;
   [k: string]: number;
 }
 */
-            </code></pre>
+        </code></pre>
       </p>
     </section>
     <section class="refer">

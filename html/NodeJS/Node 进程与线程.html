@@ -30,20 +30,147 @@
       <p>
         <h3>单线程</h3>
         <p>
-          在 NodeJS v13 之前，Node 是单线程执行，这里说的单线程指的是 Javscript 代码在一个线程上执行，但除此之外还有其他线程，比如 I/O 线程。
+          在 Node v10.5.0 之前，Node 是单线程执行，这里说的单线程指的是 Javscript 代码在一个线程上执行，除此之外还有其他线程，比如 I/O 线程。
+          <figure>
+            <img src="../../images/node_single_thread.jpg" alt="">
+          </figure>
         </p>
         <h3>多线程</h3>
+        <p>
+          在 Node v10.5.0 之后，可以使用 worker_threads 来创建子线程。
+          <pre><code class="nodejs">
+const { Worker } = require('worker_threads');
+new Worker(path);
+          </code></pre>
+          <div class="tip">
+            因为创建的子线程是执行 Javscript 的线程，所以创建子线程时，path 只能传入 Javscript 文件的路径（.js / .mjs）。
+          </div>
+          worker_threads 模块提供多个 API 来实现多线程。
+          <table>
+            <tr>
+              <th>名字</th>
+              <th>描述</th>
+              <th>类型</th>
+            </tr>
+            <tr>
+              <td>Worker</td>
+              <td>创建子线程的类</td>
+              <td>class</td>
+            </tr>
+            <tr>
+              <td>isMainThread</td>
+              <td>判断当前线程是否为主线程</td>
+              <td>boolean</td>
+            </tr>
+            <tr>
+              <td>parentPort</td>
+              <td>用于与父线程通信，本质上是 NodeJS 在子线程中自动创建的 MessagePort 实例</td>
+              <td>object</td>
+            </tr>
+            <tr>
+              <td>workerData</td>
+              <td>存放主线程（clone 并）传过来的初始数据</td>
+              <td>any</td>
+            </tr>
+          </table>
+          <pre><code class="nodejs">
+// 主线程
+const { Worker } = require('worker_threads');
+const worker = new Worker('./worker.js', {});
+worker.on('online', () => {}); // 子线程开始执行 JS 代码
+worker.on('message', (msg) => {}); // 子线程给主线程发数据
+worker.on('messageerror', (error) => {}); // 子线程给主线程发数据失败
+worker.on('exit', (exitCode) => {}); // 子线程主动退出
+worker.on('error', (error) => {}); // 子线程报错
+
+// 子线程
+// 发数据参见下一部分
+// 主动退出
+process.exit(exitCode);
+// 报错
+throw new Error();
+          </code></pre>
+        </p>
+        <h3>多线程通信</h3>
+        <p>
+          <h4>初始数据</h4>
+          在创建子线程时可以传入的数据，子线程使用 workerData 接收。
+          <pre><code class="nodejs">
+// 主线程
+const { Worker } = require('worker_threads');
+const worker = new Worker('./worker.js', {
+  workerData: {
+    message: 'Hello World'
+  }
+});
+
+// 子线程
+const { workerData } = require('worker_threads');
+console.log(workerData); // => { message: 'Hello World' }
+          </code></pre>
+          <h4>互发数据</h4>
+          <pre><code class="nodejs">
+// 主线程
+const { Worker } = require('worker_threads');
+const worker = new Worker('./worker.js', {});
+// 发数据
+worker.postMessage(message);
+// 接收数据
+worker.on('message', message => {});
+
+// 子线程
+const { parentPort } = require('worker_threads');
+// 发数据
+parentPort.postMessage(message);
+// 接收数据
+parentPort.on('message', message => {});
+          </code></pre>
+          <h4>共享内存</h4>
+        </p>
       </p>
     </section>
     <section>
       <h2>进程</h2>
-      <p></p>
+      <p>
+        <h3>创建子进程</h3>
+        <p>
+          在 NodeJS 中，使用 child_process 模块来创建子进程，一共有四个方法：
+          <pre><code class="nodejs">
+const { spawn, exec, execFile, fork } = require('child_process');
+          </code></pre>
+          <figure>
+            <img src="../../images/node_create_process.jpg" alt="">
+            <figcaption>内部调用关系</figcaption>
+          </figure>
+          <pre><code class="nodejs">
+const { spawn } = require('child_process');
+
+// 创建子进程
+const child = spawn('ls', ['-al', '.']); // 打印当前 NodeJS 文件所在目录的文件列表
+const { stdin, stdout, stderr } = child;
+
+// 进程退出回调事件
+child.on('close', (exitCode) => {
+  console.log(exitCode);
+});
+
+// 进程标准输出回调事件
+stdout.on('data', (data) => {
+  console.log(data);
+});
+
+// 进程报错回调事件
+stderr.on('data', (data) => {
+  console.log(data);
+});
+          </code></pre>
+        </p>
+        <h3>进程通信</h3>
+      </p>
     </section>
     <section class="refer">
       <h2>参考文献</h2>
-      <p>
-      <div>[1] 标题 <a href="链接">链接</a></div>
-      </p>
+      <p></p>
     </section>
   </div>
 </body>

@@ -40,7 +40,7 @@
 				<h3>读取整个文件</h3>
 				<p>
 					使用 readFile 读取整个文件内容。
-					<pre><code class="javascript">
+					<pre><code class="nodejs">
 var fs = require('fs');
 fs.readFile(path, code, function(err, data) => {
 	if (err) {
@@ -63,7 +63,7 @@ fs.readFile(path, code, function(err, data) => {
 				<h3>部分读取</h3>
 				<p>
 					需要先使用 oepn 方法打开文件，获得 fd（文件描述），再通过 read 方法读取文件指定部分到缓冲区。
-					<pre><code class="javascript">
+					<pre><code class="nodejs">
 var fs = require('fs');
 fs.open(path, flag, mode, function(err, fd) {
 	if (err) {
@@ -110,7 +110,7 @@ fs.open(path, flag, mode, function(err, fd) {
 				<h3>写整个文件</h3>
 				<p>
 					使用 writeFile 写文件。
-					<pre><code class="javascript">
+					<pre><code class="nodejs">
 	var fs = require('fs');
 	fs.write(path, data, {
 		encoding: 'utf-8',
@@ -211,7 +211,7 @@ fs.open(path, flag, mode, function(err, fd) {
 			<h2>读取目录</h2>
 			<p>
 				使用 readdir 读取目标目录下的所有子文件、子目录。
-				<pre><code class="javascript">
+				<pre><code class="nodejs">
 var fs = require('fs');
 fs.readdir(path, function(err, files) {
 	if (err) {
@@ -235,7 +235,7 @@ fs.readdir(path, function(err, files) {
 			<h2>判断</h2>
 			<p>
 				使用 stat 获得目标路径的文件 / 目录的信息。
-				<pre><code class="javascript">
+				<pre><code class="nodejs">
 var fs = require('fs');
 fs.stat(path, function(err, stats) {
 	if (err) {
@@ -266,7 +266,7 @@ fs.stat(path, function(err, stats) {
 				<h3>递归遍历目录</h3>
 				<p>
 					递归遍历目标目录下的所有文件，读取内容并输出到目标文件。
-					<pre><code class="javascript">
+					<pre><code class="nodejs">
 const fs = require("fs");
 const path = require("path");
 
