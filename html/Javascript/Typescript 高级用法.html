@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Typescript 高级用法</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">Typescript 高级用法</h1>
+    </hgroup>
+    <section>
+      <h2>类型声明文件</h2>
+      <p>
+        <h3>加载第三方库类型</h3>
+        <h4>方式一</h4>
+        如果第三方库的类型声明文件和源代码放一起，那么只要满足以下三个条件之一<sup>[1]</sup>，就能自动匹配类型：
+        <ul>
+          <li>给 package.json 添加 types / typings 字段，设置类型声明文件的地址</li>
+          <li>在项目的根目录添加一个 index.d.ts</li>
+          <li>添加一个和入口文件（package.json 中的 main）相同名字的 .d.ts 文件</li>
+        </ul>
+        <h4>方式二</h4>
+        其他情况，ts 默认会按照以下路径去寻找第三方库文件（jquery、node 等）的类型声明文件：
+        <ol>
+          <li>node_modules/@types</li>
+          <li>../../node_modules/@types</li>
+          <li>../../../../node_modules/@types</li>
+          <li>...</li>
+        </ol>
+        通常类型声明文件应该是 @types/xxx，比如安装 @types/jquery：
+        <pre><code class="shell">
+npm install --save-dev @type/jquery
+        </code></pre>
+        安装后，在使用包的时候就会自动提示类型
+        <pre><code class="typescript">
+import $ from 'jquery';
+$('#id').html('Hello World');
+        </code></pre>
+        你也可以在 tsconfig.json 中指定类型声明文件的所在路径：
+        <pre><code class="json">
+{
+  "compilerOptions": {
+    "typeRoots": ["./types"] // 只会寻找 ./types 下的类型声明文件（而不会去找 node_modules/@types）
+  }
+}
+        </code></pre>
+        还可以用 types 参数来指定具体的包：
+        <pre><code class="json">
+{
+  "compilerOptions": {
+    "types": ["jquery"] // 只会加载 jquery 包的类型声明文件
+  }
+}
+        </code></pre>
+        <h3>管理自定义的类型文件</h3>
+        对于自定义的类型，通常的做法是创建一个 types 目录，里面用于存放与管理自己写的类型声明文件。
+      </p>
+    </section>
+    <section>
+      <h2>declare</h2>
+      <p>
+        <h3>declare 是什么</h3>
+        通常情况，我们会在创建变量时声明其类型。
+        <pre><code class="typescript">
+const person: {
+  name: string,
+  age: number,
+  gender: number
+} = {
+  name: '张三',
+  age: 18,
+  gender: 0
+};
+        </code></pre>
+        但当变量已经存在，希望手动地配置其类型时，就需要 declare 关键字。
+        <pre><code class="typescript">
+declare const person: {
+    name: string,
+    age: number,
+    gender: number
+}
+        </code></pre>
+        declare const 只是其中一种用法，还可以使用其他用法：
+        <ul>
+          <li>declare var / let / const</li>
+          <li>declare function</li>
+          <li>declare interface</li>
+          <li>declare class</li>
+          <li>declare enum</li>
+          <li>declare namespace</li>
+          <li>declare module</li>
+          <li>declare global</li>
+        </ul>
+        <div class="tip">
+          declare 声明的类型是全局可用的，但如果文件内使用了 import 或者 export 语法，则该文件会被认为是 npm 包而不是类型声明文件，因此 declare 的类型也不再全局可用。
+        </div>
+        <h3>拓展模块</h3>
+        当你使用的第三方模块已经有了类型声明文件，但发现类型声明不完整，可以手动进行拓展。
+        <pre><code class="typescript">
+// types/foo/index.d.ts
+
+declare module 'foo' {
+  // 给 foo 模块添加一个方法 bar
+  export function bar(): void;
+}
+                </code></pre>
+        <h3>拓展全局对象</h3>
+        由于 typescript 会对接口进行声明合并操作，所以可以自定义地对全局对象进行类型拓展，比如在 window 上挂全局对象：
+        <pre><code class="typescript">
+// types/global.d.ts
+
+declare global {
+  interface Window {
+    isProd: boolean; // 在代码中可以直接使用 window.isProd 且提示类型为 bool
+  }
+}
+export {};
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>alias</h2>
+      <p></p>
+    </section>
+    <section>
+      <h2>内置结构</h2>
+      <p>
+      <h3>keyof</h3>
+      <div class="tip">
+        约定俗成：K -> key，表示键名；V -> value，表示键值；T -> type，表示某个类型。From typescript2.1 的特性<a
+          href="https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html">https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html</a>。
+      </div>
+      keyof T 用于枚举出指定对象的 key。
+      <pre><code class="typescript">
+interface Foo {
+  a: string;
+  b: number;
+}
+keyof Foo; // => 'a' | 'b'
+keyof Foo[]; // => "length" | "toString" | "toLocaleString" | "pop" | "push" | "concat" | "join" | "reverse" | "shift" | "slice" |
+"sort" | "splice" | "unshift" | "indexOf" | "lastIndexOf" | ... 13 more ... | "values"
+keyof 'abc'; // => "toString" | "charAt" | "charCodeAt" | "concat" | "indexOf" | "lastIndexOf" | "localeCompare" | "match" |
+"replace" | "search" | "slice" | "split" | "substring" | "toLowerCase" | ... 25 more ... | "sup"
+            </code></pre>
+      <h3>Partial</h3>
+      Partial&lt;T&gt; 用于表示指定对象的任意部分内容，相当于对象内的所有属性都变为可选属性。
+      <pre><code class="typescript">
+type Foo1 = Partial&lt;Foo&gt;
+/*
+=>  {
+  a?: string | undefined;
+  b?: number | undefined;
+}
+*/
+            </code></pre>
+      <h3>Pick</h3>
+      Pick&lt;T, K&gt; 用于表示从指定对象取出指定部分内容，相当于取出对象的子集。
+      <pre><code class="typescript">
+type Foo2 = Pick&lt;Foo, 'a'&gt;
+/*
+=> {
+  a: string;
+}
+*/
+            </code></pre>
+      <h3>Omit</h3>
+      Omit&lt;T, K&gt; 与 Pick 相反，用于从指定对象去掉部分内容。
+      <pre><code class="typescript">
+type Foo3 = Omit&lt;Foo, 'a'&gt;
+/*
+=> {
+  b: number
+}
+*/
+            </code></pre>
+      <h3>Record</h3>
+      Record&lt;K, T&gt; 用于表示用 K 作为对象的键名，用 T 作为所有键值的类型，生成一个类型声明对象。
+      <pre><code class="typescript">
+type Foo4 = Record<'a' | 'b', 123>;
+/*
+=> {
+  a: 123;
+  b: 123;
+}
+*/
+type Foo5 = Record&lt;string, number&gt;;
+/*
+=> {
+  [k: string]: number;
+}
+*/
+            </code></pre>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      <div>[1] 声明文件 <a href="https://ts.xcatliu.com/basics/declaration-files.html#%E5%B0%86%E5%A3%B0%E6%98%8E%E6%96%87%E4%BB%B6%E5%92%8C%E6%BA%90%E7%A0%81%E6%94%BE%E5%9C%A8%E4%B8%80%E8%B5%B7">https://ts.xcatliu.com/basics/declaration-files.html#%E5%B0%86%E5%A3%B0%E6%98%8E%E6%96%87%E4%BB%B6%E5%92%8C%E6%BA%90%E7%A0%81%E6%94%BE%E5%9C%A8%E4%B8%80%E8%B5%B7</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

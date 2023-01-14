@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>事件循环机制</title>
+	<link rel="stylesheet" href="../../css/normalize.css">
+	<link rel="stylesheet" href="../../css/styles/agate.css">
+	<link rel="stylesheet" href="../../css/dark.css">
+	<script src="../../js/highlight.pack.js"></script>
+	<script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+	<aside id="sidebar">
+		<section id="catalog">
+			<img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+			目录
+		</section>
+	</aside>
+	<div id="showCatalog">
+		<img src="../../images/arrow.png">
+	</div>
+	<article id="container">
+		<hgroup>
+			<h1 id="title">事件循环机制</h1>
+		</hgroup>
+		<section>
+			<h2>浏览器环境</h2>
+			<p>
+				<h3>单线程</h3>
+				<p>
+					Javascript 是单线程执行，即同一时刻只能做一件事。如果只是这样所有代码都同步执行，那么如果前面的代码如果执行时间过长，后面的代码将执行不到。
+					<pre><code class="javascript">
+console.log('执行 ajax 前');
+$.ajax({
+	type: 'GET',
+	url: 'www.demo.com',
+	success: function (data) {
+		console.log(data);
+	}
+})
+console.log('执行 ajax 后');
+					</code></pre>
+					输出 "执行 ajax 前" 之后向 www.demo.com 发送了个 http 请求，如果 javascript 是同步执行，且该请求迟迟没有回应，后面的代码(console.log('执行 ajax
+					后');)就无法执行。此时就需要让 http 请求 <span class="definition">异步执行</span> 。
+				</p>
+				<h3>事件循环 / Event-Loop</h3>
+				<p>
+					javacript 使用<span class="definition"> 任务队列 </span>的机制来实现异步，给异步任务设置回调事件，当异步任务执行完成后都会向这个任务队列添加一个事件。
+					<figure>
+						<img src="../../images/javascript_process_event_loop.jpg">
+						<figcaption>事件队列机制</figcaption>
+					</figure>
+					javascript 代码则在执行栈（execution context stack）上执行，<strong><u>只有执行栈上的代码执行完之后</u></strong>才会去照看一下任务队列，此时如果任务队列上有事件，那么就依次从队列上（队列-先进先出）一条条取出执行。
+					<pre><code class="javascript">
+setTimeout(function() {
+	console.log('hello world');
+}, 1000);
+var now = new Date();
+while (new Date() - now < 3000) {}
+						</code></pre>
+					<span class="definition"> console.log('hello world') </span>在 1000ms 后会被执行？不是，实际上会在 3000ms 后才执行。
+					<figure>
+						<img src="../../images/javascript_process_exec.gif">
+					</figure>
+					这其中的执行逻辑为:
+					<ol>
+						<li>0ms 时刻，执行了 setTimeout ，告诉 javascript 函数 function() { console.log('hello world'); } 要在 1000ms 后执行</li>
+						<li>0-1000ms 时间，进入 while 循环中</li>
+						<li>1000ms 时刻，定时器触发，将函数 function() { console.log('hello world'); } 放入事件队列</li>
+						<li>1000-3000ms 时间，依旧在 while 循环中，所以没办法去执行事件队列里的任务</li>
+						<li>3000ms 时刻，跳出 while 循环，执行栈没有要执行的代码，这时去看事件队列，取出函数 function() { console.log('hello world'); } 并执行</li>
+					</ol>
+				</p>
+				<h3>异步任务细分</h3>
+				<p>
+					先进入任务队列的先执行。
+					<pre><code class="javascript">
+setTimeout(function() {
+	console.log('setTimeout1');
+}, 0);
+setTimeout(function() {
+	console.log('setTimeout2');
+}, 0);
+
+// => setTimeout1
+// => setTimeout2
+					</code></pre>
+					不同的异步任务还分宏任务（macro-task）队列和微任务（micro-task）队列：
+					<ul>
+						<li>宏任务：setTimeout, setInterval</li>
+						<li>微任务：Promise, MutationObserver</li>
+					</ul>
+					当执行栈上的同步代码执行完之后，会去微任务队列查看有没有任务，有的话逐一取出来执行，执行完之后再去宏任务队列取队头的一条记录放到执行栈上执行，执行完之后就又去看看微任务队列有没有任务 ... 不断循环。
+					<pre><code class="javascript">
+setTimeout(function() {
+	console.log('setTimeout');
+}, 0);
+new Promise(function(resolve) {
+	console.log('promise');
+	resolve();
+}).then(function(data) {
+	console.log('then');
+});
+console.log('console');
+
+// => promise
+// => console
+// => then
+// => setTimeout
+					</code></pre>
+				</p>
+				<h3>浏览器子进程</h3>
+				<p>
+					HTML5 提供了 Web Workers API，可以在 javascript 主进程下创建子进程（也是 javascript 脚本文件）。
+					<pre><code>
+/* 父进程代码 */
+if (window.Worker) {
+	// 执行 my-worker.js
+	var worker = new Worker('my-work.js');
+
+	// 向子进程发送 'hello world'
+	worker.postMessage('hello world');
+
+	// 监听 my-script.js 传送过来的消息
+	worker.onmessage = function(event) {
+		console.log(event.data);
+	}
+
+	// 监听出错，例如执行了不同源的脚本
+	worker.onerror = function(event) {
+		console.log(event.message); // 错误信息
+		console.log(event.filename); // 错误的脚本名，这里是 my-workder.js
+		console.log(event.lineno); // 错误代码行数
+	}
+
+	// 结束 my-worker.js 的执行
+	worker.terminate();
+}
+					</code></pre>
+					父子进程可以进行相互通信，方法与父进程相似，但子进程的全局对象不是 window ，而是父进程创建出来的 worker 实例，所以向父进程传输数据和设置钩子的时候，可以直接在全局对象上设置 this.xxx = ...
+					，然后父进程通过 worker.xxx 来获取。
+					<pre><code class="javascript">
+/* 子进程代码 */
+// 向父进程发送 'hello world'
+postMessage('hello world');
+
+// 监听父进程传送过来的消息
+onmessage = function(event) {
+	console.log(event.data);
+}
+
+// 结束自己（子进程）的执行
+close();
+					</code></pre>
+					创建的子进程受以下限制：
+					<ul>
+						<li>没有 window 全局对象，所以也无法操作父进程的 DOM ，但可以直接使用一部分 API，如 WebSockets，IndexedDB 以及FireFox OS 专用的 Data Store API
+							等数据存储机制<sup>[2]</sup></li>
+						<li>父进程只能调用同源的脚本</li>
+						<li>出于安全考虑，chrome 不允许本地(file:///)执行子进程。</li>
+					</ul>
+				</p>
+			</p>
+		</section>
+		<section>
+			<h2>node 环境</h2>
+			<p>
+				<h3>事件循环 / Event-Loop</h3>
+				整个 NodeJS 可以分为四层：
+				<ul>
+					<li>Application / 应用层：JS 交互层</li>
+					<li>V8 引擎：解析 JS 语法，调用 Node API</li>
+					<li>Node API 层：给上层模块调用，与操作系统进行交互</li>
+					<li>libuv：底层封装的核心功能，其中就包括了<span class="different">事件循环</span>的实现</li>
+				</ul>
+				<figure>
+					<img src="../../images/nodejs_core.png" alt="">
+					<figcaption>NodeJS 的运行机制</figcaption>
+				</figure>
+				NodeJS 也有事件循环机制，并且新加了两个 API 用于创建异步事件的回调。
+				<ul>
+					<li>process.nextTick：在执行栈执行完之后，进入事件循环之前调用</li>
+					<li>setImmediate：在 check 阶段执行</li>
+				</ul>
+				<figure>
+					<img src="../../images/node_event_loop.jpg" alt="">
+				</figure>
+				<h3>微任务执行时机</h3>
+				执行以下代码：
+				<pre><code class="javascript">
+setTimeout(() => {
+	console.log('setTimeout1');
+	Promise.resolve().then(() => {
+		console.log('Promise1');
+	});
+}, 0);
+setTimeout(() => {
+	console.log('setTimeout2');
+	Promise.resolve().then(() => {
+		console.log('Promise2');
+	});
+}, 0);
+				</code></pre>
+				按 NodeJS 的事件循环机制，微任务会在每个阶段之间执行，所以输出的结果应该为：
+				<div class="command">
+					setTimeout1
+					setTimeout2
+					Promise1
+					Promise2
+				</div>
+				这是因为两个 setTimeout 会在 times 阶段全部执行，在进入下一阶段之前去执行微任务队列。但是<span class="different">在 NodeJS v11 之后，为了和浏览器保持一致，每次执行完 setTimeout 后马上执行微任务队列</span>，所以结果变成了：
+				<div class="command">
+					setTimeout1
+					Promise1
+					setTimeout2
+					Promise2
+				</div>
+				<h3>setTimeout & setImmediate 的执行顺序</h3>
+				执行以下代码：
+				<pre><code class="javascript">
+setImmediate(() => {
+	console.log('setImmediate');
+});
+
+setTimeout(() => {
+	console.log('setTimeout');
+}, 0);
+				</code></pre>
+				根据 HTML5 规范，setTimeou 不能设置为 0，不传或者传 0 会自动变成 4ms，相当于：
+				<pre><code class="javascript">
+setTimeout(() => {
+	console.log('setTimeout');
+}, 4);
+				</code></pre>
+				理想情况下，应该是第 0ms 时 timers 阶段中的 setTimeout 还没到期因此不触发，然后到了 check 阶段执行 setImmediate 的回调，4ms 后执行到 timers 阶段执行 setTimeout 的回调，但实际情况却是：
+				<figure>
+					<img src="../../images/node_event_loop_test_case1.jpg" alt="">
+					<figcaption>先后顺序不确定</figcaption>
+				</figure>
+				这是因为计算机并不是只执行 node 代码，cpu 有可能因为处理其他事情，还没进入事件循环就已经过了 4ms，导致第一次到 timers 阶段就已经可以执行 setTimeout 的回调，后续再到 check 阶段执行 setImmediate。
+				<h3>阶段继续</h3>
+				执行以下代码：
+				<pre><code class="javascript">
+const fs = require('fs');
+
+fs.readFile('test.txt', () => {
+	console.log('readFile');
+	setTimeout(() => {
+		console.log('setTimeout');
+	}, 0);
+	setImmediate(() => {
+		console.log('setImmediate');
+	});
+});
+				</code></pre>
+				执行结果必然是：
+				<div class="command">
+					readFile
+					setImmediate
+					setTimeout
+				</div>
+				这是因为 readFile 属于 I/O 操作，读取完成文件后的回调在 poll 阶段执行，下一阶段就是 check 阶段，因此会执行 setImmediate 的回调，再下下阶段才到 timers 阶段，此时再执行 setTimeout 的回调。
+				<figure>
+					<img src="../../images/node_event_loop_test_case2.jpg" alt="">
+				</figure>
+			</p>
+		</section>
+		<section class="refer">
+			<h2>参考文献</h2>
+			<p>
+				<div>[1] 阮一峰 event-loop <a
+						href="http://www.ruanyifeng.com/blog/2014/10/event-loop.html">http://www.ruanyifeng.com/blog/2014/10/event-loop.html</a>
+				</div>
+				<div>[2] MDN Web Workers API <a
+						href="https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API/Using_web_workers">https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API/Using_web_workers</a>
+				</div>
+			</p>
+		</section>
+	</article>
+</body>
+
+</html>

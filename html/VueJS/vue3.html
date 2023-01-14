@@ -109,6 +109,95 @@ export default {
   });
 &lt;/script&gt;
         </code></pre>
+        <h4>ref & reactive & shadowReactive</h4>
+        ref 和 reactive 都可以用来创建响应式数据，不同点：
+        <ul>
+          <li>ref 一般用于基本数据类型，若用于对象，本质上会转化为 reactive</li>
+          <li>reactive 只能用于对象或数组，并且里面的每个元素都是响应式的</li>
+          <li>shadowReactive 使用方法与 reactive 一样，但只有根级别的属性是响应式的</li>
+        </ul>
+        <pre><code class="javascript">
+import { ref, reactive, shadowReactive } from 'vue';
+
+export default {
+  setup() {
+    const count = ref(0);
+    const arr = ref(['foo']);
+    const obj = shadowReactive({
+      foo: {
+        bar: 0 // 只对 foo 响应式，而 bar 无响应式
+      }
+    });
+  }
+}
+        </code></pre>
+        <h4>watch & watchEffect</h4>
+        <ul>
+          <li>watch：监听若干个响应式数据源（ref & reactive 等响应式对象、getter 函数），当数据发生变更时回调函数会被触发</li>
+          <li>watchEffect：自动监听回调函数中依赖的响应式数据，当数据发生变更时触发回调函数，<span class="different">且响应式数据初始化时会触发一次函数</span></li>
+        </ul>
+        这两个方法都可以追加一个选项参数，用于控制一些行为：
+        <table>
+          <tr>
+            <th>参数名</th>
+            <th>类型</th>
+            <th>默认</th>
+            <th>解释</th>
+          </tr>
+          <tr>
+            <td>immediate（watch 专属）</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td>是否立即触发一次回调函数</td>
+          </tr>
+          <tr>
+            <td>deep（watch 专属）</td>
+            <td>Boolean</td>
+            <td>false</td>
+            <td>如果传入的是对象，是否深度遍历监听</td>
+          </tr>
+          <tr>
+            <td>flush</td>
+            <td>'pre' | 'post' | 'sync'</td>
+            <td>'pre'</td>
+            <td>执行回调函数的时机，pre 表示更新 DOM 之前，post 表示更新 DOM 之后</td>
+          </tr>
+          <tr>
+            <td>onTrack</td>
+            <td>Function</td>
+            <td>undefined</td>
+            <td>回调函数触发之前的回调</td>
+          </tr>
+          <tr>
+            <td>onTrigger</td>
+            <td>Function</td>
+            <td>undefined</td>
+            <td>回调函数触发之后的回调</td>
+          </tr>
+        </table>
+        <pre><code class="javascript">
+import { ref, watch, watchEffect } from 'vue';
+
+export default {
+  setup() {
+    const count = ref(0);
+
+    // watch 写法一
+    const unwatch = watch(count, () => {
+      console.log(count.value);
+    });
+    // watch 写法二，使用 getter（当需要监听多个时使用数组）
+    const unwatch = watch(() => count.value, () => {
+      console.log(count.value);
+    });
+    unwatch(); // 取消监听
+
+    watchEffect(() => {
+      console.log(count.value);
+    });
+  }
+}
+        </code></pre>
         <h3>组合式函数</h3>
         正常来讲，我们会使用函数来复用重复的代码逻辑，如常用的第三方库 lodash，这种函数是无状态的。而使用 vue3 提供的组合式函数，可以复用<span class="definition">有逻辑状态</span>的函数。
         <pre><code class="typescript">

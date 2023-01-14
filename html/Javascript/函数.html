@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>函数</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">函数</h1>
+    </hgroup>
+    <section>
+      <h2>function</h2>
+      <p>
+      </p>
+    </section>
+    <section>
+      <h2>new function</h2>
+      <p>
+        new 一个函数实际发生的操作：
+        <ol>
+          <li>创建一个对象 {}</li>
+          <li>将该对象的原型（__proto__）设置为函数的原型对象（prototype）</li>
+          <li>执行函数，且函数的上下文为该对象</li>
+          <li>若原函数返回引用对象（比如 Object、Array），则直接使用原函数的返回值作为创建出来的实例，否则返回上面创建的对象</li>
+        </ol>
+        <pre><code class="javascript">
+function new(fn, ...args) {
+  const defaultObj = Object.create(fn.prototype); // 第 1、2 步
+  const fnObj = fn.call(defaultObj, ...args); // 第 3 步
+  return isObject(fnObj) ? fnObj : defaultObj; // 第 4 步
+}
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>箭头函数</h2>
+      <p>
+        箭头函数不能使用 new 实例化，如果使用了 new 则会报错，原因为：
+        <ul>
+          <li>箭头函数没有 prototype</li>
+          <li>不会创建 this，而是用的上下文的 this（所以 call 和 apply 方法的第一个参数会被无视）</li>
+          <li>函数内不能用 arguments</li>
+        </ul>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      <div>[1] es6中的箭头函数是否可以使用new实例化 <a href="https://blog.csdn.net/qq_40146880/article/details/99940648">https://blog.csdn.net/qq_40146880/article/details/99940648</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

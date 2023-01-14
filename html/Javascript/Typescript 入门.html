@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Typescript</title>
+	<title>Typescript 入门</title>
 	<link rel="stylesheet" href="../../css/normalize.css">
 	<link rel="stylesheet" href="../../css/styles/agate.css">
 	<link rel="stylesheet" href="../../css/dark.css">
@@ -23,7 +23,7 @@
 	</div>
 	<article id="container">
 		<hgroup>
-			<h1 id="title">Typescript</h1>
+			<h1 id="title">Typescript 入门</h1>
 		</hgroup>
 		<section>
 			<h2>定义</h2>
@@ -68,8 +68,8 @@ $ tsc
 	"compileOnSave": true, // 文件修改时自动编译
 	// 编译选项，必需
 	"compilerOptions": {
-	"outFile": "src/js/main.js", // 编译后输出的 js 文件
-	"target": "es5", // 编译后的 js 版本
+		"outFile": "src/js/main.js", // 编译后输出的 js 文件
+		"target": "es5", // 编译后的 js 版本
 		"allowJs": false, // 是否连同 js 文件也编译
 		"module": "commonjs", // 模块语法
 		"noImplicitAny": true, // 编译器无法推断出类型时是否报错
@@ -82,35 +82,12 @@ $ tsc
 		"index.ts" // 指定具体文件编译
 	],
 	"include": [
-	    "src/ts/*.ts" // 使用 glob 匹配文件编译
+	    "src/ts/*.ts" // 使用 glob 匹配哪些文件编译
 	],
 	"exclude": [
-	    "node_modules" // 使用 glob 匹配文件不编译
+	    "node_modules" // 使用 glob 匹配哪些文件不编译
 	]
 }
-					</code></pre>
-				</p>
-				<h3>typings files</h3>
-				<p>
-					ts 默认会按照以下路径去寻找第三方库文件（jquery、node 等）：
-					<ol>
-						<li>node_modules/@types</li>
-						<li>../../node_modules/@types</li>
-						<li>../../../../node_modules/@types</li>
-						<li>...</li>
-					</ol>
-					你也可以在 tsconfig.json 中进行修改：
-					<pre><code class="json">
-{
-	"compilerOptions": {
-		"types": ["node"], // 方式一，按照上面路径去寻找 node 环境的库
-		"typeRoots": ["node_modules/@types"] // 方式二，寻找 node_modules/@types 下的所有库
-	}
-}
-					</code></pre>
-					然后需要做的是下载需要的库
-					<pre><code class="shell">
-npm install --save-dev @type/node
 					</code></pre>
 				</p>
 			</p>
@@ -490,76 +467,6 @@ import a = A.a;
 let instance = new a();
 					</code></pre>
 				</p>
-			</p>
-		</section>
-		<section>
-			<h2>内置结构</h2>
-			<p>
-				<h3>keyof</h3>
-				<div class="tip">
-					约定俗成：K -> key，表示键名；V -> value，表示键值；T -> type，表示某个类型。From typescript2.1 的特性<a
-						href="https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html">https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html</a>。
-				</div>
-				keyof T 用于枚举出指定对象的 key。
-				<pre><code class="typescript">
-interface Foo {
-	a: string;
-	b: number;
-}
-keyof Foo; // => 'a' | 'b'
-keyof Foo[]; // => "length" | "toString" | "toLocaleString" | "pop" | "push" | "concat" | "join" | "reverse" | "shift" | "slice" |
-"sort" | "splice" | "unshift" | "indexOf" | "lastIndexOf" | ... 13 more ... | "values"
-keyof 'abc'; // => "toString" | "charAt" | "charCodeAt" | "concat" | "indexOf" | "lastIndexOf" | "localeCompare" | "match" |
-"replace" | "search" | "slice" | "split" | "substring" | "toLowerCase" | ... 25 more ... | "sup"
-				</code></pre>
-				<h3>Partial</h3>
-				Partial&lt;T&gt; 用于表示指定对象的任意部分内容，相当于对象内的所有属性都变为可选属性。
-				<pre><code class="typescript">
-type Foo1 = Partial&lt;Foo&gt;
-/*
-=>  {
-	a?: string | undefined;
-	b?: number | undefined;
-}
-*/
-				</code></pre>
-				<h3>Pick</h3>
-				Pick&lt;T, K&gt; 用于表示从指定对象取出指定部分内容，相当于取出对象的子集。
-				<pre><code class="typescript">
-type Foo2 = Pick&lt;Foo, 'a'&gt;
-/*
-=> {
-	a: string;
-}
-*/
-				</code></pre>
-				<h3>Omit</h3>
-				Omit&lt;T, K&gt; 与 Pick 相反，用于从指定对象去掉部分内容。
-				<pre><code class="typescript">
-type Foo3 = Omit&lt;Foo, 'a'&gt;
-/*
-=> {
-	b: number
-}
-*/
-				</code></pre>
-				<h3>Record</h3>
-				Record&lt;K, T&gt; 用于表示用 K 作为对象的键名，用 T 作为所有键值的类型，生成一个类型声明对象。
-				<pre><code class="typescript">
-type Foo4 = Record<'a' | 'b', 123>;
-/*
-=> {
-	a: 123;
-	b: 123;
-}
-*/
-type Foo5 = Record&lt;string, number&gt;;
-/*
-=> {
-	[k: string]: number;
-}
-*/
-				</code></pre>
 			</p>
 		</section>
 		<section class="refer">

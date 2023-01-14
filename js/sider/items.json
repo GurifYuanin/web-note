@@ -36,10 +36,10 @@
     "原型链",
     "闭包",
     "事件",
+    "函数",
     "异常",
     "复制粘贴",
     "模块化",
-    "Javascript进程",
     "RegExp",
     "ajax 和 fetch",
     "Class",
@@ -48,7 +48,8 @@
     "promise",
     "Generator",
     "async",
-    "Typescript"
+    "Typescript 入门",
+    "Typescript 高级用法"
   ],
   [
     "jquery"
@@ -68,6 +69,7 @@
     "file system",
     "处理原始数据",
     "process",
+    "Node 进程与线程",
     "koa"
   ],
   [
@@ -93,6 +95,7 @@
     "浏览器内核",
     "头疼的兼容",
     "浏览器截屏",
+    "事件循环机制",
     "前端性能优化",
     "前端监控",
     "一次HTTP请求"
