@@ -51,10 +51,34 @@
             </ul>
            </li>
           <li>
-            抽出第三方库文件，使用 CDN 地址
+            优化分包策略，抽出第三方库文件，使用 CDN 地址
             <ul>
               <li>内容分发网络（CDN）是一组分布在多个不同地理位置的 Web 服务器，多个位置部署服务器，客户端在请求时可以就近获取，缩短请求时间</li>
               <li>由于对第三方库的版本变更频率较低，因此增加对资源的缓存利用</li>
+            </ul>
+          </li>
+          <li>
+            按需加载，比如：
+            <ul>
+              <li>只用到组件库的部分组件，则只打包这部分组件</li>
+              <li>配置 babel polyfill 只引入使用到的 API</li>
+              <pre><code class="javascript">
+// babel.config.js
+
+module.exports = {
+  presets: [
+    '@vue/cli-plugin-babel/preset',
+    [
+      '@babel/preset-env',
+      {
+        'useBuiltIns': 'usage',
+        'corejs': 3
+      }
+    ]
+  ],
+  // ...
+}
+              </code></pre>
             </ul>
           </li>
           <li>使用 iconfont 代替图片图标，既提高了图标清晰度（矢量图），也减少文件体积</li>
@@ -118,15 +142,6 @@
             </ul>
           </li>
           <li>
-            Vue 代码风格改善
-            <ul>
-              <li>尽量用 v-show 替代 v-if</li>
-              <li>少用 watch，且禁止在 watch 进行副作用操作</li>
-              <li>v-for 必须给每个 item 配套 key</li>
-              <li>销毁组件前必须注销掉该组件之前注册过的事件（尤其是使用 EventBus）</li>
-            </ul>
-          </li>
-          <li>
             降低 CSS 选择器复杂度
             <ul>
               <li>减少选择器嵌套层级</li>
@@ -149,6 +164,24 @@
       </p>
     </section>
     <section>
+      <h2>针对 Vue 的优化</h2>
+      <p>
+        <ul>
+          <li>
+            代码上的优化：
+            <ul>
+              <li>尽量用 v-show 替代 v-if</li>
+              <li>少用 watch，且禁止在 watch 进行副作用操作</li>
+              <li>v-for 必须给每个 item 配套 key</li>
+              <li>销毁组件前必须注销掉该组件之前注册过的事件（尤其是使用 EventBus）</li>
+              <li>使用 v-once 或 v-memo 缓存不会变更的渲染内容，减少重复渲染</li>
+            </ul>
+          </li>
+          <li>tree-shake：去掉代码中没有使用到的 Vue 模块（比如 &lt;Transition&gt;）</li>
+        </ul>
+      </p>
+    </section>
+    <section>
       <h2>其他</h2>
       <p>
         <ul>
@@ -160,6 +193,7 @@
             </ul>
           </li>
           <li>CSS 资源优于 JS 资源加载</li>
+          <li>页面加载时使用骨架屏提升用户体验</li>
         </ul>
       </p>
     </section>
