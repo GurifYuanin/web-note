@@ -68,7 +68,15 @@
 &lt;/body&gt;
 &lt;/html&gt;
 				</code></pre>
-				该网站通过 img 向银行官网发送跨域请求，其结果是，用户在不知情的情况下给目标为 1 的用户转账了 100 块。
+				该网站通过 img 向银行官网发送跨域请求，其结果是，用户在不知情的情况下给目标为 1 的用户转账了 100 块。并且这只是 GET 请求，还可以通过表单自定义发送的数据和方法。
+				<pre><code class="html">
+&lt;form action="http://www.bank.com/transaction.php" method=POST&gt;
+	&lt;input type="hidden" name="intent" value="transfer" /&gt;
+	&lt;input type="hidden" name="aim" value="1" /&gt;
+	&lt;input type="hidden" name="amount" value="100" /&gt;
+&lt;/form&gt;
+&lt;script&gt; document.forms[0].submit(); &lt;/script&gt;
+				</code></pre>
 			</p>
 		</section>
 		<section>
@@ -76,8 +84,9 @@
 			<p>
 				CSRF 是服务器对浏览器过于信任，只凭借 cookies 来判断是哪个用户，却不对来源进行检查，也不管是否用户本人的意志。常用的防御措施有：
 				<ul>
-					<li>检查 Referer 字段</li>
+					<li>同源监测，比如检查 Referer 字段</li>
 					<li>添加校验 token </li>
+					<li>Samesite Cookie</li>
 				</ul>
 				<div>
 					<p>

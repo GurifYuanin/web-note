@@ -72,7 +72,7 @@
 				<div>
 					<p>
 						<h3>事件捕获</h3>
-						事件捕获是网景提出的一种事件流，其思想是最底（外）层的元素（即 document）应该先接收到事件，再逐级传递给最顶（内）层的元素（被点击的元素）。
+						事件捕获是网景提出的一种事件流，其思想是最顶（外）层的元素（即 document）应该先接收到事件，再逐级传递给最底（内）层的元素（被点击的元素）。
 						<pre><code class="html">
 &lt;div id="outer">
 	&lt;div id="inner" style="color: green; cursor: pointer;">点击我&lt;/div>
@@ -122,7 +122,7 @@
 					</p>
 					<p>
 						<h3>事件冒泡</h3>
-						事件冒泡与事件捕获相反，是先由当前元素（最顶层）开始接收事件，然后逐步传递到根元素（document），也是大多数浏览器默认支持的事件触发顺序。
+						事件冒泡与事件捕获相反，是先由当前元素开始接收事件，然后逐步传递到根元素（document），也是大多数浏览器默认支持的事件触发顺序。
 						<div class="show">
 							<div id="out">
 								<div id="in" style="color: green; cursor: pointer;">再次点击我</div>

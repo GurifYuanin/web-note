@@ -44,7 +44,7 @@
 function new(fn, ...args) {
   const defaultObj = Object.create(fn.prototype); // 第 1、2 步
   const fnObj = fn.call(defaultObj, ...args); // 第 3 步
-  return isObject(fnObj) ? fnObj : defaultObj; // 第 4 步
+  return fnObj instanceof Object ? fnObj : defaultObj; // 第 4 步
 }
         </code></pre>
       </p>

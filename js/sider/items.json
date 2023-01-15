@@ -47,12 +47,14 @@
     "this",
     "promise",
     "Generator",
-    "async",
-    "Typescript 入门",
-    "Typescript 高级用法"
+    "async"
   ],
   [
     "jquery"
+  ],
+  [
+    "Typescript 入门",
+    "Typescript 高级用法"
   ],
   [
     "three",
@@ -84,6 +86,11 @@
     "vue3"
   ],
   [
+    "webpack",
+    "webpack plugins",
+    "webpack loader"
+  ],
+  [
     "响应式布局",
     "响应式图片",
     "bootstrap",
@@ -106,9 +113,6 @@
     "git",
     "sublime 插件",
     "VSCode",
-    "webpack",
-    "webpack plugins",
-    "webpack loader",
     "npm",
     "pnpm"
   ],
