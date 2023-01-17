@@ -108,6 +108,10 @@
     "一次HTTP请求"
   ],
   [
+    "nginx",
+    "htaccess"
+  ],
+  [
     "抓包工具",
     "chrome devtools",
     "git",
@@ -130,13 +134,15 @@
     "Vue Test Utils"
   ],
   [
-    "Thinkphp5.1",
-    "htaccess",
-    "nginx",
-    "Collection",
+    "Thinkphp5.1"
+  ],
+  [
     "python2",
     "pip",
     "Django"
+  ],
+  [
+    "Collection"
   ],
   [
     "nsq",

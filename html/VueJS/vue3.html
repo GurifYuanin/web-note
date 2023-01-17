@@ -29,7 +29,7 @@
       <h2>响应式数据原理</h2>
       <p>
         <h3>vue2</h3>
-        在 vue2 中，使用的是 Object.defineProperty 对数据进行劫持，当数据变化时，触发 setter，通过<span class="definition">发布者-订阅者模式</span>更新 DOM。
+        在 vue2 中，使用的是 Object.defineProperty 对数据进行劫持，当数据变化时，触发 setter，通过<a href="../其他/设计模式.html#发布者-订阅者模式">发布者-订阅者模式</a>更新 DOM。
         <h3>vue3</h3>
         在 vue3 中，使用的是 ES6 新增的 Proxy API。
       </p>
@@ -42,9 +42,33 @@
           <li>事件监听缓存：对于添加了事件的元素，如果事件不会变更，原本可能标记为 8（动态属性），开启事件监听缓存后去除该标记</li>
         </ul>
       </p>
+      <h2>支持 Tree-shaking</h2>
+      <p>
+        通过 webpack 的 tree-shaking 功能，打包时可以将没用到的模块去掉，仅打包使用的，减少包体积。
+      </p>
       <h2>Fragments</h2>
       <p>
         在 vue2 中一个组件只能有一个根标签，但在 vue3 中，不再有这种限制。
+      </p>
+      <h2>Teleport</h2>
+      <p>
+        通过 Teleport，可以将模板代码渲染到指定的位置（甚至 Vue template 范围之外），比如全局使用的 Modal 组件。
+        <pre><code class="html">
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;!-- Vue 组件外 --&gt;
+    &lt;div id="modal"&gt;&lt;/div&gt;
+  
+    &lt;!-- Vue 组件内 --&gt;
+    &lt;teleport to="#modal"&gt;
+      &lt;div v-if="visible"&gt;
+        我是一个 Modal
+      &lt;/div&gt;
+    &lt;/teleport&gt;
+    &lt;!-- ... --&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+        </code></pre>
       </p>
       <h2>组合式 API</h2>
       <p>

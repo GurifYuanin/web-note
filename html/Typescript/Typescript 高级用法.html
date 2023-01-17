@@ -108,9 +108,6 @@ declare const person: {
           <li>declare module</li>
           <li>declare global</li>
         </ul>
-        <div class="tip">
-          declare 声明的类型是全局可用的，但如果文件内使用了 import 或者 export 语法，则该文件会被认为是 npm 包而不是类型声明文件，因此 declare 的类型也不再全局可用。
-        </div>
         <h3>拓展模块</h3>
         当你使用的第三方模块已经有了类型声明文件，但发现类型声明不完整，可以手动进行拓展。
         <pre><code class="typescript">
@@ -136,8 +133,57 @@ export {};
       </p>
     </section>
     <section>
+      <h2>三斜线指令</h2>
+      <p>
+        三斜线指令也是 ts 在早期版本中为了描述模块之间的依赖关系而创造的语法。随着 ES6 的广泛应用，现在已经不建议再使用 ts 中的三斜线指令来声明模块之间的依赖关系了，但在一些场景依旧不得不使用到。
+        <h3>保持声明文件全局有效</h3>
+        declare 声明的类型是全局可用的，但如果文件内使用了 import 或者 export 语法，则该文件会被认为是 npm 包而不是类型声明文件，导致 declare 的类型也不再全局可用，这时候就需要使用三斜线指令。
+        <pre><code class="typescript">
+///&lt;reference types="jquery" /&gt;
+
+declare function foo(options: JQuery.AjaxSettings): string;
+        </code></pre>
+        <h3>依赖一个全局变量的声明文件</h3>
+        由于全局变量不支持通过 import 导入，所以也需要借助三斜线指令。
+        <pre><code class="typescript">
+///&lt;reference types="node" /&gt;
+
+export function foo(p: NodeJS.Process): string;
+        </code></pre>
+      </p>
+    </section>
+    <section>
       <h2>alias</h2>
-      <p></p>
+      <p>
+        可以在 tsconfig.json 中配置路径别名。
+        <pre><code class="json">
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "@src": ["src/*"]
+        }
+    }
+}
+        </code></pre>
+        在代码中使用：
+        <pre><code class="javascript">
+import utils from '@src/utils';
+        </code></pre>
+        在 tsconfig.json 中，可以使用 * 来进行兜底通配，当路径所在的文件找不到时，会多一次兜底尝试。
+        <pre><code class="json">
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "@pages": ["src/pages/*"],
+            "@components": ["src/components/*"],
+            "*": ["src/*"]
+        }
+    }
+}
+        </code></pre>
+      </p>
     </section>
     <section>
       <h2>内置语法</h2>
