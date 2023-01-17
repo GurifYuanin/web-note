@@ -40,6 +40,67 @@
       </p>
     </section>
     <section>
+      <h2>发布者-订阅者模式</h2>
+      <p>
+        发布-订阅是一种消息范式，消息的发送者（称为发布者）不会将消息直接发送给特定的接收者（称为订阅者）。而是将发布的消息分为不同的类别，无需了解哪些订阅者（如果有的话）可能存在。
+        <br>
+        同样的，订阅者可以表达对一个或多个类别的兴趣，只接收感兴趣的消息，无需了解哪些发布者存在。<sup>[2]</sup>
+        <figure>
+          <img src="../../images/publish_subscriber_pattern.jpg" alt="">
+        </figure>
+        <pre><code class="javascript">
+class Publisher {
+  constructor(name, context) {
+    this.name = name;
+    this.context = context;
+  }
+  publish(type, content) {
+    this.context.publish(type, content);
+  }
+}
+
+class Subscriber {
+  constructor(name, context) {
+    this.name = name;
+    this.context = context;
+  }
+  subscribe(type, cb) {
+    this.context.subscribe(type, cb);
+  }
+}
+
+class PubSub {
+  constructor() {
+    this.messages = {};
+    this.listeners = {};
+  }
+  // 添加发布者
+  publish(type, content) {
+    const existContent = this.messages[type];
+    if (!existContent) {
+      this.messages[type] = [];
+    }
+    this.messages[type].push(content);
+  }
+  // 添加订阅者
+  subscribe(type, cb) {
+    const existListener = this.listeners[type];
+    if (!existListener) {
+      this.listeners[type] = [];
+    }
+    this.listeners[type].push(cb);
+  }
+  // 通知
+  notify(type) {
+    const messages = this.messages[type];
+    const subscribers = this.listeners[type] || [];
+    subscribers.forEach((cb, index) => cb(messages[index]));
+  }
+}
+        </code></pre>
+      </p>
+    </section>
+    <section>
       <h2>单例模式</h2>
       <p>
         单例模式下，类会自己创建（有且只有）一个对象，全局可以直接访问对象而不需要实例化。详细参见<a href="./设计模式.html#单例模式">设计模式</a>。
@@ -75,6 +136,7 @@ SingleTon.instance === SingleTon.getInstance(); // => true
       <h2>参考文献</h2>
       <p>
         <div>[1] Model-View-ViewModel (MVVM) <a href="https://www.techtarget.com/whatis/definition/Model-View-ViewModel">https://www.techtarget.com/whatis/definition/Model-View-ViewModel</a></div>
+        <div>[1] 说说你对发布订阅、观察者模式的理解？区别？<a href="https://vue3js.cn/interview/design/Observer%20%20Pattern.html#二、发布订阅模式">https://vue3js.cn/interview/design/Observer%20%20Pattern.html#二、发布订阅模式</a></div>
       </p>
     </section>
   </div>
