@@ -229,27 +229,32 @@
 		<section>
 			<h2>元素在文档中的位置</h2>
 			<p>
-				如何确定一个元素的位置？关于 Y 轴的有：
+				如何确定一个元素的位置？在 Y 轴上，有以下分类：
 				<ul>
-					<li>style.height：元素高度</li>
-					<li>style.top：元素上方偏移量</li>
-					<li>clientTop：元素样式 border-top 的 border-width</li>
-					<li>scrollTop：元素内滚动条的偏移量 / 被隐藏的部分内容的高度</li>
-					<li>offsetTop：和父标签的距离，top + margin-top</li>
-					<li>clientHeight：可视区的高度，height + padding-top + padding-bottom - 滚动条宽度</li>
-					<li>scrollHeight：内容高度 + padding-top + padding-bottom</li>
-					<li>offsetHeight：内容高度（IE、Opera、FF） / height（chrome） + padding-top + padding-bottom + border-top +
-						border-bottom</li>
+					<li>
+						距离（Top）
+						<ul>
+							<li>style.top：元素上方偏移量（只有 relative / absolute / fixed 元素生效）</li>
+							<li>clientTop：元素样式 border-top-width</li>
+							<li>scrollTop：元素内滚动条的偏移量 / 因进行鼠标滚动而被隐藏的内容的高度</li>
+							<li>offsetTop：和父标签的距离，即 top + margin-top</li>
+						</ul>
+					</li>
+					<li>
+						高度（Height）
+						<ul>
+							<li>style.height：元素的样式高度</li>
+							<li>clientHeight：可视区的高度，height + padding-top + padding-bottom - 滚动条宽度</li>
+							<li>scrollHeight：内容高度 + padding-top + padding-bottom</li>
+							<li>offsetHeight：<span class="different">内容高度（IE、Opera、FF） / style.height（chrome）</span> + padding-top + padding-bottom + border-top +
+								border-bottom</li>
+						</ul>
+					</li>
 				</ul>
-				注意：
-				<ol>
-					<li>其中 height 指的是样式上的高度，也就是 getComputedStyle(el).height ，而"内容高度"指的是元素内的内容的实际高度，比如有 100 行文字，每行文字的 line-height 为
-						16px ，那内容高度就有 160px，而设置了 height: 100px，那 height 就为 100px</li>
-					<li>上面所说的滚动条宽度指的是：</li>
-					<figure>
-						<img src="../../images/position_scroll_width.jpg">
-					</figure>
-				</ol>
+				上面所说的滚动条宽度指的是：
+				<figure>
+					<img src="../../images/position_scroll_width.jpg">
+				</figure>
 				<figure>
 					<img src="../../images/position_box.jpg" alt="">
 					<figcaption>实际例子可查看<a href="../../demo/position_demo.html">此处</a></figcaption>
@@ -400,7 +405,7 @@ window.document.body === document.getElementsByTagName('body')[0] // => true
 					<figure>
 						<img src="../../images/position_scroll_into_view.jpg">
 					</figure>
-					使用时分为三种情况：
+					该方法的第一个参数可以传入以下值之一：
 					<ul>
 						<li>不传参数，滚动最终效果是元素在视图顶部</li>
 						<li>传入布尔值</li>

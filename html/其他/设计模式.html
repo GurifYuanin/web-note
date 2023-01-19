@@ -49,51 +49,57 @@
           <img src="../../images/publish_subscriber_pattern.jpg" alt="">
         </figure>
         <pre><code class="javascript">
+// 发布者
 class Publisher {
-  constructor(name, context) {
+  name = ''; // 发布者名字
+  pubsub = null;
+  constructor(name, pubsub) {
     this.name = name;
-    this.context = context;
+    this.pubsub = pubsub;
   }
-  publish(type, content) {
-    this.context.publish(type, content);
+  publish(topic, message) {
+    this.pubsub.publish(topic, message);
   }
 }
 
+// 订阅者
 class Subscriber {
-  constructor(name, context) {
+  name = ''; // 发布者名字
+  pubsub = null;
+  constructor(name, pubsub) {
     this.name = name;
-    this.context = context;
+    this.pubsub = pubsub;
   }
-  subscribe(type, cb) {
-    this.context.subscribe(type, cb);
+  subscribe(topic, cb) {
+    this.pubsub.subscribe(topic, cb);
   }
 }
 
 class PubSub {
   constructor() {
-    this.messages = {};
-    this.listeners = {};
+    this.messages = {}; // key: topic value: messages
+    this.listeners = {}; // key: topic value: callbacks
   }
-  // 添加发布者
-  publish(type, content) {
-    const existContent = this.messages[type];
-    if (!existContent) {
-      this.messages[type] = [];
+  // 发布者向 topic 发布消息
+  publish(topic, message) {
+    const existMessages = this.messages[topic];
+    if (!existMessages) {
+      this.messages[topic] = [];
     }
-    this.messages[type].push(content);
+    this.messages[topic].push(message);
   }
   // 添加订阅者
-  subscribe(type, cb) {
-    const existListener = this.listeners[type];
-    if (!existListener) {
-      this.listeners[type] = [];
+  subscribe(topic, cb) {
+    const existListeners = this.listeners[topic];
+    if (!existListeners) {
+      this.listeners[topic] = [];
     }
-    this.listeners[type].push(cb);
+    this.listeners[topic].push(cb);
   }
   // 通知
-  notify(type) {
-    const messages = this.messages[type];
-    const subscribers = this.listeners[type] || [];
+  notify(topic) {
+    const messages = this.messages[topic];
+    const subscribers = this.listeners[topic] || [];
     subscribers.forEach((cb, index) => cb(messages[index]));
   }
 }

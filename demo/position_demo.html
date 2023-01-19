@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>元素定位 demo</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
 </head>
 <body>
 	<style>
@@ -48,7 +49,7 @@
 		<div>clientHeight: <span id="client-height"></span>（可视区的高度 = height + padding-top + padding-bottom - 滚动条宽度 = <span id="client-height-number"></span> - 滚动条宽度）</div>
 		<div>scrollHeight: <span id="scroll-height"></span>（内容高度 + padding-top + padding-bottom = 内容高度 + <span id="scroll-height-top"></span>）</div>
 		<div>offsetHeight: <span id="offset-height"></span>（内容高度（IE、Opera、FF） / height（chrome） + padding-top + padding-bottom + border-top + border-bottom = <span id="offset-height-number"></span>）</div>
-		<div style="display: inline-block; font-size: .8rem; background-color: #bbffbb; color: green; border: solid gray .5px; padding: 5px; margin: 5px; border-radius: 5px;">javscript 操作刷新可能存在局限，无法及时更新数据，需要时请手动滚动元素的滚动条来刷新</div>
+		<!-- <div style="display: inline-block; font-size: .8rem; background-color: #bbffbb; color: green; border: solid gray .5px; padding: 5px; margin: 5px; border-radius: 5px;">javscript 操作刷新可能存在局限，无法及时更新数据，需要时请手动滚动元素的滚动条来刷新</div> -->
 	</div>
 	<div style="position: absolute; border: solid 1px black; height: 1000px; width: 50%;">
 		<div id="block" style="
@@ -61,7 +62,7 @@
 		padding: 100px;
 		border: solid 20px black;
 		background-color: gray;
-		transition: all .5s;
+		transition: all .1s;
 		"></div>
 	</div>
 	<div style="position: absolute;  left: 50.7%; width: 49.3%; overflow: hidden;">
@@ -120,19 +121,19 @@
 		var scrollHeightNumber = document.getElementById('scroll-height-top');
 		var offsetHeight = document.getElementById('offset-height');
 		var offsetHeightNumber = document.getElementById('offset-height-number');
-		function scrollEvent () {
+		const scrollEvent = _.debounce(() => {
 			clientTop.innerText = el.clientTop + 'px';
 			clientTopNumber.innerText = el.style.borderWidth;
 			scrollTop.innerText = el.scrollTop + 'px';
 			offsetTop.innerText = el.offsetTop + 'px';
-			offsetTopNumber.innerText = el.style.height + ' + ' + el.style.marginTop;
+			offsetTopNumber.innerText = el.style.top + ' + ' + el.style.marginTop;
 			clientHeight.innerText = el.clientHeight + 'px';
 			clientHeightNumber.innerText = el.style.height + ' + ' + el.style.paddingTop + ' + ' + el.style.paddingBottom;
 			scrollHeight.innerText = el.scrollHeight + 'px';
 			scrollHeightNumber.innerText = el.style.paddingTop + ' + ' + el.style.paddingBottom;
 			offsetHeight.innerText = el.offsetHeight + 'px';
 			offsetHeightNumber.innerText = el.style.height + ' + ' + el.style.paddingTop + ' + ' + el.style.paddingBottom + ' + ' + el.style.borderWidth + ' + ' + el.style.borderWidth;
-		}
+		}, 100);
 		function paddingChange () {
 			el.style.padding = Math.abs(padding.value) + 'px';
 			scrollEvent();

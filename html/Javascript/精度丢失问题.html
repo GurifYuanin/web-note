@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>精度丢失问题</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">精度丢失问题</h1>
+    </hgroup>
+    <section>
+      <h2>问题描述</h2>
+      <p>
+        在进行浮点数计算时，可能会存在以下情况：
+        <pre><code class="javascript">
+0.1 + 0.2 === 0.3 // => false
+        </code></pre>
+        这是因为，计算机在存储数据时，无法是以二进制的形式进行存储和计算，并且对于浮点数，因为存在小数点，所以使用二进制的科学计数法来存储，这种存储方式导致了误差。
+      </p>
+    </section>
+    <section>
+      <h2>问题详解</h2>
+      <p>
+        <h3>科学计数法</h3>
+        <p>
+          以 27.5 为例子，在十进制中，科学计数法是这样的：
+          <div class="command">
+            2.75 * 10<sup>1</sup>
+          </div>
+          而在二进制中，一样是将 27.5 分为整数部分和小数部分，27 用二进制表示是 11011，而 0.5 在二进制中表示为 0.1，合起来就是
+          <div class="command">
+            11011.1
+          </div>
+          通过下面图片可以解释如何在二进制中如何表示小数
+          <figure>
+            <img src="../../images/decimal_binary.jpg" alt="">
+          </figure>
+          因此，二进制的科学计数法为：
+          <div class="command">
+            1.10111 * 2<sup>4</sup>
+          </div>
+        </p>
+        <h3>在计算机中存储浮点数</h3>
+        <p>
+          有了科学计数法后，我们从存储 11011.1 变成了存储 1.10111 * 2<sup>4</sup>。4 换算成二进制是 100，也就是说在计算机中只需要存储 110111 和 100 这两个数字就可以表示 27.5。在 JS 中浮点类型的大小占 8 Byte（64 位），其表示方式为：
+          <figure>
+            <img src="../../images/js_double_float.png" alt="">
+          </figure>
+          一个浮点数可以用上面的 64 位表示，将 64 位分为了三部分，每部分代表不同意义
+          <ul>
+            <li>第 1 位：浮点位，0 表示正数，1 表示负数</li>
+            <li>中间 11 位：用来表示科学计数法里的指数部分</li>
+            <li>最后 52 位：用来表示科学技术法里的实数部分</li>
+          </ul>
+          需要注意，中间 11 位指数部分可以表示负数，当值为 1023 时表示 0，小于该值表示负数，大于改值表示正数，所以对应 27.5 的例子实际情况为：
+          <ul>
+            <li>第 1 位：正数，所以是 0</li>
+            <li>中间 11 位：指数为 4，所以是 1023 + 4 = 1027，换算为二进制为 10000000011</li>
+            <li>最后 52 位：实数为 1.10111，去掉小数点为 110111，再补 0 到 52 位结果为 1011 1000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000</li>
+          </ul>
+          最终，27.5 在计算机中存储为：
+          <div class="command">
+            (0) (100 0000 0011) (1011 1000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000)
+          </div>
+        </p>
+        <h3>问题原因</h3>
+        <p>
+          通过上面可以得到，在 JS 中浮点数最多可以表示的位数为 2<sup>53</sup>，也就是说存储的范围是有限的，当大于该值时会被舍去。在 number 类型的变量上，可以使用 toPrecision 来就做更多位的精度计算。
+          <pre><code class="javascript">
+(0.5).toPrecision(20); // => '0.50000000000000000000'
+(0.1).toPrecision(20); // => '0.10000000000000000555'
+          </code></pre>
+          可以看到，0.5 在更高精度的情况下没有偏差，而 0.1 出现了偏差 0.00000000000000000555。这是因为 0.5 刚好等于 2<sup>-1</sup>，可以被二进制表示，而 0.1 没有刚好对应的
+          2<sup>-x</sup> 值，只能表示为 0.0001 1001 1001 1001 1001 1001 1001 1001 1001 1001 1001 1001 1001 1010 ...：
+          <div class="command">
+           0.1 = 2<sup>-4</sup> + 2<sup>-5</sup> + 2<sup>-8</sup> + 2<sup>-9</sup> + ...
+          </div>
+          用十进制来表示就是：
+          <div class="command">
+            0.1 = 0.0625 + 0.03125 + 0.00390625 + 0.001953125 + ...
+          </div>
+          这个值只会无限接近于 0.1，因为计算机存储的位数有限，所以会将 52 位之后舍去，如果再用浮点数与浮点数进行计算，计算出来的结果就可能出现误差。
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>解决方法</h2>
+      <p>
+        <h3>比较</h3>
+        <p>
+          由于出现的误差一般都非常小，可以使用 toPrecision 只取前面部分的精度，裁切掉这部分误差。
+          <pre><code class="javascript">
+Number.parseFloat(0.10000000000000000555.toPrecision(16)) === 0.1 // => true
+          </code></pre>
+        </p>
+        <h3>计算</h3>
+        <p>
+          因为误差仅出现在小数部分，所以计算前可以通过乘除将小数点抹去，最后再将计算结果除回来。
+          <pre><code class="javascript">
+0.1 * 10 + 0.2 * 10 === 0.3 * 10 // => true
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      <div>[1] 说说 Javascript 数字精度丢失的问题 <a href="https://vue3js.cn/interview/JavaScript/loss_accuracy.html">https://vue3js.cn/interview/JavaScript/loss_accuracy.html</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

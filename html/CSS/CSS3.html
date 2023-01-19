@@ -423,6 +423,13 @@ transform: translateX(100px);
 transform: translateY(100px);
 transform: translateZ(100px);
 				</code></pre>
+				<div class="tip">
+					通过上面的示例也可以看出，使用 transform 将元素进行变形，并不会影响其他元素在文档中的位置，若希望产生影响，请使用以下方式之一：
+					<ul>
+						<li>使用 zoom 替代 transform: scale（但 transition 对 zoom 无效，无法生成动画，且 zoom 存在浏览器兼容性问题）</li>
+						<li>给元素添加 margin / padding 等属性，以改变当前元素在文档中所占的大小</li>
+					</ul>
+				</div>
 			</p>
 		</section>
 		<section>
@@ -537,13 +544,23 @@ div:hover {
 					<div class="command">
 						animation: 动画名 动画时长 动画曲线 延迟时长 动画样式是否保留 动画执行次数 动画执行方向
 					</div>
+					除了用 animation 统一设置，也可以拆开进行行单独配置：
 					<ul>
 						<li>动画名：animation-name</li>
 						<li>动画时长：animation-duration</li>
-						<li>动画曲线：animation-timing-function</li>
+						<li>
+							动画曲线：animation-timing-function
+							<ul>
+								<li>ease：缓入 + 缓出</li>
+								<li>ease-in：缓入</li>
+								<li>ease-out：缓出</li>
+								<li>linear：线性</li>
+								<li>cubic-bezier(x,y,z,w)：自定义贝塞尔曲线</li>
+							</ul>
+						</li>
 						<li>延迟时长：animation-delay</li>
 						<li>
-							动画样式是否保留：animation-fill-mode，表示动画开始前和结束后，是否显示动画样式：
+							动画样式是否保留：animation-fill-mode。表示动画开始前和结束后，是否显示动画样式：
 							<ul>
 								<li>none：不保留，执行完动画后动画上的属性都消失</li>
 								<li>forwards：执行后，to 或 100% 里的样式将保留给元素</li>
@@ -554,7 +571,7 @@ div:hover {
 						</li>
 						<li>动画执行次数：animation-iteration-count，默认是 1 ，可以设置为 infinite（无限）</li>
 						<li>
-							动画执行方向：animation-direction：
+							动画执行方向：animation-direction
 							<ul>
 								<li>normal：正常顺序</li>
 								<li>reverse：反向</li>
@@ -565,8 +582,45 @@ div:hover {
 						</li>
 					</ul>
 					<div class="show">
-
+						<div class="animation-show"></div>
+						<style>
+							@keyframes animation-move {
+								from {
+									transform: translateX(0);
+								}
+								to {
+									transform: translateX(100%);
+								}
+							}
+							.animation-show {
+								width: 100px;
+								height: 100px;
+								background-color: yellow;
+								animation: animation-move 1s infinite alternate-reverse;
+							}
+						</style>
 					</div>
+					<pre><code class="html">
+&lt;div class="animation-show"&gt;&lt;/div&gt;
+&lt;style&gt;
+	@keyframes animation-move {
+		from {
+			transform: translateX(0);
+		}
+
+		to {
+			transform: translateX(100%);
+		}
+	}
+
+	.animation-show {
+		width: 100px;
+		height: 100px;
+		background-color: yellow;
+		animation: animation-move 1s infinite alternate-reverse;
+	}
+&lt;/style&gt;
+					</code></pre>
 				</p>
 				<div class="tip">
 					transition 和 animation 里有关时间的参数都不能省略单位，比如不能把 0s 写成 0 ，否则无法识别。
