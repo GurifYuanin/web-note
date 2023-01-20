@@ -40,7 +40,7 @@
         <h3>Partition</h3>
         一条消息队列会被分为不同的 Partition，每个 Partition 在物理上是不同的目录，当接收到生产者发送的一条记录时，会根据某种机制决定追加到哪个 Partition 之后。
         <h3>Consumer</h3>
-        消费者自己决定何时到 Broker 下的哪个 topic 消费记录，消费者会自己维护一个 offset，表示上次消费到 Partition 哪个位置（偏移量）。offset 是由消费者自己管理的，消费者甚至可以根据自己需要进行变更，实现重复消费某个记录。
+        消费者自己决定何时到 Broker 下的哪个 topic 消费记录，消费者会自己维护一个 offset，表示上次消费到 Partition 哪个位置（偏移量）。offset 是由消费者自己管理的，消费者甚至可以根据自己需要进行变更，实现重复消费某个记录。
         <h3>Consumer Group</h3>
         多个消费者可以被归入同一个消费者组里，当消费记录时，会从消费者组里选出一位消费者进行消费。
       </p>
@@ -53,7 +53,7 @@
         <ol>
           <li>当发送记录的时指定了 Partition，则按照指定的来</li>
           <li>如果发送记录的时候记录有 key，则将 key 进行哈希后取模（% Partion 的数量）得到</li>
-          <li>否则轮询发送</li>
+          <li>否则轮询发送</li>
         </ol>
         <h3>Comsumer Group 中 Comsumer 选择哪个 Partition</h3>
         目的：在一个 Comsumer Group 内，保证每个 Partition 只被一个 Comsumer 消费，默认采取以下策略：

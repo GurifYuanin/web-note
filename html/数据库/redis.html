@@ -130,7 +130,7 @@ $ redis-cli [-h host] [-p port] [-a password]
         <section>
             <h2>数据类型</h2>
             <p>
-                redis 是 Key-Value 数据库，所有数据可以通过 key 来检索，value 有以下类型：
+                redis 是 Key-Value 数据库，所有数据可以通过 key 来检索，value 有以下类型：
                 <ul>
                     <li>字符串</li>
                     <li>Hash：哈希映射，key-value 键值对</li>
@@ -289,7 +289,7 @@ $ redis-cli [-h host] [-p port] [-a password]
                 <pre><code class="shell">
 127.0.0.1:6379> SCAN position
         </code></pre>
-                上面命令表示从 position 开始扫描，redis 将返回两个结果：扫描后的下一个位置，扫描得到的 key 列表。
+                上面命令表示从 position 开始扫描，redis 将返回两个结果：扫描后的下一个位置，扫描得到的 key 列表。
                 <h3>判断 key 是否存在</h3>
                 <pre><code class="shell">
 # 不存在：0
@@ -345,7 +345,7 @@ $ redis-cli [-h host] [-p port] [-a password]
             <p>
                 订阅者订阅频道，发布者在某个频道发布消息后，所有订阅者都会收到这个消息。
                 <h3>订阅频道</h3>
-                
+                
                 <pre><code class="shell">
 127.0.0.1:6379> SUBSCRIBE channel
         </code></pre>

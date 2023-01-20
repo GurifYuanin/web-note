@@ -79,7 +79,7 @@ const divEl = document.createElement('div');
 this.appendChild(divEl);
         </code></pre>
         <h3>shadow</h3>
-        自定义元素可以通过 this.attachShadow 来创建 shadowRoot，shadowRoot 是与外界 html 环境完全隔离的元素节点，拥有与一般 html 元素相同的特性。
+        自定义元素可以通过 this.attachShadow 来创建 shadowRoot，shadowRoot 是与外界 html 环境完全隔离的元素节点，拥有与一般 html 元素相同的特性。
         <pre><code class="javascript">
 class MyElement extends HTMLElement {
   construcotr() {
@@ -105,7 +105,7 @@ class MyElement extends HTMLElement {
 $0.shadowRoot.host === $0; // => true
         </code></pre>
         <h3>slot</h3>
-        除了直接在 shadowRoot 上添加节点，还可以定义 slot（插槽）来实现更灵活的组件，name 表示插槽名，自定义组件内的内容可能是 template 内的内容：
+        除了直接在 shadowRoot 上添加节点，还可以定义 slot（插槽）来实现更灵活的组件，name 表示插槽名，自定义组件内的内容可能是 template 内的内容：
         <pre><code class="html">
 &lt;template id="my-template">
   &lt;slot name="title">默认标题&lt;/slot>
