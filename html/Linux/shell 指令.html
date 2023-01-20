@@ -443,7 +443,7 @@ x file2
 				<div class="command">
 					ssh user@host -t port
 				</div>
-				发起请求后本机会收到远程主机的公钥，第一次连接时会收到以下提示：
+				发起请求后本机会收到远程主机的公钥，第一次连接时会收到以下提示：
 				<pre><code class="shell">
 The authenticity of host 'host (xxx.xxx.xxx.xxx)' can't be established.
 
@@ -451,8 +451,8 @@ RSA key fingerprint is xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx.
 
 Are you sure you want to continue connecting (yes/no)?
 				</code></pre>
-				由于远程主机的公钥太长（参见 ssh-keygen 生成的秘钥），我们不容易判断该公钥是否为远程主机的公钥（可能被中间人修改过），因此将公钥进行 MD5 计算生成秘钥指纹，指纹的长度固定为 128
-				位，远程主机需要公布秘钥指纹，我们连接的时候再判断是否和公布的指纹一致，如果一致则可以输入 yes 表示信任。
+				由于远程主机的公钥太长（参见 ssh-keygen 生成的秘钥），我们不容易判断该公钥是否为远程主机的公钥（可能被中间人修改过），因此将公钥进行 MD5 计算生成秘钥指纹，指纹的长度固定为 128
+				位，远程主机需要公布秘钥指纹，我们连接的时候再判断是否和公布的指纹一致，如果一致则可以输入 yes 表示信任。
 				<pre><code class="shell">
 Are you sure you want to continue connecting (yes/no)? yes
 Warning: Permanently added 'host,12.18.429.21' (RSA) to the list of known hosts.
@@ -467,7 +467,7 @@ Password: (enter password)
 				</code></pre>
 				该密码会被公钥加密，加密后的密码发送到远程主机后，远程主机会使用自己的私钥进行解密，认证成功后就连接成功了。
 				<h3>ssh-copy-id</h3>
-				使用 ssh 连接时每次都需要输入一遍密码，我们可以改用公钥方式进行认证而不用输入密码。本地主机需要生成自己的公私钥。
+				使用 ssh 连接时每次都需要输入一遍密码，我们可以改用公钥方式进行认证而不用输入密码。本地主机需要生成自己的公私钥。
 				<pre><code class="shell">
 ssh-keygen
 				</code></pre>
@@ -498,7 +498,7 @@ $ vim ~/.ssh/authorized_keys
 					ssh-copy-id user@host
 				</div>
 				下次进行 ssh 连接的时候，远程主机会先发送一串随机字符串，本地主机使用自己的私钥进行加密发回去，远程主机使用添加到 ~/.ssh/authorized_keys
-				的公钥进行解密，解密成功则说明认证成功，整个过程不需要密码，直接一条指令：
+				的公钥进行解密，解密成功则说明认证成功，整个过程不需要密码，直接一条指令：
 				<pre><code class="shell">
 ssh user@host
 				</code></pre>
@@ -552,7 +552,7 @@ $ ssh user@host 'cd ~/Downloads && tar -cvz file1 file2' | cd ~/Downloads && tar
 						</ul>
 					</li>
 				</ul>
-				其基本使用方法为（由于是使用 ssh，所以远程主机可以直接使用 ~/.ssh/config 的远程主机别名）：
+				其基本使用方法为（由于是使用 ssh，所以远程主机可以直接使用 ~/.ssh/config 的远程主机别名）：
 				<div class="command">
 					rsync [选项] 本地文件路径 [用户@]远程主机:远程文件路径
 				</div>
@@ -560,7 +560,7 @@ $ ssh user@host 'cd ~/Downloads && tar -cvz file1 file2' | cd ~/Downloads && tar
 				<div class="command">
 					rsync [选项] [用户@]远程主机:远程文件路径 本地文件路径
 				</div>
-				<h4>本地服务器 -> 远程服务器</h4>
+				<h4>本地服务器 -> 远程服务器</h4>
 				将本地文件 ~/Downloads/file.tar.gz 同步到远程服务器的 ~/Downloads 下。
 				<pre><code class="shell">
 $ rsync -avz ~/Downloads/file.tar.gz host:~/Downloads/

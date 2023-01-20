@@ -56,7 +56,7 @@ undefined.foo();
     <section>
       <h2>ReferenceError</h2>
       <p>
-        引用错误异常，当引用了一个不存在的变量时抛出。
+        引用错误异常，当引用了一个不存在的变量时抛出。
         <pre><code class="javascript">
 const a = b;
 <span style="color: red;">Uncaught ReferenceError: b is not defined</span>
@@ -96,7 +96,7 @@ decodeURIComponent('%');
     <section>
       <h2>EvalError</h2>
       <p>
-        该异常只能手动抛出，因为执行 eval 出错只会抛出以上的异常。
+        该异常只能手动抛出，因为执行 eval 出错只会抛出以上的异常。
         <pre><code class="javascript">
 throw new EvalError('执行出错');
 <span style="color: red;">Uncaught EvalError: 执行出错</span>

@@ -30,7 +30,7 @@
       <p>
         <h3>单线程</h3>
         <p>
-          在 Node v10.5.0 之前，Node 是单线程执行，这里说的单线程指的是 Javscript 代码在一个线程上执行，除此之外还有其他线程，比如 I/O 线程。
+          在 Node v10.5.0 之前，Node 是单线程执行，这里说的单线程指的是 Javascript 代码在一个线程上执行，除此之外还有其他线程，比如 I/O 线程。
           <figure>
             <img src="../../images/node_single_thread.jpg" alt="">
           </figure>
@@ -43,7 +43,7 @@ const { Worker } = require('worker_threads');
 new Worker(path);
           </code></pre>
           <div class="tip">
-            因为创建的子线程是执行 Javscript 的线程，所以创建子线程时，path 只能传入 Javscript 文件的路径（.js / .mjs）。
+            因为创建的子线程是执行 Javascript 的线程，所以创建子线程时，path 只能传入 Javascript 文件的路径（.js / .mjs）。
           </div>
           worker_threads 模块提供多个 API 来实现多线程。
           <table>

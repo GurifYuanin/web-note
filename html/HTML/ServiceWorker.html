@@ -46,7 +46,7 @@ new Cache();
         </code></pre>
         需要使用全局的 CacheStorage 对象 window.caches 来管理 cache。
         <ul>
-          <li>open(cacheName: string): Promise&lt;Cache&gt;：打开一个名字为 cacheName 的 cache，如果不存在则创建一个</li>
+          <li>open(cacheName: string): Promise&lt;Cache&gt;：打开一个名字为 cacheName 的 cache，如果不存在则创建一个</li>
           <li>match(request: string | Request): Promise&lt;Response&gt;：根据 request 检索 Cache 的键，返回第一个符合的 Response</li>
           <li>keys(): Promise&lt;Cache[]&gt;：返回所有 Cache</li>
           <li>delete(cacheName: string): Promise&lt;boolean&gt;：删除 Cache</li>
@@ -74,7 +74,7 @@ navigator.serviceWorker.register('/sw.js').then(registration => {
         </code></pre>
         register 后 sw.js 文件将永久存在，除非执行了 unregister 操作。
         <div class="tip">
-            ServiceWorker 文件所在路径决定了可以拦截的请求范围，由于 sw.js 在根路径上，所以可以拦截所有请求。
+            ServiceWorker 文件所在路径决定了可以拦截的请求范围，由于 sw.js 在根路径上，所以可以拦截所有请求。
         </div>
         <h3>安装</h3>
         <pre><code class="javascript">

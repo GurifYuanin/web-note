@@ -118,7 +118,7 @@ server {
           rewrite module 使用 PCRE 语言的正则表达式，比如存在一条规则 rewrite ^/path/([^/]*).*$ /$1，如果访问 /path/page/route，那么实际上访问到的是 /page。具体规则可参见 <a href="https://www.debuggex.com/cheatsheet/regex/pcre">https://www.debuggex.com/cheatsheet/regex/pcre</a>
         </div>
         <h3>types</h3>
-        如果不加 include 和 default_type，nginx 会把所有资源当做 text，浏览器遇到 css 等资源就不会去解析。其中，mime.types 文件为 nginx 配置目录下自带的文件：
+        如果不加 include 和 default_type，nginx 会把所有资源当做 text，浏览器遇到 css 等资源就不会去解析。其中，mime.types 文件为 nginx 配置目录下自带的文件：
         <pre><code class="config">
 types {
   text/html html htm shtml;
@@ -237,7 +237,7 @@ location 前缀 内容 {
       <h2>反向代理</h2>
       <p>
         <h3>基本使用</h3>
-        使用 127.0.0.1:8080 代理 https://www.baidu.com ，当我们（客户端）访问 127.0.0.1:8080 时，nginx（代理）请求百度（上游服务器），再将请求到的结果返回给客户端。
+        使用 127.0.0.1:8080 代理 https://www.baidu.com ，当我们（客户端）访问 127.0.0.1:8080 时，nginx（代理）请求百度（上游服务器），再将请求到的结果返回给客户端。
         <pre><code class="nginx">
 events {
   worker_connections 2048;

@@ -77,7 +77,7 @@ const xiaoming = hashTable[key];
           <li>哈希表的关键在于哈希函数如何计算，当面对不同的值，比如"小明"和"小红"，其计算出来的 key 可能<span class="different">冲突</span>，也就是 key 相同</li>
           <li>哈希表不可能无限大，即常量 HASHTABLE_MAX_SIZE 大小是有限的，计算出来的 key 得落在哈希表上才能存储</li>
         </ul>
-        冲突时避免不了的，当 key 冲突时，就得想出解决冲突的方案。
+        冲突时避免不了的，当 key 冲突时，就得想出解决冲突的方案。
         <h3>将冲突存储在另一个位置上</h3>
         当插入一个数据时，比如加入了"小王"，而计算出来的 key 已经有人占用了，那么就将"小王"放在另一个 key 上，比如将 key++，得到新的位置，如果还冲突，那么继续自增 1 直到找到空位置。查找时也遵循同样的策略。
         <pre><code class="typescript">
@@ -154,7 +154,7 @@ for (const person of people) {
   }
 }
         </code></pre>
-        这里以数组暂代链表，这时候如果需要查找"小明"，会先执行一次哈希函数，再沿着链表一个个查找小明。
+        这里以数组暂代链表，这时候如果需要查找"小明"，会先执行一次哈希函数，再沿着链表一个个查找小明。
         <pre><code class="typescript">
 const key = hashFun('小明');
 if (hashTable[key]) {
