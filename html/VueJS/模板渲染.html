@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>模板渲染</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">模板渲染</h1>
+    </hgroup>
+    <section>
+      <h2>模板编译</h2>
+      <p>
+        vue 允许我们写这样的模板：
+        <pre><code class="html">
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;h1&gt;Hello World&lt;/h1&gt;
+    &lt;div v-for="message in messages" :key="message"&gt;{{ message }}&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+        </code></pre>
+        但这种属于 vue 模板，浏览器并不能识别其中的语法（v-for 等），所以需要将这些模板翻译为浏览器（即 Javascript）能执行的语言：
+        <ol>
+          <li>解析模板（比如使用正则表达式匹配<span class="different">&lt;</span>、<span class="different">&gt;</span>等），将模板进行语法分析，构建 AST（Abstract Syntax Tree / 抽象语法树）</li>
+          <li>优化 AST，方便后续虚拟 DOM 的更新</li>
+          <li>
+            将 AST 转化为可执行代码，比如
+            <pre><code class="javascript">
+`
+  with(this) {
+    return _c(
+      'div',
+      [
+        ...
+      ]
+    )
+  }
+`
+            </code></pre>
+          </li>
+        </ol>
+      </p>
+    </section>
+    <section>
+      <h2>渲染原理</h2>
+      <p>
+        <h3>简单描述<sup>[2]</sup></h3>
+        <p>
+          <ol>
+            <li>首次渲染时，使用 render 函数构建一个虚拟 DOM（VNode）</li>
+            <li>通过 getter&setter/ Proxy 监听到数据变更，构建新的虚拟 DOM</li>
+            <li>使用<span class="different">diff 算法</span>对比两个虚拟 DOM，将发生的节点更新到浏览器 DOM 上</li>
+          </ol>
+        </p>
+        <h3>为什么要用虚拟 DOM</h3>
+        <p>
+          虚拟 DOM 本质是一个 Object 对象，存储了真实 DOM （部分）的属性和结构，比如：
+          <pre><code class="typescript">
+class VNode {
+  tag: string;
+  data: any;
+  children?: VNode | VNode[] | string;
+  // ...
+}
+          </code></pre>
+          使用虚拟 DOM 主要是因为：
+          <ul>
+            <li>每个真实 DOM 包含非常多属性，如果直接操作 DOM，对性能消耗的代价昂贵</li>
+            <li>使用虚拟 DOM，可以在内存中进行节点 diff，再统一更新到真实 DOM 上</li>
+          </ul>
+        </p>
+        <h3>渲染时机</h3>
+        <p>
+          当监听到数据的变化，Vue 开启一个队列，并将同一事件循环内发生的所有数据变化缓冲起来（去除重复的数据变更），等同步任务完成后进行 DOM 更新，之后再去触发 nextTick 事件。
+          <figure>
+            <img src="../../images/nextTick.jpg" alt="">
+          </figure>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>diff 算法</h2>
+      <p>
+        <h3>算法优化</h3>
+        <p>
+          vue 对传统的 diff 算法进行了优化，减少了时间复杂度：
+          <ul>
+            <li>只比较同一层级，不跨级比较</li>
+            <li>tag 不相同，则直接删掉重建，不再深度比较</li>
+            <li>tag 和 key 两者都相同，则认为是相同节点，不再深度比较</li>
+          </ul>
+        </p>
+        <h3>算法详解</h3>
+        上面算法优化只是优化了两个节点比较方法，在拿到新老两个虚拟 DOM 后，还需要对每一层节点列表进行比较，diff 算法的具体执行流程为：
+        <figure>
+          <img src="../../images/vue_vnode_diff.jpg" alt="">
+        </figure>
+        <ol>
+          <li>若新老节点的第一个节点相同，则进行复用，oldStartIndex++ && newStartIndex++</li>
+          <li>若新老节点的最后一个节点相同，则进行复用，oldEndIndex-- && newEndIndex--</li>
+          <li>若老节点的第一个节点与新节点的最后一个节点相同，则进行复用，oldStartIndex++ && newEndIndex--</li>
+          <li>若老节点的最后一个节点与新节点的第一个节点相同，则进行复用，oldEndIndex-- && newStartIndex++</li>
+          <li>
+            若新节点的第一个节点有 key 值，且在哈希表中找得到相同的 key 的节点，则复用该节点，newStartIndex++
+            <div class="tip">哈希表的 key 为旧节点，value 为旧节点的 index</div>
+          </li>
+          <li>若找不到，则新增节点</li>
+        </ol>
+        本质上，diff 算法的最终目的为：比较出新的虚拟 DOM 相对旧的虚拟 DOM 找到新增、修改、删除了哪些节点，而对于不变的节点则进行复用。
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] Vue diff <a href="https://vue3js.cn/interview/vue/diff.html">https://vue3js.cn/interview/vue/diff.html</a></div>
+        <div>[2] Vue 核心原理全解 <a href="https://segmentfault.com/a/1190000038375749">https://segmentfault.com/a/1190000038375749</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
