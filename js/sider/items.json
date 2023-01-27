@@ -51,7 +51,8 @@
     "async"
   ],
   [
-    "jquery"
+    "jquery",
+    "bootstrap"
   ],
   [
     "Typescript 入门",
@@ -95,7 +96,6 @@
   [
     "响应式布局",
     "响应式图片",
-    "bootstrap",
     "viewport",
     "1px"
   ],
@@ -112,6 +112,9 @@
   [
     "nginx",
     "htaccess"
+  ],
+  [
+    "微前端"
   ],
   [
     "抓包工具",
