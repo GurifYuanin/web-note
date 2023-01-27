@@ -83,7 +83,12 @@ class VNode {
           </code></pre>
           使用虚拟 DOM 主要是因为：
           <ul>
-            <li>每个真实 DOM 包含非常多属性，如果直接操作 DOM，对性能消耗的代价昂贵</li>
+            <li>
+              每个真实 DOM 包含非常多属性，如果直接操作 DOM，性能消耗代价昂贵
+              <figure>
+                <img src="../../images/console_dir_div.jpg" alt="">
+              </figure>
+            </li>
             <li>使用虚拟 DOM，可以在内存中进行节点 diff，再统一更新到真实 DOM 上</li>
           </ul>
         </p>
@@ -109,7 +114,7 @@ class VNode {
           </ul>
         </p>
         <h3>算法详解</h3>
-        上面算法优化只是优化了两个节点比较方法，在拿到新老两个虚拟 DOM 后，还需要对每一层节点列表进行比较，diff 算法的具体执行流程为：
+        上面算法优化只是讲了如何优化了两个节点比较。在拿到新老两个虚拟 DOM 后，还需要对每一层节点列表进行比较，diff 算法的具体执行流程为：
         <figure>
           <img src="../../images/vue_vnode_diff.jpg" alt="">
         </figure>
@@ -120,11 +125,11 @@ class VNode {
           <li>若老节点的最后一个节点与新节点的第一个节点相同，则进行复用，oldEndIndex-- && newStartIndex++</li>
           <li>
             若新节点的第一个节点有 key 值，且在哈希表中找得到相同的 key 的节点，则复用该节点，newStartIndex++
-            <div class="tip">哈希表的 key 为旧节点，value 为旧节点的 index</div>
+            <div class="tip">这个哈希表的 key 为旧节点，value 为旧节点的 index</div>
           </li>
           <li>若找不到，则新增节点</li>
         </ol>
-        本质上，diff 算法的最终目的为：比较出新的虚拟 DOM 相对旧的虚拟 DOM 找到新增、修改、删除了哪些节点，而对于不变的节点则进行复用。
+        本质上，diff 算法的最终目的为：比较出新的虚拟 DOM 相对旧的虚拟 DOM ，找到新增、修改、删除了哪些节点，而对于不变的节点则进行复用。
       </p>
     </section>
     <section class="refer">

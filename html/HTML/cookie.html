@@ -90,11 +90,33 @@ sessionid=123456; path=/; domain=www.example.com; max-age=60; expires=W2024-01-2
 					<tr>
 						<td>SameSite</td>
 						<td style="text-align: left;">
-							虽然可以通过设置 domain 和 path 来限制访问哪些资源才携带该 cookie，但有些资源比如放在静态资源服务器上的图片，是不需要 cookie 的，可以通过 SameSite 来限制是否携带 cookie
+							SameSite 主要用来实现两个目的：
 							<ul>
-								<li>Lax（默认）：若请求的资源和当前网页是同一个站点时，才会携带 cookie</li>
-								<li>Strict：仅在第一方上下文中被发送，即加载图片、视频等不会携带 cookie</li>
-								<li>None：任意情况都会携带 cookie</li>
+								<li>减少不必要的数据传输：虽然可以通过设置 domain 和 path 来限制访问哪些资源才携带该 cookie，但有些符合 domain 和 path 的资源并不需要读取 cookie（比如图片、CSS 样式表等静态资源）</li>
+								<li>防止<a href="../安全/CSRF.html">CSRF</a></li>
+							</ul>
+							SameSite 可以设置为以下指之一：
+							<ul>
+								<li>
+									Strict：当访问的资源与当前页面是不同站点时，将不会携带 cookie，比如在 www.example.com 页面上有一个跳转 Github 的链接
+									<pre><code class="html">
+&lt;!-- https://www.example.com --&gt;
+&lt;a href="https://www.github.com/"&gt;Go To Github&lt;/a&gt;
+									</code></pre>
+									若存储 Github 登录态的 cookie 设置了 SameSite=Strict，从 www.example.com 跳转过来后，用户会是未登录状态。
+								</li>
+								<li>
+									Lax（默认）：设置为 Lax 可以允许下面三种情况携带 cookie
+									<pre><code class="html">
+&lt;!-- 链接 --&gt;
+&lt;a href="..."&gt;&lt;/a&gt;
+&lt;!-- 预加载 --&gt;
+&lt;link rel="prerender" href="..."&gt;
+&lt;!-- GET 请求的表单 --&gt;
+&lt;form method="GET" action="..."&gt;&lt;/form&gt;
+									</code></pre>
+								</li>
+								<li>None：任意情况都会携带 cookie（若设置为该值，必须同时设置 Secure）</li>
 							</ul>
 						</td>
 						<td>None</td>

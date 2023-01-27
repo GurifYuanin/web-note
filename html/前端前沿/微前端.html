@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>微前端</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">微前端</h1>
+    </hgroup>
+    <section>
+      <h2>为什么选择微前端</h2>
+      <p>
+        <h3>对比 iframe</h3>
+        <p>
+          iframe 存在的问题：
+          <ul>
+            <li>在性能上，因为每个 iframe 需要加载完整的文档和上下文环境，所以会大量消耗内存和资源</li>
+            <li>
+              在使用上，由于 iframe 是一个独立的窗口，所以
+              <ul>
+                <li>打开新页面时体验感割裂，无法达到 SPA 的流畅体验</li>
+                <li>iframe 内的元素会被限制在窗口内，视窗宽高会被限制，比如 iframe 内使用 Modal，其半透明的黑色遮罩只影响 iframe 窗口，无法覆盖浏览器的全部屏幕</li>
+                <li>当 iframe 与外部窗口存在相同的基础库（比如组件库）时，无法共享，导致相同的资源加载多次</li>
+                <li>当外部窗口发生刷新时，iframe 会重新加载，导致 iframe 窗口链接上信息（比如路由、查询参数）会被丢掉</li>
+                <li>若 cookie 中 SameSite 为 Strict 或 Lax，外部窗口和 iframe 窗口 cookie 无法共享</li>
+                <li>无法获取 iframe 内的性能、错误信息</li>
+              </ul>
+            </li>
+            <li>事件通信繁琐，比如需要借助 postMessage 进行通信</li>
+          </ul>
+        </p>
+        <h3>对比多页应用</h3>
+        <p>
+          多页应用存在的问题与 iframe 类似。
+        </p>
+        <h3>对比单页应用</h3>
+        <p>
+          一个大型单页应用存在的问题：
+          <ul>
+            <li>
+              所有功能杂糅在一个代码库内，增加维护、构建、发布的成本
+              <ul>
+                <li>代码打包构建时间逐渐增加</li>
+                <li>代码权限、分支、commit 等管理问题</li>
+                <li>上线、回滚互相影响，比如当一个模块出现问题时，需要整体回滚</li>
+              </ul>
+            </li>
+            <li>所有页面模块要求技术栈统一</li>
+          </ul>
+        </p>
+        <h3>微前端的问题</h3>
+        <p>
+          <ul>
+            <li>系统的复杂度提升</li>
+            <li>接入微前端需要具备一定的学习与开发成本</li>
+            <li>因为在同一个文档流中，载入的子应用必须是可信任的，否则会带来安全性问题</li>
+          </ul>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>微前端运行机制</h2>
+      <p>
+       微前端采取的是基座 + 子应用分治的概念：
+        <ul>
+          <li>解析器（Loader）通过路由信息解析加载子应用的资源（HTML、JS）</li>
+          <li>在沙箱隔离执行子应用代码</li>
+          <li>建立通信桥梁，实现主子应用通信</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>解析器</h2>
+      <p>
+        <h3>路由</h3>
+        <p>
+          微前端的设计思想类似于 SPA，在主应用上配置并注册子应用的路由信息，比如：
+          <pre><code class="javascript">
+[
+  {
+    activeWhen: '/doshboard',
+    entry: 'https://www.example.com'
+  },
+  {
+    activeWhen: '/admin',
+    entry: 'https://admin.example.com'
+  }
+]
+          </code></pre>
+          各种 entry 加载进来的页面即为子应用，同时在主应用的页面上，需要一个加载子应用的地方
+          <pre><code class="html">
+&lt;div id="submodule"&gt;&lt;/div&gt;
+          </code></pre>
+        </p>
+        <h3>解析子应用</h3>
+        <p>
+          通过路由信息得知子应用的地址，比如 https://admin.example.com，执行以下操作：
+          <ol>
+            <li>通过 ajax 拿到 HTML 文本</li>
+            <li>将 HTML 拆解为语法树</li>
+            <li>
+              解析渲染语法树
+              <ol>
+                <li>去掉 HTML 中 head 部分，将 body 部分挂载在子应用的入口</li>
+                <li>
+                  将语法树中具有副作用的内容（比如 script、link、style 标签）交给沙箱执行
+                  <div class="tip">除了 HTML 文档中静态标签，Javascript 执行过程中动态创建的 script 等也需要交给沙箱执行</div>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>沙箱隔离</h2>
+      <p>
+        <h3>JS 执行沙箱</h3>
+        <p>
+          为了让子应用的代码不污染到全局环境（window 等全局变量），在执行子应用代码时，需要进行隔离策略，有以下思路：
+          <ul>
+            <li>上下文快照 / Snapshot：在执行代码前把上下文备份一份，执行完代码之后还原备份</li>
+            <li>VM / Virtual Machine：将代码放在模拟出来的 VM 沙箱中，代码只会对这个沙箱产生影响，执行完成后销毁沙箱</li>
+          </ul>
+          <h4>上下文快照</h4>
+          在执行前通过快照模式保存当前执行环境，在代码执行完成后恢复之前的执行环境。
+          <h4>VM</h4>
+          整体思路为，使用 new Function(window, code) 执行子应用代码，对widnow 进行代理（ES6 Proxy API），代码执行时：
+          <ul>
+            <li>若为读操作，优先读沙箱上的变量，若没有则降级到 window 上</li>
+            <li>若为写操作，只会影响到沙箱</li>
+          </ul>
+          <pre><code class="javascript">
+const vmBox = {};
+const fakeWindow = new Proxy(window, {
+  get(target, key) {
+    return vmBox[key] || window[key];
+  },
+  set(target, key, value) {
+    vmBox[key] = value;
+  }
+});
+          </code></pre>
+        </p>
+        <h3>样式</h3>
+        <p>
+          利用选择器，让子应用的样式只对自己生效。
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      <div>[1] Garfish <a href="https://www.garfishjs.org/blog">https://www.garfishjs.org/blog</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
