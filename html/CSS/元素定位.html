@@ -326,24 +326,40 @@ window.document.body === document.getElementsByTagName('body')[0] // => true
 						<th>兼容性</th>
 					</tr>
 					<tr>
-						<td>window.innerWidth / window.innerHeight</td>
-						<td>window(窗口)可视区宽高</td>
-						<td>IE9 及以上</td>
+						<td>window.innerWidth</td>
+						<td>window(窗口)可视区宽</td>
+						<td rowspan="2">IE9 及以上</td>
 					</tr>
 					<tr>
-						<td>window.document.documentElement.clientWidth / window.document.documentElement.clientHeight</td>
-						<td>viewport(视窗) / html 元素宽高</td>
-						<td>IE7 及以上</td>
+						<td>window.innerHeight</td>
+						<td>window(窗口)可视区高</td>
 					</tr>
 					<tr>
-						<td>window.document.body.clientWidth / window.document.body.clientHeight</td>
-						<td>body 元素宽高</td>
-						<td>无</td>
+						<td>window.document.documentElement.clientWidth</td>
+						<td>viewport(视窗) / html 元素宽</td>
+						<td rowspan="2">IE7 及以上</td>
 					</tr>
 					<tr>
-						<td>getComputedStyle(元素).width / getComputedStyle(元素).height</td>
-						<td>获得元素的最终（嵌入 + 内联 + 外联）样式宽高</td>
-						<td>IE9 及以上</td>
+						<td>window.document.documentElement.clientHeight</td>
+						<td>viewport(视窗) / html 元素高</td>
+					</tr>
+					<tr>
+						<td>window.document.body.clientWidth</td>
+						<td>body 元素宽</td>
+						<td rowspan="2">无</td>
+					</tr>
+					<tr>
+						<td>window.document.body.clientHeight</td>
+						<td>body 元素高</td>
+					</tr>
+					<tr>
+						<td>getComputedStyle(元素).width</td>
+						<td>获得元素的最终（嵌入 + 内联 + 外联）样式宽</td>
+						<td rowspan="2">IE9 及以上</td>
+					</tr>
+					<tr>
+						<td>getComputedStyle(元素).height</td>
+						<td>获得元素的最终（嵌入 + 内联 + 外联）样式高</td>
 					</tr>
 				</table>
 				<h3>window.innerWidth / window.innerHeight</h3>

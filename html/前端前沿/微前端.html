@@ -156,6 +156,7 @@ const fakeWindow = new Proxy(window, {
   },
   set(target, key, value) {
     vmBox[key] = value;
+    return true;
   }
 });
           </code></pre>

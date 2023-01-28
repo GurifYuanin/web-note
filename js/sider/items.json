@@ -127,7 +127,8 @@
   ],
   [
     "HTTP",
-    "TCP"
+    "TCP",
+    "Thrift"
   ],
   [
     "CSRF",

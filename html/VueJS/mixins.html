@@ -107,6 +107,17 @@ console.log(vm.name);
 				</figure>
 			</p>
 		</section>
+		<section>
+			<h2>存在的问题</h2>
+			<p>
+				虽然 mixins 可以复用代码，但当使用多个 mixin 或者 mixin 的内容过多时，就会有以下问题：
+				<ul>
+					<li>数据 / 方法的命名可能发生冲突</li>
+					<li>数据来源不清晰，特别是添加了生命周期的钩子、执行期间 mixin 中与实例的代码相互调用，由于数据流无法直观可见，导致代码的可读性降低</li>
+				</ul>
+				对于这种情况，若在 vue3 中，可以使用<a href="./vue3.html#组合式API">组合式函数</a>来代替。
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>

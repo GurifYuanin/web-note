@@ -95,12 +95,30 @@ $ git push 远程主机名 本地分支名 :远程分支名
 					<div class="command">
 						git config --global alias.别名 '指令'
 					</div>
+					也可以直接修改 git 配置文件：
+					<div class="command">
+						vim ~/.gitconfig
+					</div>
+					然后在 [alias] 下添加自定义别名，比如：
+					<pre><code class="git">
+[alias]
+	st = status
+					</code></pre>
 					设置别名有以下局限：
 					<ul>
 						<li>无法传参给指令</li>
 						<li>无法使用 git 之外的指令，如 cd</li>
 					</ul>
 				</p>
+				<h3>配置个人信息</h3>
+				配置个人信息，这在提交代码与推送仓库时十分必要。设置你的名字：
+				<div class="command">
+					git config --global user.name="Your Name"
+				</div>
+				邮箱：
+				<div class="command">
+					git config --global user.email="Your Email"
+				</div>
 				<h3>查看配置</h3>
 				<p>
 					<div class="command">
@@ -151,7 +169,7 @@ Changes to be committed:
 </div>
 					</code></pre>
 				</p>
-				<h3>添加</h3>
+				<h3>添加（非 git 指令）</h3>
 				<p>
 					touch 用于创建文件，mkdir 用于创建文件夹。
 					<div class="command">
@@ -159,7 +177,7 @@ Changes to be committed:
 						mkdir 文件夹名
 					</div>
 				</p>
-				<h3>删除</h3>
+				<h3>删除（非 git 指令）</h3>
 				<p>
 					<h4>直接删除</h4>
 					使用 rm 命令将直接删除工作树上的文件，即我们常用的<span class="definition">右键 -> 删除</span>
@@ -181,6 +199,10 @@ Changes to be committed:
 					<div class="command">
 						git checkout -- 路径匹配
 					</div>
+					最常用的使用方法，就是在仓库下做了修改，比如尝试 bugfix 一些代码，最后想要都丢弃，就可以用这个指令：
+					<pre><code class="git">
+git checkout -- .
+					</code></pre>
 				</p>
 			</p>
 		</section>
@@ -285,7 +307,7 @@ Saved working directory and index state WIP on master: <span class="strong">本�
 			</p>
 		</section>
 		<section>
-			<h2>仓库</h2>
+			<h2>commit / 仓库</h2>
 			<p>
 				<h3>添加</h3>
 				<p>
@@ -298,7 +320,7 @@ Saved working directory and index state WIP on master: <span class="strong">本�
 						git commit --amend
 					</div>
 				</p>
-				<h3>回退 / 移动指针</h3>
+				<h3>移动指针</h3>
 				<p>
 					使用 git reset 来将当前指针（HEAD）指向以前的提交（commit），回退的模式（mode）有 3 种：
 					<ul>
@@ -330,6 +352,36 @@ dcf353c403e3641328dd976ddfbbb7f4261a45f9 (HEAD -> master) v2
 dac5b86399bf5d22af230a220bda4e911e105674 init
 $ git reset --hard dac5b86399bf5d22af230a220bda4e911e105674
 					</code></pre>
+				</p>
+				<h3>cherry-pick</h3>
+				<p>
+					可以用 cherry-pick 来提取指定的 commit 追加到当前分支上。
+					<div class="command">git cherry-pick 哈希值</div>
+					可以 commit 的完整哈希，也可以使用前 7 位的短哈希：
+					<pre><code class="git">
+git cherry-pick 222898a
+git cherry-pick 222898a0b49b95c3e7e0e76577c9ecea4978fdd5
+					</code></pre>
+				</p>
+				<h3>操作 commit</h3>
+				<p>
+					使用 rebase 对若干 commit 进行操作，可以进行合并或者删除 commit
+					<div class="command">git rebase -i 目标地址</div>
+					地址可以是 HEAD 指针，也可以是 commit 哈希，最终展示当前 commit 到目标地址中间所有的 commit（顺序与 git log 相反，下方是最新的 commit，上方是最老 commit），比如：
+					<pre><code class="git">
+pick 800e099 Add unit test
+pick 4ced982 Add demo case
+pick b367bd6 Update readme
+pick aeaf5cc Add demo param controller
+pick 3f21692 Fix vue2 cdn 404
+					</code></pre>
+					修改其中的 pick 关键字，可以实现不同的操作，常见的有（其他操作不一一列举，可在实际操作中查看注释）：
+					<ul>
+						<li>不修改，即还是用 pick，则不改变这个 commit</li>
+						<li>修改为 s / squash，则将这个 commit 合并到上方的 commit 中</li>
+						<li>删除这一行或者改为 d / drop，则这个 commit 会消失</li>
+						<li>修改顺序，则 commit 顺序也会变化</li>
+					</ul>
 				</p>
 			</p>
 		</section>
@@ -515,11 +567,14 @@ $ git remote show origin
 			<p>
 				<h3>克隆</h3>
 				<p>
-					克隆相当于直接到 github 下载仓库并解压到本地。
+					克隆相当于直接到 github 下载仓库并解压到本地，将网站上的仓库下载到本地并重命名为仓库名。
 					<div class="command">
-						git clone 网站 仓库名
+						git clone 网站 [仓库名]
 					</div>
-					将网站上的仓库下载到本地并重命名为仓库名。
+					在拉取第三方仓库时，有时候仓库历史悠久，存在大量的 commit 历史，我们并不需要历史代码，可以使用参数限制拉取的 commit 深度：
+					<div class="command">
+						git clone --depth=1 网站 [仓库名]
+					</div>
 				</p>
 				<h3>拉取</h3>
 				<p>
