@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>移动端适配</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">移动端适配</h1>
+    </hgroup>
+   <section>
+			<h2>rem</h2>
+			<p>
+				Flexible 是手机淘宝团队适配移动端的一种解决方案，其原理设置 viewport(视窗) 为跟随设备宽度，然后引入<a
+					href="https://github.com/amfe/lib-flexible">flexible.js</a>文件：
+				<pre><code class="git">
+# 下载包
+npm i -S amfe-flexible
+				</code></pre>
+				然后在应用中使用该包。
+				<pre><code class="html">
+&lt;meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"&gt;
+&lt;script src="./node_modules/amfe-flexible/index.js"&gt;&lt;/script&gt;
+				</code></pre>
+				<h3>原理</h3>
+				<p>
+					flexible.js 的源代码为（此处添加了注释）：
+					<pre><code class="javascript">
+(function flexible (window, document) {
+  var docEl = document.documentElement // 获得根标签 (html)
+  var dpr = window.devicePixelRatio || 1 // 获得设备缩放比，默认为 1
+
+  // 调整 body 的 font-size
+  function setBodyFontSize () {
+    if (document.body) {
+      // 如果 dom 树已经加载完成了，则直接修改 body 的fon-size
+      document.body.style.fontSize = (12 * dpr) + 'px'
+    }
+    else {
+      // 如果 dom 树还未加载完，等待加载完后再修改 body 的 font-size
+      document.addEventListener('DOMContentLoaded', setBodyFontSize)
+    }
+  }
+  setBodyFontSize();
+
+  // 设置 1rem 等于 视窗宽度 / 10
+  function setRemUnit () {
+    var rem = docEl.clientWidth / 10
+    docEl.style.fontSize = rem + 'px'
+  }
+
+  setRemUnit()
+
+  // 添加事件，当页面尺寸发生变化时，执行 setRemUnit 来修改根标签的 font-size
+  window.addEventListener('resize', setRemUnit)
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) {
+      setRemUnit()
+    }
+  })
+
+  // detect 0.5px supports
+  if (dpr >= 2) {
+    var fakeBody = document.createElement('body')
+    var testElement = document.createElement('div')
+    testElement.style.border = '.5px solid transparent'
+    fakeBody.appendChild(testElement)
+    docEl.appendChild(fakeBody)
+    if (testElement.offsetHeight === 1) {
+      docEl.classList.add('hairlines')
+    }
+    docEl.removeChild(fakeBody)
+  }
+}(window, document))
+					</code></pre>
+					简单来讲，其原理为当页面尺寸发生变化（resize 事件）时，修改根标签的 font-size 为视窗宽度的 1/10，比如使用 1600px * 900px 的设备访问，根标签的 font-size 就等于
+					160px。
+				</p>
+				<h3>直接使用</h3>
+				<p>
+					适配的最终目的是使得不同宽高的设备访问同一个页面时都能获得相同的体验，我们已经把 1rem 动态设置为 1/10 视窗宽度，所以当你写以下 html 代码时，div 块总是能占据设备的一半宽度。
+					<pre><code class="html">
+&lt;div style="width: 5rem;"&gt;hello world&lt;/div&gt;
+					</code></pre>
+					假如设计稿的宽度为 750px，那么该设计宽度的 1/10 就等于 1rem = 75px，写 css 样式时就需要将设计稿上的 px 按照 75 : 1 的比例换算为 rem。比如 300px 的 div
+					块，在设计稿上占了 40% 的宽度。
+					<figure>
+						<img src="../../images/viewport_flexible.jpg" alt="">
+					</figure>
+					进行计算：300px = 4 * 75px = 4 * 1rem，因此 css 样式应该写成：
+					<pre><code class="css">
+div {
+	width: 4rem;
+}
+					</code></pre>
+					此时无论什么设备访问，由于 1rem = 1/10 视窗宽度，因此页面上的的 div 块宽度都有设备的 40% 宽。
+          </p>
+        <h3>px2rem</h3>
+        <p>
+          使用 css 预处理器的函数、混合等功能实现快速从 px 转化为 rem。
+          <pre><code class="sass">
+// 定义 px2rem 函数
+/*
+param px 转化前的像素大小
+param base-font-size 1rem的像素大小，填设计稿宽度的 1/10，比如设计稿是 375px 宽，那么就传入 37.5px
+return rem 转化后的rem
+ */
+@function px2em($px, $base-font-size: 16px) {
+    @if (unitless($px)) {
+        // 判断是否带单位，如果无单位则默认为 px
+        @warn "Assuming #{$px} to be in pixels, attempting to convert it into pixels for you";
+        @return px2em($px + 0px);
+    } @else if (unit($px) == em) {
+        // 若单位为 em，则不转化直接返回
+        @return $px;
+    }
+    @return ($px / $base-font-size) * 1rem;
+}
+// 使用函数
+div {
+	width: px2em(300px);
+}
+          </code></pre>
+        </p>
+			</p>
+		</section>
+    <section>
+			<h2>vw & vh & vmin & vmax</h2>
+			<p>
+				vw 将 viewport 的宽度分为 100 份，1vw 就等于 1% viewport 的宽度，当 viewport 变化时也会自动变化。简而言之，相当于：
+				<pre><code class="javascript">
+1vw = window.innerWidth / 100 + 'px';
+				</code></pre>
+				<ul>
+					<li>vw：1% viewport 宽度</li>
+					<li>vh：1% viewport 高度</li>
+					<li>vmin：Math.min(vw, vh)</li>
+					<li>vmax：Math.max(vw, vh)</li>
+				</ul>
+				<h3>兼容性</h3>
+        虽然使用 vw & vh 可以不用像 rem 一样动态地设置根元素的 font-size，但对浏览器版本要求比较高：
+        <figure>
+          <img src="../../images/vw_vh_can_i_use.jpg" alt="">
+          <figcaption>
+            <a href="https://caniuse.com/#search=vw,%20vh,%20vmin,%20vmax">https://caniuse.com/#search=vw,%20vh,%20vmin,%20vmax</a>
+          </figcaption>
+        </figure>
+			</p>
+		</section>
+    <section>
+      <h2>ReactNative</h2>
+      <p>
+        <h3>手动计算</h3>
+        <p>
+          假如设计稿的宽度是 375px：
+          <pre><code class="javascript">
+// tools.js
+import { Dimensions, PixelRatio } from 'reaact-native';
+const { width } = Dimensions.get('window'); // 获取屏幕宽度
+const ratio = PixelRatio.get(); // 处理 dpr
+export function px2dp(px) {
+  return width * px / 375 / ratio;
+}
+          </code></pre>
+          使用方法：
+          <pre><code class="javascript">
+import { px2dp } from '@/tools';
+const styles = StyleSheet.create({
+  image: {
+    width: px2dp(100),
+    height: px2dp(100)
+  }
+});
+export styles;
+          </code></pre>
+        </p>
+        <h3>缩放根节点</h3>
+        <p>
+          Container 下的子节点可以直接使用设计稿里的 px 值。
+          <pre><code class="react-native">
+import { PixelRatio, Dimensions } from 'react-native';
+const dp2px = dp => PixelRatio.getPixelSizeForLayoutSize(dp);
+const px2dp = px => PixelRatio.roundToNearestPixel(px);
+
+// 设计稿宽高
+const designSize = {
+  width: 750,
+  height: 1336
+};
+
+const pxRatio = PixelRatio.get();
+const {
+  width: winWidth,
+  height: winHeight
+} = Dimensions.get("window");
+
+const width = dp2px(winWidth);
+const height = dp2px(winHeight) * (designSize.width / width);
+
+const designScale = designSize.width / width;
+
+const scale = 1 / pxRatio / designScale;
+
+export function Container(props) {
+  return (
+    &lt;View sytle={{
+      width,
+      height,
+      transform:[
+        { translateX: -width * .5 },
+        { translateY: -height * .5 },
+        { scale },
+        { translateX: width * .5 },
+        { translateY: height * .5 }
+      ] }}&gt;
+      { props.children }
+    &lt;/View&gt;
+  )
+}
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 大漠 使用Flexible实现手淘H5页面的终端适配 <a
+            href="https://www.w3cplus.com/mobile/lib-flexible-for-html5-layout.html">https://www.w3cplus.com/mobile/lib-flexible-for-html5-layout.html</a>
+        </div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

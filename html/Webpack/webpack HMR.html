@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>webpack HMR</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">webpack HMR</h1>
+    </hgroup>
+    <section>
+      <h2>简介</h2>
+      <p>
+        HMR（Hot Module Replacement / 热模块替换）是指当代码变更时，浏览器上的页面会进行实时替换变更部分。
+      </p>
+    </section>
+    <section>
+      <h2>原理</h2>
+      <p>
+        HMR 的原理是通过额外启动一个服务器，监听本地文件的变化，若变化了则向浏览器通过 WebSocket 主动告知变更
+        <figure>
+          <img src="../../images/hmr_procedure.jpeg" alt="">
+        </figure>
+        <ol>
+          <li>HMR 服务器监听代码文件的变更</li>
+          <li>
+            当文件修改时，webpack 进行以下两个操作：
+            <ul>
+              <li>对整体进行一次重新打包，这次打包在页面刷新时使用</li>
+              <li>
+                对变更的文件进行重新打包，生成 manifest 文件和 chunk 文件
+                <ul>
+                  <li>chunk.js：变化的内容</li>
+                  <li>manifest.json：说明变化的内容，包含两个值 chunkId（被打包的文件名）和 hash（本次变更生成的哈希值）</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>HMR 服务器通过 WebSocket 请求把 hash 发送给浏览器</li>
+          <li>
+            浏览器判断与上一次的 hash 是否不同，若不同则通过 ajax 请求 manifest 文件
+            <figure>
+              <img src="../../images/hmr_manifest.png" alt="">
+            </figure>
+          </li>
+          <li>浏览器通过 ajax 获取 chunk 文件</li>
+        </ol>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      <div>[1] 说说webpack的热更新是如何做到的？ <a href="https://vue3js.cn/interview/webpack/HMR.html">https://vue3js.cn/interview/webpack/HMR.html</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

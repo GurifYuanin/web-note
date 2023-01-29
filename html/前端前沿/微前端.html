@@ -143,7 +143,7 @@
           <h4>上下文快照</h4>
           在执行前通过快照模式保存当前执行环境，在代码执行完成后恢复之前的执行环境。
           <h4>VM</h4>
-          整体思路为，使用 new Function(window, code) 执行子应用代码，对widnow 进行代理（ES6 Proxy API），代码执行时：
+          整体思路为，使用 new Function('window', 'code') 执行子应用代码，对 widnow 进行代理（ES6 Proxy API），代码执行时：
           <ul>
             <li>若为读操作，优先读沙箱上的变量，若没有则降级到 window 上</li>
             <li>若为写操作，只会影响到沙箱</li>
