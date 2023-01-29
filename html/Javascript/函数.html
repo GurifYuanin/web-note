@@ -28,12 +28,19 @@
     <section>
       <h2>function</h2>
       <p>
+        <pre><code class="javascript">
+function functionName(arg1, arg2, ...) {
+  // ...
+  return ...
+}
+        </code></pre>
       </p>
     </section>
     <section>
-      <h2>new function</h2>
+      <h2>new 构造函数</h2>
       <p>
-        new 一个函数实际发生的操作：
+        <h3>自定义构造函数</h3>
+        通过 new 构造函数来创建实例对象，实际发生的操作：
         <ol>
           <li>创建一个对象 {}</li>
           <li>将该对象的原型（__proto__）设置为函数的原型对象（prototype）</li>
@@ -45,6 +52,25 @@ function new(fn, ...args) {
   const defaultObj = Object.create(fn.prototype); // 第 1、2 步
   const fnObj = fn.call(defaultObj, ...args); // 第 3 步
   return fnObj instanceof Object ? fnObj : defaultObj; // 第 4 步
+}
+        </code></pre>
+        <h3>Function</h3>
+        通过 new Function() 可以创建一个函数，格式为：
+        <pre><code class="javascript">
+new Function('arg1', 'arg2', ..., 'code');
+
+// 举个例子
+const foo = new Function('a', 'b', 'console.log(a + b)');
+foo(1, 2); // => 3
+        </code></pre>
+        和直接写 function() {} 不同，通过这种方式创建的函数在执行时上下文是全局对象，比如下面的情况会报错：
+        <pre><code class="javascript">
+// 创建块级作用域，让 a、b 不要挂在 window 下
+{
+  const a = 1;
+  const b = 2;
+  const foo = new Function('console.log(a + b)');
+  foo(); // => Uncaught ReferenceError: a is not defined
 }
         </code></pre>
       </p>

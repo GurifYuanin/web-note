@@ -91,12 +91,14 @@
   [
     "webpack",
     "webpack plugins",
-    "webpack loader"
+    "webpack loader",
+    "webpack HMR"
   ],
   [
     "响应式布局",
     "响应式图片",
     "viewport",
+    "移动端适配",
     "1px"
   ],
   [
@@ -117,7 +119,7 @@
     "微前端"
   ],
   [
-    "抓包工具",
+    "Fiddler",
     "chrome devtools",
     "git",
     "sublime 插件",
@@ -127,7 +129,8 @@
   ],
   [
     "HTTP",
-    "TCP"
+    "TCP",
+    "Thrift"
   ],
   [
     "CSRF",

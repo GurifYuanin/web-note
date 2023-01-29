@@ -186,6 +186,11 @@ new PerformanceObserver((entryList) => {
             <td>错误对象，可以使用<span class="different">error.stack</span>来查看错误堆栈</td>
           </tr>
         </table>
+        onerror 能捕捉到以下错误：
+        <ul>
+          <li>大多数代码执行错误，比如引用了一个不存在的变量</li>
+          <li>setTimeout / setInterval 异步任务里的错误</li>
+        </ul>
         <pre><code class="javascript">
 window.onerror = (event, source, lineno, colno, error) => {
   console.log(`event: ${event}
@@ -216,10 +221,44 @@ asd
         <div class="tip">
           可以在 onerror 的 handler 中返回 true 不让错误往外抛出。
         </div>
+        但 onerror 无法捕获以下错误：
+        <ul>
+          <li>Ajax / fetch / new Image() 等异步请求错误</li>
+          <li>Promise 异步错误</li>
+          <li>语法错误</li>
+        </ul>
         </p>
-        <h3>Ajax / fetch 错误</h3>
+        <h3>Ajax</h3>
         <p>
           需要通过封装并覆盖原生对象 / 方法来实现监控。
+        </p>
+        <h3>fetch & Promise</h3>
+        <p>
+          因为 fetch 最终也是返回 Promise 对象，因此都可以使用 unhandledrejection 事件来监听：
+          <pre><code class="javascript">
+window.addEventListener('unhandledrejection', event => {
+  console.log(event);
+});
+          </code></pre>
+        </p>
+        <h3>new Image() 错误</h3>
+        <p>
+          可以在 Image 上加 onerror 事件来拿到报错信息：
+          <pre><code class="javascript">
+const image = new Image();
+image.onerror = event => {
+  console.log(event);
+};
+image.src = 'abc';
+          </code></pre>
+        </p>
+        <h3>语法错误</h3>
+        <p>
+          下面情况会报错，因为 a 作为常量必须在声明时进行初始化：
+          <pre><code class="javascript">
+const a;
+          </code></pre>
+          这种情况 onerror 捕获不到，但能在编辑器中得到提醒。
         </p>
         <h3>静态资源</h3>
         <p>

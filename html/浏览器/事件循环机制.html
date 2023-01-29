@@ -210,7 +210,7 @@ setTimeout(() => {
 					Promise1
 					Promise2
 				</div>
-				这是因为两个 setTimeout 会在 times 阶段全部执行，在进入下一阶段之前去执行微任务队列。但是<span class="different">在 NodeJS v11 之后，为了和浏览器保持一致，每次执行完 setTimeout 后马上执行微任务队列</span>，所以结果变成了：
+				这是因为两个 setTimeout 会在 timers 阶段全部执行，在进入下一阶段之前去执行微任务队列。但是<span class="different">在 NodeJS v11 之后，为了和浏览器保持一致，每次执行完 setTimeout 后马上执行微任务队列</span>，所以结果变成了：
 				<div class="command">
 					setTimeout1
 					Promise1

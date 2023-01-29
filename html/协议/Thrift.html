@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Thrift</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">Thrift</h1>
+    </hgroup>
+    <section>
+      <h2>简介</h2>
+      <p>
+        Thrift 协议是 RPC（Remote Procedure Call / 远程过程调用）的一种实现，它包含了以下四个部分：
+        <ul>
+          <li>动态代理</li>
+          <li>序列化与反序列化</li>
+          <li>通信，即数据的传输方式，可以基于 HTTP、TCP、UDP 多种方式实现传输</li>
+          <li>异常处理</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>使用</h2>
+      <p>
+        <h3>流程</h3>
+        <p>
+          <ol>
+            <li>编写 thrift 文件</li>
+            <li>通过代码生成工具将 thrift 生成服务端和客户端代码</li>
+            <li>服务端实现方法，客户端调用方法</li>
+          </ol>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>与 HTTP 对比</h2>
+      <p>
+        <h3>使用思路</h3>
+        <p>
+          <ul>
+            <li>HTTP：调用服务端暴露的接口（method + URL）得到响应数据</li>
+            <li>Thrift：调用本地方法得到执行结果，这种本地方法并不是真的在本地执行服务端代码，而是通过动态代理屏蔽了底层逻辑，让调用方以为是调用本地方法</li>
+          </ul>
+          <figure>
+            <img src="../../images/thrift_proxy.jpg" alt="">
+          </figure>
+        </p>
+        <h3>有效信息比</h3>
+        <p>
+          <ul>
+            <li>HTTP 协议由于是无状态的通信协议，为了确认通信双方的信息，会携带大量无用的 Header 或者空行，传输效率比较低</li>
+            <li>Thrift 只需要自己框架需要的信息，省去很多冗余数据</li>
+          </ul>
+        </p>
+        <h3>传输方式</h3>
+        <p>
+          <ul>
+            <li>HTTP 1.x 使用明文传输，在 HTTP 2 之后才改为二进制传输</li>
+            <li>Thrift 一般使用二进制传输，也支持使用文本传输</li>
+          </ul>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>Thrift 的问题</h2>
+      <p>
+        <ul>
+          <li>客户端与服务器必须捆绑升级，比如服务端提供的接口变更了字段类型，客户端若不更新，则在序列化与反序列化过程中报错</li>
+          <li>二进制传输格式不方便调试</li>
+        </ul>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 为何使用thrift-rpc与http的选择 <a href="https://www.cnblogs.com/jianzihao/p/14604400.html">https://www.cnblogs.com/jianzihao/p/14604400.html</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
