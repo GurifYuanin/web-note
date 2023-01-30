@@ -28,12 +28,18 @@
     <section>
       <h2>Buffer</h2>
       <p>
-        Buffer 是 Node 内置的一个核心库。
+        Buffer 是 Node 内置的一个核心库，可以用来存放二进制数据。
         <h3>创建</h3>
         从已有的数据转化为 Buffer 格式。
         <pre><code class="typescript">
 Buffer.from(source: numer[] | string | Buffer, charset?: string);
+
+// 比如
+const buffer = Buffer.from('js'); // => &lt;Buffer 6a 73&gt;
         </code></pre>
+        <figure>
+          <img src="../../images/buffer_convert.png" alt="">
+        </figure>
         或者直接开辟指定长度的空间，一个 Buffer 长度的元素表示 00 ~ FF 的数值，alloc 后所有值都会被初始化为 0。
         <pre><code class="typescript">
 Buffer.alloc(size: number);
@@ -51,7 +57,7 @@ Buffer.allocUnsafe(size: number);
         <pre><code class="typescript">
 const buffer = Buffer.from('hello world');
 
-buffer.toString(charset: string);
+buffer.toString(charset: string); // 默认是 utf-8 编码
         </code></pre>
         转化为 JSON，实际上是转化为 { type: 'Buffer', data: number[] }，data 为十进制格式的 buffer 数组。
         <pre><code class="typescript">

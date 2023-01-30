@@ -26,9 +26,31 @@
       <h1 id="title">Thrift</h1>
     </hgroup>
     <section>
-      <h2>简介</h2>
+      <h2>RPC</h2>
       <p>
-        Thrift 协议是 RPC（Remote Procedure Call / 远程过程调用）的一种实现，它包含了以下四个部分：
+        RPC（Remote Procedure Call / 远程过程调用）是一种规范，目的是让本地主机有调用远程方法的能力，通信时二进制数据在 Steam 中传输，比如用 NodeJS 实现一个简单的 RPC 包：
+        <pre><code class="node">
+const payload = {
+  service: 'example',
+  method: 'ping',
+  args: ['Hello World']
+};
+const body = Buffer.from(JSON.stringify(payload)); // 请求主体
+const header = Buffer.alloc(10); // header 信息
+const packet = Buffer.concat([ header, body ], header.length + body.length);
+        </code></pre>
+        然后通过 HTTP 或 TCP 等方法进行传输，服务器拿到该包进行解析执行：
+        <pre><code class="node">
+const header = packet.slice(0, 10);
+const body = packet.slice(10);
+const payload = JSON.parse(body);
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>Thrift</h2>
+      <p>
+        Thrift 协议是 RPC 的一种实现，它包含了以下四个部分：
         <ul>
           <li>动态代理</li>
           <li>序列化与反序列化</li>

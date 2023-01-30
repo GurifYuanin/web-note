@@ -89,6 +89,9 @@
     "vue3"
   ],
   [
+    "合成事件"
+  ],
+  [
     "webpack",
     "webpack plugins",
     "webpack loader",

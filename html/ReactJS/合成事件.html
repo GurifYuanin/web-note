@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>合成事件</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">合成事件</h1>
+    </hgroup>
+    <section>
+      <h2>原理</h2>
+      <p>
+        在 React 中，下面两种方式绑定事件结果不同，前者是给 DOM 绑定原生的点击事件，后者则是把事件绑定在最外层的元素上（v17 之前是 document，v17 之后是根元素），由 React 统一处理。
+        <pre><code class="jsx">
+const button = &lt;button onclick={ onClick }&gt;原生事件&lt;/button&gt;
+
+const button = &lt;button onClick={ onClick }&gt;合成事件&lt;/button&gt;
+        </code></pre>
+        React 有一套自己的合成事件 SyntheticEvent，所有通过 onXxx 注册的事件最终会绑定在最外层元素上，所以：
+        <ul>
+          <li>
+            由于事件冒泡机制，手动绑定的原生事件先触发，再触发合成事件
+            <pre><code class="jsx">
+function onNativeClick() {
+  console.log('native');
+}
+function onReactClick() {
+  console.log('synthetic');
+}
+const button = &lt;button onclick={ onNativeClick } onClick={ onReactClick }&gt;按钮&lt;/button&gt;
+// => native synthetic
+            </code></pre>
+          </li>
+          <li>
+            事件的回调函数中拿到的 event 不是原生的事件对象，而是该对象的封装，如果想要获得原生事件，可以通过 e.nativeEvent 属性获取
+            <pre><code class="jsx">
+function onClick(event) {
+  console.log(event);
+  console.log(event.nativeEvent);
+}
+            </code></pre>
+          </li>
+          <li>
+            由于 React 是合成事件，当使用 event.stopPropagation() 时，能阻止合成事件的冒泡，但不能阻止绕过 React 通过原生 API 绑定的事件。
+            <pre><code class="jsx">
+function onDivNativeClick() {
+  console.log('div native');
+}
+function onDivReactClick() {
+  console.log('div react');
+}
+function onButtonNativeClick() {
+  console.log('button native');
+}
+function onButtonReactClick(event) {
+  console.log('button react');
+  event.stopPropagation();
+}
+const button = (
+  &lt;div onclick={ onDivNativeClick } onClick={ onDivReactClick }&gt;
+    &lt;button onclick={ onButtonNativeClick } onClick={ onButtonReactClick }&gt;按钮&lt;/button&gt;
+  &lt;/div&gt;
+);
+
+/**
+ * 点击按钮后输出：
+ * button native
+ * div native
+ * button react
+ */
+            </code></pre>
+          </li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>为什么要用合成事件</h2>
+      <p>
+        <ul>
+          <li>兼容不同浏览器，实现一套代码跨平台运行</li>
+          <li>React 引进了事件池，创建出来的事件不会马上释放，而是放进一个数组里，当事件触发时弹出利用，避免事件对象的频繁创建与销毁</li>
+          <li>方便事件的统一管理和事务机制</li>
+        </ul>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 说说React的事件机制 <a href="https://vue3js.cn/interview/React/SyntheticEvent.html">https://vue3js.cn/interview/React/SyntheticEvent.html</a></div>
+        <div>[2] react要用合成事件是为什么 <a href="https://www.qycn.com/xzx/article/12291.html">https://www.qycn.com/xzx/article/12291.html</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
