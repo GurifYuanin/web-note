@@ -69,7 +69,7 @@ fs.open(path, flag, mode, function(err, fd) {
 	if (err) {
 		console.log(err);
 	} else {
-		var buf = new Buffer.alloc(1024);
+		var buf = Buffer.alloc(1024);
 		fs.read(fd, buf, offset, length, position, function(err, bytes, buf) {
 			if (err) {
 				console.log(err);

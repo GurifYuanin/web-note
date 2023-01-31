@@ -144,16 +144,22 @@ instance1.say.bind(instance2, 'Hi, ', 'I am ')(); // Hi, I am instance2
 				<h3>箭头函数</h3>
 				箭头函数的 this 指向定义函数时的作用域。
 				<pre><code class="javscript">
-function foo() {
-	this.name = 'foo';
-	setTimeout(() => {
-		console.log(this.name);
-	}, 100);
+const obj = {
+	name: 'foo',
+	foo1() {
+		(() => {
+			console.log('foo1: ' + this.name);
+		})()
+	},
+	foo2: () => {
+		console.log('foo2: ' + this.name);
+	}
 }
 
 window.name = 'window';
 
-foo(); // foo
+obj.foo1(); // foo1: foo
+obj.foo2(); // foo2: window
 				</code></pre>
 			</p>
 		</section>

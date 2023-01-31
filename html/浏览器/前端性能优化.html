@@ -109,10 +109,16 @@ module.exports = {
       </p>
     </section>
     <section>
-      <h2>懒加载</h2>
+      <h2>懒加载 & 预加载</h2>
       <p>
         <ul>
-          <li>图片懒加载</li>
+          <li>
+            图片
+            <ul>
+              <li>懒加载：当图片出现在可视区域内时才去加载图片，以减少同一时间的请求数，并缓解服务器压力</li>
+              <li>预加载：提前加载需要的图片，保证加载大图或者切换页面时体验的流畅度</li>
+            </ul>
+          </li>
           <li>页面懒加载 / 按需加载：当一个单页应用比较大时，可以将部分暂时不会使用到的页面拆分出来，只有当访问到这些页时才进行加载</li>
         </ul>
       </p>
@@ -179,6 +185,25 @@ module.exports = {
           </li>
           <li>Tree-shaking：去掉代码中没有使用到的 Vue 模块（比如 &lt;Transition&gt;）</li>
         </ul>
+      </p>
+    </section>
+    <section>
+      <h2>针对 WebView 的优化</h2>
+      <p>
+        相比浏览器，App 端内打开页面第一步是先启动浏览器内核（初始化 WebView），再建立连接请求资源，所以会更加耗时。
+        <h3>对于 Native 应用</h3>
+        <p>
+          <ul>
+            <li>初始化好一个 WebView 待用</li>
+            <li>资源本地化</li>
+          </ul>
+        </p>
+        <h3>对于 Web 应用</h3>
+        <p>
+          <ul>
+            <li>尽量让静态资源的域名与 App 上资源的域名一致，当打开 WebView 加载资源时就能复用已经缓存好的 DNS</li>
+          </ul>
+        </p>
       </p>
     </section>
     <section>
