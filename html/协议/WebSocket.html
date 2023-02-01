@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>WebSocket</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">WebSocket</h1>
+    </hgroup>
+    <section>
+      <h2>最大连接数</h2>
+      <p>
+        <h3>客户端</h3>
+        <p>
+          在不同的浏览器，同一个网页有最大连接数限制：
+          <table>
+            <tr>
+              <th>浏览器</th>
+              <th>数量</th>
+            </tr>
+            <tr>
+              <td>Chrome</td>
+              <td>256</td>
+            </tr>
+            <tr>
+              <td>FireFox</td>
+              <td>200</td>
+            </tr>
+            <tr>
+              <td>IE</td>
+              <td>6</td>
+            </tr>
+            <tr>
+              <td>Safari（for Mac）</td>
+              <td>1273</td>
+            </tr>
+          </table>
+        </p>
+        <h3>服务器</h3>
+        <p>
+          对于服务器，可以进行手动配置，当达到最大数量时，建立连接会失败。
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 为什么你的websocket只能建立256个连接 <a href="https://developer.aliyun.com/article/938747">https://developer.aliyun.com/article/938747</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

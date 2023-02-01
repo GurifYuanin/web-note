@@ -26,7 +26,7 @@
 			<h1 id="title">Vuex</h1>
 		</hgroup>
 		<section>
-			<h2>下载</h2>
+			<h2>使用</h2>
 			<p>
 				<h3>CDN</h3>
 				<p>
@@ -49,10 +49,11 @@ Vue.use(Vuex);
 			</p>
 		</section>
 		<section>
-			<h2>定义</h2>
+			<h2>原理</h2>
 			<p>
 				Vuex 类似创建了一个仓库，可以将所有组件都需要的数据和方法存放到这个仓库里，并提供给 <span class="different"> 所有组件 </span> 使用。
 				<pre><code class="javascript">
+Vue.use(Vuex);
 // 创建 Vuex 对象
 var store = new Vuex.Store({
 	state: {}, // 存放状态
@@ -66,6 +67,30 @@ new Vue({
 	store: store
 });
 				</code></pre>
+				<h3>为什么能获取到 store</h3>
+				Vue.use(Vuex) 会调用 Vue 的 install 方法，在 Vue 实例对象的生命周期 beforeCreate 前调用 vuexInit 方法：
+				<pre><code class="javascript">
+Vue.mixin({ beforeCreate: vuexInit });
+
+function vuexInit () {
+    const options = this.$options
+    // store injection
+    if (options.store) {
+			<span class="strong">
+this.$store = typeof options.store === 'function'
+		? options.store()
+		: options.store
+			</span>
+    } else if (options.parent && options.parent.$store) {
+			<span class="strong">
+this.$store = options.parent.$store
+			</span>
+    }
+}
+				</code></pre>
+				该方法使 store 对象设置到上下文环境 $store 中。
+				<h3>为什么 store 里面的 state 是响应式的</h3>
+				Vuex 将 state 存入 Vue 实例的 data 中，而 getters 则是借助 computed 来实现。
 			</p>
 		</section>
 		<section>

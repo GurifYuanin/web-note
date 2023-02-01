@@ -30,20 +30,7 @@
 			<p>
 				<h3>单线程</h3>
 				<p>
-					Javascript 是单线程执行，即同一时刻只能做一件事。如果只是这样所有代码都同步执行，那么如果前面的代码如果执行时间过长，后面的代码将执行不到。
-					<pre><code class="javascript">
-console.log('执行 ajax 前');
-$.ajax({
-	type: 'GET',
-	url: 'www.demo.com',
-	success: function (data) {
-		console.log(data);
-	}
-})
-console.log('执行 ajax 后');
-					</code></pre>
-					输出 "执行 ajax 前" 之后向 www.demo.com 发送了个 http 请求，如果 javascript 是同步执行，且该请求迟迟没有回应，后面的代码(console.log('执行 ajax
-					后');)就无法执行。此时就需要让 http 请求 <span class="definition">异步执行</span> 。
+					Javascript 代码是单线程执行，参见<a href="./浏览器JS单线程.html">浏览器JS单线程</a>。
 				</p>
 				<h3>事件循环 / Event-Loop</h3>
 				<p>

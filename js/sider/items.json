@@ -52,7 +52,8 @@
   ],
   [
     "jquery",
-    "bootstrap"
+    "bootstrap",
+    "vue vs react"
   ],
   [
     "Typescript 入门",
@@ -89,7 +90,8 @@
     "vue3"
   ],
   [
-    "合成事件"
+    "合成事件",
+    "react hooks"
   ],
   [
     "webpack",
@@ -109,6 +111,7 @@
     "浏览器内核",
     "头疼的兼容",
     "浏览器截屏",
+    "浏览器JS单线程",
     "事件循环机制",
     "前端性能优化",
     "前端监控",
@@ -122,6 +125,9 @@
     "微前端"
   ],
   [
+    "plimit"
+  ],
+  [
     "Fiddler",
     "chrome devtools",
     "git",
@@ -133,7 +139,8 @@
   [
     "HTTP",
     "TCP",
-    "Thrift"
+    "Thrift",
+    "WebSocket"
   ],
   [
     "CSRF",

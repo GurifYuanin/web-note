@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>plimit</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">plimit</h1>
+    </hgroup>
+    <section>
+      <h2>问题描述</h2>
+      <p>
+        实现类似于 p-limit 的功能，给定若 n 个异步任务，同一时间内只能执行 max 条任务，将这些任务全部执行完。
+        <pre><code class="javascript">
+const tasks = [
+  () => new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('task1');
+      resolve('task1');
+    }, 1000);
+  }),
+  () => new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('task2');
+      resolve('task2');
+    }, 3000);
+  }),
+  () => new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('task3');
+      resolve('task3');
+    }, 2000);
+  }),
+  () => new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('task4');
+      resolve('task4');
+    }, 1000);
+  }),
+];
+const max = 2;
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>函数方式</h2>
+      <p>
+        执行完所有任务且按原任务的顺序返回对应的值：
+        <pre><code class="javascript">
+async function runAsyncTasks(tasks, max) {
+  const results = Array.from(tasks);
+  const wrapTasks = tasks.map((task, index) => async () => {
+    results[index] = await task();
+    if (wrapTasks.length) {
+      await wrapTasks.shift()();
+    }
+  });
+  await Promise.all(wrapTasks.splice(0, max).map(task => task()));
+  return results;
+}
+runAsyncTasks(tasks, max).then(data => console.log(data));
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>类方式</h2>
+      <p>
+        设计一个类，可以随时添加任务，按先进先执行的机制进行：
+        <pre><code class="javascript">
+class Schedule {
+  tasks = [];
+  count = 0;
+  max = 0;
+  constructor(max) {
+    this.max = max;
+  }
+  add(task) {
+    this.tasks.push(async () => {
+      await task();
+      this.count--;
+      this.runTasks();
+    });
+    this.runTasks();
+  }
+  runTasks() {
+    const n = this.max - this.count;
+    if (n && this.tasks.length) {
+      const tasks = this.tasks.splice(0, n);
+      this.count += tasks.length;
+      tasks.forEach(task => task());
+    }
+  }
+}
+const schedule = new Schedule(max);
+tasks.forEach(task => schedule.add(task));
+        </code></pre>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 标题 <a href="链接">链接</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
