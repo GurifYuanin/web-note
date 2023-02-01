@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>react hooks</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">react hooks</h1>
+    </hgroup>
+    <section>
+      <h2>作用</h2>
+      <p>
+        Hooks 让函数组件拥有了类组件的特性，即状态、生命周期等，可以解决以下问题：
+        <ul>
+          <li>
+            复用状态逻辑
+            <ul>
+              <li>传统做法：高阶组件、renderProps 等，但会让代码难以理解，形成<span class="different">嵌套地狱</span></li>
+              <li>hooks：从组件中提取状态逻辑，这些逻辑可以单独测试与复用</li>
+            </ul>
+          </li>
+          <li>复杂的组件难以开发与维护，使用 hooks 将不同细粒度的代码拆成更小的函数</li>
+          <li>在类组件中，this 不好理解</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>两条使用规则</h2>
+      <p>
+        使用 hooks 需要遵循以下两点规则：
+        <ul>
+          <li>为了保证每一次渲染 hook 都能顺序执行，需要在顶层 hook，不能在循环、条件或嵌套函数中定义 hook</li>
+          <li>只能在组件函数中使用 hook，不要在普通函数中使用 hook</li>
+        </ul>
+        <h3>在顶层定义 hook</h3>
+        <p>
+          因为当存在多个 hook 时，会创建多个 hook 对象，这些对象通过 next 属性连成链表，hook 会复用上次更新，导致可能发生错误。
+        </p>
+        <h3>只能在组件函数中使用 hook</h3>
+        <p>
+          以 useState 为例，useState 内部会调用 ReactCurrentDispatcher.current.useState，而只有在函数组件内 ReactCurrentDispatcher.current 才会被正常设置。
+          <figure>
+            <img src="../../images/react_hooks_rule1.jpg" alt="">
+          </figure>
+          所以在普通函数中，useState 实际上调用的是 ContextOnlyDispatcher.setState，而该方法会抛出报错
+          <pre><code class="typescript">
+// 执行会抛错的 dispatcher
+export const ContextOnlyDispatcher: Dispatcher = {
+  useCallback: throwInvalidHookError,
+  useContext: throwInvalidHookError,
+  useEffect: throwInvalidHookError,
+  useImperativeHandle: throwInvalidHookError,
+  useLayoutEffect: throwInvalidHookError,
+  useMemo: throwInvalidHookError,
+  useReducer: throwInvalidHookError,
+  useRef: throwInvalidHookError,
+  useState: throwInvalidHookError,
+  ...
+};
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 为什么React Hooks会有两条使用规则 <a href="https://juejin.cn/post/7020811068955951135">https://juejin.cn/post/7020811068955951135</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

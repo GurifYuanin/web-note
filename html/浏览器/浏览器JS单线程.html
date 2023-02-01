@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>浏览器JS单线程</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">浏览器JS单线程</h1>
+    </hgroup>
+    <section>
+      <h2>简介</h2>
+      <p>
+        <h3>JS 引擎</h3>
+        <p>
+          需要区分两个概念：
+          <ul>
+            <li>JS 引擎（V8 引擎）：负责处理执行 JS 代码</li>
+            <li>JS 代码：即脚本文件</li>
+          </ul>
+          浏览器 JS 单线程指的是<span class="different">JS 引擎</span>在执行<span class="different">JS 代码</span>时，代码只在一个线程上执行，而 JS 引擎本身有多个线程，其中最重要的 4 个模块负责以下事情：
+          <ol>
+            <li>Parser：将 JS 代码转化为 AST</li>
+            <li>Ignition（解释器）：将 AST 转化为字节码 Bytecode 并解释执行，收集编译器需要的信息</li>
+            <li>TurboFan（编译器：对于反复执行的代码，则会将这段 Bytecode 转化为优化的汇编代码</li>
+            <li>Orinoco（垃圾回收）：将不需要的内存空间回收</li>
+          </ol>
+        </p>
+        <h3>子线程</h3>
+        <p>
+          HTML5 新增了 Web Worker API，允许创建出多个子线程，每个子线程受主线程控制，且无法操作 DOM。
+        </p>
+        <h3>如何实现异步</h3>
+        <p>
+          参见 <a href="./事件循环机制.html">事件循环机制</a>。
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>为什么是单线程</h2>
+      <p>
+        <ul>
+          <li>JS 作为脚本语言最早是用于实现用户与浏览器的交互，在使用场景上不会太复杂</li>
+          <li>防止多线程带来的同步问题，如 DOM 操作，因此即使能创建子线程，子线程也无法操作 DOM</li>
+        </ul>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 彻底理解js是单线程的 <a href="https://blog.csdn.net/wu_xianqiang/article/details/105837869">https://blog.csdn.net/wu_xianqiang/article/details/105837869</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>vue vs react</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">vue vs react</h1>
+    </hgroup>
+    <section>
+      <h2>在开发习惯上</h2>
+      <p>
+        <ul>
+          <li>Vue 单文件组件（SFC，即 .vue 文件）使用 template + js + css 的组合模式，对前端开发者来说更易于理解</li>
+          <li>React 偏向于函数式编程，将 html 和 css 融入 js 中，一切皆由 js 控制（all in js）</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>在响应式的实现上</h2>
+      <p>
+        <ul>
+          <li>Vue 提供反应式的数据，当数据改动时界面自动更新 => 开发便捷</li>
+          <li>对于 React 来说，state 是只读的，需要用户给系统一个明确的信号才会重新渲染 => 数据流可控、系统稳定</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>对 TS 的支持上</h2>
+      <p>
+        <ul>
+          <li>
+            Vue3 之前对 TS 的支持不是很完全，props 和 data 的类型是断层的，比如在 props 类型的声明上：
+            <pre><code class="vue">
+&lt;script&gt;
+  export default {
+    props: {
+      myData: {
+        type: Object,
+        required: true
+      }
+    }
+  }
+&lt;/script&gt;
+            </code></pre>
+          </li>
+          <li>React 通过函数和类来表达组件，所以对 TS 更加契合</li>
+        </ul>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 标题 <a href="链接">链接</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

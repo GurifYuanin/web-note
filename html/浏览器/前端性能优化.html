@@ -178,12 +178,28 @@ module.exports = {
             <ul>
               <li>尽量用 v-show 替代 v-if</li>
               <li>少用 watch，且禁止在 watch 进行副作用操作</li>
-              <li>v-for 必须给每个 item 配套 key</li>
               <li>销毁组件前必须注销掉该组件之前注册过的事件（尤其是使用 EventBus）</li>
-              <li>使用 v-once 或 v-memo 缓存不会变更的渲染内容，减少重复渲染</li>
+              <li>v-for 必须给每个 item 配套 key</li>
+              <li>
+                使用 v-once 或 v-memo 缓存不会变更的渲染内容，减少重复渲染
+                <ul>
+                  <li>v-once 组件只会初始化一次，不会二次渲染</li>
+                  <li>通过 v-memo="[value]" 给组件绑一个值，当值不改变时组件不会重新渲染</li>
+                </ul>
+              </li>
             </ul>
           </li>
           <li>Tree-shaking：去掉代码中没有使用到的 Vue 模块（比如 &lt;Transition&gt;）</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>针对 React 的优化</h2>
+      <p>
+        <ul>
+          <li>通过写 shouldComponentUpdate 生命周期函数来手动比对 state 和 props，确定是否要重新渲染</li>
+          <li>使用 PureComponent 组件，原理与 shouldComponentUpdate 一样，PureComponent 本身会对 state 和 props 进行浅比较来判断是否重新渲染</li>
+          <li>使用 React.memo 来缓存函数组件的渲染</li>
         </ul>
       </p>
     </section>

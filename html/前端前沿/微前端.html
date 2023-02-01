@@ -159,12 +159,88 @@ const fakeWindow = new Proxy(window, {
     return true;
   }
 });
+
+// 子应用代码
+const code = `
+  !(function(){
+    var e=function(){if(document.getElementsByTagName('body')[0])}
+    ...
+  })()
+`;
+const fn = new Function('window', code);
+fn(fakeWindow);
           </code></pre>
         </p>
         <h3>样式</h3>
         <p>
           利用选择器，让子应用的样式只对自己生效。
         </p>
+      </p>
+    </section>
+    <section>
+      <h2>通信</h2>
+      <p>
+        <h3>主子应用通信</h3>
+        <p>
+          子应用通过 props 接收参数，当主应用更新数据时触发子应用的回调，将数据传递给子应用。
+        </p>
+        <h3>子应用间通信</h3>
+        <p></p>
+      </p>
+    </section>
+    <section>
+      <h2>模块共享</h2>
+      <p>
+        主应用与子应用可能存在相同的依赖模块，比如 Vue / React、组件库，为了避免重复加载，实现模块的复用（即只需要加载一次模块，主应用和子应用都可以使用同一个模块），有以下模块共享方案。
+        <h3>联邦模块</h3>
+        webpack5 提出了<span class="different">模块联邦</span>（module federation），通过该 webpack 插件可以实现应用与应用之间模块共享，比如在模块提供方进行以下配置：
+        <pre><code class="javascript">
+// webpack.config.js
+module.exports = {
+  plugins: [
+    new ModuleFederationPlugin({
+        name: 'lib_remote',
+        filename: 'remoteEntry.js', // 最终打包出的文件名
+        exposes: {
+          './modal': './src/component/modal.vue' // 选择暴露的模块
+        },
+        shared: ['vue']
+    })
+  ],
+}
+        </code></pre>
+        进行 webpack 打包会生成一个 remoteEntry.js 文件，假如将上面的应用部署在 www.example.com 上，则在其他应用，如果想要复用该模块，则可以进行以下配置：
+        <pre><code class="javascript">
+// webpack.config.js
+webpack.exports = {
+  plugins: [
+    new ModuleFederationPlugin({
+        name: "main_app",
+        filename: "remoteEntry.js",
+        remotes: {
+          lib_remote: "lib_remote@http://www.example.com/remoteEntry.js",
+        },
+        shared: {
+          vue: {
+            eager: true,
+            singleton: true,
+          }
+        }
+    })
+  ]
+}
+        </code></pre>
+        在代码中使用：
+        <pre><code class="vue">
+&lt;script&gt;
+  import Modal from 'lib_remote/modal';
+  export default {
+    components: {
+      Modal
+    }
+  }
+&lt;/script&gt;
+        </code></pre>
       </p>
     </section>
     <section class="refer">

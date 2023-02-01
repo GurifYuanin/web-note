@@ -127,9 +127,44 @@ class VNode {
             若新节点的第一个节点有 key 值，且在哈希表中找得到相同的 key 的节点，则复用该节点，newStartIndex++
             <div class="tip">这个哈希表的 key 为旧节点，value 为旧节点的 index</div>
           </li>
-          <li>若找不到，则新增节点</li>
+          <li>若找不到，则在 newStartIndex 位置新增节点</li>
         </ol>
         本质上，diff 算法的最终目的为：比较出新的虚拟 DOM 相对旧的虚拟 DOM ，找到新增、修改、删除了哪些节点，而对于不变的节点则进行复用。
+      </p>
+    </section>
+    <section>
+      <h2>v-for 中为什么必须写 key</h2>
+      <p>
+        <ul>
+          <li>便于 diff 算法优化，当节点 tag 和 key 都相同时，认为是同一个节点</li>
+          <li>
+            如果不用 key，Vue 会采用就地复地原则，选择最近的相同类型元素进行复用（patch 或 reuse），这在循环渲染中会导致后续的节点也进行了 DOM 操作
+            <pre><code class="vue">
+&lt;body&gt;
+  &lt;div id="demo"&gt;
+    &lt;p v-for="item in items" :key="item"&gt;{{item}}&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;script src="../../dist/vue.js"&gt;&lt;/script&gt;
+  &lt;script&gt;
+    // 创建实例
+    const app = new Vue({
+      el: '#demo',
+      data: { items: ['a', 'b', 'c', 'd', 'e'] },
+      mounted() {
+        setTimeout(() =&gt; {
+          this.items.splice(2, 0, 'f')  // 
+        }, 2000);
+      },
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+            </code></pre>
+            <figure>
+              <img src="../../images/vue_for_key.png" alt="">
+              <figcaption>新增的 F 复用了 C 节点，导致 F 后面的 C、D 也要发生 DOM 操作去复用 D、E</figcaption>
+            </figure>
+          </li>
+        </ul>
       </p>
     </section>
     <section class="refer">
