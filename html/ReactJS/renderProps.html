@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>renderProps</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">renderProps</h1>
+    </hgroup>
+    <section>
+      <h2>定义</h2>
+      <p>
+        React 的 renderProps 指的是父组件 通过 props 给子组件传递一个控制渲染的函数，子组件调用该函数来得到渲染结果。
+        <pre><code class="jsx">
+// 子组件
+class ChildComponent {
+  render() {
+    return (
+      &lt;div&gt;
+        &lt;h1&gt;Title&lt;/h1&gt;
+        { this.props.render() }
+      &lt;/div&gt;
+    );
+  }
+}
+
+// 父组件
+class ParentComponent {
+  render() {
+    return (
+      &lt;ChildComponent render={ () =&gt; &lt;div&gt;Hello World&lt;/div&gt;  } /&gt;
+    );
+  }
+}
+        </code></pre>
+      </p>
+    </section>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] React 关于render props技术的理解 <a href="https://blog.csdn.net/Jack_lzx/article/details/121268684">https://blog.csdn.net/Jack_lzx/article/details/121268684</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

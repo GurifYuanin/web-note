@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HOC</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">HOC</h1>
+    </hgroup>
+    <section>
+      <h2>定义</h2>
+      <p>
+        在 React 中，HOC（Higher-order function / 高阶组件）指的是接受一个或多个组件作为参数并且返回一个新组件的<span class="different">函数</span>。
+        <pre><code class="jsx">
+import { Component } from 'react';
+
+// MyComponent 是原组件
+class MyComponent extends Component {
+  render() {
+    return &lt;div&gt;Hello World&lt;/div&gt;;
+  }
+}
+
+// highOrderComponent 是 HOC
+function highOrderComponent(Component) {
+  return class EnhancedComponent extends Component {
+    // 做一些自定义操作
+    render() {
+      return &lt;Component {...this.props} /&gt;
+    }
+  }
+}
+
+// WrappedComponent 是新组件
+const WrappedComponent = highOrderComponent(MyComponent);
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>有什么用</h2>
+      <p>
+        <h3>逻辑复用</h3>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      <div>[1] 说说对高阶组件的理解 <a href="https://vue3js.cn/interview/React/High%20order%20components.html">https://vue3js.cn/interview/React/High%20order%20components.html</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

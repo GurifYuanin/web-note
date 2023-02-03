@@ -58,11 +58,11 @@ VariableObject = {
 		<section>
 			<h2>作用域</h2>
 			<p>
-				作用域（Scope），即变量或函数在某个代码区域内可以被使用。<br>
-				在 javascrpt 中，存在以下两种作用域：
+				作用域（Scope），有效访问变量或函数的区域。在 javascrpt 中，存在以下三种作用域：
 				<ul>
-					<li>全局作用域，声明后在任何地方都可以被使用</li>
-					<li>局部作用域，声明后在函数内可以被使用</li>
+					<li>全局作用域：声明后在任何地方都可以被使用</li>
+					<li>函数作用域：声明后在函数内可以被使用</li>
+					<li>块级作用域（ES6 新增）：在<span class="different">{ }</span>中使用 let / const 声明的变量</li>
 				</ul>
 				<pre><code class="javascrpt">
 var a = 'global'; // 创建全局变量
@@ -74,7 +74,7 @@ console.log(a); // 使用全局变量
 console.log(b); // 报错，函数外找不到局部变量
 				</code></pre>
 				<div>
-					<h3>声明提前</h3>
+					<h3>var 声明提前</h3>
 					<p>
 						在 javascrpt 中，通过 var 进行的变量声明，全局变量的声明会被自动提前到代码开头，局部变量的声明会被自动提前到函数开头。
 						<pre><code class="javascrpt">

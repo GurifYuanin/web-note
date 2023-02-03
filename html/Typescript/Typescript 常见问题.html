@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Typescript 常见问题</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">Typescript 常见问题</h1>
+    </hgroup>
+    <section>
+      <h2>抽象类与接口有什么区别</h2>
+      <p>
+        <h3>使用上的区别</h3>
+        <p>
+          <table>
+            <tr>
+              <th>名字</th>
+              <th>能不能实例化</th>
+              <th>用途</th>
+              <th>能不能实现构造函数</th>
+              <th>其他</th>
+              <th>用例</th>
+            </tr>
+            <tr>
+              <td>抽象类 / abstract class</td>
+              <td>不能</td>
+              <td>只能被其他类继承（extends）</td>
+              <td>可以</td>
+              <td>类里面的方法都是抽象方法，需要在被 extends 时实现</td>
+              <td style="text-align: left">
+                <pre><code class="typescript">
+abstract class Foo {
+  name: string;
+  constructor(name: string) {
+    this.name = name;
+  }
+  abstract doSomething(): void;
+}
+                </code></pre>
+              </td>
+            </tr>
+            <tr>
+              <td>接口 / interface</td>
+              <td>不能</td>
+              <td>被其他接口继承（extends），或者被类实现（implement）</td>
+              <td>不能，contructor 在 interface 中会被认为是方法</td>
+              <td>接口里面的方法需要在被 implement 实现</td>
+              <td style="text-align: left">
+                <pre><code class="typescript">
+interface Foo {
+  name: string;
+  doSomething(): void;
+} 
+                </code></pre>
+              </td>
+            </tr>
+          </table>
+        </p>
+        <h3>在概念上</h3>
+        <p>
+          <ul>
+            <li>抽象类是对事物的抽象，接口是一系列行为的抽象</li>
+            <li>抽象类具有继承的特点，即父子类关系。而接口仅能用于实现，相当于一个模板，承诺了能调用的方法</li>
+          </ul>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>type 和 interface 有什么区别</h2>
+      <p>
+        虽然说 type 和 interface 在很多地方可以互相代替，但两者并不等价，表现为：
+        <ul>
+          <li>type 的语义为类型，即表现为变量类型</li>
+          <li>interface 的语义是接口，强调关系的继承和约束，即数据结构</li>
+        </ul>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p></p>
+    </section>
+  </div>
+</body>
+
+</html>

@@ -98,16 +98,16 @@ console.log('console');
 // => setTimeout
 					</code></pre>
 				</p>
-				<h3>浏览器子进程</h3>
+				<h3>浏览器子线程</h3>
 				<p>
-					HTML5 提供了 Web Workers API，可以在 javascript 主进程下创建子进程（也是 javascript 脚本文件）。
+					HTML5 提供了 Web Workers API，可以在 javascript 主进程下创建子线程（也是 javascript 脚本文件）。
 					<pre><code>
 /* 父进程代码 */
 if (window.Worker) {
 	// 执行 my-worker.js
 	var worker = new Worker('my-work.js');
 
-	// 向子进程发送 'hello world'
+	// 向子线程发送 'hello world'
 	worker.postMessage('hello world');
 
 	// 监听 my-script.js 传送过来的消息
@@ -126,10 +126,10 @@ if (window.Worker) {
 	worker.terminate();
 }
 					</code></pre>
-					父子进程可以进行相互通信，方法与父进程相似，但子进程的全局对象不是 window ，而是父进程创建出来的 worker 实例，所以向父进程传输数据和设置钩子的时候，可以直接在全局对象上设置 this.xxx = ...
+					父子线程可以进行相互通信，方法与父进程相似，但子线程的全局对象不是 window ，而是父进程创建出来的 worker 实例，所以向父进程传输数据和设置钩子的时候，可以直接在全局对象上设置 this.xxx = ...
 					，然后父进程通过 worker.xxx 来获取。
 					<pre><code class="javascript">
-/* 子进程代码 */
+/* 子线程代码 */
 // 向父进程发送 'hello world'
 postMessage('hello world');
 
@@ -138,15 +138,15 @@ onmessage = function(event) {
 	console.log(event.data);
 }
 
-// 结束自己（子进程）的执行
+// 结束自己（子线程）的执行
 close();
 					</code></pre>
-					创建的子进程受以下限制：
+					创建的子线程受以下限制：
 					<ul>
 						<li>没有 window 全局对象，所以也无法操作父进程的 DOM ，但可以直接使用一部分 API，如 WebSockets，IndexedDB 以及FireFox OS 专用的 Data Store API
 							等数据存储机制<sup>[2]</sup></li>
 						<li>父进程只能调用同源的脚本</li>
-						<li>出于安全考虑，chrome 不允许本地(file:///)执行子进程。</li>
+						<li>出于安全考虑，chrome 不允许本地(file:///)执行子线程。</li>
 					</ul>
 				</p>
 			</p>

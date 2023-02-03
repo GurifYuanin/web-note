@@ -211,8 +211,9 @@ context.width = '100px';
 			</p>
 		</section>
 		<section>
-			<h2>localStorage & sessionStorage</h2>
+			<h2>本地存储</h2>
 			<p>
+				<h3>Web Storage</h3>
 				localStorage 和 sessionStorage 都是保存在客户端的数据，以 <span class="definition">键值对</span> 的方式存储。
 				<pre><code class="javascript">
 if (typeof(Storage) !== 'undefined') {
@@ -233,6 +234,8 @@ if (typeof(Storage) !== 'undefined') {
 					<li>单个键值的存储最大为 5 ~ 10M （因不同浏览器而差异）</li>
 					<li>同样受同源策略限制</li>
 				</ul>
+				<h3>indexedDB</h3>
+				可以通过 indexedDB 在浏览器打开一个小型数据库，存储结构化数据。
 			</p>
 		</section>
 		<section>
