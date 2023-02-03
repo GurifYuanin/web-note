@@ -57,7 +57,8 @@
   ],
   [
     "Typescript 入门",
-    "Typescript 高级用法"
+    "Typescript 高级用法",
+    "Typescript 常见问题"
   ],
   [
     "three",
@@ -91,6 +92,8 @@
   ],
   [
     "合成事件",
+    "renderProps",
+    "HOC",
     "react hooks"
   ],
   [
@@ -206,6 +209,7 @@
     "字符编码",
     "批处理命令",
     "软件设计师",
-    "设计模式"
+    "设计模式",
+    "CDN"
   ]
 ]

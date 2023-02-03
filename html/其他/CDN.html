@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>CDN</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">CDN</h1>
+    </hgroup>
+    <section>
+      <h2>定义</h2>
+      <p>
+        <h3>是什么</h3>
+        <p>
+          CDN 为内容分发网络（Content Delivery Network），原理是提供各种缓存服务器，让用户在访问资源时，利用负载均衡技术使用户访问到最近的服务器上。
+        </p>
+        <h3>有什么用</h3>
+        <p>
+          解决网络拥堵状况，提高用户访问资源的速度。
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>上传资源</h2>
+      <p>
+        <h3>CDN 的组成部分</h3>
+        <p>
+          从功能上划分：
+          <ul>
+            <li>分发服务系统：负责资源的响应、缓存和同步</li>
+            <li>负载均衡系统：负责均衡单点多个内容缓存设备的负载，对内容进行缓存负载平衡和访问控制</li>
+            <li>运营管理系统：负责运营需求管理和网络系统管理</li>
+          </ul>
+          从节点分布查看：
+          <figure>
+            <img src="../../images/cdn_upload.jpg" alt="">
+            <figcaption>每个边缘节点都是台静态资源服务器，分布在世界各个地方</figcaption>
+          </figure>
+        </p>
+        <h3>缓存控制</h3>
+        <p>
+          边缘节点和中央节点存储了缓存资源，如果源站的资源发生了更新，CDN 节点如何感知并获取最新的资源，通常有两种方案：
+          <ul>
+            <li>源站更新后 push 刷新所有 CDN 缓存</li>
+            <li>给 CDN 缓存设置一个固定的过期时间，过期后缓存失效，就会去拉取最新资源</li>
+          </ul>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>下载资源</h2>
+      <p>
+        <h3>访问流程</h3>
+        <p>
+          以在浏览器访问 https://www.example.com/index.js 为例
+          <figure>
+            <img src="../../images/cdn_download.jpg" alt="">
+          </figure>
+          可以看到，DNS 不会直接拿到 www.example.com 的 IP，而是拿到 CNAME（Canonical Name / 别名记录），该别名记录指向了 CDN 的负载均衡服务器，服务器根据以下指标选择最优的边缘节点的 IP 返回：
+          <ul>
+            <li>用户 IP 地址，找到最近的边缘节点</li>
+            <li>用户所在的运营商网络，找到相同网络的边缘节点</li>
+            <li>边缘节点的负载情况，选择负载较轻的边缘节点</li>
+            <li>其他指标，如监控状况、服务能力、带宽、响应时间等</li>
+          </ul>
+        </p>
+        <h3>命中与回源</h3>
+        <p>
+          上图中的步骤 ⑨ 浏览器向边缘节点 1 请求 index.js，如果边缘节点存在该缓存资源，则称之为<span class="different">命中</span>缓存资源，反之则：
+          <ol>
+            <li>边缘节点 1 向中心节点请求资源</li>
+            <li>若中心节点也未命中缓存资源，则到源站服务器获取资源，该行为成为<span class="different">回源</span></li>
+          </ol>
+          <div class="tip">
+            通常来讲，现在的商业 CDN 命中率都在 90% 以上。
+          </div>
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] CDN缓存的理解 <a href="https://www.cnblogs.com/WindrunnerMax/p/13606903.html">https://www.cnblogs.com/WindrunnerMax/p/13606903.html</a></div>
+        <div>[2] 如何理解CDN <a href="https://vue3js.cn/interview/http/CDN.html">https://vue3js.cn/interview/http/CDN.html</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
