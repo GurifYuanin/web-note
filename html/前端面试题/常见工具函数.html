@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>常见工具函数</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">常见工具函数</h1>
+    </hgroup>
+    <section>
+      <h2>深拷贝</h2>
+      <p>
+        <pre><code class="javascript">
+function cloneDeep(obj, hash = new WeakMap()) {
+  if (Object.prototype.toString.call(obj).toLowerCase() === '[object object]') {
+    // hash 用于避免循环调用
+    if (hash.has(obj)) {
+      return hash.get(obj);
+    }
+    const cloneObj = new obj.constructor();
+    hash.set(obj, cloneObj);
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        cloneObj[key] = cloneDeep(obj[key], hash);
+      }
+    }
+    return cloneObj;
+  } else if (Array.isArray(obj)) {
+    return obj.map(el => cloneDeep(el));
+  } else {
+    return obj;
+  }
+}
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>查找数组中重复的元素</h2>
+      <p>
+        <h3>先排序再遍历</h3>
+        <p>
+          <pre><code class="javascript">
+function findDuplicate(arr) {
+  const result = [];
+  const sortedArr = arr.map(i => i).sort();
+  for (let i = 0; i < sortedArr.length - 1; i++) {
+    if (sortedArr[i] === sortedArr[i + 1] && !result.includes(sortedArr[i])) {
+      result.push(sortedArr[i]);
+    }
+  }
+  return result;
+}
+          </code></pre>
+        </p>
+        <h3>暴力解法</h3>
+        <p>
+          <pre><code class="javascript">
+function findDuplicate(arr) {
+  const result = [];
+  const cloneArr = arr.map(i => i);
+  while(cloneArr.length) {
+    const el = cloneArr.pop();
+    if (cloneArr.includes(el)) {
+      result.push(el);
+      cloneArr = cloneArr.filter(i => el !== i);
+    }
+  }
+  return result;
+}
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>扁平化数组</h2>
+      <p>
+        <pre><code class="javascript">
+function flattenDeep(arr, result = []) {
+  if (Array.isArray(arr)) {
+    for (const el of arr) {
+      flattenDeep(el, result);
+    }
+  } else {
+    result.push(arr);
+  }
+  return result;
+}
+        </code></pre>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 深拷贝浅拷贝的区别 <a href="https://vue3js.cn/interview/JavaScript/copy.html">https://vue3js.cn/interview/JavaScript/copy.html</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

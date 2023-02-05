@@ -41,13 +41,17 @@
           <li>Object.defineProperty 只能代理某个属性，所以：
             <ul>
               <li>在实现响应式时需要对对象进行遍历、递归操作</li>
-              <li>对象上新增属性时监听不到</li>
-              <li>修改数组里元素的内容时监听不到</li>
+              <li>对象上新增属性、修改数组里元素的内容时监听不到</li>
             </ul>
             Proxy 是对整个对象进行代理，不存在以上问题
           </li>
           <li>Object.defineProperty 在 IE8+ 可以使用，Proxy 是 ES6 新增的 API，不兼容 IE</li>
         </ul>
+        <div class="preset-question">为什么 vue2 无法监听新增对象属性、修改数组元素？</div>
+        <div class="preset-answer">
+          <div>对于新增对象属性这种情况，新增的属性只是个普通属性，所以无法触发视图响应式更新。</div>
+          <div>对于修改数组元素这种情况，尤雨溪认为性能开销过大，所以没有实现。</div>
+        </div>
       </p>
       <h2>diff 算法优化</h2>
       <p>

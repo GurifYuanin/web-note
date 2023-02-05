@@ -323,38 +323,9 @@ postMessage('hello'); // 传送消息
 			<br>
 		</section>
 		<section>
-			<h2>Web Socket</h2>
+			<h2>WebSocket</h2>
 			<p>
-				WebSocket是HTML5开始提供的一种在单个 TCP 连接上进行全双工通讯的协议。<br>
-				<pre><code class="javascript">
-if ('WebSocket' in window) {
-	var url = ''; // 进行通信的URL
-	var message = ''; // 发送的数据
-	var receive = ''; // 接收的数据
-	var socket = new WebSocket(url); // 创建 WebSocket 对象(浏览器马上尝试连接)
-	// 成功建立连接时触发
-	socket.onopen = function() {
-		socket.send(message);
-	}
-	// 接受到数据时触发
-	socket.onmessage = function(event) {
-		receive = event.data;
-	}
-	// 关闭连接时触发
-	socket.onclose = function(event) {
-		if (event.wasClean) {
-			// 连接已经关闭
-		}
-	}
-	// 连接出错时触发
-	socket.onerror = function(event) {
-		console.log('服务器返回的状态码：' + event.code);
-		console.log('服务器返回的信息：' + event.reason);
-	}
-	socket.send(message);
-	socket.close();
-}
-				</code></pre>
+				WebSocket是 HTML5 开始提供的一种在单个 TCP 连接上进行全双工通讯的协议，参见<a href="../协议/WebSocket.html">WebSocket</a>。
 			</p>
 		</section>
 		<section>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>主题色替换方案</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">主题色替换方案</h1>
+    </hgroup>
+    <section>
+      <h2>打包时替换</h2>
+      <p>
+        以组件库为例子，通过预处理器的变量，对于多套的组件库提供多个变量表，比如默认样式为：
+        <pre><code class="less">
+// variables.less
+@primary-color: green;
+@warn-color: yellow;
+@danger-color: red;
+...
+        </code></pre>
+        使用 loader 在打包时选择不同的变量文件作为全局变量，实现同一套组件库不同的主题选择
+        <pre><code class="javascript">
+module.exports = {
+  module: {
+    css: [
+      {
+        test: /\.less$/i,
+        use: [
+          // ...
+          {
+            loader: 'less-loader',
+            options: {
+              lessOptions: {
+                paths: [
+                  path.resolve(__dirname, 'src/themes/variables.less')
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>动态替换</h2>
+      <p>
+        <h3>替换整个样式文件</h3>
+        <p>
+          每个主题都打包出一个独立的样式文件，文件内的选择器命名一致但内容不同，通过 JS 控制加载哪个文件。
+          <pre><code class="css">
+/* dark.css */
+.title {
+  color: white;
+  background-color: black;
+}
+
+/* bright.css */
+.title {
+  color: black;
+  background-color: white;
+}
+          </code></pre>
+          <pre><code class="vue">
+&lt;!-- index.vue --&gt;
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;link rel="stylesheet" :href="theme + '.css'"&gt;
+    &lt;div class="title"&gt;{{ theme }}&lt;/div&gt;
+    &lt;button @click="onClick"&gt;切换主题&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+  export default {
+    data() {
+      return {
+        theme: 'dark'
+      }
+    },
+    methods: {
+      onClick() {
+        this.theme = this.theme === 'dark' ? 'bright' : 'dark';
+      }
+    }
+  }
+&lt;/script&gt;
+          </code></pre>
+        </p>
+        <h3>替换 CSS3 变量</h3>
+        <p>
+          前一个方案替换整个样式文件过于简单粗暴，且当样式文件过大时存在加载问题，可以使用 CSS3 新增的变量来优化
+          <pre><code class="css">
+/* dark.css */
+--color: white;
+--bg-color: black;
+
+/* bright.css */
+--color: black;
+--bg-color: white;
+          </code></pre>
+          <pre><code class="vue">
+&lt;!-- index.vue --&gt;
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;link rel="stylesheet" :href="theme + '.css'"&gt;
+    &lt;div class="title"&gt;{{ theme }}&lt;/div&gt;
+    &lt;button @click="onClick"&gt;切换主题&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+  export default {
+    data() {
+      return {
+        theme: 'dark'
+      }
+    },
+    methods: {
+      onClick() {
+        this.theme = this.theme === 'dark' ? 'bright' : 'dark';
+      }
+    }
+  }
+&lt;/script&gt;
+&lt;style scoped&gt;
+  .title {
+    color: var(--color);
+    background-color: var(--bg-color);
+  }
+&lt;/style&gt;
+          </code></pre>
+        </p>
+        <h3>选择器</h3>
+        <p>
+          不同主题样式写在一个文件，通过选择器进行区分
+          <pre><code class="vue">
+&lt;!-- index.vue --&gt;
+&lt;template&gt;
+  &lt;div :class="theme"&gt;
+    &lt;div class="title"&gt;{{ theme }}&lt;/div&gt;
+    &lt;button @click="onClick"&gt;切换主题&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+  export default {
+    data() {
+      return {
+        theme: 'dark'
+      }
+    },
+    methods: {
+      onClick() {
+        this.theme = this.theme === 'dark' ? 'bright' : 'dark';
+      }
+    }
+  }
+&lt;/script&gt;
+&lt;style scoped&gt;
+.dark .title {
+  color: white;
+  background-color: black;
+}
+
+.bright .title {
+  color: black;
+  background-color: white;
+}
+&lt;/style&gt;
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] Web前端主题切换的几种方案 <a href="https://segmentfault.com/a/1190000041195585?utm_source=sf-similar-article">https://segmentfault.com/a/1190000041195585?utm_source=sf-similar-article</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

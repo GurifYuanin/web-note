@@ -148,6 +148,10 @@ mergeSort(arr);
 			<p>
 				取数组第一个数作为标尺 temp ，i 等于 0 ，j 等于 arr.length - 1 。对于右边，若 arr[j] 值小于标尺，则丢到 arr[0] ，反之则 j--；对于左边，若 arr[i] 值大于标尺，则丢到
 				arr[j] ，反之则 i++ 。以上程序递归完成。
+				<div class="tip">
+					<div>时间复杂度：n * lgn（平均情况）n^2（最差情况）</div>
+					<div>空间复杂度：lgn</div>
+				</div>
 				<pre><code class="javascript">
 // 生成一个长度为 10 的随机数组
 const arr = Array.from({length: 10}, () => Number.parseInt(Math.random() * 10));
