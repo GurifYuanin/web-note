@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>进制转换</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">进制转换</h1>
+    </hgroup>
+    <section>
+      <h2>问题描述</h2>
+      <p>
+        实现从 n 进制转化为 m 进制。
+        <pre><code class="javascript">
+const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>n 进制转化为 10 进制</h2>
+      <p>
+        功能等价于 Number.parseInt(str, radix)
+        <pre><code class="javascript">
+function parseInt(str, radix) {
+  let result = 0;
+  let base = 1; // radix^0
+  for (const s of str.split('').reverse()) {
+    const n = chars.indexOf(s);
+    if (n === -1) {
+      throw new Error();
+    } else {
+      result += n * base;
+      base *= radix;
+    }
+  }
+  return result;
+}
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>10 进制转化为 m 进制</h2>
+      <p>
+        <pre><code class="javascript">
+function toString(num, radix) {
+  if (num === 0) {
+    return '0';
+  }
+  let result = '';
+  while (num > 0) {
+    const n = num % radix;
+    if (n >= chars.length) {
+      throw new Error();
+    }
+    result = chars[n] + result;
+    num = Math.floor(num / radix);
+  }
+  return result;
+}
+        </code></pre>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 标题 <a href="链接">链接</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>请求缓存器</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">请求缓存器</h1>
+    </hgroup>
+    <section>
+      <h2>问题描述</h2>
+      <p>
+        实现一个类，使用类发送请求时，若该请求已经请求过了，若之前的请求
+        <ul>
+          <li>还未返回，则等待返回后复用</li>
+          <li>已经返回，则直接使用之前缓存好的响应</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>实现方法</h2>
+      <p>
+        <pre><code class="javascript">
+class XHRCache {
+  requestMap = new Map();
+  responseMap = new Map();
+  send(url) {
+    if (this.responseMap.has(url)) {
+      const resp = this.responseMap.get(url);
+      if (resp === null) {
+        return this.requestMap.get(url);
+      } else {
+        return resp;
+      }
+    } else {
+      this.responseMap.set(url, null);
+      return new Promise(resolve => {
+        this.requestMap.set(url, new Promise(async innerResolve => {
+          const resp = await fetch(url);
+          this.responseMap.set(url, resp);
+          innerResolve(resp);
+          resolve(resp);
+        }));
+      });
+    }
+  }
+}
+
+const cache = new XHRCache();
+cache.send('/').then(data => console.log('task1', data));
+cache.send('/').then(data => console.log('task2', data));
+        </code></pre>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

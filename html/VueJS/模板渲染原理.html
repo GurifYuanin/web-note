@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>模板渲染原理</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">模板渲染原理</h1>
+    </hgroup>
+    <section>
+      <h2>模板编译</h2>
+      <p>
+        <h3>如何理解</h3>
+        vue 允许我们写这样的模板：
+        <pre><code class="html">
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;h1&gt;Hello World&lt;/h1&gt;
+    &lt;div v-for="message in messages" :key="message"&gt;{{ message }}&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+        </code></pre>
+        但这种属于 vue 模板，浏览器并不能识别其中的语法（v-for 等），所以需要将这些模板翻译为浏览器（即 Javascript）能执行的语言：
+        <ol>
+          <li>解析模板（比如使用正则表达式匹配<span class="different">&lt;</span>、<span class="different">&gt;</span>等），将模板进行语法分析，构建 AST（Abstract Syntax Tree / 抽象语法树）</li>
+          <li>优化 AST，方便后续虚拟 DOM 的更新</li>
+          <li>
+            将 AST 转化为可执行代码（render 函数），代码执行后生成虚拟 DOM 树，比如：
+            <pre><code class="javascript">
+`
+  with(this) {
+    return _c(
+      'div',
+      [
+        ...
+      ]
+    )
+  }
+`
+            </code></pre>
+          </li>
+        </ol>
+        <h3>compileToFunctions</h3>
+      </p>
+    </section>
+    <section>
+      <h2>模板渲染</h2>
+      <p>
+        <h3>渲染原理<sup>[2]</sup></h3>
+        <p>
+          <ol>
+            <li>
+              Vue 会为每个组件实例新建一个 Watcher 对象，并且通过 Object.defineProperty / Proxy 监听数据变更
+              <pre><code class="javascript">
+// src/core/instance/lifecycle.js
+updateComponent = () => {
+  vm._update(vm._render(), hydrating)
+}
+
+new Watcher(vm, updateComponent, noop, {
+  before () {
+    if (vm._isMounted) {
+      callHook(vm, 'beforeUpdate')
+    }
+  }
+}, true /* isRenderWatcher */)
+              </code></pre>
+            </li>
+            <li>
+              首次渲染时就会执行 updateComponent，_render 函数构建一个虚拟 DOM 树（Virtual DOM Tree）并执行 _update 操作：
+              <pre><code class="javascript">
+// src/core/instance/lifecycle.js
+vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
+              </code></pre>
+            </li>
+            <li>
+              当数据变更时，Object.defineProperty / Proxy 通知依赖该数据的 Watcher，触发执行 updateComponent，_render 函数构建新的虚拟 DOM 树，并执行 _update 操作：
+              <pre><code class="javascript">
+// src/core/instance/lifecycle.js
+vm.$el = vm.__patch__(prevVnode, vnode)
+              </code></pre>
+              __patch__ 最终使用 patch 方法，对比两个虚拟 DOM 树执行<span class="different">diff 算法</span>，将发生的节点更新到浏览器 DOM 上
+              <pre><code class="javascript">
+// src/platforms/web/runtime/index.js
+Vue.prototype.__patch__ = inBrowser ? patch : noop
+              </code></pre>
+            </li>
+          </ol>
+          <figure>
+            <img src="../../images/vue_reactive_loop.png" alt="">
+          </figure>
+        </p>
+        <h3>为什么要用虚拟 DOM</h3>
+        <p>
+          虚拟 DOM 本质是一个 Object 对象，存储了真实 DOM （部分）的属性和结构，比如：
+          <pre><code class="typescript">
+// src/core/vdom/vnode.js
+class VNode {
+  tag: string; // 标签名
+  data: VNodeData; // 绑定的数据
+  key?: string; // 节点标志，用于优化
+  text?: string; // 如果是文本节点，该属性表示文本内容
+  elm: HTMLElement; // 对应的真实 DOM
+  children?: VNode | VNode[] | string; // 子节点
+  // ...
+}
+          </code></pre>
+          使用虚拟 DOM 主要是因为：
+          <ul>
+            <li>
+              每个真实 DOM 包含非常多属性，如果直接操作 DOM，性能消耗代价昂贵
+              <figure>
+                <img src="../../images/console_dir_div.jpg" alt="">
+              </figure>
+            </li>
+            <li>使用虚拟 DOM，可以在内存中进行节点 diff，再统一更新到真实 DOM 上</li>
+          </ul>
+        </p>
+        <h3>渲染时机</h3>
+        <p>
+          当监听到数据的变化，Vue 开启一个队列，并将同一事件循环内发生的所有数据变化缓冲起来（去除重复的数据变更），等同步任务完成后进行 DOM 更新，之后再去触发 nextTick 事件。
+          <figure>
+            <img src="../../images/nextTick.jpg" alt="">
+          </figure>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>响应式原理</h2>
+      <p>
+        <h3>依赖收集 / Dep & Watcher</h3>
+        <p>
+          初始化组件时，Vue 会为 data 创建 Observe 对象
+          <pre><code class="typescript">
+// src/core/instance/state.js
+initData(vm: Component) {
+  ...
+  observe(data, true)
+}
+
+// src/core/observer/index.js
+function observe (value: any, asRootData: ?boolean) {
+  ...
+  <span class="strong">ob = new Observer(value)</span>
+}
+          </code></pre>
+          Observer 在创建实例时，会递归地为 data 的每个属性创建一个 dep 对象，每当读取响应式属性时，就会触发 dep.depend() 进行依赖收集。
+          <pre><code class="typescript">
+class Observer {
+  constructor (value: any) {
+    ...
+    this.walk(value)
+  }
+  walk (obj: Object) {
+    const keys = Object.keys(obj)
+    for (let i = 0; i < keys.length; i++) {
+      <span class="strong">defineReactive(obj, keys[i])</span>
+    }
+  }
+}
+
+// src/core/observer/index.js
+function defineReactive (
+  obj: Object,
+  key: string,
+  val: any,
+  customSetter?: ?Function,
+  shallow?: boolean
+) {
+  const dep = new Dep()
+  ...
+  let childOb = !shallow && observe(val)
+  Object.defineProperty(obj, key, {
+    enumerable: true,
+    configurable: true,
+    get: function reactiveGetter () {
+      const value = getter ? getter.call(obj) : val
+      if (Dep.target) {
+        <span class="strong">dep.depend()</span>
+        if (childOb) {
+          <span class="strong">childOb.dep.depend()</span>
+          if (Array.isArray(value)) {
+            dependArray(value)
+          }
+        }
+      }
+      return value
+    },
+    set: function reactiveSetter (newVal) {}
+  })
+}
+          </code></pre>
+          depend 方法经过几次调用跳转，最终会将 Dep.target（Watcher）添加到订阅者列表中。
+          <pre><code class="typescript">
+class Dep {
+  static target?: Watcher;
+  subs: Array&lt;Watcher&gt;;
+  ...
+  constructor () {
+    ...
+    this.subs = []
+  }
+  depend() {
+    if (Dep.target) {
+      Dep.target.addDep(this)
+    }
+  }
+  addSub(sub: Watcher) {
+    <span class="strong">this.subs.push(sub)</span>
+  }
+}
+          </code></pre>
+          Dep.target 是一个静态属性，创建 Vue 实例时会配套创建一个 Watcher 实例，Watcher 在初始化时会对 Dep.target 进行赋值
+          <pre><code class="typescript">
+class Watcher {
+  onstructor (
+    vm: Component,
+    expOrFn: string | Function,
+    cb: Function,
+    options?: ?Object,
+    isRenderWatcher?: boolean
+  ) {
+    ...
+    <span class="strong">this.value = this.get()</span>
+    ...
+  }
+  get () {
+    <span class="strong">pushTarget(this)</span>
+    ...
+  }
+}
+          </code></pre>
+          其中 pushTarget 为
+          <pre><code class="javascript">
+// src/core/observer/dep.js
+function pushTarget (_target: Watcher) {
+  if (Dep.target) targetStack.push(Dep.target)
+  Dep.target = _target
+}
+          </code></pre>
+          而在通过 _render 方法首次渲染 VNode 时，就会访问到 data（数据对象）上的 getter，从而完成上面的依赖收集。后续访问 getter 时 Watcher 则会通过判断避免重复收集。
+          <figure>
+            <img src="../../images/vue_dep_collect.jpg" alt="">
+          </figure>
+        </p>
+        <h3>派发更新</h3>
+      </p>
+    </section>
+    <section>
+      <h2>patch 原理</h2>
+      <p>
+        <h3>算法优化</h3>
+        <p>
+          Vue 对传统的 diff 算法进行了优化，两个虚拟 DOM 树之间只比较同一层级的节点，不跨级比较。
+        </p>
+        <h3>前置知识</h3>
+        <p>
+          <h4>sameVNode</h4>
+          sameVNode 用于判断两个 VNode 是否相同
+          <pre><code class="javascript">
+// src/core/vdom/patch.js
+function sameVnode (a, b) {
+  return (
+    a.key === b.key && (
+      (
+        a.tag === b.tag &&
+        a.isComment === b.isComment &&
+        isDef(a.data) === isDef(b.data) &&
+        sameInputType(a, b)
+      ) || (
+        isTrue(a.isAsyncPlaceholder) &&
+        a.asyncFactory === b.asyncFactory &&
+        isUndef(b.asyncFactory.error)
+      )
+    )
+  )
+}
+          </code></pre>
+          <ul>
+            <li>
+              对于非异步组件，两个 VNode 需要同时满足以下条件才能认为是相同节点
+              <ol>
+                <li>如果有 key，key 需要相同</li>
+                <li>tag（元素名）相同</li>
+                <li>都是或都不是注释节点</li>
+                <li>都有 data</li>
+                <li>如果是 input 元素，元素上的 type 属性相同</li>
+              </ol>
+            </li>
+            <li>
+              对于异步组件
+              <ol>
+                <li>工厂方法相同</li>
+                <li>新 VNode 没有发生报错</li>
+              </ol>
+            </li>
+          </ul>
+          <h4>createElm</h4>
+          通过虚拟节点创建真实 DOM 并插入到父节点中，其中最核心的逻辑：
+          <pre><code class="javascript">
+// src/core/vdom/patch.js
+function createElm (
+  vnode,
+  insertedVnodeQueue,
+  parentElm,
+  refElm,
+  nested,
+  ownerArray,
+  index
+) {
+  ...
+  const children = vnode.children
+  ...
+  // 创建真实 DOM
+  vnode.elm = vnode.ns
+    ? nodeOps.createElementNS(vnode.ns, tag)
+    : nodeOps.createElement(tag, vnode)
+  ...
+  createChildren(vnode, children, insertedVnodeQueue) // 创建子元素
+  // 执行所有的 create 的钩子并把 vnode push 到 insertedVnodeQueue 中
+  if (isDef(data)) {
+    invokeCreateHooks(vnode, insertedVnodeQueue)
+  }
+  insert(parentElm, vnode.elm, refElm) // 将创建出来的 DOM 挂载在父节点下
+  ...
+}
+          </code></pre>
+        </p>
+        <h3>1/patch</h3>
+        <p>
+          在拿到新旧两个虚拟 DOM 树后，从根节点开始，调用 patch 方法（<span class="definition">src/core/vdom/patch.js</span>）。
+          <ul>
+            <li>
+              若新 VNode 为 undefined，则触发旧 VNode destory 钩子
+              <pre><code class="javascript">
+if (isUndef(vnode)) {
+  if (isDef(oldVnode)) invokeDestroyHook(oldVnode)
+  return
+}
+              </code></pre>
+            </li>
+            <li>
+              若旧 VNode 为 undefined，则 createElm
+              <pre><code class="javascript">
+if (isUndef(oldVnode)) {
+  isInitialPatch = true
+  createElm(vnode, insertedVnodeQueue)
+}
+              </code></pre>
+            </li>
+            <li>
+              否则
+              <ul>
+                <li>
+                  如果旧 VNode 不是真实 DOM 且新旧 VNode 相同，则进行 patchVNode
+                  <pre><code class="javascript">
+const isRealElement = isDef(oldVnode.nodeType)
+if (!isRealElement && sameVnode(oldVnode, vnode)) {
+    patchVnode(oldVnode, vnode, insertedVnodeQueue, null, null, removeOnly)
+}
+                  </code></pre>
+                </li>
+                <li>否则，通过 createElm 创建新节点插入到 DOM，并在 DOM 中删除旧节点</li>
+              </ul>
+            </li>
+          </ul>
+        </p>
+        <h3>2/patchVNode</h3>
+        <p>
+          <ol>
+            <li>
+              执行 prepatch 钩子
+              <pre><code class="javascript">
+let i
+const data = vnode.data
+if (isDef(data) && isDef(i = data.hook) && isDef(i = i.prepatch)) {
+  i(oldVnode, vnode)
+}
+              </code></pre>
+            </li>
+            <li>
+              执行 update 钩子
+              <pre><code class="javascript">
+if (isDef(data) && isPatchable(vnode)) {
+  for (i = 0; i &lt; cbs.update.length; ++i) cbs.update[i](oldVnode, vnode)
+  if (isDef(i = data.hook) && isDef(i = i.update)) i(oldVnode, vnode)
+}
+              </code></pre>
+            </li>
+            <li>
+              进行 patch 操作
+              <ul>
+                <li>
+                  如果新 VNode 为文本节点，则更新文本内容
+                  <pre><code class="javascript">
+if (oldVnode.text !== vnode.text) {
+  nodeOps.setTextContent(elm, vnode.text)
+}
+                  </code></pre>
+                </li>
+                <li>
+                  如果新 VNode 不是文本节点
+                  <ul>
+                    <li>如果新旧 VNode 都有子节点，且子节点不同，则对两个子节点数组进行 updateChildren</li>
+                    <li>若果仅有新 VNode 有子节点，则新建 DOM 添加进父节点</li>
+                    <li>若果仅有旧 VNode 有子节点，则删除 DOM</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>
+              执行 postpatch 钩子
+              <pre><code class="javascript">
+if (isDef(data)) {
+  if (isDef(i = data.hook) && isDef(i = i.postpatch)) i(oldVnode, vnode)
+}
+              </code></pre>
+            </li>
+          </ol>
+        </p>
+        <h3>3/updateChildren</h3>
+        <p>
+          循环从两边比较，向中间收拢。
+          <figure>
+            <img src="../../images/vue_vnode_diff.jpg" alt="">
+            <figcaption>
+              初始化时 oldStartIndex = 0 oldEndIndex = 3 newStartIndex = 0 newEndINdex = 5
+            </figcaption>
+          </figure>
+          <ol>
+            <li>
+              若新旧节点的第一个节点相同，则
+              <ol>
+                <li>进行 patchVNode</li>
+                <li>oldStartIndex++ && newStartIndex++</li>
+              </ol>
+              <pre><code class="javascript">
+if (sameVnode(oldStartVnode, newStartVnode) {
+  patchVnode(oldStartVnode, newStartVnode, insertedVnodeQueue)
+  oldStartVnode = oldCh[++oldStartIndex]
+  newStartVnode = newCh[++newStartIndex]
+}
+              </code></pre>
+            </li>
+            <li>
+              若新旧节点的最后一个节点相同，则
+              <ol>
+                <li>进行 patchVNode</li>
+                <li>oldEndIndex-- && newEndIndex--</li>
+              </ol>
+              <pre><code class="javascript">
+if (sameVnode(oldEndVnode, newEndVnode)) {
+  patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue)
+  oldEndVnode = oldCh[--oldEndIndex]
+  newEndVnode = newCh[--newEndIndex]
+}
+              </code></pre>
+            </li>
+            <li>
+              若老节点的第一个节点与新节点的最后一个节点相同，则
+              <ol>
+                <li>进行 patchVNode</li>
+                <li>进行 DOM 操作</li>
+                <li>oldStartIndex++ && newEndIndex--</li>
+              </ol>
+              <pre><code class="javascript">
+if (sameVnode(oldStartVnode, newEndVnode)) {
+  patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue)
+  canMove && nodeOps.insertBefore(parentElm, oldStartVnode.elm, nodeOps.nextSibling(oldEndVnode.elm))
+  oldStartVnode = oldCh[++oldStartIndex]
+  newEndVnode = newCh[--newEndIndex]
+}
+              </code></pre>
+            </li>
+            <li>
+              若老节点的最后一个节点与新节点的第一个节点相同，则
+              <ol>
+                <li>进行 patchVNode</li>
+                <li>进行 DOM 操作</li>
+                <li>oldEndIndex-- && newStartIndex++</li>
+              </ol>
+              <pre><code class="javascript">
+if (sameVnode(oldEndVnode, newStartVnode)) {
+  patchVnode(oldEndVnode, newStartVnode, insertedVnodeQueue)
+  canMove && nodeOps.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm)
+  oldEndVnode = oldCh[--oldEndIndex]
+  newStartVnode = newCh[++newStartIndex]
+}
+              </code></pre>
+            </li>
+            <li>
+              若新节点的第一个节点有 key 值，且在 oldKeyToIdx 中找得到相同的节点，则
+              <ol>
+                <li>进行 patchVNode</li>
+                <li>进行 DOM 操作</li>
+                <li>newStartIndex++</li>
+              </ol>
+              <div class="tip">
+                oldKeyToIdx 是一个 map，key 为旧节点的 key，value 为旧节点的 index
+                <pre><code class="javascript">
+// 先创建 oldKeyToIdx
+if (isUndef(oldKeyToIdx)) {
+  oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIndex, oldEndIndex)
+}
+
+// createKeyToOldIdx 方法其实是将节点数组转化为 map
+function createKeyToOldIdx(children, beginIdx, endIdx) {
+  let i, key
+  const map = {}
+  for (i = beginIdx; i &lt;= endIdx; ++i) {
+    key = children[i].key
+    if (isDef(key)) map[key] = i
+  }
+  return map
+}
+                </code></pre>
+              </div>
+            </li>
+            <li>
+              若上面全都找不到，则
+              <ol>
+                <li>在 newStartIndex 位置新增节点</li>
+                <li>newStartIndex++</li>
+              </ol>
+              <pre><code class="javascript">
+createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm)
+newStartVnode = newCh[++newStartIndex]
+              </code></pre>
+            </li>
+          </ol>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>v-for 中为什么必须写 key</h2>
+      <p>
+        以下面为例子，在数组中间塞入一个元素 f
+        <pre><code class="vue">
+&lt;body&gt;
+  &lt;div id="demo"&gt;
+    &lt;p v-for="item in items"&gt;{{item}}&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;script src="../../dist/vue.js"&gt;&lt;/script&gt;
+  &lt;script&gt;
+    // 创建实例
+    const app = new Vue({
+      el: '#demo',
+      data: { items: ['a', 'b', 'c', 'd', 'e'] },
+      mounted() {
+        setTimeout(() =&gt; {
+          this.items.splice(2, 0, 'f');
+        }, 2000);
+      },
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+        </code></pre>
+        <figure>
+          <img src="../../images/vue_for_key.png" alt="">
+        </figure>
+        如果不使用 key，就会进行以下操作：
+        <ol>
+          <li>新节点 A 复用旧节点 A</li>
+          <li>新节点 B 复用旧节点 B</li>
+          <li>新节点 F 复用旧节点 C，textContent 'c' -> 'f'</li>
+          <li>新节点 C 复用旧节点 D，textContent 'd' -> 'c'</li>
+          <li>新节点 D 复用旧节点 E，textContent 'e' -> 'd'</li>
+          <li>创建新节点 E textContent = 'e' 并追加到 DOM 中</li>
+        </ol>
+        这是因为通过 sameVNode 函数判断会认为<span class="different">旧节点 C</span> 和<span class="different">新节点 F</span>是同一个节点，在循环渲染中会导致后续的节点也进行了 DOM 操作
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] Vue diff <a href="https://vue3js.cn/interview/vue/diff.html">https://vue3js.cn/interview/vue/diff.html</a></div>
+        <div>[2] Vue 核心原理全解 <a href="https://segmentfault.com/a/1190000038375749">https://segmentfault.com/a/1190000038375749</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

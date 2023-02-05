@@ -52,6 +52,10 @@ new Cache();
           <li>delete(cacheName: string): Promise&lt;boolean&gt;：删除 Cache</li>
           <li>has(cacheName: string): Promise&lt;boolean&gt;：判断 Cache 是否存在</li>
         </ul>
+        <pre><code class="javascript">
+const cache = await caches.open('index');
+const resp = await cache.add('https://www.example.com');
+        </code></pre>
       </p>
     </section>
     <section>
@@ -126,7 +130,7 @@ self.addEventListener('fetch', async function(event) {
 });
         </code></pre>
         <h3>调试</h3>
-        在 chrome 浏览器输入 chrome://inspect/#service-workers 来查看已存在的 ServiceWorker。
+        在 chrome 浏览器输入 <span class="definition">chrome://inspect/#service-workers</span> 来查看已存在的 ServiceWorker。
       </p>
     </section>
     <section>
@@ -134,7 +138,7 @@ self.addEventListener('fetch', async function(event) {
       <p>
         Notification 可以向浏览器发出弹窗通知。
         <h3>获得权限</h3>
-        发起通知前需要询问是否允许通知，若用户选择允许，则表示该域名可以发起弹窗通知。
+        发起通知前需要询问是否允许通知，若用户选择允许，则表示该域名可以发起弹窗通知。
         <pre><code class="javascript">
 Notification.requestPermission(permission => {
   if (permission === 'granted') {

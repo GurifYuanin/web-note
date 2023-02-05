@@ -26,11 +26,106 @@
       <h1 id="title">WebSocket</h1>
     </hgroup>
     <section>
+      <h2>使用</h2>
+      <p>
+        <h3>客户端</h3>
+        <p>
+				<pre><code class="javascript">
+if ('WebSocket' in window) {
+	const url = 'ws://example.com'; // 进行通信的URL
+	const message = 'Hello World'; // 发送的数据
+	const socket = new WebSocket(url); // 创建 WebSocket 对象(浏览器马上尝试连接)
+	// 成功建立连接时触发
+	socket.onopen = function() {
+		socket.send(message);
+	}
+	// 接受到数据时触发
+	socket.onmessage = function(event) {
+		const receive = event.data;
+    console.log(receive);
+	}
+	// 关闭连接时触发
+	socket.onclose = function(event) {
+		if (event.wasClean) {
+			// 连接已经关闭
+		}
+	}
+	// 连接出错时触发
+	socket.onerror = function(event) {
+		console.log('服务器返回的状态码：' + event.code);
+		console.log('服务器返回的信息：' + event.reason);
+	}
+	socket.send(message);
+	socket.close();
+}
+				</code></pre>
+        </p>
+        <h3>服务端</h3>
+        <p>
+
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>原理</h2>
+      <p>
+        <h3>握手流程</h3>
+        建立 WebSocket 连接之前，需要有一次握手过程，客户端发起一次转化协议的 HTTP 请求：
+        <pre><code class="http">
+GET /chat HTTP/1.1
+Connection: Upgrade
+Upgrade: websocket
+Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
+Sec-WebSocket-Protocol: chat, superchat
+Sec-WebSocket-Version: 13
+        </code></pre>
+        <ul>
+          <li>Connection: Upgrade 表示进行连接升级</li>
+          <li>Upgrade: websocket 表示升级到 WebSocket 协议</li>
+          <li>Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ== 客户端生成的 base64 编码密文，用于简单的认证秘钥</li>
+          <li>Sec-WebSocket-Protocol: chat, superchat 表示请求进行的子协议</li>
+          <li>Sec-WebSocket-Version: 13 表示支持的 WebSocket 版本</li>
+        </ul>
+        服务端进行应答：
+        <pre><code class="http">
+HTTP/1.1 101 Switching Protocols
+Connection: Upgrade
+Upgrade: websocket
+Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+Sec-WebSocket-Protocol: chat
+        </code></pre>
+        <ul>
+          <li>Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo= 该值是通过请求中的 Sec-WebSocket-Key 加上专用的 UUID （Universally Unique IDentifier）计算摘要得来</li>
+        </ul>
+        如果没有返回 Sec-WebSocket-Accept，客户端会抛出错误，并关闭连接。
+        <h3>如何生成 Sec-WebSocket-Accept</h3>
+        <p>
+          <pre><code class="node">
+const crypto = require('crypto');
+
+const secWebSocketKey = 'dGhlIHNhbXBsZSBub25jZQ=='; // 从 http request headers 中拿到
+const UUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'; // RFC4122<sup>[3]</sup>
+
+const key = secWebSocketKey + UUID;
+const secWebSocketAccept = crypto.createHash('sha1').update(key).digest('base64');
+console.log(secWebSocketAccept); // => s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+          </code></pre>
+        </p>
+        <h3>为什么要有握手校验</h3>
+        <p>
+          <ul>
+            <li>证明服务器理解 WebSocket</li>
+            <li>因为标准浏览器在发起 ajax / fetch 时是不允许手动设置 Sec-WebSocket-Accept，因此可以避免一些误操作意外升级成 WebSocket 连接</li>
+          </ul>
+        </p>
+      </p>
+    </section>
+    <section>
       <h2>最大连接数</h2>
       <p>
         <h3>客户端</h3>
         <p>
-          在不同的浏览器，同一个网页有最大连接数限制：
+          在不同的浏览器，同一个页面有最大连接数限制：
           <table>
             <tr>
               <th>浏览器</th>
@@ -64,6 +159,8 @@
       <h2>参考文献</h2>
       <p>
         <div>[1] 为什么你的websocket只能建立256个连接 <a href="https://developer.aliyun.com/article/938747">https://developer.aliyun.com/article/938747</a></div>
+        <div>[2] 说说对 WebSocket 的理解 <a href="https://vue3js.cn/interview/http/WebSocket.html">https://vue3js.cn/interview/http/WebSocket.html</a></div>
+        <div>[3] A Universally Unique IDentifier (UUID) URN Namespace <a href="https://datatracker.ietf.org/doc/html/rfc4122">https://datatracker.ietf.org/doc/html/rfc4122</a></div>
       </p>
     </section>
   </div>
