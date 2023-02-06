@@ -124,6 +124,11 @@ class SingleTon {
 // 使用公用的单例
 SingleTon.instance === SingleTon.getInstance(); // => true
         </code></pre>
+        应用场景：
+        <ul>
+          <li>登录弹窗</li>
+          <li>vuex、redux</li>
+        </ul>
       </p>
     </section>
     <section>
@@ -136,6 +141,29 @@ SingleTon.instance === SingleTon.getInstance(); // => true
       <h2>原型模式</h2>
       <p>
         参见<a href="../Javascript/原型链.html#原型模式">原型链</a>。
+      </p>
+    </section>
+    <section>
+      <h2>策略模式</h2>
+      <p>
+        定义一系列方法，将它们封装起来复用，应用场景：
+        <ul>
+          <li>表单校验：非空、是否为数字、最小最大长度、正则表达式</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>代理模式</h2>
+      <p>
+        <h3>React 合成事件</h3>
+        <p>
+          参见<a href="../ReactJS/合成事件.html">合成事件</a>。
+        </p>
+        <h3>zepto</h3>
+        <p>
+          在移动端，因为双击（double tap）可以放大，所以 click 事件有 300ms 的延迟，而 touch 事件没有延迟，所以 zepto 采用了全局监听 touchend 事件。
+          <div class="tip">因为 zepto 使用 touchend 来模拟 click 事件，所以存在点击穿透问题，比如 touchend 上层的 mask，下层的元素（如按钮、链接）会触发 click</div>
+        </p>
       </p>
     </section>
     <section class="refer">

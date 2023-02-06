@@ -83,6 +83,65 @@ function countGroupNumber(n) {
 			</p>
 		</section>
 		<section>
+			<h2>二叉树相关算法</h2>
+			<p>
+				<h3>树结构</h3>
+				<p>
+					<pre><code class="javascript">
+class Node {
+	value = null;
+	left = null;
+	right = null;
+	constructor(value, left, right) {
+		this.value = value;
+		this.left = left;
+		this.right = right;
+	}
+}
+const root = new Node('A-1',
+	new Node('B-1',
+		new Node('C-1'),
+		new Node('C-2')
+	),
+	new Node('B-2')
+);
+					</code></pre>
+				</p>
+				<h3>深度遍历</h3>
+				<p>
+					<pre><code class="javascript">
+function dfs(node) {
+	if (node) {
+		console.log(node.value);
+		if (node.left) {
+			dfs(node.left);
+		}
+		if (node.right) {
+			dfs(node.right);
+		}
+	}
+}
+					</code></pre>
+					深度遍历并计算整棵树高度
+					<pre><code class="javascript">
+function getHeight(node, height = 1) {
+	if (node) {
+		let tmp = height;
+		if (node.left) {
+			tmp = Math.max(tmp, getHeight(node.left, height + 1));
+		}
+		if (node.right) {
+			tmp = Math.max(tmp, getHeight(node.right, height + 1));
+		}
+		return tmp;
+	}
+	return height;
+}
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
 			<h2>图基本概念</h2>
 			<p>
 				<ul>

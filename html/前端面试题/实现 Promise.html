@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>实现 Promise</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">实现 Promise</h1>
+    </hgroup>
+    <section>
+      <h2>实现基本功能</h2>
+      <p>
+        <ol>
+          <li>new Promise 传入执行函数并立即执行</li>
+          <li>执行函数控制更新 Promise 的状态</li>
+          <li>then / catch 添加回调函数进入队列，若已经是最终态（resolved / rejected）则直接执行</li>
+          <li>当 Promise 状态更新时，执行所有未执行的回调函数队列</li>
+          <li>then 支持链式调用，且每次调用的返回值都是一个新的 Promise</li>
+        </ol>
+        <pre><code class="typescript">
+class MyPromise {
+  static PENDING = 'pending';
+  static RESOLVED = 'resolved';
+  static REJECTED = 'rejected';
+
+  status = MyPromise.PENDING;
+  value = null;
+  reason = null;
+  resolvedQueues = [];
+  rejectedQueues = [];
+
+  constructor(executor) {
+    const resolve = (value) => {
+      if (this.status === MyPromise.PENDING) {
+        this.status = MyPromise.RESOLVED;
+        this.value = value;
+        this.resolvedQueues.forEach(fn => fn(value));
+      }
+    }
+    const reject = (reasone) => {
+      if (this.status === MyPromise.PENDING) {
+        this.status = MyPromise.rejected;
+        this.reason = reason;
+        this.rejectedQueues.forEach(fn => fn(reason));
+      }
+    }
+    executor(resolve, reject);
+  }
+
+  then(onFulfilled, onRejected) {
+    onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : v => v;
+    onRejected = typeof onRejected === 'function' ? onRejected : (reason) => { throw reason };
+    return new MyPromise((resolve, rejected) => {
+      if (this.status === MyPromise.PENDING) {
+        this.resolvedQueues.push(() => {
+          resolve(onFulfilled(this.value));
+        });
+        this.rejectedQueues.push(() => {
+          reject(onRejected(this.reason));
+        });
+      }
+      if (this.status === MyPromise.RESOLVED) {
+        resolve(onFulfilled(this.value));
+      }
+      if (this.status === MyPromise.REJECTED) {
+        reject(onRejected(this.reason));
+      }
+    });
+  }
+}
+const promise = new MyPromise((resolve) => {
+  console.log('new MyPromise');
+  setTimeout(() => {
+    console.log('resolve');
+    resolve('resolve');
+  }, 1000);
+});
+promise.then(data => {
+  console.log('then1: ' + data);
+  return 'then1';
+}).then(data => {
+  console.log('then2: ' + data);
+  return 'then2';
+});
+        </code></pre>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 30分钟，带你实现一个符合规范的 Promise <a href="https://juejin.cn/post/6844904147884441608">https://juejin.cn/post/6844904147884441608</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
