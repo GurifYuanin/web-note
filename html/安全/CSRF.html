@@ -89,8 +89,8 @@
 					<li>Samesite Cookie</li>
 				</ul>
 				<div>
+					<h3>检查 Referer 字段</h3>
 					<p>
-						<h3>检查 Referer 字段</h3>
 						HTTP头中有一个Referer字段，这个字段用以标明请求来源于哪个地址。在处理敏感数据请求时，通常来说，Referer字段应和请求的地址位于同一域名下。<sup>[1]</sup>
 						<pre><code class="php">
 &lt;?php
@@ -105,11 +105,12 @@
 						其局限性是因其完全依赖浏览器发送正确的 Referer 字段。虽然 http
 						协议对此字段的内容有明确的规定，但并无法保证来访的浏览器的具体实现，亦无法保证浏览器没有安全漏洞影响到此字段。并且也存在攻击者攻击某些浏览器，篡改其 Referer 字段的可能。
 					</p>
+					<h3>添加校验 token </h3>
 					<p>
-						<h3>添加校验 token </h3>
 						单凭借 cookies 无法保证是用户本人进行请求操作，此时就需要添加其他不保存在 cookies
 						中的验证条件，通常是一组伪随机数。常规情况下若用户进行转账操作，进入服务器端返回的转账页面时服务器端为其设置了一个伪随机数并添加到表单项中，用户进行提交请求后该伪随机数发送到服务器端，服务器端就可以验证该伪随机数是否正确来阻止
-						CSRF 。<br>
+						CSRF 。
+						<h3>Session 存储 token 方式</h3>
 						银行的转账页面：
 						<pre><code class="html">
 &lt;?php
@@ -140,6 +141,30 @@
 ?&gt;
 						</code></pre>
 					</p>
+					<h3>计算 token 方式</h3>
+					<p>
+						Session 是存储在本机内存的，当使用多主机服务器部署时，或者存在 Session 存储性能时，通常使用另一种方案，token 通过计算生成，比如用户UID + 时间戳 + 随机数，加密后传输给客户端
+						<pre><code class="node">
+const token = Encrypt(`${UserId}:${Date.now()}:${Math.random()}`);
+						</code></pre>
+						当收到浏览器发送的 token 时进行解密，对比里面的信息是否正确
+						<pre><code class="node">
+const hour = 3600 * 1000;
+const [
+	UserId,
+	timestamp,
+	random
+] = Decrypt(token).split(':');
+if (
+	UserId === ctx.request.UserId &&
+	Date.now() - timestamp < hour
+) {
+	// 通过校验
+} else {
+	// 没有通过，拒绝操作
+}
+						</code></pre>
+					</p>
 				</div>
 			</p>
 		</section>
@@ -151,6 +176,9 @@
 				</div>
 				<div>[2] 陈曦明 浅谈CSRF攻击方式 <a
 						href="https://www.cnblogs.com/hyddd/archive/2009/04/09/1432744.html">https://www.cnblogs.com/hyddd/archive/2009/04/09/1432744.html</a>
+				</div>
+				<div>[3] 前端安全系列（二）：如何防止CSRF攻击？ <a
+						href="https://tech.meituan.com/2018/10/11/fe-security-csrf.htmll">https://tech.meituan.com/2018/10/11/fe-security-csrf.htmll</a>
 				</div>
 			</p>
 		</section>

@@ -130,10 +130,10 @@ console.log(n);
       <h2>扁平化数组</h2>
       <p>
         <pre><code class="javascript">
-function flattenDeep(arr, result = []) {
-  if (Array.isArray(arr)) {
+function flatten(arr, depth = 1, result = []) {
+  if (Array.isArray(arr) && depth >= 0) {
     for (const el of arr) {
-      flattenDeep(el, result);
+      flatten(el, depth - 1, result);
     }
   } else {
     result.push(arr);
@@ -168,6 +168,33 @@ const sum = (() => {
 
 console.log(sum(1, 2 ,3).toString());
 console.log(sum(1)(2)(3).toString());
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>isNaN</h2>
+      <p>
+        任何数值除以非数值都会得到 NaN，有以下特性：
+        <ol>
+          <li>NaN 与任何只值都不相等，包括自己</li>
+          <li>任何与 NaN 相关的操作都会得到 NaN</li>
+        </ol>
+        原生的 Number.isNaN 函数实际上判断传入的值是不是以下几种：
+        <ol>
+          <li>NaN</li>
+          <li>undefined</li>
+          <li>对象</li>
+          <li>非数字字符串，比如 "abc123"</li>
+        </ol>
+        这里实现的仅判断是上面第一种，即是否为 NaN：
+        <pre><code class="javascript">
+function isNaN(n) {
+  return n !== n;
+}
+
+function isNaN(n) {
+  return Object.prototype.toString.call(n).toLowerCase() === '[object number]' && n.toString() === 'NaN';
+}
         </code></pre>
       </p>
     </section>

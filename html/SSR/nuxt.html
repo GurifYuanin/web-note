@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>nuxt</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">nuxt</h1>
+    </hgroup>
+    <section>
+      <h2>生命周期</h2>
+      <p>
+        <h3>服务端</h3>
+        <p>
+          <ul>
+            <li>nuxtServerInit：服务端初始化</li>
+            <li>middleware：中间件运行</li>
+            <li>validate()：校验参数</li>
+            <li>asyncData() & fetch()：异步数据处理</li>
+            <li>Render：客户端开始渲染</li>
+          </ul>
+        </p>
+        <h3>服务端和客户端都可执行的钩子</h3>
+        <p>
+          <ul>
+            <li>Vue 实例中的 beforeCreate & created</li>
+          </ul>
+        </p>
+        <h3>客户端</h3>
+        <p>
+          Vue 其他生命周期
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      <div>[1] 这样理解Nuxt的生命周期 <a href="https://blog.csdn.net/baidu_36511315/article/details/118415482">https://blog.csdn.net/baidu_36511315/article/details/118415482</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
