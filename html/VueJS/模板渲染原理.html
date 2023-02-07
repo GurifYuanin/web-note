@@ -140,6 +140,10 @@ class VNode {
           <figure>
             <img src="../../images/nextTick.jpg" alt="">
           </figure>
+          nextTick 的实现：
+          <pre><code class="javascript">
+
+          </code></pre>
         </p>
       </p>
     </section>
@@ -262,6 +266,91 @@ function pushTarget (_target: Watcher) {
           </figure>
         </p>
         <h3>派发更新</h3>
+        <p>
+          当修改数据时，实际上是会触发 dep.notify。
+          <pre><code class="javascript">
+Object.defineProperty(obj, key, {
+  enumerable: true,
+  configurable: true,
+  // ...
+  set: function reactiveSetter (newVal) {
+    const value = getter ? getter.call(obj) : val
+    /* eslint-disable no-self-compare */
+    if (newVal === value || (newVal !== newVal && value !== value)) {
+      return
+    }
+    /* eslint-enable no-self-compare */
+    if (process.env.NODE_ENV !== 'production' && customSetter) {
+      customSetter()
+    }
+    if (setter) {
+      setter.call(obj, newVal)
+    } else {
+      val = newVal
+    }
+    <span class="strong">
+    childOb = !shallow && observe(newVal)
+    dep.notify()
+    </span>
+  }
+})
+          </code></pre>
+          notify 方法则是调用之前依赖收集来的对该属性的订阅者（Watcher 列表），调用每个订阅者的 update 方法。
+          <pre><code class="javascript">
+class Dep {
+  // ...
+  notify () {
+  // stabilize the subscriber list first
+    const subs = this.subs.slice()
+    for (let i = 0, l = subs.length; i < l; i++) {
+      subs[i].update()
+    }
+  }
+}
+          </code></pre>
+          update 方法会把先将自己塞入待执行的任务队列 queue
+          <pre><code class="javascript">
+// src/core/observer/scheduler.js
+...
+queue.push(watcher)
+...
+if (!waiting) {
+  waiting = true
+  nextTick(flushSchedulerQueue)
+}
+          </code></pre>
+          等到 waiting 为 false 时，flushSchedulerQueue 会将 queue 里面的 Watcher 取出来一一执行
+          <pre><code class="javascript">
+// src/core/observer/scheduler.js
+function flushSchedulerQueue () {
+  ...
+  if (watcher.before) {
+    watcher.before()
+  }
+  ...
+  watcher.run()
+  ...
+}
+          </code></pre>
+          watcher.run 实际上就是执行 this.getAndInvoke 方法，而 getAndInvoke 则是先通过 this.get() 得到它当前的值，如果满足以下任一条件会执行 watcher 的回调：
+          <ul>
+            <li>新旧值不等</li>
+            <li>新值是对象类型</li>
+            <li>deep 模式</li>
+          </ul>
+          而上面的 this.get() 则会执行 getter 方法，这个时候就回到了上面的<a href="#模板渲染" target="_self">模板渲染</a>这一节。
+          <pre><code class="javascript">
+updateComponent = () => {
+  vm._update(vm._render(), hydrating)
+}
+          </code></pre>
+        </p>
+        <h3>computed</h3>
+        在创建 computed 属性时，会循环所有计算属性，为每一个属性创建一个 Watcher 对象，通过 defineProperty 监听
+        <ul>
+          <li>在 get 中，（组件挂载前）进行依赖收集</li>
+          <li>在 set 中，执行计算方法</li>
+        </ul>
       </p>
     </section>
     <section>
@@ -586,6 +675,24 @@ newStartVnode = newCh[++newStartIndex]
           <li>创建新节点 E textContent = 'e' 并追加到 DOM 中</li>
         </ol>
         这是因为通过 sameVNode 函数判断会认为<span class="different">旧节点 C</span> 和<span class="different">新节点 F</span>是同一个节点，在循环渲染中会导致后续的节点也进行了 DOM 操作
+      </p>
+    </section>
+    <section>
+      <h2>Keep-Alive</h2>
+      <p>
+        <h3>作用</h3>
+        <p>
+          在组件切换过程中将状态保留在内存中，防止重复渲染DOM，减少加载时间及性能消耗，提高用户体验性。
+          <pre><code class="html">
+&lt;keep-alive&gt;
+  &lt;component v-bind:is="currentTabComponent"&gt;&lt;/component&gt;
+&lt;/keep-alive&gt;
+          </code></pre>
+        </p>
+        <h3>原理</h3>
+        <p>
+          在组件的 created 钩子调用时将需要缓存的 VNode 节点保存在 this.cache 中。当 VNode 的 name 符合缓存条件，就会从 this.cache 中取出之前缓存的 VNode 节点进行渲染。
+        </p>
       </p>
     </section>
     <section class="refer">

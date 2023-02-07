@@ -61,6 +61,47 @@
 			</p>
 		</section>
 		<section>
+			<h2>border-box 应用场景</h2>
+			<p>
+				<h3>防止布局被打乱</h3>
+				<p>
+					当元素存在 padding / border 时同时希望通过 width 控制元素的总宽度，比如下面这个是标准模式（content-box），元素的最右侧溢出了
+					<div class="show">
+						<div style="background-color: white; border: solid 1px red;">
+							<div style="width: 100%; padding: 5px; background-color: black;">111</div>
+						</div>
+					</div>
+					<pre><code class="html">
+&lt;div style="background-color: white; border: solid 1px red;"&gt;
+	&lt;div style="width: 100%; padding: 5px; background-color: black;"&gt;111&lt;/div&gt;
+&lt;/div&gt;
+					</code></pre>
+					怪异模式（box-sizing）下表现符合预期：
+					<div class="show">
+						<div style="background-color: white; border: solid 1px red;">
+							<div style="width: 100%; padding: 5px; background-color: black; box-sizing: border-box;">111</div>
+						</div>
+					</div>
+					<pre><code class="html">
+&lt;div style="background-color: white; border: solid 1px red;"&gt;
+	&lt;div style="width: 100%; padding: 5px; background-color: black; box-sizing: border-box;"&gt;111&lt;/div&gt;
+&lt;/div&gt;
+					</code></pre>
+				</p>
+				<h3>减少计算操作</h3>
+				<p>
+					常用于组件实现，比如在设计稿中一个按钮的宽度是 22px， 通过计算 CSS 样式需要设置为 width（16px） + padding（2px + 2px） + border（1px + 1px）
+					<pre><code class="html">
+&lt;button style="width: 16px; padding: 2px; border: solid 1px black;"&gt;&lt;/button&gt;
+					</code></pre>
+					如果使用怪异模式，可以直接给 width 赋值 22px，后续改动 padding / border 也不用进行重新计算
+					<pre><code class="html">
+&lt;button style="width: 22px; padding: 2px; border: solid 1px black; box-sizing: border-box;"&gt;&lt;/button&gt;
+					</code></pre>
+				</p>
+			</p>
+		</section>
+		<section>
 			<h2>其他</h2>
 			<p>
 				<div>

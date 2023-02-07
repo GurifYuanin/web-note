@@ -246,12 +246,6 @@ new Vue({
 					<img src="../../images/vue_computed_error.jpg">
 					<figcaption> {{getMessage()}} </figcaption>
 				</figure>
-				<h3>原理</h3>
-				在创建 computed 属性时，会循环所有计算属性，为每一个属性创建一个 Watch 对象，通过 defineProperty 监听
-				<ul>
-					<li>在 get 中，（组件挂载前）进行依赖收集</li>
-					<li>在 set 中，执行计算方法</li>
-				</ul>
 			</p>
 		</section>
 		<section>
