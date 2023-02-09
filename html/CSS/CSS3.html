@@ -1038,44 +1038,6 @@ stretch...
 			</p>
 		</section>
 		<section>
-			<h2>flex应用</h2>
-			<p>
-				<h3>水平垂直居中</h3>
-				<p>
-					通过设置 justify-content 和 align-items 属性来让唯一的子元素在 flex 容器内水平垂直居中。
-					<pre><code class="html">
-&lt;div style="<span class="strong">display: flex; justify-content: center; align-items: center;</span> height: 200px; width: 200px; background-color: gray">
-	&lt;div style="background-color: black; color: white;">水平垂直居中元素&lt;/div>
-&lt;/div>
-					</code></pre>
-					<div class="show">
-						<div
-							style="display: flex; justify-content: center; align-items: center; height: 200px; width: 200px; background-color: gray">
-							<div style="background-color: black; color: white;">水平垂直居中元素</div>
-						</div>
-					</div>
-				</p>
-				<h3>水平方向自适应</h3>
-				<p>
-					有时需要实现一个布局：单列，3 个元素，左右元素是固定宽度（比如 200px），中间元素自适应宽度。
-					<pre><code class="html">
-&lt;div style="display: flex;">
-	&lt;div style="width: 200px; background-color: #888; color: white;">200px&lt;/div>
-	&lt;div style="<span class="strong">flex-grow: 1;</span> background-color: #222; color: white;">自适应&lt;/div>
-	&lt;div style="width: 200px; background-color: #888; color: white;">200px&lt;/div>
-&lt;/div>
-					</code></pre>
-					<div class="show">
-						<div style="display: flex;">
-							<div style="width: 200px; background-color: #888; color: white;">200px</div>
-							<div style="flex-grow: 1; background-color: #222; color: white;">自适应</div>
-							<div style="width: 200px; background-color: #888; color: white;">200px</div>
-						</div>
-					</div>
-				</p>
-			</p>
-		</section>
-		<section>
 			<h2>calc</h2>
 			<p>
 				calc 可以对不同单位的数值进行计算，支持加减乘除操作。

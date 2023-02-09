@@ -30,7 +30,9 @@
       <p>
         <pre><code class="javascript">
 function cloneDeep(obj, hash = new WeakMap()) {
-  if (Object.prototype.toString.call(obj).toLowerCase() === '[object object]') {
+  if (obj === null) {
+    return obj
+  } else if (typeof obj === 'object') {
     // hash 用于避免循环调用
     if (hash.has(obj)) {
       return hash.get(obj);

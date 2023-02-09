@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>三数和</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">三数和</h1>
+    </hgroup>
+    <section>
+      <h2>问题描述</h2>
+      <p>
+        给定一个数组，数组内的值都是数组（存在重复值），取出三个数使其相加等于 0，即<span class="different">a + b + c = 0</span>。
+        <pre><code class="javascript">
+const nums = [ -1, 0, 1, 2, -1, -4 ];
+// 答案为：[ [-1, -1, 2], [-1, 0, -1] ]
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>双指针解法</h2>
+      <p>
+        <pre><code class="javascript">
+function treeSum(nums) {
+  const result = [];
+  // 1. 排序
+  const sortedNums = nums.slice(0).sort();
+  const { length } = sortedNums;
+  // 2. 双指针
+  for (let i = 0; i < length; i++) {
+    const n = sortedNums[i];
+    // 如果当前值就大于 0 了，因为是升序数组，所以后面两个数比当前值大，三数相加也必然大于 0
+    if (n > 0) {
+      break;
+    }
+    let left = i + 1;
+    let right = length - 1
+    while(left < right) {
+      const leftNum = sortedNums[left];
+      const rightNum = sortedNums[right];
+      const sum = n + leftNum + rightNum;
+      if (sum === 0) {
+        // 三数和等于 0，则得到一组解，跳出循环
+        result.push([
+          n,
+          leftNum,
+          rightNum
+        ]);
+        break;
+      } else if (sum < 0) {
+        // 三数和小于 0，说明 leftNum + rightNum 太小，需要让 left 往右移
+        while(sortedNums[left] === leftNum) {
+          left++;
+        }
+      } else {
+        // 三数和大于 0，说明 leftNum + rightNum 太大，需要让 right 往左移
+        while(sortedNums[right] === rightNum) {
+          right--;
+        }
+      }
+    }
+  }
+  return result;
+}
+console.log(treeSum(nums));
+        </code></pre>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 标题 <a href="链接">链接</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

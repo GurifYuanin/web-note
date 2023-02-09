@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>打包工具对比</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">打包工具对比</h1>
+    </hgroup>
+    <section>
+      <h2>主流打包工具</h2>
+      <p>
+        <table>
+          <tr>
+            <th>名字</th>
+            <th>使用场景</th>
+            <th>原理</th>
+            <th>是否支持 Tree-Shaking</th>
+            <th>是否支持 HMR</th>
+            <th>构建基于</th>
+            <th>优劣势</th>
+          </tr>
+          <tr>
+            <td>webpack</td>
+            <td>打包项目</td>
+            <td>分析各个模块依赖进行编译</td>
+            <td>支持（效果不好）</td>
+            <td>支持</td>
+            <td>nodejs</td>
+            <td>
+              <ul>
+                <li>优势：生态完善</li>
+                <li>劣势：随着模块的增多，打包的体积变大，造成热更新速度变慢</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>rollup</td>
+            <td>打包库</td>
+            <td></td>
+            <td>支持</td>
+            <td>不支持（需要插件）</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>vite</td>
+            <td>打包项目</td>
+            <td>基于浏览器自带的 ESM 功能</td>
+            <td>支持</td>
+            <td>支持，按需编译</td>
+            <td>Esbuild（Go 实现）预构建（即将 CommonJS 模块转为 ESM）</td>
+            <td>
+              <ul>
+                <li>优点：打包快</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>Parcel</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </p>
+    </section>
+    <section>
+      <h2>为什么用 rollup 打包库而不用 webpack</h2>
+      <p>
+        <h3>原因</h3>
+        <p>
+          <ul>
+            <li>rollup 打包产物通常比 webpack 小，因为webpack 的打包产物会带有很多 __webpack_require__ 工具函数</li>
+            <li>rollup 对 Tree-Shaking 支持更好</li>
+          </ul>
+        </p>
+        <h3>__webpack_require__ 是什么</h3>
+        <p>
+          __webpack_require__ 是一个函数，上面还挂了一些工具方法：
+          <ul>
+            <li>__webpack_require__(moduleId)：加载模块代码并进行缓存</li>
+            <li>
+              __webpack_require__.r(exports)：将传入的模块标记为 ES 模块，相当于给模块加上 Symbol.toStringTag 属性
+              <pre><code class="javascript">
+class MyModule {
+  get [Symbol.toStringTag]() {
+    return "MyModule";
+  }
+}
+// 在 toString 时就能读到该属性
+Object.prototype.toString.call(new MyModule()); // "[object MyModule]"
+              </code></pre>
+            </li>
+            <li>​__webpack_require__​.d(require, moduleName, getModule)：提供 Getter 给导出的方法、变量</li>
+          </ul>
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] rollup 比 webpack 更适合打包库 <a href="http://events.jianshu.io/p/a45ca167ebef">http://events.jianshu.io/p/a45ca167ebef</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

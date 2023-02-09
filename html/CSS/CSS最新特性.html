@@ -28,16 +28,134 @@
     <section>
       <h2>选择器</h2>
       <p>
-        <h3>:has()</h3>
+        <h3>伪类</h3>
         <p>
+          <h4>:has()</h4>
+          根据其后代选择一个元素。比如下面的例子中，只有第二个 section 中的 b.jpg 图片样式生效
+          <pre><code class="html">
+&lt;section&gt;
+  &lt;img src="a.jpg" alt=""&gt;
+&lt;/section&gt;
+&lt;section&gt;
+  &lt;h2&gt;Title&lt;/h2&gt;
+  &lt;img src="b.jpg" alt=""&gt;
+&lt;/section&gt;
+&lt;style&gt;
+  section:has(h2) img {
+    border: solid 1px black;
+  }
+&lt;/style&gt;
+          </code></pre>
+          <h4>:is() / :where()</h4>
+          这两个伪类用来选择多个选择器，比如下面的情况是等价的：
+          <pre><code class="css">
+.class1 div,
+.class2 div {}
+:is(.class1, .class2) div {}
+:where(.class1, class2) div {}
+          </code></pre>
+          :is() 和 :where() 的不同点在于其选择器权重不同：
+          <ul>
+            <li>is：括号中的选择器列表中最高优先级</li>
+            <li>where：总是 0</li>
+          </ul>
+        </p>
+        <h3>层叠层</h3>
+        <p>
+          层叠层可以使用 @layer 来对多个选择器进行分组，组与组之间存在优先级关系，后面的组会覆盖前面组的样式。
+          <pre><code class="css">
+@layer reset, base, theme;
+@layer reset {
+  body {
+    padding: 0;
+    margin: 0;
+  }
+}
+@layer base {
+  h1 {
+    font-size: 22px;
+    color: #222;
+  }
+}
+@layer theme {
+  h1 {
+    color: #333;
+  }
+}
+          </code></pre>
+        </p>
+        <h3>嵌套</h3>
+        <p>
+          <pre><code class="css">
+.card {
+  & h2 {
+    color: blue;
+  }
+  &:hover {
+    color: red;
+  }
+}
+          </code></pre>
+          等价于预处理器中
+          <pre><code class="css">
+.card {
+  h2 {
+    color: blue;
+  }
+  &:hover {
+    color: red;
+  }
+}
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>表达式</h2>
+      <p>
+        <h3>@when/@else</h3>
+        <p>
+          通过 @when/@else 来写类似于 if/else 的条件规则。
+          <pre><code class="css">
+@when media(min-width: 30em) and supports(display: subgrid) {
 
+} @else {
+
+}
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>颜色</h2>
+      <p>
+        <h3>配色方案</h3>
+        <p>
+          color-scheme 属性允许元素指示配色方案，配合选择器在指定范围生效，比如通过伪类 :root 让整个页面都生效。
+          <pre><code class="css">
+:root {
+  accent-color: lime;
+}
+          </code></pre>
+        </p>
+        <h3>生成颜色</h3>
+        <p>
+          提供了更多定义颜色的方式：
+          <ul>
+            <li>hwb()：色相、白度、黑度</li>
+            <li>lab()：亮度、a 值、b 值</li>
+            <li>lch()：亮度、色度、色调</li>
+            <li>color-mix()：将两种颜色混合在一起</li>
+            <li>color-contrast()：从颜色列表中，输出第一个相比对比度最高的颜色</li>
+            <li>color()：指定不同颜色空间中的颜色</li>
+          </ul>
         </p>
       </p>
     </section>
     <section class="refer">
       <h2>参考文献</h2>
       <p>
-      <div>[1] 标题 <a href="链接">链接</a></div>
+        <div>[1] 2022年你不应该错过的CSS新特性 <a href="https://www.51cto.com/article/703498.html">https://www.51cto.com/article/703498.html</a></div>
       </p>
     </section>
   </div>

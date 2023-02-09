@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>CSS常见题目</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">CSS常见题目</h1>
+    </hgroup>
+    <section>
+      <h2>自适应宽度</h2>
+      <p>
+        实现这样一个布局：单行三列，左右元素是固定宽度（比如 200px），中间元素自适应宽度。
+        <h3>flex</h3>
+        <p>
+          使用 flex-grow: 1 来让中间元素自动撑开。
+          <pre><code class="html">
+&lt;div style="display: flex;">
+  &lt;div style="width: 200px; background-color: #888; color: white;">200px&lt;/div>
+  &lt;div style="<span class="strong">flex-grow: 1;</span> background-color: #222; color: white;">自适应&lt;/div>
+  &lt;div style="width: 200px; background-color: #888; color: white;">200px&lt;/div>
+&lt;/div>
+          </code></pre>
+          <div class="show">
+            <div style="display: flex;">
+              <div style="width: 200px; background-color: #888; color: white;">200px</div>
+              <div style="flex-grow: 1; background-color: #222; color: white;">自适应</div>
+              <div style="width: 200px; background-color: #888; color: white;">200px</div>
+            </div>
+          </div>
+        </p>
+        <h3>calc</h3>
+        <p>
+          通过 css 的 calc 计算出中间元素的宽度。
+          <pre><code class="html">
+&lt;div style="display: flex;"&gt;
+  &lt;div style="width: 200px; background-color: #888; color: white;"&gt;200px&lt;/div&gt;
+  &lt;div style="<span class="strong">width: calc(100% - 400px);</span> background-color: #222; color: white;"&gt;自适应&lt;/div&gt;
+  &lt;div style="width: 200px; background-color: #888; color: white;"&gt;200px&lt;/div&gt;
+&lt;/div&gt;
+          </code></pre>
+          <div class="show">
+            <div style="display: flex;">
+              <div style="width: 200px; background-color: #888; color: white;">200px</div>
+              <div style="width: calc(100% - 400px); background-color: #222; color: white;">自适应</div>
+              <div style="width: 200px; background-color: #888; color: white;">200px</div>
+            </div>
+          </div>
+        </p>
+        <h3>网格布局</h3>
+        <p>
+          与 flex 实现思路类似，fr 表示剩下空间的等分数。
+          <pre><code class="html">
+&lt;div style="display: grid; grid-template-columns: 200px 1fr 200px"&gt;
+  &lt;div style="background-color: #888; color: white;"&gt;200px&lt;/div&gt;
+  &lt;div style="background-color: #222; color: white;"&gt;自适应&lt;/div&gt;
+  &lt;div style="background-color: #888; color: white;"&gt;200px&lt;/div&gt;
+&lt;/div&gt;
+          </code></pre>
+          <div class="show">
+            <div style="display: grid; grid-template-columns: 200px 1fr 200px">
+              <div style="background-color: #888; color: white;">200px</div>
+              <div style="background-color: #222; color: white;">自适应</div>
+              <div style="background-color: #888; color: white;">200px</div>
+            </div>
+          </div>
+        </p>
+        <h3>js 计算宽度</h3>
+        <p>
+          <pre><code class="html">
+  &lt;div id="js-container" style="display: flex;"&gt;
+    &lt;div style="width: 200px; background-color: #888; color: white;"&gt;200px&lt;/div&gt;
+    &lt;div id="js-div" style="background-color: #222; color: white;"&gt;自适应&lt;/div&gt;
+    &lt;div style="width: 200px; background-color: #888; color: white;"&gt;200px&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+    const containerEl = document.getElementById('js-container');
+    const divEl = document.getElementById('js-div');
+    const { width } = containerEl.getBoundingClientRect();
+    divEl.style.width = width - 400 + 'px';
+  &lt;/script&gt;
+          </code></pre>
+          <div class="show">
+            <div id="js-container" style="display: flex;">
+              <div style="width: 200px; background-color: #888; color: white;">200px</div>
+              <div id="js-div" style="background-color: #222; color: white;">自适应</div>
+              <div style="width: 200px; background-color: #888; color: white;">200px</div>
+            </div>
+            <script>
+              const containerEl = document.getElementById('js-container');
+              const divEl = document.getElementById('js-div');
+              const { width } = containerEl.getBoundingClientRect();
+              divEl.style.width = width - 400 + 'px';
+            </script>
+          </div>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>自适应对齐</h2>
+      <p>
+        当只有一行文本时，居中对齐，当大于等于两行时，左对齐。
+        <pre><code class="css">
+.auto-align {
+  text-align: center;
+  text-align-last: left;
+}
+        </code></pre>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 标题 <a href="链接">链接</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

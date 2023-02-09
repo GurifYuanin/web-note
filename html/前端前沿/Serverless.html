@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Serverless</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">Serverless</h1>
+    </hgroup>
+    <section>
+      <h2>是什么</h2>
+      <p>
+        让用户不需要关注运行的各种资源（计算、存储），也不需要对其进行配置维护，只关注业务逻辑与构建，提高交付效率。
+      </p>
+    </section>
+    <section>
+      <h2>特点</h2>
+      <p>
+        <h3>访问量不确定</h3>
+        <p>
+          因为不同的服务访问量不一定相同，所以：
+          <ul>
+            <li>按需加载：当有请求访问时，服务会自动启动，当一段时间服务不被使用时，服务将被关闭等待下次调用</li>
+            <li>动态扩缩容：根据访问量动态调整服务实例</li>
+          </ul>
+        </p>
+        <h3>多主机</h3>
+        <p>
+          因为应用不在特定的某台服务器上启动，所以：
+          <ul>
+            <li>状态非持久化：服务器节点不会保存应用的状态</li>
+            <li>非会话保持：每次请求可能访问到不同的服务器节点，所以同一个客户端的多次请求无法保证请求到同一个服务器实例上</li>
+          </ul>
+        </p>
+        <h3>实现方式</h3>
+        <p>
+          由于函数本身是无状态的，无法保存状态或会话，所以应用可以被拆分为多个细粒度的函数，通过函数建的编排调度完成业务逻辑。
+        </p>
+        <h3>依赖服务</h3>
+        <p>
+          提供第三方工具，如消息队列、数据库、缓存等。
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>使用场景</h2>
+      <p>
+        <h3>FaaS</h3>
+        <p>
+          Function as a Serice，函数即服务。将应用分解为多个函数服务，通过多个函数之间的编排调度完成业务逻辑，应用运行所需的底层服务资源由平台统一管理。
+        </p>
+        <h3>Baas</h3>
+        <p>
+          Backend as a Service，后台即服务。通过 BaaS平台可以将数据库、文件存储和消息队列等第三方工具服务化，让用户以 API 的形式进行访问，按照使用量进行付费。
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] Serverless 入门介绍 <a href="https://zhuanlan.zhihu.com/p/466817569">https://zhuanlan.zhihu.com/p/466817569</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

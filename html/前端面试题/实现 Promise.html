@@ -28,12 +28,18 @@
     <section>
       <h2>实现基本功能</h2>
       <p>
+        实现以下特性：
         <ol>
           <li>new Promise 传入执行函数并立即执行</li>
-          <li>执行函数控制更新 Promise 的状态</li>
-          <li>then / catch 添加回调函数进入队列，若已经是最终态（resolved / rejected）则直接执行</li>
-          <li>当 Promise 状态更新时，执行所有未执行的回调函数队列</li>
-          <li>then 支持链式调用，且每次调用的返回值都是一个新的 Promise</li>
+          <li>执行函数控制更新 Promise 的状态，状态只能是 pending -> resolved 或者 pending -> rejected，单向不可逆</li>
+          <li>then / catch 添加回调函数进入队列，若当前 Promise 已经是最终态（resolved / rejected）则直接执行</li>
+          <li>当 Promise 状态更新时，顺序执行所有未执行的回调函数队列</li>
+          <li>then 支持链式调用，若 then 的回调函数返回的是
+            <ul>
+              <li>普通值，则封装为 Promise 返回</li>
+              <li>Promise，则调用 .then 拿到结果值（若结果值还是 Promise，则递归使用 .then），封装为 Promise 返回</li>
+            </ul>
+          </li>
         </ol>
         <pre><code class="typescript">
 class MyPromise {

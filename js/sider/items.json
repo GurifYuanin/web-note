@@ -9,9 +9,7 @@
     "表单元素",
     "canvas",
     "svg",
-    "cookie",
-    "Web Component",
-    "ServiceWorker"
+    "cookie"
   ],
   [
     "选择器",
@@ -28,6 +26,7 @@
     "颜色和长度",
     "认识 CSS 的百分比",
     "主题色替换方案",
+    "网格布局",
     "CSS最新特性"
   ],
   [
@@ -84,13 +83,14 @@
     "安装",
     "实例",
     "模板",
-    "模板渲染原理",
     "组件",
     "数据通信",
     "mixins",
     "vue-router",
     "vuex",
-    "vue3"
+    "vue3",
+    "vue2原理",
+    "vue3原理"
   ],
   [
     "合成事件",
@@ -99,6 +99,7 @@
     "react hooks"
   ],
   [
+    "SSR汇总",
     "nuxt"
   ],
   [
@@ -112,7 +113,8 @@
     "响应式图片",
     "viewport",
     "移动端适配",
-    "1px"
+    "1px",
+    "300ms 问题"
   ],
   [
     "浏览器渲染",
@@ -130,14 +132,20 @@
     "htaccess"
   ],
   [
-    "微前端"
+    "ServiceWorker",
+    "Web Component",
+    "微前端",
+    "Serverless",
+    "GraphQL"
   ],
   [
     "plimit",
     "常见工具函数",
     "请求缓存器",
     "进制转换",
-    "实现 Promise"
+    "实现 Promise",
+    "Case解决方案",
+    "CSS常见题目"
   ],
   [
     "Fiddler",
@@ -146,7 +154,8 @@
     "sublime 插件",
     "VSCode",
     "npm",
-    "pnpm"
+    "pnpm",
+    "打包工具对比"
   ],
   [
     "HTTP",
@@ -187,6 +196,9 @@
     "队列和栈",
     "哈希",
     "算法题编程规范"
+  ],
+  [
+    "三数和"
   ],
   [
     "shell 指令",

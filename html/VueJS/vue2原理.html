@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>模板渲染原理</title>
+  <title>vue2原理</title>
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/styles/agate.css">
   <link rel="stylesheet" href="../../css/dark.css">
@@ -23,7 +23,7 @@
   </div>
   <div id="container">
     <hgroup>
-      <h1 id="title">模板渲染原理</h1>
+      <h1 id="title">vue2原理</h1>
     </hgroup>
     <section>
       <h2>模板编译</h2>
@@ -43,7 +43,7 @@
           <li>解析模板（比如使用正则表达式匹配<span class="different">&lt;</span>、<span class="different">&gt;</span>等），将模板进行语法分析，构建 AST（Abstract Syntax Tree / 抽象语法树）</li>
           <li>优化 AST，方便后续虚拟 DOM 的更新</li>
           <li>
-            将 AST 转化为可执行代码（render 函数），代码执行后生成虚拟 DOM 树，比如：
+            将 AST 转化为可执行代码（render 函数），代码执行（new Function）后生成虚拟 DOM 树，比如：
             <pre><code class="javascript">
 `
   with(this) {
@@ -189,16 +189,16 @@ function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
-  const dep = new Dep()
+  <span class="strong">const dep = new Dep()</span> // 为当前属性创建一个 Dep
   ...
-  let childOb = !shallow && observe(val)
+  let childOb = !shallow && observe(val) // 如果当前属性值是一个对象，则进行递归
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
-        <span class="strong">dep.depend()</span>
+        <span class="strong">dep.depend()</span> // 读取属性时进行依赖收集
         if (childOb) {
           <span class="strong">childOb.dep.depend()</span>
           if (Array.isArray(value)) {
@@ -232,7 +232,7 @@ class Dep {
   }
 }
           </code></pre>
-          Dep.target 是一个静态属性，创建 Vue 实例时会配套创建一个 Watcher 实例，Watcher 在初始化时会对 Dep.target 进行赋值
+          Dep.target 是一个静态属性，创建 Vue 实例时会给每个实例配套创建一个 Watcher 实例（称为渲染 Watcher），而在 new Watcher 时就会对 Dep.target 进行赋值
           <pre><code class="typescript">
 class Watcher {
   onstructor (
@@ -260,10 +260,47 @@ function pushTarget (_target: Watcher) {
   Dep.target = _target
 }
           </code></pre>
-          而在通过 _render 方法首次渲染 VNode 时，就会访问到 data（数据对象）上的 getter，从而完成上面的依赖收集。后续访问 getter 时 Watcher 则会通过判断避免重复收集。
+          创建 Vue 实例时，会调用 _render 方法构建 VNode，这时就会访问到 data（数据对象）上的 getter，从而完成上面的依赖收集。后续访问 getter 时 Watcher 则会通过判断避免重复收集。
           <figure>
             <img src="../../images/vue_dep_collect.jpg" alt="">
           </figure>
+        </p>
+        <h3>依赖收集例子</h3>
+        <p>
+          我们知道，父子组件创建时的声明周期钩子执行顺序为：
+          <ol>
+            <li>父 beforeCreate</li>
+            <li>父 created</li>
+            <li>父 beforeMount</li>
+            <li>子 beforeCreate</li>
+            <li>子 created</li>
+            <li>子 beforeMount</li>
+            <li>子 mounted</li>
+            <li>父 mounted</li>
+          </ol>
+          所以当父通过 props 传给子数据时，比如
+          <pre><code class="vue">
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;span&gt;{{ message }}&lt;/span&gt;
+    &lt;ChildComponent :message="message"&gt;&lt;/ChildComponent&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+  export default {
+    data() {
+      return {
+        message: 'Hello World'
+      };
+    }
+  }
+&lt;/script&gt;
+          </code></pre>
+          依赖收集的顺序为：
+          <ol>
+            <li>父组件创建 Vue 实例时 new Watcher，构建 VNode 触发 getter，这时候 Dep.target 为该父 Watcher，将父 Watcher 添加的 message（Dep）的订阅者列表中</li>
+            <li>子组件创建 Vue 实例时 new Watcher，构建 VNode 触发 geter，这时候 Dep.target 变成了子 Watcher，添加到 message（Dep）的订阅者列表中。</li>
+          </ol>
         </p>
         <h3>派发更新</h3>
         <p>
@@ -345,7 +382,11 @@ updateComponent = () => {
 }
           </code></pre>
         </p>
-        <h3>computed</h3>
+      </p>
+    </section>
+    <section>
+      <h2>computed 原理</h2>
+      <p>
         在创建 computed 属性时，会循环所有计算属性，为每一个属性创建一个 Watcher 对象，通过 defineProperty 监听
         <ul>
           <li>在 get 中，（组件挂载前）进行依赖收集</li>
