@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>GraphQL</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">模板</h1>
+    </hgroup>
+    <section>
+      <h2>是什么</h2>
+      <p>
+        GraphQL 是：
+        <ul>
+          <li>API 查询语言，同时是在不断发展的规范</li>
+          <li>编程语言无关的执行引擎</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>查询语言</h2>
+      <p>
+        <h3>请求格式</h3>
+        <p>
+          请求 method 方法并要求返回的结构只需要 field1, field2, ... 字段
+          <div class="command">https://www.example.com/path/to?query={method{field1, field2, ...}}</div>
+        </p>
+        <h3>响应配置</h3>
+        在 nodejs 中使用 GraphQL + express 启动一个服务器：
+        <pre><code class="javascript">
+// index.js
+const express = require('express');
+const { graphqlHTTP } = require('express-graphql');
+const schema = require('./schema');
+
+const app = express();
+app.use('/path/to', graphqlHTTP({
+  schema,
+  graphiql: true
+}));
+app.listen(80);
+        </code></pre>
+        <pre><code class="javascript">
+const {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLSchema,
+} = require('graphql');
+// schema.js
+const GetUserInfo = new GraphQLObjectType({
+  name: 'GetUserInfo',
+  fields: () => ({
+    id: { type: GraphQLString },
+    name: { type: GraphQLString }
+  })
+});
+module.exports = new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: 'index',
+    fields: {
+      getUserInfo: {
+        type: GetUserInfo,
+        args: {},
+        resolve(parent, args) {
+          return {
+            id: 1,
+            name: '张三'
+          };
+        }
+      }
+    }
+  })
+})
+        </code></pre>
+        当访问 http://localhost/path/to?query={getUserInfo{name}} 时查到的结果为
+        <pre><code class="javascript">
+{
+  data: {
+    getUserInfo: {
+      name: '张三'
+    }
+  }
+}
+        </code></pre>
+        可以看到，使用 GraphQL 主要用于接口交互，可以做到：
+        <ul>
+          <li>声明式获取：客户端自由筛选服务端事先定好的数据类型，只获取需要的字段</li>
+          <li>定义操作：在声明返回数据时，将部分执行逻辑交给 GrapQL 去自动完成</li>
+          <li>健壮性：强类型</li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>执行引擎</h2>
+      <p></p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 关于graphql快速入门 <a href="https://blog.csdn.net/wu_xianqiang/article/details/113445612">https://blog.csdn.net/wu_xianqiang/article/details/113445612</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

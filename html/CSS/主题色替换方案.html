@@ -152,7 +152,7 @@ module.exports = {
         </p>
         <h3>选择器</h3>
         <p>
-          不同主题样式写在一个文件，通过选择器进行区分
+          不同主题样式写在一个文件，通过选择器进行区分使用哪一套主题
           <pre><code class="vue">
 &lt;!-- index.vue --&gt;
 &lt;template&gt;
@@ -187,6 +187,28 @@ module.exports = {
 }
 &lt;/style&gt;
           </code></pre>
+        </p>
+        <h3>层叠层</h3>
+        <p>
+          CSS 2022 允许使用 @layer 来对多个选择器进行分组，组与组之间存在优先级关系，后面的组会覆盖前面组的样式，比如下面这种情况 dark 主题会覆盖掉 bright 主题。
+          <pre><code class="css">
+@layer bright, dark;
+@layer bright {
+  .title {
+    color: black;
+    background-color: white;
+  }
+}
+@layer dark {
+  .title {
+    color: white;
+    background-color: black;
+  }
+}
+          </code></pre>
+          <div class="tip">
+            注意这种方式不是替换而是覆盖，所以需要保证每个 css 属性都能覆盖到。
+          </div>
         </p>
       </p>
     </section>

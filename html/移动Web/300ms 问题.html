@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>300ms 问题</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">300ms 问题</h1>
+    </hgroup>
+    <section>
+      <h2>问题介绍</h2>
+      <p>
+        在移动端，因为允许用户进行双击缩放（doble tap to zoom），所以用户在第一次点击屏幕的时候，并不会马上触发 click 事件，而是等到 300ms 后，若没有进行第二次点击，才触发 click，由此产生 300ms 延迟问题。
+      </p>
+    </section>
+    <section>
+      <h2>解决方案</h2>
+      <p>
+        <h3>禁用双击缩放</h3>
+        <p>
+          通过 width=device-width 修改默认视口的宽度，浏览器就会认为这是个响应式页面，从而禁用双击缩放操作。
+          <pre><code class="html">
+&lt;meta name="viewport" content="width=device-width" /&gt;
+          </code></pre>
+        </p>
+        <h3>禁用所有缩放操作</h3>
+        <p>
+          通过 user-scalable=no 禁用所有缩放操作（包括双击缩放与双指缩放）。
+          <pre><code class="html">
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" /&gt;
+          </code></pre>
+        </p>
+        <h3>zepto</h3>
+        <p>
+          zepto 使用 touchend 来模拟 click 事件，但会产生点击穿透问题。
+        </p>
+        <h3>fastclick</h3>
+        <p>
+          fastclick 也是使用 touchend 模拟 click 事件，但同时会通过 DOM 自定义事件立即出发模拟一个 click 事件，把浏览器在 300ms 后的 click 事件阻止掉。
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 移动端H5网页开发常见问题 <a href="https://juejin.cn/post/7055599228478816270#heading-40">https://juejin.cn/post/7055599228478816270#heading-40</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
