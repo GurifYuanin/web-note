@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>概念汇总</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">概念汇总</h1>
+    </hgroup>
+    <section>
+      <h2>混合应用</h2>
+      <p>
+        <h3>Weex</h3>
+        <h3>ReactNative</h3>
+        <p>
+          ReactNative 的架构模型由三部分构成：
+          <ul>
+            <li>JS 层：负责构建虚拟 DOM、解析并执行 Javascript 代码</li>
+            <li>C++ 层：衔接前端和原生平台（使用 JavaScriptCore 解析 JavaScript 代码，通过 MessageQueue.js 实现双向通信）</li>
+            <li>Native（Java 或 Objective）：负责原生交互通信</li>
+          </ul>
+          <figure>
+            <img src="../../images/react_native_model.png" alt="">
+          </figure>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>桌面应用</h2>
+      <p>
+        桌面平台制作应用程序。
+        <h3>Electron</h3>
+        <h3>Tauri</h3>
+      </p>
+    </section>
+    <section>
+      <h2>SSR</h2>
+      <p>
+        <h3>Vue</h3>
+        <p>
+          <ul>
+            <li>Nuxt.js</li>
+          </ul>
+        </p>
+        <h3>React</h3>
+        <p>
+          <ul>
+            <li>Next.js</li>
+          </ul>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>打包工具</h2>
+      <p>
+        <h3>Vite</h3>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] ReactNative 跨平台的实现 <a href="https://www.reactnative.cn/architecture/xplat-implementation">https://www.reactnative.cn/architecture/xplat-implementation</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

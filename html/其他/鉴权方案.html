@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>鉴权方案</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">鉴权方案</h1>
+    </hgroup>
+    <section>
+      <h2>jwt</h2>
+      <p>
+        <h3>是什么</h3>
+        <p>
+          JWT（JSON Web Token），本质就是一个字符串书写规范，它包含了三部分：
+          <ul>
+            <li>Header：源格式为 JSON，进行 Base64 编码。保存了 jwt 生成的算法</li>
+            <li>Payload：源格式为 JSON，进行了 Base64 编码。保存了用户信息，比如 UserId 和 UserName</li>
+            <li>Signature：对 Base64 编码后的 Header 和 Payload 进行字符串连接，中间用 . 隔开，然后用秘钥使用 Header 规定的算法进行生成签名</li>
+          </ul>
+        </p>
+        <h3>如何生成 jwt</h3>
+        <p>
+          首先需要先定义一些工具函数：
+          <pre><code class="nodejs">
+const CryptoJS = require('crypto-js');
+
+// 将任意对象进行 base64 编码
+function encodeBase64(source) {
+  const value = Object.prototype.toString.call(source).toLowerCase() === '[object object]' ? JSON.stringify(source) : source;
+  const encodedWord = CryptoJS.enc.Utf8.parse(value);
+  const encoded = CryptoJS.enc.Base64.stringify(encodedWord);
+  return encoded;
+}
+
+// 将字符串进行 base64 解码
+function decodeBase64(source) {
+  const encodedWord = CryptoJS.enc.Base64.parse(source);
+  const decoded = CryptoJS.enc.Utf8.stringify(encodedWord);
+  try {
+    const obj = JSON.parse(decoded);
+    return obj;
+  } catch (error) {
+    return decoded;
+  }
+}
+          </code></pre>
+          定义业务需要的 header 和 payload，并在服务端创建一个秘钥
+          <pre><code class="nodejs">
+const header = {
+  alg: 'HS256', // 声明签名算法
+  typ: 'JWT' // 可选，默认字段
+};
+
+const payload = {
+  id: '123456', // 用户 ID
+  name: '张三', // 用户名
+  iat: Date.now() // 生成 jwt 的时间戳
+};
+
+const secretKey = '123';
+          </code></pre>
+          生成 jwt 并返回给客户端
+          <pre><code class="nodejs">
+const CryptoJS = require('crypto-js');
+
+const prefix = `${encodeBase64(header)}.${encodeBase64(payload)}`
+const token = `${prefix}.${
+  encodeBase64(
+    CryptoJS.SHA256(prefix, secretKey)
+  )
+}`;
+          </code></pre>
+          <h3>客户端发送 jwt</h3>
+          <p>
+            客户端接收到 jwt 后，通常是将该 token 放在 HTTP 的 Authorization Header 中：
+            <pre><code class="javascript">
+const xhr = new XHRHttpRequest();
+
+xhr.setRequestHeader('Authorization', `Bear: ${token}`);
+            </code></pre>
+          </p>
+          <h3>服务端校验 token</h3>
+          <p>
+            服务端可以自定义校验逻辑，比如检查签名是否正确、检查之前设置的 iat 时间戳是否已经过期
+            <pre><code class="nodejs">
+const oneDay = 24 * 60 * 60 * 1000; // 一天的毫秒数
+
+const [
+  encodedHeader,
+  encodedPayload,
+  signature
+] = token.split('.');
+const prefix = `${encodedHeader}.${encodedPayload}`;
+if (
+  encodeBase64(
+    CryptoJS.SHA256(prefix, secretKey)
+  ) === signature
+) {
+  const payload = decodeBase64(encodedPayload);
+  if (Number.isInteger(payload?.iat) && payload.iat + oneDay > Date.now()) {
+    // 签名未过期
+  } else {
+    // 没有有效的时间戳或者签名已经过期
+  }
+}
+            </code></pre>
+          </p>
+          <h3>使用第三方库简化操作</h3>
+          <p>
+            手动生成和校验 jwt 太过于繁琐，可以使用 jsonwebtoken 来简化这些操作。
+            <pre><code class="nodejs">
+const jwt = require("jsonwebtoken");
+// 生成 token
+const token = jwt.sign(  
+  payload,
+  secretKey,
+  { expiresIn: 24 * 60 * 60 } // 设置过期时间，单位秒
+);
+// 校验 token
+const isVerified = jwt.verify(token, secretKey);
+            </code></pre>
+          </p>
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 如何实现jwt鉴权机制 <a href="https://vue3js.cn/interview/NodeJS/jwt.html">https://vue3js.cn/interview/NodeJS/jwt.html</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

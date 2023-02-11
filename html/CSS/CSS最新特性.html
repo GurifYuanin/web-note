@@ -26,6 +26,83 @@
       <h1 id="title">CSS最新特性</h1>
     </hgroup>
     <section>
+      <h2>响应式</h2>
+      <p>
+        <h3>容器查询</h3>
+        <p>
+          <h4>如何使用</h4>
+          传统的<a href="../移动Web/响应式布局.html">响应式布局</a>通常是通过媒体查询的方式，对视窗的宽度进行检查来让不同的样式生效，比如
+          <pre><code class="html">
+&lt;div class="card"&gt;Hello World&lt;/div&gt;
+
+&lt;style&gt;
+.card {
+  width: 600px;
+}
+
+/* viewport 的宽度小于 800px 时生效 */
+@media (max-width: 800px) {
+  .card {
+    width: 200px;
+  }
+}
+&lt;/style&gt;
+          </code></pre>
+          容器查询可以让我们对 HTML 元素的宽度进行查询，使不同的样式生效
+          <pre><code class="html">
+&lt;div class="wrapper"&gt;
+  &lt;div class="card"&gt;Hello World&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+.wrapper {
+  container: inline-size / my-name; /* 使用查询容器 */
+}
+.card {
+  width: 600px;
+}
+
+/* 声明一个名字为 my-name 的查询容器 */
+@container my-name (max-width: 800px) {
+  .card {
+    width: 200px;
+  }
+}
+&lt;/style&gt;
+          </code></pre>
+          当 .wrapper 的元素的宽度小于 800px 时，查询容器内的样式将生效，.card 的宽度将被设置为 200px。
+          <h4>详细介绍</h4>
+          container 其实是两个 CSS 属性的合并：container-name / container-type，配置了 container-type 后，会在该元素上创建一个容器上下文
+          <table>
+            <tr>
+              <th>属性名</th>
+              <th>属性值</th>
+              <th>是否必须</th>
+            </tr>
+            <tr>
+              <td>container-name</td>
+              <td>查询容器的名字</td>
+              <td>否</td>
+            </tr>
+            <tr>
+              <td>container-type</td>
+              <td style="text-align: left">
+                容器的类型，可选值有：
+                <ul>
+                  <li>size：在 Block Aixis 和 Inline Axis 上创建一个查询容器</li>
+                  <li>inline-size：在 Inline Axis 上创建一个查询容器</li>
+                  <li>block-size：在 Block Axis 上创建一个查询容器</li>
+                  <li>style：创建一个查询容器，用于样式查询</li>
+                  <li>state：创建一个查询容器，用于状态查询</li>
+                </ul>
+              </td>
+              <td>是</td>
+            </tr>
+          </table>
+        </p>
+      </p>
+    </section>
+    <section>
       <h2>选择器</h2>
       <p>
         <h3>伪类</h3>
@@ -152,10 +229,170 @@
         </p>
       </p>
     </section>
+    <section>
+      <h2>图层</h2>
+      <p>
+        <h3>mask</h3>
+        <p>
+          可以指定一张图片来作为 mask 层，来对某个图层进行 alpha 通道控制：
+          <pre><code class="html">
+&lt;div class="mask-container"&gt;
+  &lt;div class="mask-demo"&gt;1234567890&lt;/div&gt;
+&lt;/div&gt;
+&lt;style&gt;
+  @keyframes hueRotate {
+    from {
+      filter: hue-rotate(0deg);
+    }
+
+    to {
+      filter: hue-rotate(360deg);
+    }
+  }
+
+  .mask-container {
+    background-color: yellowgreen;
+    animation: hueRotate 2s ease-in-out infinite;
+  }
+
+  .mask-demo {
+    /* mask-image 还未标准化，需要加 -webkit- 前缀 */
+    -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/9674/splatter-mask_1.png');
+    font-size: 5vw;
+    line-height: 5vw;
+  }
+&lt;/style&gt;
+          </code></pre>
+          <div class="show">
+            <div class="mask-container">
+              <div class="mask-demo">1234567890</div>
+            </div>
+            <style>
+              @keyframes hueRotate {
+                from {
+                  filter: hue-rotate(0deg);
+                }
+                to {
+                  filter: hue-rotate(360deg);
+                }
+              }
+              .mask-container {
+                background-color: yellowgreen;
+                animation: hueRotate 2s ease-in-out infinite;
+              }
+              .mask-demo {
+                -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/9674/splatter-mask_1.png');
+                font-size: 5vw;
+                line-height: 5vw;
+              }
+            </style>
+          </div>
+          对于遮罩图片，还可以通过 mask-type 来决定取它的哪个通道作为遮罩：
+          <ul>
+            <li>alpha：透明通道</li>
+            <li>luminance：亮度通道</li>
+          </ul>
+        </p>
+        <h3>clip-path</h3>
+        <p>
+          可以使用 clip-path 来对 HTML 元素进行自定义裁切，支持使用 path 来进行绘制，使用方法参见<a href="../HTML/svg.html#路径">svg path</a>。
+        </p>
+        <h3>图层混合模式</h3>
+        <p>
+          可以通过 mix-blend-mode 和 background-blend-mode 来决定元素之间的混合模式。
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>其他</h2>
+      <p>
+        <h3>等比缩放</h3>
+        <p>
+          transform 的 scale 控制的 HTML 元素不会影响文档流，而通过等比缩放 aspect-ratio 则可以实现：
+          <pre><code class="css">
+aspect-ratio: 2;
+          </code></pre>
+        </p>
+        <h3>边距</h3>
+        <p>
+          通过 gap 可以控制元素与元素之间的距离，它包含了两个属性：
+          <ul>
+            <li>row-gap：纵轴上元素之间的间距</li>
+            <li>column-gap：横轴上元素的间距</li>
+          </ul>
+          比如有时候我们会这么写来控制元素之间的距离：
+          <pre><code class="html">
+&lt;div class="my-container"&gt;
+  &lt;div&gt;1&lt;/div&gt;
+  &lt;div&gt;2&lt;/div&gt;
+  &lt;div&gt;3&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+  .my-container {
+    display: flex;
+  }
+
+  .my-container > div:not(:last-child) {
+    margin-right: 5px;
+  }
+&lt;/style&gt;
+          </code></pre>
+          <div class="show">
+            <div class="my-container">
+              <div>1</div>
+              <div>2</div>
+              <div>3</div>
+            </div>
+
+            <style>
+              .my-container {
+                display: flex;
+              }
+              .my-container > div:not(:last-child)  {
+                margin-right: 5px;
+              }
+            </style>
+          </div>
+          通过 gap 则会方便很多
+          <pre><code class="html">
+&lt;div class="my-container"&gt;
+  &lt;div&gt;1&lt;/div&gt;
+  &lt;div&gt;2&lt;/div&gt;
+  &lt;div&gt;3&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+  .my-container {
+    display: flex;
+    column-gap: 5px;
+  }
+&lt;/style&gt;
+          </code></pre>
+          <div class="show">
+            <div class="my-container-gap">
+              <div>1</div>
+              <div>2</div>
+              <div>3</div>
+            </div>
+          
+            <style>
+              .my-container-gap {
+                display: flex;
+                column-gap: 5px;
+              }
+            </style>
+          </div>
+          另一种更常见的用法是在国际化场景，部分语言是 RTL（Right To Left），使用 gap 可以更好地控制间距。
+        </p>
+      </p>
+    </section>
     <section class="refer">
       <h2>参考文献</h2>
       <p>
         <div>[1] 2022年你不应该错过的CSS新特性 <a href="https://www.51cto.com/article/703498.html">https://www.51cto.com/article/703498.html</a></div>
+        <div>[2] 详解16个CSS新特性（2021最新版-上） <a href="https://mp.weixin.qq.com/s?__biz=MzAxNDEwNjk5OQ==&mid=2650432153&idx=1&sn=31b743ab2c52522881b38fb19c3e33fc&chksm=8396aa81b4e123977e11dd0e561fa6f1a0858a241f5a481e2397f4ef5b3037ec26018a32a870&scene=21#wechat_redirect">https://mp.weixin.qq.com/s?__biz=MzAxNDEwNjk5OQ==&mid=2650432153&idx=1&sn=31b743ab2c52522881b38fb19c3e33fc&chksm=8396aa81b4e123977e11dd0e561fa6f1a0858a241f5a481e2397f4ef5b3037ec26018a32a870&scene=21#wechat_redirect</a></div>
+        <div>[3] 详解16个CSS新特性（2021最新版-下） <a href="http://www.hzhcontrols.com/new-1254019.html">http://www.hzhcontrols.com/new-1254019.html</a></div>
       </p>
     </section>
   </div>

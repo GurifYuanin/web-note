@@ -26,6 +26,96 @@
       <h1 id="title">vue3原理</h1>
     </hgroup>
     <section>
+      <h2>diff 算法（最长递增子序列）</h2>
+      <p>
+        <h3>diff 无 key 的子节点</h3>
+        <p>
+          对于无 key 的节点列表更新，进行以下操作：
+          <ol>
+            <li>算出最小公共长度，从头到开始对这部分进行 patch</li>
+            <li>若旧列表长度大于新列表长度，则进行 unmount</li>
+            <li>若新列表长度大于旧列表长度，则进行 mount</li>
+          </ol>
+        </p>
+        <h3>diff 有 key 的子节点</h3>
+        <p>
+          需要提前了解一些变量：
+          <ul>
+            <li>c1：旧 VNode 列表</li>
+            <li>c2：新 VNode 列表</li>
+            <li>i：数组下标，初始值为 0</li>
+            <li>e1：数组下标，即 end1，指向旧 VNode 列表数组的最后一个元素</li>
+            <li>e2：数组下标，即 end2，指向新 VNode 列表数组的最后一个元素</li>
+          </ul>
+          diff 的操作顺序为：
+          <ol>
+            <li>从起始位置开始，判断节点是否相同，若相同，则 i++ 直到节点不相同</li>
+            <li>从终点位置开始，判断节点是否相同，若相同，则 e1--, e2-- 直到节点不相同</li>
+            <li>对剩余部分进行比较</li>
+          </ol>
+          <figure>
+            <img src="../../images/vue3_diff_step1.jpg" alt="">
+          </figure>
+          执行完前两步得到的结果为：
+          <figure>
+            <img src="../../images/vue3_diff_step2.jpg" alt="">
+          </figure>
+          对于中间部分，首先会创建一个名为 newIndexToOldIndexMap 的数组，数组长度为中间部分新节点的长度
+          <pre><code class="typescript">
+const s1 = i
+const s2 = i
+const toBePatched = e2 - s2 + 1
+for (i = 0; i < toBePatched; i++) newIndexToOldIndexMap[i]=0
+          </code></pre>
+          newIndexToOldIndexMap 数组中的元素值一开始是 0，表示没有哪个旧节点跟当前节点相同，比如上图的 case 中，newIndexToOldIndexMap 为：
+          <pre><code class="typescript">
+[ 0, 0, 0, 0, 0, 0 ]
+          </code></pre>
+          根据新旧节点的 key 比较，对数组进行填充，比如 C、D、E、F 为相同节点可以复用，所以 newIndexToOldIndexMap 变成了：
+          <pre><code class="typescriot">
+[ 0, 5, 2, 3, 0, 4 ]
+          </code></pre>
+          <figure>
+            <img src="../../images/vue3_diff_step3.jpeg" alt="">
+          </figure>
+          从图中可以看到，节点的新旧位置发生了交叉，因此需要通过算法得到 newIndexToOldIndexMap 的<span class="different">最大递增子序列</span>
+          <pre><code class="typescript">
+const increasingNewIndexSequence = moved
+  ? getSequence(newIndexToOldIndexMap)
+  : EMPTY_ARR
+          </code></pre>
+          其结果为：
+          <pre><code class="typescript">
+[ 2, 3, 4 ]
+          </code></pre>
+          算出最大递增子序列的目的是对于这部分节点不进行移动
+          <pre><code class="typescript">
+for (i = toBePatched - 1; i >= 0; i--) {
+  const nextIndex = s2 + i
+  const nextChild = c2[nextIndex]
+  const anchor =
+    nextIndex + 1 < l2 ? c2[nextIndex + 1].el : parentAnchor
+  if (newIndexToOldIndexMap[i] === 0) {
+    patch(
+      null,
+      nextChild,
+      container,
+      anchor,
+      ...
+    )
+  } else if (moved) {
+    if (j < 0 || i !== increasingNewIndexSequence[j]) {
+      move(nextChild, container, anchor, MoveType.REORDER)
+    } else {
+      j--
+    }
+  }
+}
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section>
       <h2>ref</h2>
       <p>
         当给 ref 传入对象时，内部会转为调用<a href="#reactive" target="_self">reactive</a>方法，而传入基本类型时才会执行下面操作。
@@ -238,10 +328,13 @@ function createSetter(shallow = false) {
     <section class="refer">
       <h2>参考文献</h2>
       <p>
-        <div>[1] vue3响应式原理之Ref <a
+        <div>[1] Vue3 diff算法图解分析 <a
+            href="https://zhuanlan.zhihu.com/p/459134214">https://zhuanlan.zhihu.com/p/459134214</a>
+        </div>
+        <div>[2] vue3响应式原理之Ref <a
             href="https://blog.csdn.net/SK_study/article/details/125092283">https://blog.csdn.net/SK_study/article/details/125092283</a>
         </div>
-        <div>[2] vue3的ref,reactive的使用和原理解析 <a
+        <div>[3] vue3的ref,reactive的使用和原理解析 <a
             href="https://blog.csdn.net/weixin_42974827/article/details/127038700">https://blog.csdn.net/weixin_42974827/article/details/127038700</a>
         </div>
       </p>
