@@ -143,7 +143,7 @@
 					</p>
 					<h3>计算 token 方式</h3>
 					<p>
-						Session 是存储在本机内存的，当使用多主机服务器部署时，或者存在 Session 存储性能时，通常使用另一种方案，token 通过计算生成，比如用户UID + 时间戳 + 随机数，加密后传输给客户端
+						Session 是存储在本机内存的，当使用多主机服务器部署时，或者存在 Session 存储性能问题时，通常使用另一种方案，token 通过计算生成，比如用户UID + 时间戳 + 随机数，加密后传输给客户端
 						<pre><code class="node">
 const token = Encrypt(`${UserId}:${Date.now()}:${Math.random()}`);
 						</code></pre>

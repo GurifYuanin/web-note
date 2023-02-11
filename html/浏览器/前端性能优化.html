@@ -104,17 +104,45 @@ module.exports = {
       </p>
     </section>
     <section>
-      <h2>减少 DNS 查询时间</h2>
+      <h2>预加载与预解析</h2>
       <p>
         <h3>DNS 预解析</h3>
-        一般来说，浏览器会对 DNS 查询结果进行缓存，但不是所有浏览器都会进行这样的行为。可以通过 DNS 预解析来开启和配置指定域名的 DNS 查询。
-        <pre><code class="html">
-&lt;!-- 开启预解析 --&gt;
-&lt;meta http-equiv="x-dns-prefetch-control" content="on" /&gt;
-&lt;!-- 指定域名 --&gt;
-&lt;link rel="dns-prefetch" href="www.example.com" /&gt;
-        </code></pre>
-        <div class="tip">DNS 缓存分为浏览器层级的缓存和操作系统层级的缓存，在 chrome 中可通过<span class="different">chrome://net-internals/#dns</span>来查看已缓存的 host</div>
+        <p>
+          一般来说，浏览器会对 DNS 查询结果进行缓存，但不是所有浏览器都会进行这样的行为。可以通过 DNS 预解析来开启和配置指定域名的 DNS 查询。
+          <pre><code class="html">
+  &lt;!-- 开启预解析 --&gt;
+  &lt;meta http-equiv="x-dns-prefetch-control" content="on" /&gt;
+  &lt;!-- 指定域名 --&gt;
+  &lt;link rel="dns-prefetch" href="www.example.com" /&gt;
+          </code></pre>
+          <div class="tip">DNS 缓存分为浏览器层级的缓存和操作系统层级的缓存，在 chrome 中可通过<span class="different">chrome://net-internals/#dns</span>来查看已缓存的 host</div>
+        </p>
+        <h3>资源预加载</h3>
+        <p>
+          <ul>
+            <li>
+              强制浏览器在不阻塞 document 的 onload 事件的情况下请求资源
+              <pre><code class="html">
+&lt;link rel="preload" href="/path/to/style.css" as="style"&gt;
+              </code></pre>
+              实际案例中，比如使用了异步组件，可能需要频繁地进行请求，导致页面的 loading，可以通过 webpack + preload 在浏览器空闲时加载 js 文件
+              <pre><code class="javascript">
+const { default: lodash } = await import(/* webpackChunkName: "lodash" */ /* webpackPrefetch: true */ 'lodash');
+// Multiple possible targets
+import(
+  /* webpackInclude: /\.json$/ */
+  /* webpackExclude: /\.noimport\.json$/ */
+  /* webpackChunkName: "my-chunk-name" */
+  /* webpackMode: "lazy" */
+  /* webpackPrefetch: true */
+  /* webpackPreload: true */
+  `./locale/${language}`
+);
+              </code></pre>
+            </li>
+            <li>图片预加载：提前加载需要的图片，保证加载大图或者切换页面时体验的流畅度</li>
+          </ul>
+        </p>
       </p>
     </section>
     <section>
@@ -125,7 +153,6 @@ module.exports = {
             图片
             <ul>
               <li>懒加载：当图片出现在可视区域内时才去加载图片，以减少同一时间的请求数，并缓解服务器压力</li>
-              <li>预加载：提前加载需要的图片，保证加载大图或者切换页面时体验的流畅度</li>
               <li>使用<a href="../移动Web/响应式图片.html">响应式图片</a>（IE 不兼容）</li>
             </ul>
           </li>
@@ -252,8 +279,8 @@ module.exports = {
     <section class="refer">
       <h2>参考文献</h2>
       <p>
-      <div>[1] 2022 前端性能优化最佳实践 <a
-          href="https://segmentfault.com/a/1190000041753539">https://segmentfault.com/a/1190000041753539</a></div>
+        <div>[1] 2022 前端性能优化最佳实践 <a href="https://segmentfault.com/a/1190000041753539">https://segmentfault.com/a/1190000041753539</a></div>
+        <div>[2] Preload与Prefetch的区别以及webpack项目中如何优化 <a href="https://cloud.tencent.com/developer/article/1839684">https://cloud.tencent.com/developer/article/1839684</a></div>
       </p>
     </section>
   </div>

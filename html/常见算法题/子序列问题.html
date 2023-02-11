@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>子序列问题</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">子序列问题</h1>
+    </hgroup>
+    <section>
+      <h2>最长增长子序列</h2>
+      <p>
+        <pre><code class="javascript">
+function getSequence(nums) {
+  const prevIndexs = Array.from(nums).fill(-1);
+  const maxLengthNums = Array.from(nums).fill(1); // 表示从 0 到当前元素的子序列最大长度为多少
+  // maxLength 最长增长子序列的长度
+  // maxLengthIndex 最长增长子序列的最后一个元素下标
+  let maxLength = 0, maxLengthIndex = -1;
+  for (let i = 1; i < nums.length; i++) {
+    const num = nums[i];
+    let max = 1;
+    let prevIndex = -1;
+    for (let j = 0; j < i; j++) {
+      if (num > nums[j] && maxLengthNums[j] >= max) {
+        max = maxLengthNums[j] + 1;
+        prevIndex = j;
+      }
+    }
+    maxLengthNums[i] = max;
+    prevIndexs[i] = prevIndex;
+    if (max > maxLength) {
+      maxLengthIndex = i;
+    }
+  }
+
+  const result = [];
+  while (maxLengthIndex !== -1) {
+    result.unshift(nums[maxLengthIndex]);
+    maxLengthIndex = prevIndexs[maxLengthIndex];
+  }
+  return result;
+}
+
+const nums = [ 4, 5, 2, 3, 0, 4 ];
+console.log(getSequence(nums));
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>最长公共子序列</h2>
+      <p></p>
+    </section>
+    <section>
+      <h2>最长公共连续子序列</h2>
+      <p></p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 标题 <a href="链接">链接</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

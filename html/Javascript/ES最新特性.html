@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ES最新特性</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">ES最新特性</h1>
+    </hgroup>
+    <section>
+      <h2>字符串</h2>
+      <p>
+        <h3>padStart & padEnd</h3>
+        <p>
+          <ul>
+            <li>padStart(length, str)：头部补全</li>
+            <li>padEnd(length, str)：尾部补全</li>
+          </ul>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>数组</h2>
+      <p>
+        <h3>拍平数组（ES10）</h3>
+        <p>
+          新增了两个方法：
+          <ul>
+            <li>flatMap(callback)：先进行 map，再进行 flat(1)</li>
+            <li>flat(depth = 1)：拍平数组，可传入 Infinity 表示拍平到层级为 1 的数组</li>
+          </ul>
+          <pre><code class="javascript">
+const arr = [
+  1,
+  2,
+  [3],
+  [4, 5],
+  [6, [7, 8]]
+];
+
+// 下面两种写法是等价的
+// => [1, 2, 3, 4, 5, 6, [7, 8]]
+arr.flatMap(n => n);
+arr.map(n => n).flat();
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>对象</h2>
+      <p>
+        <h3>Object.values & Object.entries（ES8）</h3>
+        <p>
+          <ul>
+            <li>Object.values：返回对象的属性值数组</li>
+            <li>Object.entries：返回对象的键值对数组</li>
+          </ul>
+        </p>
+        <h3>Object.fromEntries（ES10）</h3>
+        <p>
+          类型与 Array.from()，可以做一些数据类型转化。
+          <pre><code class="javascript">
+
+const obj1 = Object.fromEntries(new Map([
+  [ 'a', 1 ]
+]));
+const obj2 = Object.fromEntries([
+  [ 'a', 1 ]
+]);
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>Promise</h2>
+      <p>
+        <h3>for-await-of（ES9）</h3>
+        <p>
+          等待 Promise 对象变为 resolved 状态才进入循环块。
+          <div class="tip">若中间有 rejected 状态的结果，则之后的数组元素虽然也会执行，但成功部分的 Promise 不会进入循环块</div>
+          <pre><code class="javascript">
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(ms), ms);
+  });
+}
+for await (el of [
+  sleep(1000),
+  sleep(2000),
+  sleep(3000),
+]) {
+  console.log(el);
+}
+          </code></pre>
+        </p>
+        <h3>Promise.race（ES6）</h3>
+        <p>
+          Promise 数组中只要有一个执行完就执行 then。
+        </p>
+        <h3>Promise.any（ES12）</h3>
+        <p>
+          Promise 数组中只要有一个执行完且状态是 fulfilled 就执行 then。
+          <pre><code class="javascript">
+Promise.any([
+  new Promise(resolve => {
+    setTimeout(() => resolve(0), 1000);
+  }),
+  new Promise((resolve, reject) => reject('error'))
+]).then(data => {
+  console.log(data);
+});
+// => 0
+          </code></pre>
+        </p>
+        <h3>Promise.allSettled（ES11）</h3>
+        <p>
+          相当于 Promise.all 的增强版，Promise.all 当 Promise 数组中有一个报错时就不会执行 then
+          <pre><code class="javascript">
+Promise.all([
+  new Promise(resolve => resolve(0)),
+  new Promise((resolve, reject) => reject('error'))
+]).then((data) => {
+  console.log(data);
+});
+// => Uncaught (in promise) error
+          </code></pre>
+          现在无论 Promise 数组结果怎么样，知道都到达了 fulfilled 或 rejected 状态，就会执行 then
+          <pre><code class="javascript">
+Promise.allSettled([
+  new Promise(resolve => resolve(0)),
+  new Promise((resolve, reject) => reject('error'))
+]).then((propmises) => {
+  for (const propmise of propmises) {
+    if (propmise.status === 'fulfilled') {
+      console.log(propmise.value);
+    } else if (propmise.status === 'rejected') {
+      console.log(propmise.reason);
+    }
+  }
+});
+// => 0
+// => error
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>异常</h2>
+      <p>
+        <h3>catch 参数可选（ES10）</h3>
+        <p>
+          <pre><code class="javascript">
+try {
+  // ...
+} catch {
+  // ...
+}
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>数据类型</h2>
+      <p>
+        <h3>BigInt（ES11）</h3>
+        <p>
+          BigInt 是新增的一种数据类型，用来保存任意大小的整数，和 number 不同，数字末尾用 n 进行区分。
+          <pre><code class="javascript">
+const bigInt = 9007199254740993n;
+console.log(bigInt); // => 9007199254740993n
+console.log(bigInt.toString()); // => 9007199254740993
+          </code></pre>
+          BigInt 之间可以进行计算，但不能和 number 类型进行计算，且值不相等。
+          <pre><code class="javascript">
+1n === 1 // => false
+1n + 1 // => Uncaught TypeError: Cannot mix BigInt and other types, use explicit conversions
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>语法</h2>
+      <p>
+        <h3>import（ES11）</h3>
+        <p>
+          可以异步地动态导入 JS 模块。
+          <pre><code class="javascript">
+// my-module.js
+export function then() {
+  console.log("then() called");
+}
+
+// index.js
+import("/my-module.js").then((mod) => {
+  mod.then();
+});
+          </code>e</pre>
+        </p>
+        <h3>可选链（ES11）</h3>
+        <p>
+          在 Typescript 3.7 就已经实现的功能。
+          <pre><code class="javascript">
+const obj = null;
+// 下面两种写法是等价的
+obj?.a
+obj && obj.a
+          </code></pre>
+        </p>
+        <h3>空值判断（ES11）</h3>
+        <p>
+          类似于 ||，但只有左侧是 null 或 undefined 时才进入右侧判断。
+          <pre><code class="javascript">
+const initValue = '';
+const value1 = initValue ?? 'Hello World'; // => value1 最终为 ''
+const value2 = initValue || 'Hello World'; // => value2 最终为 'Hello World'
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 花一个小时，迅速了解ES6~ES12的全部特性 <a href="https://juejin.cn/post/7068935394191998990#heading-56">https://juejin.cn/post/7068935394191998990#heading-56</a></div>
+        <div>[2] MDN import() <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

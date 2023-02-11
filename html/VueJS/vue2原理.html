@@ -140,10 +140,62 @@ class VNode {
           <figure>
             <img src="../../images/nextTick.jpg" alt="">
           </figure>
-          nextTick 的实现：
+          nextTick 的源码为：
           <pre><code class="javascript">
-
+export function nextTick (cb?: Function, ctx?: Object) {
+  let _resolve
+  callbacks.push(() => {
+    if (cb) {
+      try {
+        cb.call(ctx)
+      } catch (e) {
+        handleError(e, ctx, 'nextTick')
+      }
+    } else if (_resolve) {
+      _resolve(ctx)
+    }
+  })
+  ...
+}
           </code></pre>
+          将回调函数传入 nextTick 并不会马上执行，而是塞入回调函数列表中。假设现在是首次调用 nextTick，那么 pending 的值为 false，就会执行下面逻辑：
+          <pre><code class="javascript">
+if (!pending) {
+  pending = true
+  if (useMacroTask) {
+    macroTimerFunc()
+  } else {
+    microTimerFunc()
+  }
+}
+          </code></pre>
+          useMacroTask 用来判断是使用宏任务还是微任务，也就是说 Vue 会根据当前环境，选择使用不同的异步方式执行回调函数，其优先级为：
+          <ol>
+            <li>Promise</li>
+            <li>setImmediate</li>
+            <li>MessageChannel</li>
+            <li>setTimeout</li>
+          </ol>
+          假设当前环境是浏览器环境，支持 Promise，那么就会执行到
+          <pre><code class="javascript">
+const p = Promise.resolve()
+microTimerFunc = () => {
+  p.then(flushCallbacks)
+  if (isIOS) setTimeout(noop)
+}
+          </code></pre>
+          flushCallbacks 函数的功能是取出前面塞入的回调函数列表一一执行
+          <pre><code class="javascript">
+function flushCallbacks () {
+  pending = false
+  const copies = callbacks.slice(0)
+  callbacks.length = 0
+  for (let i = 0; i < copies.length; i++) {
+    copies[i]()
+  }
+}
+          </code></pre>
+          因为是通过微任务执行 flushCallbacks，所以执行栈上的同步代码会继续执行，比如此时又使用 nextTick 传入新的回调函数，callbacks 数组长度加一，也是暂时不会执行，直到执行栈上的代码跑完，才会调用 flushCallbacks 清空 callbacks。
         </p>
       </p>
     </section>
@@ -191,7 +243,7 @@ function defineReactive (
 ) {
   <span class="strong">const dep = new Dep()</span> // 为当前属性创建一个 Dep
   ...
-  let childOb = !shallow && observe(val) // 如果当前属性值是一个对象，则进行递归
+  <span class="strong">let childOb = !shallow && observe(val)</span> // 如果当前属性值是一个对象，则进行递归进行 observe（跟初始化组件调用 observe(data) 一样，递归地变成响应式对象）
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
@@ -200,7 +252,7 @@ function defineReactive (
       if (Dep.target) {
         <span class="strong">dep.depend()</span> // 读取属性时进行依赖收集
         if (childOb) {
-          <span class="strong">childOb.dep.depend()</span>
+          <span class="strong">childOb.dep.depend()</span> // 递归地进行依赖收集
           if (Array.isArray(value)) {
             dependArray(value)
           }
@@ -395,7 +447,7 @@ updateComponent = () => {
       </p>
     </section>
     <section>
-      <h2>patch 原理</h2>
+      <h2>diff 原理（双端比较）</h2>
       <p>
         <h3>算法优化</h3>
         <p>
@@ -515,6 +567,10 @@ if (!isRealElement && sameVnode(oldVnode, vnode)) {
         </p>
         <h3>2/patchVNode</h3>
         <p>
+          当认为两个 VNode 是可复用的相同节点时，就会执行 patchVNode 对 DOM 进行 patch 操作
+          <pre><code class="javascript">
+const elm = vnode.elm = oldVnode.elm // 因为 VNode 相同，所以将旧 VNode 的真实 DOM 拿过来给新 VNode 复用
+          </code></pre>
           <ol>
             <li>
               执行 prepatch 钩子
