@@ -152,6 +152,7 @@ module.exports = {
         </p>
         <h3>选择器</h3>
         <p>
+          <h4>简单做法</h4>
           不同主题样式写在一个文件，通过选择器进行区分使用哪一套主题
           <pre><code class="vue">
 &lt;!-- index.vue --&gt;
@@ -186,6 +187,38 @@ module.exports = {
   background-color: white;
 }
 &lt;/style&gt;
+          </code></pre>
+          <h4>优雅做法</h4>
+          可以先通过给根元素设置属性
+          <pre><code class="vue">
+&lt;script&gt;
+  export default {
+    data() {
+      return {
+        theme: 'dark'
+      }
+    },
+    methods: {
+      onClick() {
+        this.theme = this.theme === 'dark' ? 'bright' : 'dark';
+        document.documentElement.setAttribute('data-theme', this.theme);
+      }
+    }
+  }
+&lt;/script&gt;
+          </code></pre>
+          通过 CSS 预处理器，更优雅地控制应用哪个样式
+          <pre><code class="sass">
+.title {
+  [data-theme=dark] & {
+    color: white;
+    background-color: black;
+  }
+  [data-theme=bright] & {
+    color: black;
+    background-color: white;
+  }
+}
           </code></pre>
         </p>
         <h3>层叠层</h3>

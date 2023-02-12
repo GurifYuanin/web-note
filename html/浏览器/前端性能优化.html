@@ -90,6 +90,22 @@ module.exports = {
               </code></pre>
             </ul>
           </li>
+          <li>
+            动态加载：将较大的代码拆分并构建出较小的 chunk 包，在应用运行到相应的业务逻辑才去加载对应的 chunk 代码，比如异步组件
+            <pre><code class="javascript">
+// 先安装插件 npm i babel-plugin-import -D
+// webpack 中配置
+module.exports = {
+  plugins: [
+    ['import', {
+      libraryName: 'antd', // 组件库名称
+      libraryDirectory: 'lib', // 编译之后各个组件单元所在文件夹名称
+      style: true // 是否引入组件对应样式文件
+    }, 'antd']
+  ]
+};
+            </code></pre>
+          </li>
           <li>使用 iconfont 代替图片图标，既提高了图标清晰度（矢量图），也减少文件体积</li>
         </ul>
       </p>
@@ -157,7 +173,6 @@ import(
             </ul>
           </li>
           <li>路由懒加载：当一个单页应用比较大时，可以将部分暂时不会使用到的页面拆分出来，只有当访问到这些页时才进行加载</li>
-          <li>组件异步加载</li>
         </ul>
       </p>
     </section>

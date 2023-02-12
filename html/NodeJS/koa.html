@@ -65,16 +65,95 @@ node koa_hello_world.js
 		<section>
 			<h2>洋葱模型</h2>
 			<p>
-				洋葱模型其实就是中间件处理的流程。
-				<figure>
-					<img src="../../images/koa_onion_model.jpeg" alt="">
-				</figure>
+				<h3>是什么</h3>
+				<p>
+					洋葱模型其实就是中间件处理的流程。
+					<figure>
+						<img src="../../images/koa_onion_model.jpeg" alt="">
+					</figure>
+					我们可以定义中间件（middleware）来逐层处理数据，比如
+					<pre><code class="nodejs">
+	app.use((ctx, next) => {
+		console.log(ctx);
+		next();
+	});
+					</code></pre>
+					如果不执行 next()，或者抛出异常，那么下一个中间件将不会执行。
+				</p>
+				<h3>原理</h3>
+				<p>
+					Koa 使用 use() 方法来添加中间件，compose 函数来处理中间件。
+					<pre><code class="nodejs">
+class Koa extends Emitter {
+	use(fn) {
+		<span class="strong">this.middleware.push(fn);</span>
+    return this;
+  }
+
+	listen() {
+		<span class="strong">const fnMiddleware = compose(this.middleware);</span>
+    ...
+  }
+}
+					</code></pre>
+					compose 会把中间件数组整理成嵌套调用的形式
+					<pre><code class="nodejs">
+function compose (middleware) {
+  ...
+  return function (context, next) {
+    let index = -1
+    return dispatch(0)
+    function dispatch (i) {
+      ...
+      let fn = middleware[i]
+      if (i === middleware.length) fn = next
+      if (!fn) return Promise.resolve()
+      try {
+				<span class="strong">return Promise.resolve(fn(context, dispatch.bind(null, i + 1)));</span>
+      } catch (err) {
+        return Promise.reject(err)
+      }
+    }
+  }
+}
+					</code></pre>
+					可以看到，后一个中间件会被包裹为一个函数传入前一个中间件作为第二个参数（中间件的第一个参数为 ctx，第二个参数为 next）。假设我们传入了下面三个中间件：
+					<pre><code class="nodejs">
+this.middleware = [fn1, fn2, fn3];
+					</code></pre>
+					经过 compose 后得到：
+					<pre><code class="nodejs">
+const fnMiddleware = function(context) {
+    return Promise.resolve(
+      fn1(context, function next() {
+        return Promise.resolve(
+          fn2(context, function next() {
+              return Promise.resolve(
+                  fn3(context, function next() {
+                    return Promise.resolve();
+                  })
+              )
+          })
+        )
+    })
+  );
+};
+					</code></pre>
+					其执行顺序为：
+					<ol>
+						<li>fn1 先执行</li>
+						<li>若 fn1 中调用了 next，则执行 fn2</li>
+						<li>若 fn2 中调用了 next，则执行 fn3</li>
+						<li>fn3 的 next 只是个占位，调用后无反应</li>
+					</ol>
+				</p>
 			</p>
 		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>
 				<div>[1] Koa 官网 <a href="https://koa.bootcss.com/#application">https://koa.bootcss.com/#application</a></div>
+				<div>[2] 学习 koa 源码的整体架构 <a href="https://lxchuan12.gitee.io/koa">https://lxchuan12.gitee.io/koa</a></div>
 			</p>
 		</section>
 	</article>

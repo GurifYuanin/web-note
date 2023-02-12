@@ -67,7 +67,7 @@
             <td>基于浏览器自带的 ESM 功能</td>
             <td>支持</td>
             <td>支持，按需编译</td>
-            <td>Esbuild（Go 实现）预构建（即将 CommonJS 模块转为 ESM）</td>
+            <td>Esbuild（Go 实现）预构建（将 CommonJS 模块转为 ESM）</td>
             <td>
               <ul>
                 <li>优点：打包快</li>
@@ -83,6 +83,15 @@
             <td></td>
             <td></td>
           </tr>
+          <tr>
+            <td>Turbopack</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>SWC（Rust 实现）</td>
+            <td>构建缓存、增量式构建、按需延迟编译</td>
+          </tr>
         </table>
       </p>
     </section>
@@ -92,7 +101,7 @@
         <h3>原因</h3>
         <p>
           <ul>
-            <li>rollup 打包产物通常比 webpack 小，因为webpack 的打包产物会带有很多 __webpack_require__ 工具函数</li>
+            <li>rollup 打包产物通常比 webpack 小，因为 webpack 的打包产物会带有很多 __webpack_require__ 工具函数</li>
             <li>rollup 对 Tree-Shaking 支持更好</li>
           </ul>
         </p>
@@ -114,6 +123,26 @@ Object.prototype.toString.call(new MyModule()); // "[object MyModule]"
               </code></pre>
             </li>
             <li>​__webpack_require__​.d(require, moduleName, getModule)：提供 Getter 给导出的方法、变量</li>
+          </ul>
+        </p>
+        <h3>为什么需要 __webpack_require__</h3>
+        <p>
+          webpack 的使用场景式构建 Web 应用，所以打包的产物中，会将业务代码模块封装进函数中，并且通过 ​__webpack_require__​ 等工具函数实现包的依赖与加载。
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>为什么 vite 比 wepack 打包更快</h2>
+      <p>
+        <h3>webpack</h3>
+        <p>
+          webpack 的打包原理是通过入口文件扫描应用所有的子模块（包括动态模块），将这些子模块注入到入口文件中。
+        </p>
+        <h3>vite</h3>
+        <p>
+          <ul>
+            <li>利用 ES6 的 import 语法请求加载模块，只会加载当前页面依赖的模块而不会加载动态模块，且 HMR 时也只会更新依赖的模块。</li>
+            <li>对于非 ESM 模块，使用 Esbuild 进行构建，而 Esbuild 以为是使用 Go 编写的，比 Babel、TSC 构建速度更快</li>
           </ul>
         </p>
       </p>

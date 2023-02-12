@@ -28,9 +28,10 @@
     <section>
       <h2>最长增长子序列</h2>
       <p>
+        给定一个数组，比如 [ 4, 5, 2, 3, 0, 4 ]，求出长度最大的子序列。
         <pre><code class="javascript">
 function getSequence(nums) {
-  const prevIndexs = Array.from(nums).fill(-1);
+  const prevIndexs = Array.from(nums).fill(-1); // 表示当前元素的上一个元素下标
   const maxLengthNums = Array.from(nums).fill(1); // 表示从 0 到当前元素的子序列最大长度为多少
   // maxLength 最长增长子序列的长度
   // maxLengthIndex 最长增长子序列的最后一个元素下标
@@ -67,7 +68,53 @@ console.log(getSequence(nums));
     </section>
     <section>
       <h2>最长公共子序列</h2>
-      <p></p>
+      <p>
+        给定两个字符串，比如 'abcdefg' 和 'aceg'，求出两个字符串最长公共子序列。
+        <pre><code class="javascript">
+function lcs(table, str1, str2, i, j) {
+  if (i === 0 || j === 0) {
+    return '';
+  }
+  if (str1[i - 1] === str2[j - 1]) {
+    return lcs(table, str1, str2, i - 1, j - 1) + str1[i - 1];
+  } else if (table[i][j - 1] > table[i - 1][j]) {
+    return lcs(table, str1, str2, i, j - 1);
+  } else {
+    return lcs(table, str1, str2, i - 1, j);
+  }
+}
+
+function getCommonSubstring(str1, str2) {
+  const { length: length1 } = str1;
+  const { length: length2 } = str2;
+
+  // 初始化
+  const table = Array.from({
+    length: length1 + 1
+  }).map(() => Array.from({
+    length: length2 + 1
+  }).fill(0));
+
+  // 开始 DP
+  for (let i = 1; i <= length1; i++) {
+    for (let j = 1; j <= length2; j++) {
+      const isSame = str1[i] === str2[j];
+      table[i][j] = Math.max(
+        table[i - 1][j],
+        table[i][j - 1],
+        table[i - 1][j - 1] + (isSame ? 1 : 0)
+      );
+    }
+  }
+
+  return lcs(table, str1, str2, length1, length2);
+}
+
+const str1 = 'abcdefg';
+const str2 = 'aceg';
+const result = getCommonSubstring(str1, str2);
+        </code></pre>
+      </p>
     </section>
     <section>
       <h2>最长公共连续子序列</h2>
