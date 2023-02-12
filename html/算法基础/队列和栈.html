@@ -59,6 +59,39 @@ function checkStackInOut(i, o) {
 				</code></pre>
 			</p>
 		</section>
+		<section>
+			<h2>利用栈来变量树</h2>
+			<p>
+				<pre><code class="javascript">
+class Node {
+	value = null;
+	children = [];
+
+	constructor(value) {
+		this.value = value;
+	}
+
+	addChild(child) {
+		this.children.push(child);
+	}
+}
+
+function travelTreeByStack(root) {
+	let currentNode = root;
+	const stack = [currentNode];
+	while (currentNode) {
+		console.log(currentNode.value); // 消费当前节点
+		stack.push(...currentNode.children);
+		if (stack.length) {
+			currentNode = stack.pop();
+		} else {
+			break;
+		}
+	}
+}
+				</code></pre>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p></p>

@@ -740,14 +740,19 @@ body {
             }
 
             // 强调代码
+            .strong, .strong-multiple-line {
+                border: dotted 1px $strongBorderColor;
+                border-radius: 5px;
+                background-color: $strongBackgroundColor;
+            }
             .strong {
                 display: inline-block;
                 margin: 5px;
                 padding: 5px;
-                border: dotted 1px $strongBorderColor;
-                border-radius: 5px;
-
-                background-color: $strongBackgroundColor;
+            }
+            .strong-multiple-line {
+                display: block;
+                margin: -15px 0;
             }
         }
         .codeTypeCopyContainer {
