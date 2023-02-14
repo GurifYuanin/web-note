@@ -26,10 +26,11 @@
       <h1 id="title">setState</h1>
     </hgroup>
     <section>
-      <h2>不同点</h2>
+      <h2>调用时机</h2>
       <p>
-        <h3>在组件生命周期或合成事件中</h3>
+        <h3>使用表现</h3>
         <p>
+          在组件生命周期或合成事件中
           <ul>
             <li>异步更新数据</li>
             <li>若有多条 setState，进行合并更新</li>
@@ -46,12 +47,17 @@ Object.assign(
   { count: previousState.count+ 1 },
 )
           </code></pre>
-        </p>
-        <h3>在 setTimeout 或原生事件中</h3>
-        <p>
+          在 setTimeout 或原生事件中
           <ul>
             <li>同步更新数据</li>
             <li>若有多条 setState，逐条执行</li>
+          </ul>
+        </p>
+        <h3>原理</h3>
+        <p>
+          <ul>
+            <li>在生命周期或者合成事件中，会先把 isBatchingUpdate（变量锁）的值设置为 true，这时候 setState 实际上是 push 进 Update Queue（更新队列），事务执行完之后才会进行 flush</li>
+            <li>像 setTimeout 的异步任务在宏任务中，绕过 React 跳出了事务控制。</li>
           </ul>
         </p>
       </p>

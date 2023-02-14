@@ -451,6 +451,51 @@ updateComponent = () => {
       </p>
     </section>
     <section>
+      <h2>$set 原理</h2>
+      <p>
+        在 Vue2 中，新增属性或通过下标给数组赋值不会触发响应式更新，只有通过 Vue.set 或者 this.$set 才能解决，这两个其实内部都是调用同一个方法：
+        <pre><code class="javascript">
+import { set } from '../observer/index'
+Vue.set = set
+...
+Vue.prototype.$set = set
+        </code></pre>
+        set 的源码并不复杂，主要看对数组的处理和对对象属性的处理：
+        <pre><code class="javascript">
+function set (target: Array<any> | Object, key: any, val: any): any {
+  ...
+  <span class="strong-multiple-line">
+    if (Array.isArray(target) && isValidArrayIndex(key)) {
+      target.length = Math.max(target.length, key)
+      target.splice(key, 1, val)
+      return val
+    }
+  </span>
+  if (key in target && !(key in Object.prototype)) {
+    target[key] = val
+    return val
+  }
+  const ob = (target: any).__ob__
+  if (target._isVue || (ob && ob.vmCount)) {
+    process.env.NODE_ENV !== 'production' && warn(
+      'Avoid adding reactive properties to a Vue instance or its root $data ' +
+      'at runtime - declare it upfront in the data option.'
+    )
+    return val
+  }
+  if (!ob) {
+    target[key] = val
+    return val
+  }
+  <span class="strong">defineReactive(ob.value, key, val)</span>
+  ob.dep.notify()
+  return val
+}
+        </code></pre>
+        可以看到，对数组的处理本质上是调用了 .splice(key, 1, val) 来实现，而对对象属性的处理则是直接使用 defineReactive，该函数的功能参见上面。
+      </p>
+    </section>
+    <section>
       <h2>computed 原理</h2>
       <p>
         <h3>依赖收集</h3>
