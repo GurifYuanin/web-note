@@ -59,6 +59,14 @@
           </li>
         </ol>
         <h3>compileToFunctions</h3>
+        <p>
+          Vue 在使用时提供两个版本：
+          <ul>
+            <li>vue.js：完整版</li>
+            <li>vue.runtime.js：非完整版，不包含 compiler，所以只能使用 render 函数不能写 template 模板</li>
+          </ul>
+          因为完整版的体积比较大，所以我们通常使用 runtime 版，同时在使用 webpack 打包时，可以通过 vue-loader 进行 compile，使我们能够使用 template 模板功能
+        </p>
       </p>
     </section>
     <section>
@@ -962,7 +970,7 @@ newStartVnode = newCh[++newStartIndex]
       <p>
         <h3>作用</h3>
         <p>
-          在组件切换过程中将状态保留在内存中，防止重复渲染DOM，减少加载时间及性能消耗，提高用户体验性。
+          在组件切换过程中将状态保留在内存中，防止重复渲染 DOM，减少加载时间及性能消耗，提高用户体验性。
           <pre><code class="html">
 &lt;keep-alive&gt;
   &lt;component v-bind:is="currentTabComponent"&gt;&lt;/component&gt;

@@ -28,7 +28,28 @@
     <section>
       <h2>自适应宽度</h2>
       <p>
-        实现这样一个布局：单行三列，左右元素是固定宽度（比如 200px），中间元素自适应宽度。
+        <h3>问题描述</h3>
+        <p>
+          实现这样一个布局：单行三列，左右元素是固定宽度（比如 200px），中间元素自适应宽度。
+        </p>
+        <h3>左右 float 中间 margin</h3>
+        <p>
+          左右两侧的元素 float，中间元素使用 margin 来控制两侧边距，需要注意的是：中间元素要放到后面。
+          <pre><code class="html">
+&lt;div&gt;
+  &lt;div style="float: left; width: 200px; background-color: #888; color: white;"&gt;200px&lt;/div&gt;
+  &lt;div style="float: right; width: 200px; background-color: #888; color: white;"&gt;200px&lt;/div&gt;
+  &lt;div style="margin: 0 200px; background-color: #222; color: white;"&gt;自适应&lt;/div&gt;
+&lt;/div&gt;
+          </code></pre>
+          <div class="show">
+            <div>
+              <div style="float: left; width: 200px; background-color: #888; color: white;">200px</div>
+              <div style="float: right; width: 200px; background-color: #888; color: white;">200px</div>
+              <div style="margin: 0 200px; background-color: #222; color: white;">自适应</div>
+            </div>
+          </div>
+        </p>
         <h3>flex</h3>
         <p>
           使用 flex-grow: 1 来让中间元素自动撑开。

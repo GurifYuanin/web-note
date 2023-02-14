@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>异步请求控制器</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">异步请求控制器</h1>
+    </hgroup>
+    <section>
+      <h2>plimit</h2>
+      <p>
+        <h3>问题描述</h3>
+        <p>
+          实现类似于 p-limit 的功能，给定若 n 个异步任务，同一时间内只能执行 max 条任务，将这些任务全部执行完。
+          <pre><code class="javascript">
+const tasks = [
+  (params) => new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('task1 params: ' + params);
+      console.log('task1 log');
+      resolve('task1');
+    }, 1000);
+  }),
+  (params) => new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('task2 params: ' + params);
+      console.log('task2 log');
+      resolve('task2');
+    }, 3000);
+  }),
+  (params) => new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('task3 params: ' + params);
+      console.log('task3 log');
+      resolve('task3');
+    }, 2000);
+  }),
+  (params) => new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('task4 params: ' + params);
+      console.log('task4 log');
+      resolve('task4');
+    }, 1000);
+  }),
+];
+const max = 2;
+          </code></pre>
+        </p>
+        <h3>函数方式</h3>
+        <p>
+          执行完所有任务且按原任务的顺序返回对应的值：
+          <pre><code class="javascript">
+async function runAsyncTasks(tasks, max) {
+  const results = Array.from(tasks);
+  const wrapTasks = tasks.map((task, index) => async () => {
+    results[index] = await task();
+    if (wrapTasks.length) {
+      await wrapTasks.shift()();
+    }
+  });
+  await Promise.all(wrapTasks.splice(0, max).map(task => task()));
+  return results;
+}
+
+runAsyncTasks(tasks, max).then(data => console.log(data));
+          </code></pre>
+        </p>
+        <h3>类方式</h3>
+        <p>
+        设计一个类，可以随时添加任务，按先进先执行的机制进行：
+        <pre><code class="javascript">
+class Schedule {
+  tasks = [];
+  count = 0;
+  max = 0;
+  constructor(max) {
+    this.max = max;
+  }
+  add(task) {
+    this.tasks.push(async () => {
+      await task();
+      this.count--;
+      this.runTasks();
+    });
+    this.runTasks();
+  }
+  runTasks() {
+    const n = this.max - this.count;
+    if (n && this.tasks.length) {
+      const tasks = this.tasks.splice(0, n);
+      this.count += tasks.length;
+      tasks.forEach(task => task());
+    }
+  }
+}
+
+const schedule = new Schedule(max);
+tasks.forEach(task => schedule.add(task));
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>串行请求</h2>
+      <p>
+        <h3>问题描述</h3>
+        <p>
+          不使用 async await 的方式来串行执行多个异步请求，且前一个请求的返回值会作为后一个请求的输入参数。
+        </p>
+        <h3>reduce</h3>
+        <pre><code class="javascript">
+function runTasks(tasks) {
+  const result = [];
+  return new Promise(resolve => {
+    tasks.reduce((pre, next) => {
+      return new Promise(_resolve => {
+        pre.then(_data => {
+          next(_data).then(data => {
+            _resolve(data);
+            result.push(data);
+            if (result.length === tasks.length) {
+              resolve(result);
+            }
+          });
+        });
+      });
+    }, Promise.resolve());
+  });
+}
+
+runTasks(tasks).then(data => console.log(data));
+        </code></pre>
+        <h3>compose</h3>
+        <p>
+          类似于 koa 的 compose，实现函数的嵌套调用。
+          <pre><code class="javascript">
+function runTasks(tasks) {
+  const result = [];
+  function dispatch(i) {
+    const task = tasks[i];
+    if (!task) {
+      return Promise.resolve();
+    }
+    return new Promise(resolve => {
+      dispatch(i - 1).then(_data => {
+        task(_data).then(data => {
+          result.push(data);
+          resolve(data);
+        });
+      });
+    });
+  }
+  return new Promise(resolve => {
+    dispatch(tasks.length - 1).then(() => {
+      resolve(result);
+    });
+  })
+}
+
+runTasks(tasks).then(data => console.log(data));
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 标题 <a href="链接">链接</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

@@ -234,6 +234,17 @@ console.log(new MyClass().num); // => 2
 				</p>
 			</p>
 		</section>
+		<section>
+			<h2>对比 function</h2>
+			<p>
+				本质上，class 只是个外壳，本质上还是个 function
+				<pre><code class="javascript">
+class A {}
+typeof A; // => 'function'
+				</code></pre>
+				静态属性保存在构造函数对象身上。
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>

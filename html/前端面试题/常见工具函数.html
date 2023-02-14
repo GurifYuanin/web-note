@@ -200,6 +200,65 @@ function isNaN(n) {
         </code></pre>
       </p>
     </section>
+    <section>
+      <h2>随机</h2>
+      <p>
+        <h3>生成随机正整数</h3>
+        <p>
+          <pre><code class="javascript">
+function random(n) {
+  return Math.floor(Math.random() * (n + 1));
+}
+          </code></pre>
+        </p>
+        <h3>生成随机字母</h3>
+        <p>
+          36 进制的数字包括了 0-9 和 a-z，也就是 Math.random().toString(36) 会生成类似于 0.f6t7lwi2375 这种字符串。
+          <pre><code class="javascript">
+function random() {
+  return Math.random().toString(36).slice(2, 3);
+}
+          </code></pre>
+        </p>
+        <h3>生成多个不重复的随机数字</h3>
+        <p>
+          传统的做法是每生成一个随机数字就检查是否重复，若重复则重新生成，可以改变思路，定义一堆递增不重复的数字，再对数组进行乱序，取前 n 个作为结果。
+          <pre><code class="javascript">
+function shuffle(list) {
+  return list.sort((x, y) => Math.random() - 0.5);
+}
+
+function random(n) {
+  return shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, n);
+}
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>集合操作</h2>
+      <p>
+        <h3>交集</h3>
+        <p>
+          两个数组取交集非常简单
+          <pre><code class="javascript">
+function intersection(arr1, arr2) {
+  return arr1.filter(el => arr2.includes(el));
+}
+          </code></pre>
+          当参数为任意个数组时，就需要遍历地两两取交集，可以使用 reduce 减少代码量。
+          <pre><code class="javascript">
+function intersection(...list) {
+  return list.reduce((arr1, arr2) => arr1.filter(el => arr2.includes(el)));
+}
+          </code></pre>
+        </p>
+        <h3>并集</h3>
+        <p>
+          并集使用 concat 或者展开符即可实现。
+        </p>
+      </p>
+    </section>
     <section class="refer">
       <h2>参考文献</h2>
       <p>

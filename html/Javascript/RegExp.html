@@ -409,6 +409,32 @@ expg.exec(str); // => ["1", index: 4, input: "1a1a1a", groups: undefined]
 					<pre><code class="javascript">
 const calc = '1+2*3/2+5-6/3';
 calc.replace(/(\d+[*/])+\d+/g, item => `(${item})`);
+// 当在正则中使用小括号时，可以只用 $x 来取小括号里的值，所以可以简写为
+calc.replace(/(\d+[*/])+\d+/g, `($1)`);
+					</code></pre>
+				</p>
+				<h3>实现 lodash.get</h3>
+				<p>
+					因为 lodash.get(object, path) 中的 path 可能包含数组引用，比如 'a[0].b'，需要将这种全部转为 . 的格式，也就是最终结果为 'a.0.b'。
+					<pre><code class="javascript">
+const obj = {
+	a: [
+		{
+			b: 1
+		}
+	]
+};
+const path = 'a[0].b';
+console.log(get(obj, path));
+
+function get(obj, path) {
+	const paths = path.replace(/\[['"]?(\w+)['"]?\]/g, '.$1').split('.');
+	let result = obj;
+	for (const p of paths) {
+		result = result?.[p];
+	}
+	return result;
+}
 					</code></pre>
 				</p>
 			</p>

@@ -79,6 +79,15 @@ export const ContextOnlyDispatcher: Dispatcher = {
         </p>
       </p>
     </section>
+    <section>
+      <h2>useEffect</h2>
+      <p>
+        <h3>为什么 useEffect 会调用两次</h3>
+        <p>
+          这是 React18 新增的特性，仅在开发模式下且启用了严格模式才会执行两次，因为<span class="different">all components mount and unmount, then mount again</span>。
+        </p>
+      </p>
+    </section>
     <section class="refer">
       <h2>参考文献</h2>
       <p>
