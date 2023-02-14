@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>兼容问题</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">兼容问题</h1>
+    </hgroup>
+    <section>
+      <h2>虚拟键盘</h2>
+      <p>
+        <h3>收起虚拟键盘后大片空白</h3>
+        <p>
+          <div>问题描述：在高版本的 IOS 中收起虚拟键盘页面会留下大量空白</div>
+          <div>解决方法：页面滚动一下</div>
+          <pre><code class="javascript">
+document.addEventListener('focusout', () => {
+  setTimeout(() => {
+    const height = document.documentElement.scrollTop || document.body.scrollTop;
+    window.scrollTo(0, height + 1);
+    window.scrollTo(0, height - 1);
+  }, 20)
+});
+          </code></pre>
+        </p>
+        <h3>打开虚拟键盘后覆盖输入框</h3>
+        <p>
+          <div>问题描述：在部分安卓机上，虚拟键盘弹出后会覆盖输入框</div>
+          <div>解决方法：scrollIntoView() 让输入框出现在浏览器的可见窗口内</div>
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] H5 IOS 虚拟键盘不回落的问题 <a href="https://www.shuzhiduo.com/A/kvJ38AaO5g/">https://www.shuzhiduo.com/A/kvJ38AaO5g/</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
