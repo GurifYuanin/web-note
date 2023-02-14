@@ -40,8 +40,8 @@
       <p>
         <pre><code class="javascript">
 class XHRCache {
-  requestMap = new Map();
-  responseMap = new Map();
+  requestMap = new Map(); // key 为 url，value 为发起请求的 Promise 对象
+  responseMap = new Map(); // key 为 url，value 为请求的返回值，当请求还未返回时为 null
   send(url) {
     if (this.responseMap.has(url)) {
       const resp = this.responseMap.get(url);

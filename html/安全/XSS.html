@@ -138,6 +138,20 @@
 				</span>更改为<span class="definition"> http://error.com </span>，用户输入的账号和密码进行登录时就会将其一并传送给攻击者的服务器。
 			</p>
 		</section>
+		<section>
+			<h2>如何防</h2>
+			<p>
+				<h3>过滤</h3>
+				<h3>CSP</h3>
+				<p>
+					在页面配置 meta 来开启 CSP，进而控制当前页面能加载什么资源，比如下面表示只加载与当前页面同域名的资源：
+					<pre><code class="">
+&lt;meta http-equiv="Content-Security-Policy" content="script-src 'self'"&gt;
+					</code></pre>
+					另一种开启 CSP 的方式是通过 HTTP Header Content-Security-Policy，当返回资源时带上该 Header，可以控制资源在哪些页面生效。
+				</p>
+			</p>
+		</section>
 		<section class="refer">
 			<h2>参考文献</h2>
 			<p>

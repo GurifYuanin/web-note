@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>setState</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">setState</h1>
+    </hgroup>
+    <section>
+      <h2>不同点</h2>
+      <p>
+        <h3>在组件生命周期或合成事件中</h3>
+        <p>
+          <ul>
+            <li>异步更新数据</li>
+            <li>若有多条 setState，进行合并更新</li>
+          </ul>
+          <pre><code class="jsx">
+this.setState({ count: this.state.count + 1 });
+this.setState({ count: this.state.count + 1 });
+this.setState({ count: this.state.count + 1 });
+// 等价于
+Object.assign(
+  previousState,
+  { count: previousState.count+ 1 },
+  { count: previousState.count+ 1 },
+  { count: previousState.count+ 1 },
+)
+          </code></pre>
+        </p>
+        <h3>在 setTimeout 或原生事件中</h3>
+        <p>
+          <ul>
+            <li>同步更新数据</li>
+            <li>若有多条 setState，逐条执行</li>
+          </ul>
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 说说 React中的setState执行机制 <a href="https://vue3js.cn/interview/React/setState.html">https://vue3js.cn/interview/React/setState.html</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>
