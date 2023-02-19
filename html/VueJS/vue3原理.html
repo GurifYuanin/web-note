@@ -88,7 +88,7 @@ const increasingNewIndexSequence = moved
           <pre><code class="typescript">
 [ 2, 3, 4 ]
           </code></pre>
-          算出最大递增子序列的目的是对于这部分节点不进行移动
+          算出最大递增子序列的目的是遍历到这部分节点不进行移动，仅移动其他部分的节点
           <pre><code class="typescript">
 for (i = toBePatched - 1; i >= 0; i--) {
   const nextIndex = s2 + i
@@ -104,7 +104,7 @@ for (i = toBePatched - 1; i >= 0; i--) {
       ...
     )
   } else if (moved) {
-    if (j < 0 || i !== increasingNewIndexSequence[j]) {
+    if (j < 0 || <span class="strong">i !== increasingNewIndexSequence[j]</span>) {
       move(nextChild, container, anchor, MoveType.REORDER)
     } else {
       j--

@@ -62,6 +62,66 @@ Object.assign(
         </p>
       </p>
     </section>
+    <section>
+      <h2>原理</h2>
+      <p>
+        <h3>前置知识</h3>
+        <p>
+          <h4>Update</h4>
+          <pre><code class="javascript">
+export function createUpdate(eventTime: number, lane: Lane): Update&lt;*&gt; {
+  const update: Update&lt;*&gt; = {
+    eventTime,
+    lane, // 优先级
+    suspenseConfig,
+    tag: UpdateState, // Update 的类型
+    payload: null, // 对于 ClassComponent，为 this.setState 的第一个传参。对于 HostRoot，为 ReactDOM.render 的第一个传参。
+    callback: null, // 回调函数
+
+    next: null, // 下一个 Update 对象
+  };
+  return update;
+}
+          </code></pre>
+        </p>
+        <h3>setState 流程</h3>
+        <p>
+          this.setState 内部调用的是 enqueueSetState 方法
+          <pre><code class="javascript">
+Component.prototype.setState = function (partialState, callback) {
+  ...
+  this.updater.enqueueSetState(this, partialState, callback, 'setState');
+};
+
+enqueueSetState(inst, payload, callback) {
+  const fiber = getInstance(inst);
+
+  const eventTime = requestEventTime();
+  const suspenseConfig = requestCurrentSuspenseConfig();
+
+  const lane = requestUpdateLane(fiber, suspenseConfig);
+
+  const update = createUpdate(eventTime, lane, suspenseConfig);
+
+  update.payload = payload;
+
+  if (callback !== undefined && callback !== null) {
+    update.callback = callback;
+  }
+
+  enqueueUpdate(fiber, update);
+  scheduleUpdateOnFiber(fiber, lane, eventTime);
+}
+          </code></pre>
+          可以看到，enqueueSetState 做了几件事：
+          <ol>
+            <li>通过 requestUpdateLane 计算 Update 的优先级</li>
+            <li>创建一个 Update 对象</li>
+            <li>Update 对象通过 enqueueUpdate 挂到 updateQueue 单向链表上</li>
+          </ol>
+        </p>
+      </p>
+    </section>
     <section class="refer">
       <h2>参考文献</h2>
       <p>

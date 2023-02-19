@@ -26,16 +26,16 @@
       <h1 id="title">前端性能优化</h1>
     </hgroup>
     <section>
-      <h2>简介</h2>
-      <p>
-        性能优化，即更快、更流畅地展示页面。
-      </p>
-    </section>
-    <section>
       <h2>缓存</h2>
       <p>
         <ul>
-          <li>配置强缓存与协商缓存</li>
+          <li>
+            配置强缓存与协商缓存
+            <ol>
+              <li>入口文件 Cache-Control: no-cache 不缓存或通过 max-age 设置短暂的强缓存</li>
+              <li>CDN 静态资源（带哈希）一年强缓存</li>
+            </ol>
+          </li>
           <li>使用<a href="../HTML/ServiceWorker.html">ServiceWorker</a>（IE 不兼容）或手动实现的方式，缓存相同的请求</li>
         </ul>
       </p>
@@ -289,6 +289,25 @@ import(
           <li>CSS 资源优于 JS 资源加载</li>
           <li>页面加载时使用骨架屏提升用户体验</li>
         </ul>
+      </p>
+    </section>
+    <section>
+      <h2>解决报错</h2>
+      <p>
+        <h3>白屏</h3>
+        <p>
+          <ul>
+            <li>排查兼容性问题，大部分原因是低版本浏览器缺少 polyfill 导致</li>
+            <li>做 Error Boundary 处理，防止整个页面崩溃</li>
+            <li>检查静态资源是否成功加载，比如 CDN 挂了（进行 <a href="../前端面试题/Case解决方案.html#CDN容灾">CDN 容灾</a>）</li>
+          </ul>
+        </p>
+        <h3>JS 错误</h3>
+        <p>
+          <ul>
+            <li>通过上报的错误日志，分析代码问题</li>
+          </ul>
+        </p>
       </p>
     </section>
     <section class="refer">

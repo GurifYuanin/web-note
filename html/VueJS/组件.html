@@ -612,6 +612,9 @@ app.config.unwrapInjectedRef = true
 	&lt;标签 is="组件名"&gt;&lt;/标签&gt;
 &lt;/keep-alive&gt;
 				</code></pre>
+				<div class="tip">
+					Keep-Alive 的组件生命周期为 created-> mounted-> activated，退出时触发 deactivated，没有 unmount 或者 destory 生命周期钩子。
+				</div>
 				<h3>解析问题</h3>
 				有些 HTML 元素，诸如 &lt;ul&gt;、&lt;ol&gt;、&lt;table&gt; 和 &lt;select&gt;，对于哪些元素可以出现在其内部是有严格限制的。而有些元素，诸如
 				&lt;li&gt;、&lt;tr&gt; 和 &lt;option&gt;，只能出现在其它某些特定的元素内部。<sup>[1]</sup>

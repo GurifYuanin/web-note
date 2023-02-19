@@ -147,10 +147,34 @@
         </code></pre>
       </p>
     </section>
+    <section>
+      <h2>小于 12px 的文字大小</h2>
+      <p>
+        如何实现小于 10px 的文字大小。
+        <h3>transform: scale</h3>
+        <p>
+          <pre><code class="css">
+transform: scale(.83);
+-webkit-transform: scale(.83);
+          </code></pre>
+        </p>
+        <h3>zoom</h3>
+        <p>
+          Zoom 非标属性，有兼容问题，缩放会改变了元素占据的空间大小，触发重排。
+          <pre><code class="css">
+zoom: .83;
+          </code></pre>
+        </p>
+        <h3>aspect-ratio</h3>
+        <p>
+          参见<a href="../CSS/CSS最新特性.html#其他">等比缩放（aspect-ratio）</a>。
+        </p>
+      </p>
+    </section>
     <section class="refer">
       <h2>参考文献</h2>
       <p>
-        <div>[1] 标题 <a href="链接">链接</a></div>
+        <div>[1] 让Chrome支持小于12px 的文字方式有哪些 <a href="https://vue3js.cn/interview/css/less_12px.html">https://vue3js.cn/interview/css/less_12px.html</a></div>
       </p>
     </section>
   </div>

@@ -38,8 +38,8 @@
           浏览器 JS 单线程指的是<span class="different">JS 引擎</span>在执行<span class="different">JS 代码</span>时，代码只在一个线程上执行，而 JS 引擎本身有多个线程，其中最重要的 4 个模块负责以下事情：
           <ol>
             <li>Parser：将 JS 代码转化为 AST</li>
-            <li>Ignition（解释器）：将 AST 转化为字节码 Bytecode 并解释执行，收集编译器需要的信息</li>
-            <li>TurboFan（编译器：对于反复执行的代码，则会将这段 Bytecode 转化为优化的汇编代码</li>
+            <li>Ignition（解释器）：将 AST 转化为字节码（Bytecode）并解释执行，收集编译器需要的信息</li>
+            <li>TurboFan（编译器）：对于反复执行的代码，则会将这段 Bytecode 转化为优化的汇编代码</li>
             <li>Orinoco（垃圾回收）：将不需要的内存空间回收</li>
           </ol>
         </p>

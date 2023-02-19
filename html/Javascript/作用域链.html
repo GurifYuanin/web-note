@@ -73,16 +73,15 @@ console.log(a); // 使用全局变量
 })();
 console.log(b); // 报错，函数外找不到局部变量
 				</code></pre>
-				<div>
-					<h3>var 声明提前</h3>
-					<p>
-						在 javascrpt 中，通过 var 进行的变量声明，全局变量的声明会被自动提前到代码开头，局部变量的声明会被自动提前到函数开头。
-						<pre><code class="javascrpt">
+				<h3>var 声明提前</h3>
+				<p>
+					在 javascrpt 中，通过 var 进行的变量声明，全局变量的声明会被自动提前到代码开头，局部变量的声明会被自动提前到函数开头。
+					<pre><code class="javascrpt">
 console.log(a); // 输出 undefined
 var a = 'global';
 (function() {
-	console.log(b); // 输出 undefined
-	var b = 'local';
+console.log(b); // 输出 undefined
+var b = 'local';
 })();
 
 /* 相当于 */
@@ -91,45 +90,51 @@ var a;
 console.log(a); // 输出 undefined
 a = 'global';
 (function() {
-	var b;
-	console.log(b); // 输出 undefined
-	b = 'local';
+var b;
+console.log(b); // 输出 undefined
+b = 'local';
 })();
-						</code></pre>
-					</p>
-				</div>
-				<div>
-					<h3>作用域链</h3>
-					<p>
-						函数内部有其自身的作用域，函数外也有其作用域，查找变量时则按照一定顺序，从自身作用域一步步向外检索其他作用域，即从作用域链（Scope Chain）前端往作用域链后端的方向查找。<br>
-						可以这么认为，作用域链是一系列变量对象指针的数组。
-						<pre><code class="javascrpt">
+					</code></pre>
+				</p>
+				<h3>作用域链</h3>
+				<p>
+					函数内部有其自身的作用域，函数外也有其作用域，查找变量时则按照一定顺序，从自身作用域一步步向外检索其他作用域，即从作用域链（Scope Chain）前端往作用域链后端的方向查找。<br>
+					可以这么认为，作用域链是一系列变量对象指针的数组。
+					<pre><code class="javascrpt">
 var a = 'global';
 function outer () {
-	var b = 'outer';
-	function inner () {
-		var c = 'inner';
-	}
+var b = 'outer';
+function inner () {
+	var c = 'inner';
 }
-						</code></pre>
-						对于 inner 函数来说，其作用域链为：
-						<figure>
-							<img src="../../images/scope_chain.jpg" alt="加载失败">
-						</figure>
-						也就是说，在 inner 函数内，甚至可以自己调用自己，因为在原型链上能找到 inner 函数的函数地址，执行以下代码：
-						<pre><code class="javascrpt">
+}
+					</code></pre>
+					对于 inner 函数来说，其作用域链为：
+					<figure>
+						<img src="../../images/scope_chain.jpg" alt="加载失败">
+					</figure>
+					也就是说，在 inner 函数内，甚至可以自己调用自己，因为在原型链上能找到 inner 函数的函数地址，执行以下代码：
+					<pre><code class="javascrpt">
 function hello () {
-	console.log('hello');
-	hello();
+console.log('hello');
+hello();
 }
 hello();
-						</code></pre>
-						<figure>
-							<img src="../../images/scope_chain_deadloop.jpg">
-							<figcaption>切勿模仿</figcaption>
-						</figure>
-					</p>
-				</div>
+					</code></pre>
+					<figure>
+						<img src="../../images/scope_chain_deadloop.jpg">
+						<figcaption>切勿模仿</figcaption>
+					</figure>
+				</p>
+				<h3>module wrapper<sup>[4]</sup></h3>
+				<p>
+					在 Node 中，因为没有块级作用域，为了防止与全局作用域冲突，以及兼容老的代码，每个文件都会作为函数被包裹起来实现作用域隔离。
+					<pre><code class="nodejs">
+(function(exports, require, module, __filename, __dirname) {
+// Module code actually lives in here
+});
+					</code></pre>
+				</p>
 			</p>
 		</section>
 		<section>
@@ -195,7 +200,11 @@ scope = {
 						href="https://www.cnblogs.com/lishuxue/p/6558788.html">https://www.cnblogs.com/lishuxue/p/6558788.html</a>
 				</div>
 				<div>[3] bruce_zhou 理解JS的执行环境 <a
-						href="https://www.jianshu.com/p/76ed896bbf91">https://www.jianshu.com/p/76ed896bbf91</a></div>
+						href="https://www.jianshu.com/p/76ed896bbf91">https://www.jianshu.com/p/76ed896bbf91</a>
+				</div>
+				<div>[4] The module wrapper <a
+						href="https://nodejs.org/api/modules.html#the-module-wrapper">https://nodejs.org/api/modules.html#the-module-wrapper</a>
+				</div>
 			</p>
 		</section>
 	</article>

@@ -210,12 +210,25 @@ http
 				<h3>devDependencies</h3>
 				devDependencies 表示开发程序时依赖的模块及版本号，版本号规范同 dependencies 。
 				<h3>peerDependencies</h3>
-				当用户使用该模块作为插件时，该字段表示使用该模块时需要的模块和版本号。
+				表示当前仓库作为依赖包被使用方 A 使用时，A 最好也要安装一下 peerDependencies 下的包。
 				<pre><code class="json">
 "peerDependencies": {
 	"module": "^1.0.0"
 }
 				</code></pre>
+				比如 antd，作为一个 react 的组件库，它在 package.json 中声明了
+				<pre><code class="json">
+"peerDependencies": {
+	"react": ">=16.0.0",
+	"react-dom": ">=16.0.0"
+}
+				</code></pre>
+				那么当我们使用 antd 时，如果我们的代码仓库中没有 react 和 react-dom 这两个包，也不会直接下载（npm3 之后），而是会得到一个警告：
+				<pre><code class="shell">
+react 是一个需要的依赖，但是没有被安装
+react-dom 是一个需要的依赖，但是没有被安装
+				</code></pre>
+				而如果把 react 和 react-dom 写在 dependencies 则会自动下载，也就是说 peerDependencies 可以避免重复安装。
 				<h3>engines</h3>
 				engines 用于表示模块的运行对平台的要求。
 				<pre><code class="json">
@@ -233,6 +246,45 @@ http
 				<figure>
 					<img src="../../images/npm_private.jpg">
 				</figure>
+			</p>
+		</section>
+		<section>
+			<h2>钩子</h2>
+			<p>
+				<h3>前置后置钩子</h3>
+				<p>
+					在执行某个命令时，会触发前置和后置钩子，比如执行 npm install 会执行下面钩子：
+					<ul>
+						<li>preinstall：在执行 npm install 之前会执行的钩子</li>
+						<li>postinstall：在执行 npm install 之后会执行的钩子</li>
+						<li>prepare：在 npm install 之后自动执行</li>
+					</ul>
+					比如使用 preinstall 检查当前的包管理工具是否为 pnpm（两种方法二选一）
+					<pre><code class="json">
+"scripts": {
+	"preinstall": "node ./scripts/preinstall.js",
+	"preinstall": "npx only-allow pnpm -y",
+}
+					</code></pre>
+					其中 preinstall.js 为
+					<pre><code class="javascript">
+if (!/pnpm/.test(process.env.npm_execpath || '')) {
+	console.warn('请使用 pnpm 进行包管理');
+	process.exit(1);
+}
+					</code></pre>
+				</p>
+				<h3>npm publish 生命周期</h3>
+				<p>
+					<ol>
+						<li>prepublishOnly。</li>
+						<li>prepack</li>
+						<li>prepare</li>
+						<li>postpack</li>
+						<li>publish</li>
+						<li>postpublish</li>
+					</ol>
+				</p>
 			</p>
 		</section>
 		<section class="refer">
