@@ -83,7 +83,7 @@
     <section>
       <h2>重复下载</h2>
       <p>
-        pnpm 不仅能解决单个项目里重复下载的问题，还能解决跨项目相同包的重复下载情况，其原理为 pnpm 对下载的包进行全局存储，项目里的 node_modules 通过硬链接指到相同的地方。
+        pnpm 不仅能解决单个项目里重复下载的问题，还能解决跨项目相同包的重复下载情况，其原理为 pnpm 对下载的包进行全局存储（~/.pnpm-store），项目里的 node_modules 通过硬链接指到相同的地方。
         <figure>
           <img src="../../images/pnpm2.jpg" alt="">
         </figure>

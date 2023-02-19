@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>webpack 构建速度优化</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">webpack 构建速度优化</h1>
+    </hgroup>
+    <section>
+      <h2>开启持久化缓存</h2>
+      <p>
+        <h3>webpack4</h3>
+        <p>
+          一些性能开销较大的 loader 之前添加添加 cache-loader，以将结果缓存到磁盘里，显著提升二次构建速度。
+          <pre><code class="javascript">
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.ext$/,
+        use: ['cache-loader', ...loaders],
+        include: path.resolve('src'),
+      },
+    ],
+  },
+};
+          </code></pre>
+        </p>
+        <h3>webpack5</h3>
+        <p>
+          webpack5 直接支持开启持久化缓存。
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>按需 polyfill</h2>
+      <p>
+        在使用 babel 之类的转移工具时，配置 include 或 exclude 只对需要的代码 polyfill。
+        <pre><code class="javascript">
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: ['babel-loader?cacheDirectory'],
+        include: path.resolve(__dirname, 'src'),
+      },
+    ]
+  },
+};
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>合理使用 sourcemap</h2>
+      <p>
+        <figure>
+          <img src="../../images/webpack_devtool.jpg">
+          <figcaption> + 表示快，- 表示慢</figcaption>
+        </figure>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      <div>[1] 如何提高webpack的构建速度 <a href="https://vue3js.cn/interview/webpack/improve_build.html">https://vue3js.cn/interview/webpack/improve_build.html</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

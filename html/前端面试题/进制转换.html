@@ -78,6 +78,45 @@ function toString(num, radix) {
         </code></pre>
       </p>
     </section>
+    <section>
+      <h2>实现进制器</h2>
+      <p>
+        在一些场景中，比如实现笛卡尔积，需要手动实现一个进制器，比如现在有这么一个数字 3041：
+        <ul>
+          <li>3：第一位，相当于十进制中的千位数，在这里是 4 进制，满 4 进 1</li>
+          <li>0：第二位，相当于十进制中的百位数，在这里是 6 进制，满 6 进 1</li>
+          <li>4：第三位，相当于十进制中的十位数，在这里是 5 进制，满 5 进 1</li>
+          <li>1：最末位，相当于十进制中的个位数，在这里是 4 进制，满 4 进 1</li>
+        </ul>
+        <pre><code class="javascript">
+// addOne 函数对指定数字进行加一操作
+// indexs 每个位数的具体，比如上面的就是 [3, 0, 4, 1]
+// maxs 每个位数的进制数，比如上面的就是 [4, 6, 5, 4]
+function addOne(indexs, maxs) {
+  if (!indexs.length) {
+    return indexs;
+  }
+  let isIncrease = false;
+  indexs[indexs.length - 1]++; // 先末尾进一
+  for (let i = indexs.length - 1; i >= 0; i--) {
+    if (indexs[i] >= maxs[i]) {
+      // 满了后标记为进一
+      isIncrease = true;
+      indexs[i] = 0;
+    } else if (isIncrease) {
+      // 进行进一操作，因为不知道进一后是不是又满了，需要再进一次循环
+      isIncrease = false;
+      indexs[i]++;
+      i++;
+    } else {
+      break;
+    }
+  }
+  return indexs;
+}
+        </code></pre>
+      </p>
+    </section>
     <section class="refer">
       <h2>参考文献</h2>
       <p>

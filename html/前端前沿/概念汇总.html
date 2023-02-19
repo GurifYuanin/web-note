@@ -34,7 +34,12 @@
           ReactNative 的架构模型由三部分构成：
           <ul>
             <li>JS 层：负责构建虚拟 DOM，跨端页面的业务逻辑</li>
-            <li>C++ 桥接层：衔接前端和原生平台（使用 JavaScriptCore 解析执行 JavaScript 代码，通过 MessageQueue 消息队列实现双向通信）</li>
+            <li>
+              C++ 桥接层：衔接前端和原生平台（使用 JavaScriptCore 解析执行 JavaScript 代码，通过 MessageQueue 消息队列实现双向通信）
+              <div class="tip">
+                Native 与 JS 层之间的调用，是以两边存在两边存在同一份模块配置表，最终均是将调用转化为{ moduleID, methodID, callbackID, args }，处理端在模块配置表里查找注册的模块与方法并调用。
+              </div>
+            </li>
             <li>Native 层（Java 或 Objective）：负责原生组件的渲染，提供各种原生能力</li>
           </ul>
           <figure>
@@ -55,6 +60,7 @@
     <section>
       <h2>SSR</h2>
       <p>
+        服务端渲染过程：将同一个组件渲染为服务器端的 HTML 字符串，将它们直接发送到浏览器，最后将这些静态标记"激活"为客户端上完全可交互的应用程序。
         <h3>Vue</h3>
         <p>
           <ul>

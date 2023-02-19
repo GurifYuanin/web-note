@@ -30,6 +30,7 @@
       <p>
         <h3>渲染指标</h3>
         <p>
+          <h4>自动计算</h4>
           <style>
             #fe-performance-table img {
               width: 400px;
@@ -127,6 +128,55 @@ new PerformanceObserver((entryList) => {
           <figure>
             <img src="../../images/fcp_lcp_demo.jpg" alt="">
           </figure>
+          <h4>手动计算</h4>
+          <pre><code class="javascript">
+const timingInfo = window.performance.timing;
+
+// DNS解析，DNS查询耗时
+timingInfo.domainLookupEnd - timingInfo.domainLookupStart;
+
+// TCP连接耗时
+timingInfo.connectEnd - timingInfo.connectStart;
+
+// 获得首字节耗费时间，也叫TTFB
+timingInfo.responseStart - timingInfo.navigationStart;
+
+// domReady时间(与DomContentLoad事件对应)
+timingInfo.domContentLoadedEventStart - timingInfo.navigationStart;
+
+// DOM资源下载
+timingInfo.responseEnd - timingInfo.responseStart;
+
+// 准备新页面时间耗时
+timingInfo.fetchStart - timingInfo.navigationStart;
+
+// 重定向耗时
+timingInfo.redirectEnd - timingInfo.redirectStart;
+
+// Appcache 耗时
+timingInfo.domainLookupStart - timingInfo.fetchStart;
+
+// unload 前文档耗时
+timingInfo.unloadEventEnd - timingInfo.unloadEventStart;
+
+// request请求耗时
+timingInfo.responseEnd - timingInfo.requestStart;
+
+// 请求完毕至DOM加载
+timingInfo.domInteractive - timingInfo.responseEnd;
+
+// 解释dom树耗时
+timingInfo.domComplete - timingInfo.domInteractive;
+
+// 从开始至load总耗时
+timingInfo.loadEventEnd - timingInfo.navigationStart;
+
+// 白屏时间
+timingInfo.responseStart - timingInfo.fetchStart;
+
+// 首屏时间
+timingInfo.domComplete - timingInfo.fetchStart;
+          </code></pre>
           <div class="tip">
             实际计算指标时，由于存在后台选项卡加载、往返缓存<sup>[6]</sup>等情况，导致 API 计算结果出现误差，可以使用<a href="https://github.com/GoogleChrome/web-vitals">web-vitals</a>库来统计以尽量减少误差。
           </div>

@@ -28,7 +28,7 @@
 		<section>
 			<h2>定义</h2>
 			<p>
-				webpack 只认识 javascript 文件，在面对使用 import 导入非 javascript 文件，打包时直接报错。
+				webpack 只认识 javascript / json 文件，在面对使用 import 导入非 javascript 文件，打包时直接报错。
 				<pre><code class="javascript">
 // 在命令行执行 webpack
 $ webpack --config webpack.conf.js
@@ -39,7 +39,7 @@ import './style.css';
 				<figure>
 					<img src="../../images/loader_error.jpg">
 				</figure>
-				loader 用于对模块的源代码进行转换。loader 可以使你在 import 或"加载"模块时预处理文件。<sup>[1]</sup>
+				loader 用于对模块的源代码进行转换，最终变为 js 代码。loader 可以使你在 import 或"加载"模块时预处理文件。<sup>[1]</sup>
 				<ol>
 					<li>
 						下载 loader 包：

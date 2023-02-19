@@ -84,6 +84,15 @@
             <td></td>
           </tr>
           <tr>
+            <td>Snowpack</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
             <td>Turbopack</td>
             <td></td>
             <td></td>
@@ -110,6 +119,7 @@
           __webpack_require__ 是一个函数，上面还挂了一些工具方法：
           <ul>
             <li>__webpack_require__(moduleId)：加载模块代码并进行缓存</li>
+            <li>__webpack_require__.e(chunkId)：通过 JSONP 加载 chunk</li>
             <li>
               __webpack_require__.r(exports)：将传入的模块标记为 ES 模块，相当于给模块加上 Symbol.toStringTag 属性
               <pre><code class="javascript">

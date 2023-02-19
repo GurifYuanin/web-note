@@ -98,7 +98,8 @@
     "合成事件",
     "renderProps",
     "HOC",
-    "react hooks"
+    "react hooks",
+    "react16原理"
   ],
   [
     "nuxt"
@@ -107,7 +108,8 @@
     "webpack",
     "webpack plugins",
     "webpack loader",
-    "webpack HMR"
+    "webpack HMR",
+    "webpack 构建速度优化"
   ],
   [
     "响应式布局",
@@ -201,7 +203,7 @@
     "算法题编程规范"
   ],
   [
-    "三数和",
+    "n 数和",
     "子序列问题"
   ],
   [

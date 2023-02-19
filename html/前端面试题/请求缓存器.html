@@ -40,26 +40,21 @@
       <p>
         <pre><code class="javascript">
 class XHRCache {
-  requestMap = new Map(); // key 为 url，value 为发起请求的 Promise 对象
-  responseMap = new Map(); // key 为 url，value 为请求的返回值，当请求还未返回时为 null
-  send(url) {
-    if (this.responseMap.has(url)) {
-      const resp = this.responseMap.get(url);
-      if (resp === null) {
-        return this.requestMap.get(url);
-      } else {
-        return resp;
-      }
+  responseMap = new Map(); // key 为 url，value 为请求的返回值
+  send(options) {
+    if (Object.prototype.toString.call(options).toLowerCase() === '[object string]') {
+      options = { url: options };
+    }
+    const {
+      url,
+      ...restOptions
+    } = options;
+    if (this.responseMap.has(options)) {
+      return this.responseMap.get(options);
     } else {
-      this.responseMap.set(url, null);
-      return new Promise(resolve => {
-        this.requestMap.set(url, new Promise(async innerResolve => {
-          const resp = await fetch(url);
-          this.responseMap.set(url, resp);
-          innerResolve(resp);
-          resolve(resp);
-        }));
-      });
+      const resp = fetch(url, restOptions);
+      this.responseMap.set(options, resp);
+      return resp;
     }
   }
 }
