@@ -146,14 +146,16 @@ function flatten(arr, depth = 1, result = []) {
       </p>
     </section>
     <section>
-      <h2>函数柯里化</h2>
+      <h2>加减</h2>
       <p>
-        实现 sum(1, 2, 3) 等于 sum(1)(2)(3)，涉及知识点：
-        <ul>
-          <li>函数柯里化</li>
-          <li>闭包</li>
-        </ul>
-        <pre><code class="javascript">
+        <h3>函数柯里化</h3>
+        <p>
+          实现 sum(1, 2, 3) 等于 sum(1)(2)(3)，涉及知识点：
+          <ul>
+            <li>函数柯里化</li>
+            <li>闭包</li>
+          </ul>
+          <pre><code class="javascript">
 const sum = (() => {
   let list = [];
   const add = function(...args) {
@@ -170,7 +172,22 @@ const sum = (() => {
 
 console.log(sum(1, 2 ,3).toString());
 console.log(sum(1)(2)(3).toString());
-        </code></pre>
+          </code></pre>
+        </p>
+        <h3>拓展 Number</h3>
+        <p>
+          实现 (1).add(3).minus(2)
+          <pre><code class="javscript">
+Number.prototype.add = function(n) {
+  return this + n;
+}
+Number.prototype.minus = function(n) {
+  return this - n;
+}
+
+(1).add(3).minus(2);
+          </code>e</pre>
+        </p>
       </p>
     </section>
     <section>

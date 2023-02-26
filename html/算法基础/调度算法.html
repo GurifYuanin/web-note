@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>调度算法</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">调度算法</h1>
+    </hgroup>
+    <section>
+      <h2>LRU</h2>
+      <p>
+        <h3>是什么</h3>
+        <p>
+          LRU（Least Recently Used）最近最少使用，是一种页面置换算法，选择最近最久未使用的页面予以淘汰。
+          <figure>
+            <img src="../../images/lru.png" alt="">
+          </figure>
+        </p>
+        <h3>代码实现</h3>
+        <p>
+          <ul>
+            <li>使用双向链表来表示先后使用关系</li>
+            <li>使用哈希表来进行查重</li>
+          </ul>
+        </p>
+        <h3>应用场景</h3>
+        <p>
+          <ul>
+            <li>redis：redis 存储的 key-value 不可能无限大，当数据占用达到一定阈值时，就需要删除一些最近最少使用的 key</li>
+          </ul>
+        </p>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] LRU <a href="https://baike.baidu.com/item/LRU/1269842">https://baike.baidu.com/item/LRU/1269842</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

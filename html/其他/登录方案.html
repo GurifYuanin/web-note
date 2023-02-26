@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>鉴权方案</title>
+  <title>登录方案</title>
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/styles/agate.css">
   <link rel="stylesheet" href="../../css/dark.css">
@@ -23,7 +23,7 @@
   </div>
   <div id="container">
     <hgroup>
-      <h1 id="title">鉴权方案</h1>
+      <h1 id="title">登录方案</h1>
     </hgroup>
     <section>
       <h2>jwt</h2>
@@ -142,10 +142,40 @@ const isVerified = jwt.verify(token, secretKey);
         </p>
       </p>
     </section>
+    <section>
+      <h2>SSO</h2>
+      <p>
+        <h3>是什么</h3>
+        <p>
+          单点登录（Single Sign On），指在多个子系统中，用户只需要登录其中一个，就能访问所有子系统。
+          <figure>
+            <img src="../../images/sso_construction.jpg" alt="">
+          </figure>
+        </p>
+        <h3>实现</h3>
+        <p>
+          <h4>父域名相同</h4>
+          若父域名形同，则在设置 cookie 时 domain 设置为父域名，路径设置为根路径，保证每个子系统都可以访问到这个 cookie。
+          <h4>父域名不同</h4>
+          <h5>方式一（标准做法）</h5>
+          假设子系统的域名为 www.example.com，passport 的域名为 www.passport.com
+          <ol>
+            <li>用户首次访问子系统，子系统检查有没有 cookie（domain=example.com），若没有则跳转 passport</li>
+            <li>passport 检查有没有 cookie（domain=passport.com），若没有则显示登录页面</li>
+            <li>用户登录后 passport 进行 set-cookie（domain=passport.com），并跳转回 www.example.com，URL 上携带 cookie 参数，比如 ?sessionid=xxx</li>
+            <li>子系统解析参数，请求 passport 确认参数是否合法，若合法则进行 set-cookie（domain=example.com）</li>
+            <li>用户再次访问子系统，子系统能拿到 cookie 进行登录态校验</li>
+          </ol>
+          <h5>方式二</h5>
+          通过 iframe+postMessage() 方式，将同一份 Token 写入到了多个域下的 LocalStorage 中。
+        </p>
+      </p>
+    </section>
     <section class="refer">
       <h2>参考文献</h2>
       <p>
         <div>[1] 如何实现jwt鉴权机制 <a href="https://vue3js.cn/interview/NodeJS/jwt.html">https://vue3js.cn/interview/NodeJS/jwt.html</a></div>
+        <div>[2] 什么是单点登录 <a href="https://vue3js.cn/interview/JavaScript/single_sign.html">https://vue3js.cn/interview/JavaScript/single_sign.html</a></div>
       </p>
     </section>
   </div>
