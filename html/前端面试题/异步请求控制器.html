@@ -180,6 +180,47 @@ runTasks(tasks).then(data => console.log(data));
         </p>
       </p>
     </section>
+    <section>
+      <h2>请求缓存器</h2>
+      <p>
+        <h3>问题描述</h3>
+        <p>
+          实现一个类，使用类发送请求时，若该请求已经请求过了，若之前的请求
+          <ul>
+            <li>还未返回，则等待返回后复用</li>
+            <li>已经返回，则直接使用之前缓存好的响应</li>
+          </ul>
+        </p>
+        <h3>实现方案</h3>
+        <p>
+          <pre><code class="javascript">
+class XHRCache {
+  responseMap = new Map(); // key 为 url，value 为请求的返回值
+  send(options) {
+    if (Object.prototype.toString.call(options).toLowerCase() === '[object string]') {
+      options = { url: options };
+    }
+    const {
+      url,
+      ...restOptions
+    } = options;
+    if (this.responseMap.has(options)) {
+      return this.responseMap.get(options);
+    } else {
+      const resp = fetch(url, restOptions);
+      this.responseMap.set(options, resp);
+      return resp;
+    }
+  }
+}
+
+const cache = new XHRCache();
+cache.send('/').then(data => console.log('task1', data));
+cache.send('/').then(data => console.log('task2', data));
+          </code></pre>
+        </p>
+      </p>
+    </section>
     <section class="refer">
       <h2>参考文献</h2>
       <p>

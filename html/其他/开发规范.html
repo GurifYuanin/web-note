@@ -29,22 +29,20 @@
       <h2>文档规范</h2>
       <p>
         <ul>
-          其他：
-          <ul>
-            <li>
-              <ul>
-                <li>需求文档</li>
-                <li>测试文档</li>
-              </ul>
-            </li>
-          </ul>
           <li>
             开发相关：
             <ul>
-              <li>技术实现文档</li>
+              <li>技术实现文档 / 详细设计文档</li>
               <li>接口文档</li>
               <li>上线文档：包括了上线流程（上线顺序、上线时需要关注哪些指标）和回滚流程</li>
               <li>事故复盘文档</li>
+            </ul>
+          </li>
+          <li>
+            其他文档，一般添加在附录，便于检索
+            <ul>
+              <li>需求文档</li>
+              <li>测试文档</li>
             </ul>
           </li>
         </ul>
@@ -55,29 +53,153 @@
       <p>
         <h3>git</h3>
         <p>
+          <h4>是什么</h4>
           <ul>
             <li>分支名</li>
-            <li>commit-msg</li>
+            <li>
+              commit-msg
+              <div class="command">
+                &lt;type&gt;(&lt;scope&gt;): &lt;subject&gt;
+              </div>
+              <table>
+                <tr>
+                  <th>属性</th>
+                  <th>描述</th>
+                  <th>值</th>
+                  <th>是否必须</th>
+                </tr>
+                <tr>
+                  <td>type</td>
+                  <td>类型</td>
+                  <td style="text-align: left">
+                    <ul>
+                      <li>feat（feature）：新功能</li>
+                      <li>fix：bug 修复</li>
+                      <li>hotfix：紧急 bug 修复</li>
+                      <li>docs（document）：文档</li>
+                      <li>style：代码格式（不影响代码功能）</li>
+                      <li>refactor：重构</li>
+                      <li>perf：优化相关，如性能提升</li>
+                      <li>test：添加测试</li>
+                      <li>chore：构建过程或辅助工具变更</li>
+                      <li>revert：回滚</li>
+                      <li>merge：代码合并</li>
+                      <li>sync：同步主分支代码</li>
+                      <li>ci：流水线相关</li>
+                      <li>build：构建相关</li>
+                    </ul>
+                  </td>
+                  <td>是</td>
+                </tr>
+                <tr>
+                  <td>scope</td>
+                  <td>影响范围</td>
+                  <td style="text-align: left;">
+                    <ul>
+                      <li>根据项目决定</li>
+                      <li>*：多个范围</li>
+                    </ul>
+                  </td>
+                  <td>否</td>
+                </tr>
+                <tr>
+                  <td>subject</td>
+                  <td>描述</td>
+                  <td></td>
+                  <td>是</td>
+                </tr>
+              </table>
+            </li>
             <li>分支操作规范</li>
           </ul>
+          <h4>怎么配置</h4>
+          <ol>
+            <li>
+              安装 commitlint，这里使用通用规范（config-conventional）
+              <pre><code class="shell">
+npm install --save-dev @commitlint/{config-conventional,cli}
+              </code></pre>
+            </li>
+            <li>
+              安装 husky
+              <pre><code class="shell">
+npm install husky --save-dev
+              </code></pre>
+            </li>
+            <li>
+              配置 commitlint，比如使用配置文件 commitlint.config.js
+              <pre><code class="javascript">
+module.exports = {
+  extends: ['@commitlint/config-conventional']
+};
+              </code></pre>
+            </li>
+            <li>
+              启动 husky
+              <ol>
+                <li>
+                  对于 husky@4 以上
+                  <pre><code class="shell">
+npx husky add .husky/commit-msg 'npx commitlint --edit $1'
+                  </code></pre>
+                </li>
+                <li>
+                  对于 husky@4 以下，新建 .huskyrc.json 文件并写入
+                  <pre><code class="json">
+{
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}
+                  </code></pre>
+                </li>
+              </ol>
+            </li>
+          </ol>
         </p>
         <h3>文件名</h3>
         <h3>代码规范</h3>
         <p>
-          <h3>HTML 语义化</h3>
-          <p>
-            参见<a href="../HTML/HTML语义化.html">HTML 语义化</a>。
-          </p>
-          <h3>代码结构</h3>
-          <p>
-            这部分可以通过 eslint 可以检查出来并修改，参见<a href="./命名规范.html">命名规范</a>。
-          </p>
-          <h3>代码风格</h3>
-          <ul>
-            <li>多加注释</li>
-            <li>语义化代码，增加可读性</li>
-            <li>TS 禁不禁 any</li>
-          </ul>
+          <h4>代码风格</h4>
+          <h5>是什么</h5>
+          参见<a href="./命名规范.html">命名规范</a>。
+          <h5>怎么配置</h5>
+          <ol>
+            <li>下载 eslint/tslint 并编写配置文件</li>
+            <li>
+              在 package.json 添加 lint 执行脚本，比如
+              <pre><code class="json">
+{
+  "scripts": {
+    "lint": "tslint -c tslint.json -p tsconfig.json --fix",
+  }
+}
+              </code></pre>
+            </li>
+            <li>下载 husky</li>
+            <li>
+              启动 husky，比如在 package.json 文件中写入
+              <pre><code class="json">
+{
+  "hooks": {
+    "pre-commit": "lint-staged",
+  },
+  "lint-staged": {
+    "./src/**/*.ts": ["npm run lint", "git add"]
+  }
+}
+              </code></pre>
+            </li>
+          </ol>
+          <h4>语义化</h4>
+          <ol>
+            <li>HTML：参见<a href="../HTML/HTML语义化.html">HTML 语义化</a></li>
+            <li>JS：变量语义</li>
+            <li>CSS</li>
+          </ol>
+          <h4>注释</h4>
         </p>
         <h3>接口设计规范</h3>
         <p>
@@ -92,7 +214,23 @@
       </p>
     </section>
     <section>
-      <h2>部署流程规范</h2>
+      <h2>打包规范</h2>
+      <p>
+        <h3>包管理工具</h3>
+        <p>
+          使用 preinstall 来约束安装依赖时的包管理工具，比如只能使用 pnpm
+          <pre><code class="json">
+{
+  "scripts": {
+    "preinstall": "npx only-allow pnpm -y"
+  }
+}
+          </code></pre>
+        </p>
+      </p>
+    </section>
+    <section>
+      <h2>部署规范</h2>
       <p>
         多套环境，线下线上环境数据隔离。
         <ul>
@@ -106,7 +244,7 @@
     <section class="refer">
       <h2>参考文献</h2>
       <p>
-        <div>[1] 标题 <a href="链接">链接</a></div>
+        <div>[1] 从 vue3 和 vite 源码中，我学到了一行代码统一规范团队包管理器的神器 <a href="https://lxchuan12.gitee.io/only-allow">https://lxchuan12.gitee.io/only-allow</a></div>
       </p>
     </section>
   </div>
