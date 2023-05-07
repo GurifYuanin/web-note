@@ -28,28 +28,7 @@
     <section>
       <h2>所有子序列<sup>[1]</sup></h2>
       <p>
-        找到一个数组里的所有子序列。
-        <pre><code class="javascript">
-function backtrack(result, list, nums) {
-  if (list.length === nums.length) {
-    result.push(list.slice(0));
-  } else {
-    for (let i = 0; i < nums.length; i++) {
-      // 若原数组不重复，则可以不用这个判断
-      if (list.includes(nums[i])) {
-        continue;
-      }
-      list.push(nums[i]);
-      backtrack(result, list, nums);
-      list.pop();
-    }
-  }
-}
-
-const arr = ['a', 'b', 'c', 'd', 'e', 'f'];
-const result = [];
-backtrack(result, [], nums);
-        </code></pre>
+        参见<a href="./集合问题.html">集合问题</a>。
       </p>
     </section>
     <section>

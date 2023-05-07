@@ -128,9 +128,14 @@ selector[attr*="value"] {} /* 选择属性值包含 value 的元素 */
 		<section>
 			<h2>兄弟选择器</h2>
 			<p>
-				兄弟选择器指基于已选择元素，在其兄弟节点中选出元素。中间用<span class="definition">~</span>隔开。
+				兄弟选择器指基于已选择元素，在其兄弟节点中选出元素。
+				<ul>
+					<li>+ 第一个后面的兄弟元素</li>
+					<li>~：所有后面的兄弟元素</li>
+				</ul>
 				<pre><code class="css">
 selector1 ~ selector2 {}
+selector1 + selector2 {}
 				</code></pre>
 			</p>
 		</section>
