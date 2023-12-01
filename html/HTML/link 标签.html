@@ -60,6 +60,13 @@
 &lt;!-- 指定域名 --&gt;
 &lt;link rel="dns-prefetch" href="www.example.com" /&gt;
 						</code></pre>
+						<h4>ref.preconnect</h4>
+						和指定站点提前建立连接，已准备后续的 http 传输
+						<pre><code class="html">
+&lt;link rel="preconnect" href="https://example.com"&gt;
+						</code></pre>
+						<h4>rel.preload & rel.prefetch</h4>
+						两者都是提前将资源下载下来，并缓存在 HTTP Cache 中。preload 意味着当前页面高优先级资源，而 prefetch 的优先级则会进行推测，比如出现在视图窗口的图片会比非窗口图片优先级高。
 						<h4>rel.canonical</h4>
 						当存在多个 URL 都可以访问同一份资源时，可以告诉搜索引擎哪个链接是最具代表性的地址，比如在开启 https 后希望用户都访问 https 页面而不是 http：
 						<pre><code class="html">
