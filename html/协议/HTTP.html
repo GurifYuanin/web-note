@@ -349,7 +349,7 @@ Content-Security-Policy: 资源种类1: 范围1;资源种类2: 范围2;资源...
 							<li>img-src：图像</li>
 							<li>media-src：媒体文件，即 video 和 audio</li>
 							<li>font-src：字体文件</li>
-							<li>object-src：插件，比如 flash</li>							
+							<li>object-src：插件，比如 flash</li>
 							<li>child-src：iframe</li>
 							<li>manifest-src：manifest 文件</li>
 						</ul>
@@ -791,7 +791,7 @@ A challenge password []:
 			<p>
 				为了解决 http1.x 遗留下来的问题，Google 在基于 SPDY 协议提出了 http2，并且拥有以下特点：
 				<ul>
-					<li>多路复用，即只会启动一个 TCP 连接，在这个连接上同时发送多个请求与响应</li>
+					<li>多路复用（multiplexing），即只会启动一个 TCP 连接，在这个连接上同时发送多个请求与响应</li>
 					<li>将数据进行二进制压缩传输</li>
 					<li>采用 HPACK 算法对 Header 进行压缩</li>
 					<li>服务端可以向可以向客户端推送数据</li>
@@ -853,7 +853,10 @@ A challenge password []:
 				<h3>http2.0 的问题</h3>
 				<ul>
 					<li>http2.0 基于 TCP 协议传输，需要三次握手确认连接，如果是 https，则还需要 TLS 连接</li>
-					<li>由于 TCP 协议为了保证传输可靠性，发送方会把数据包保留在缓冲区并设定一个超时定时器，如果超时时间内被应答了则释放数据包的缓冲区，反之如果超时时间内还未应答则进行重发，直到超过最大次数。当丟包过多时，就会占用缓冲区，这期间其他请求都会被阻塞停止</li>
+					<li>
+						<div>简单讲：丟包会导致连接中的所有 stream 阻塞</div>
+						<div>详细讲：由于 TCP 协议为了保证传输可靠性，发送方会把数据包保留在缓冲区并设定一个超时定时器，如果超时时间内被应答了则释放数据包的缓冲区，反之如果超时时间内还未应答则进行重发，直到超过最大次数。当丟包过多时，就会占用缓冲区，这期间其他请求都会被阻塞停止</div>
+					</li>
 					<figure>
 						<img src="../../images/tcp_reliable.jpg" alt="">
 					</figure>
@@ -868,6 +871,13 @@ A challenge password []:
 				<ul>
 					<li>因为是基于 UDP 协议，所以可以实现 0-RTT 或 1-RTT 建立连接，再通过数据重传、拥塞控制等来保证可靠性传输</li>
 					<li>http3.0 是基于 TLS1.3，减少可以 RTT 个数</li>
+					<figure>
+						<img src="https://web.dev/static/articles/content-delivery-networks/image/comparison-the-tls-12-4f496629b0b9f_1440.png" alt="加载失败">
+					</figure>
+					<li>丟包仅会阻塞一条 stream</li>
+					<figure>
+						<img src="https://web.dev/static/articles/content-delivery-networks/image/diagram-showing-differen-e7307623724b5_1440.png" alt="">
+					</figure>
 					<li>QUIC 是在用户层实现的，与操作系统或者硬件内置的协议不同，可以快速迭代</li>
 				</ul>
 				<figure>
@@ -909,6 +919,8 @@ A challenge password []:
 				<div>[11] HTTP/1 to HTTP/2 to HTTP/3 <a
 						href="https://medium.com/@sandeep4.verma/http-1-to-http-2-to-http-3-647e73df67a8">https://medium.com/@sandeep4.verma/http-1-to-http-2-to-http-3-647e73df67a8</a>
 				</div>
+				<div>[12] Content delivery networks (CDNs) <a
+						href="https://web.dev/articles/content-delivery-networks">https://web.dev/articles/content-delivery-networks</a></div>
 			</p>
 		</section>
 	</article>
