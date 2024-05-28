@@ -26,6 +26,19 @@
       <h1 id="title">设计模式</h1>
     </hgroup>
     <section>
+      <h2>五大设计原则</h2>
+      <p>
+        SOLID
+        <ol>
+          <li>S 单一职责原则：一个程序只做好一件事，如果功能过于复杂就拆分开，每个部分保持独立。</li>
+          <li>O 开放封闭原则：当需求发生变化时，根据这种机制扩展代码，而不是修改原有的代码。</li>
+          <li>L 李氏置换原则：子类能覆盖父类，父类能出现的地方子类就能出现</li>
+          <li>I 接口独立原则：保持接口的单一独立，避免出现“胖接口”。</li>
+          <li>D 依赖导致原则：用到具体类时，不与具体类交互，而与具体类的上层（抽象）接口交互。</li>
+        </ol>
+      </p>
+    </section>
+    <section>
       <h2>MVVM</h2>
       <p>
         Model-View-ViewModel 简称 MVVM，View 中数据的变化反映在 ViewModel 层上，Model 的变化也会通过 ViewModel 更新到 View 上。
@@ -109,7 +122,11 @@ class PubSub {
     <section>
       <h2>单例模式</h2>
       <p>
-        单例模式下，类会自己创建（有且只有）一个对象，全局可以直接访问对象而不需要实例化。
+        单例模式的特点：
+        <ol>
+          <li>类会自己创建有且只有一个对象（意味着只初始化一次）</li>
+          <li>全局可以直接访问对象而不需要实例化</li>
+        </ol>
         <pre><code class="javascript">
 class SingleTon {
   static instance = new SingleTon();
@@ -126,7 +143,7 @@ SingleTon.instance === SingleTon.getInstance(); // => true
         </code></pre>
         应用场景：
         <ul>
-          <li>登录弹窗</li>
+          <li>登录弹窗等组件</li>
           <li>vuex、redux</li>
         </ul>
       </p>
@@ -134,7 +151,11 @@ SingleTon.instance === SingleTon.getInstance(); // => true
     <section>
       <h2>工厂模式</h2>
       <p>
-        通过一个共用的函数加工创建新的对象并返回。
+        通过一个共用的函数加工创建新的对象并返回。例子：
+        <ul>
+          <li>Object.create</li>
+          <li>createElement(tagName)</li>
+        </ul>
       </p>
     </section>
     <section>
@@ -180,6 +201,25 @@ SingleTon.instance === SingleTon.getInstance(); // => true
       <h2>装饰器模式</h2>
       <p>
         在不改变现有对象结构的情况下，动态地给该对象增加一些职责（即增加其额外功能）的模式。
+      </p>
+    </section>
+    <section>
+      <h2>迭代器模式</h2>
+      <p>
+        在不知道对象内部结构的情况下遍历访问集合，例子：
+        <ol>
+          <li>forEach</li>
+          <li>JS 中所有有序对象都自带了迭代器 Symbol.iterator 属性，可以通过该属性获取迭代器进行迭代访问</li>
+        </ol>
+      </p>
+    </section>
+    <section>
+      <h2>观察者模式</h2>
+      <p>
+        类似于发布订阅模式，观察者（Observer）观察对象（Subject），对象触发观察者。区别是发布订阅模式有中间媒介（EventChannel），而观察者模式没有。例子：
+        <ol>
+          <li>DOM 事件</li>
+        </ol>
       </p>
     </section>
     <section class="refer">
