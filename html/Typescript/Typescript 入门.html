@@ -93,8 +93,9 @@ $ tsc
 			</p>
 		</section>
 		<section>
-			<h2>类型检测</h2>
+			<h2>Typescript 有什么用</h2>
 			<p>
+				<h3>类型检测</h3>
 				使用 ts 可以对变量类型、参数类型、函数返回值类型进行类型检测。
 				<pre><code class="typescript">
 let 变量名: 数据类型 = 值;
@@ -105,27 +106,41 @@ function 函数名(形参名: 数据类型): 数据类型 {
 				</code></pre>
 				使用<span class="definition"> :数据类型 </span>来进行检测，数据类型有：
 				<ul>
-					<li>any：不限制类型</li>
-					<li>null：即 null</li>
-					<li>undefined：即 undefined</li>
-					<li>void：对于变量表示 null 或 undefined，对于函数表示无返回值</li>
-					<li>number：浮点数字</li>
-					<li>boolean：布尔型</li>
-					<li>string：字符串</li>
-					<li>Array&lt;数据类型&gt;：所有元素都是指定数据类型的数组</li>
-					<li>[数据类型1, 数据类型2, ...]：所有元素一一对应的元组（tuple）</li>
-					<li>object：一切对象</li>
-					<li>class（类）</li>
-					<li>Date、RegExp 等：对应的对象实例</li>
-					<li>unknown：表示未知的数据类型，比如通过 http 请求获得一个数据，任何类型都可以赋值给 unknown，但 unknown 不能赋值给其他类型（除了 unknown 和 any），需要将其转化为特定类型
+					<li>
+						基础类型 / 原始类型
+						<ul>
+							<li>number</li>
+							<li>string</li>
+							<li>boolean</li>
+							<li>symbol</li>
+							<li>null</li>
+							<li>undefined</li>
+						</ul>
 					</li>
-					<pre><code class="typescript">
-const unknownData = http.get('/getId/'); // unknown
-const data = unknownData as number; // number
-					</code></pre>
-					<li>never：表示不会返回的函数，比如函数内死循环、抛出异常</li>
+					<li>对象 / 非原始类型，比如 Array、object、function</li>
+					<li>enum</li>
+					<li>
+						特殊类型（typescript 独有的类型）
+						<ul>
+							<li>any 任意类型</li>
+							<li>unknown 表示未知的数据类型，可以使任何类型的父类。比如通过 http 请求获得一个数据，任何类型都可以赋值给 unknown，但 unknown 不能赋值给其他类型（除了 unknown 和 any），需要将其转化为特定类型</li>
+							<li>never 表示空类型、不会返回的函数（比如函数内死循环、抛出异常）</li>
+							<li>void 对于变量表示 null 或 undefined，对于函数表示无返回值</li>
+							<li>
+								tuple [数据类型1, 数据类型2, ...]：所有元素一一对应的数组，必须个数和类型一致
+								<pre><code class="typescript">
+// 元组
+const row1: [ string, number, number ] = [ "张三", 1000, 2000 ];
+// 可变元组
+const row2: [ string, number, number, ...any[] ] = [ "张三", 1000, 2000, true, "male" ]
+// 带标签的元组，标签仅用于可读性，不能通过标签来进行取值赋值等操作
+const row3: [ name: string, salary: number, debet: number ] = [ "张三", 1000, 2000 ];
+								</code></pre>
+							</li>
+						</ul>
+					</li>
 				</ul>
-				如果当不符合类型检测，在编译时将报错。（只是报错，剩下的依旧乖乖编译完成）
+				如果当不符合类型检测，在编译时将报错。（只是报错，绝大多数情况还是会正常编译）
 				<pre><code class="javscript">
 // 编译前
 const s: number = 'a';
@@ -148,9 +163,13 @@ const aDog: Dog = {
 	height: 50
 };
 				</code></pre>
-				<h3>枚举</h3>
-				<p>
-					ts 新增了关键字 enum 用于创建枚举类型。
+			</p>
+		</section>
+		<section>
+			<h2>枚举</h2>
+			<p>
+					<h3>定义</h3>
+					ts 新增了关键字 enum 用于创建枚举类型，主要是解决多次 if /switch 判断中值的语义化的问题
 					<pre><code class="typescript">
 enum 名 {键 = 值};
 // 例子
@@ -161,8 +180,7 @@ var e = {
 	key: 'value'
 }
 					</code></pre>
-					其中<span class="definition"> 键 </span>是字符串类型，类似于 {} 的键，<span class="definition"> 值 </span>是字符串或数字，不写时默认从 0
-					开始递增。
+					其中<span class="definition"> 键 </span>是字符串类型，类似于 {} 的键，<span class="definition"> 值 </span>是字符串或数字，第一项默认为 0，后续自动 +1 递增
 					<pre><code class="typescript">
 enum Name {Jack, Tom};
 Name.Jack // => 0
@@ -183,15 +201,43 @@ var e = {
 	key: 1,
 	1: 'key'
 }
-
 					</code></pre>
 					另外，如果要获得 enum 的所有 key，不能直接 keyof xxx，而应该：
 					<pre><code class="typescript">
 enum e { key = 1 };
 keyof typeof e
 					</code></pre>
+					<h3>为什么要用枚举</h3>
+					<pre><code class="typescript">
+const Status = {
+	todo: 0,
+	doing: 1,
+	done: 2
+}
+function getStatusText(status: number) {
+	switch(status) {
+		case Status.todo: return "未开始";
+		case Status.doing: return "进行中";
+		case Status.done: return "已完成";
+	}
+}
+					</code></pre>
+					如果不用枚举，那么上面的场景原本接收的应该是 0/1/2，但定义时却是接收所有 number 类型检查，使用枚举后
+					<pre><code class="typescript">
+enum Status {
+	todo,
+	doing,
+	done
+}
+function getStatusText(status: Status) {
+	switch(status) {
+		case Status.todo: return "未开始";
+		case Status.doing: return "进行中";
+		case Status.done: return "已完成";
+	}
+}
+					</code></pre>
 				</p>
-			</p>
 		</section>
 		<section>
 			<h2>类</h2>
@@ -203,10 +249,27 @@ keyof typeof e
 				</ul>
 				新增修饰符：
 				<ul>
+					<li>static：静态成员，可以通过类名 + 成员名来引用，主要是为了集中写在一个类上以方便管理</li>
 					<li>private：private 成员，只允许内部访问（无法通过 实例.成员名 来访问），不会继承给子类</li>
 					<li>protected：protected 成员，只能内部访问，但会继承给子类</li>
 					<li>abstract：定义抽象类</li>
 				</ul>
+				允许使用 getter 和 setter
+				<pre><code class="typescript">
+class Person {
+	private _age = 0;
+	get age() {
+		return this._age;
+	}
+	set age(v: number) {
+		this._age = Math.max(0, v);
+	}
+}
+
+const p = new Person();
+p.age = 18; // ok
+p._age = 18; // Property '_age' is private and only accessible within class 'Person'.
+				</code></pre>
 				<h3>class</h3>
 				<p>
 					ts 的类与 ES6 的类类似，且更趋近于其他高级语言，以不同语言写一个加法类（默认返回 1 + 1）。
@@ -283,7 +346,7 @@ class Me implements Person {
 }
 					</code></pre>
 					<h4>重复定义接口</h4>
-					重复定义接口时，不是覆盖前一个接口，而是会将新定义的接口属性、方法进行追加，比如：
+					重复定义接口时，不是覆盖前一个接口，而是会将新定义的接口属性、方法进行追加（合并），比如：
 					<pre><code class="typscript">
 interface Foo {
 	a: number;
@@ -303,6 +366,66 @@ interface Foo {
 	b: number;
 }
 					</code></pre>
+					<h4>索引签名</h4>
+					索引签名用于定义可拓展的属性
+					<pre><code class="typescript">
+interface Product {
+	price: number;
+	[key: string]: any;
+}
+
+const product: Product = {
+	price: 1,
+	name: "产品1",
+	[Symbol()]: 2, // ok
+}
+
+// 访问属性类型
+type T = Product["price"]; // => number
+					</code></pre>
+					<h4>interface 和 type 的区别</h4>
+					<ul>
+						<li>
+							type 可以定义任何类型，而 interface 只能定义对象类型
+							<pre><code class="typescript">
+type N1 = number;
+interface N2 extends Number {}
+
+const num1: N1 = 0;
+const num2: N2 = 0; // ok
+const num3: Number = 0; // ok
+							</code></pre>
+						</li>
+						<li>
+							type 可以进行类型的与或运算，而 interface 则是进行继承（与）运算
+							<pre><code class="typescript">
+// 接口继承方式一：extends
+interface A {
+	a: number
+}
+interface B extends A {
+	b: string
+}
+const b: B = {
+	a: 1,
+	b: "2"
+}
+
+// 接口继承方式二：合并
+interface A {
+	a: number
+}
+interface A {
+	b: string
+}
+const a: A = {
+	a: 1,
+	b: "2"
+}
+							</code></pre>
+							由于接口在重复定义时会进行合并，所以通常在定义复杂类型时，会使用 interface 而不是 type，方便后续在项目中拓展接口类型
+						</li>
+					</ul>
 				</p>
 			</p>
 		</section>

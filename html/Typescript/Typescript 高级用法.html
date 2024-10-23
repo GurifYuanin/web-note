@@ -74,6 +74,63 @@ $('#id').html('Hello World');
       </p>
     </section>
     <section>
+      <h2>类型细节比较</h2>
+      <p>
+        <h3>object / Object / {}</h3>
+        1. object 是非基础类型的对象
+        <pre><code class="typescript">
+const n: object = 1; // Type 'number' is not assignable to type 'object'.
+const obj: object = { a: 1 }; // ok
+const arr: object = []; // ok
+        </code></pre>
+        2. Ojbect 类型是对 javascript 中 Object 对象的类型定义
+        <pre><code class="typescript">
+// // node_modules/typescript/lib/lib.es5.d.ts
+interface Object {
+  constructor: Function;
+  toString(): string;
+  toLocaleString(): string;
+  valueOf(): Object;
+  hasOwnProperty(v: PropertyKey): boolean;
+  isPrototypeOf(v: Object): boolean;
+  propertyIsEnumerable(v: PropertyKey): boolean;
+}
+        </code></pre>
+        也就是说 Object 指的是包含以上属性的对象，包括了数值等基础类型，因为这些基础类型有上面的属性
+        <pre><code class="typescript">
+// 因为 (1).toString(); => "1" 所以
+const n: Object = 1; // ok
+// 因为 (null).toString(); => Object is possibly 'null'. 所以
+const nil: Object = null; // Type 'null' is not assignable to type 'Object'.
+
+const obj: Object = {
+  toString() { // Type '() => number' is not assignable to type '() => string'.
+      return 1;
+  }
+};
+        </code></pre>
+        3. {} 作为类型时，可以说是 object 和 Object 的并集
+        <pre><code class="typescript">
+const n: {} = 1; // ok
+const obj: {} = {
+  toString() { // ok
+    return 1;
+  }
+}
+        </code></pre>
+        需要注意的是，三种方式都是给定了固定的数据类型，相当一个父类，从而忽略了赋值的子类的类型
+        <pre><code class="typescript">
+const obj: object = { a: 1 };
+const obj: Object = { a: 1 };
+const obj: {} = { a: 1 };
+
+// 无论哪种下面一行都会报错
+// 这是因为 { a: 1 } 是 object 的子类，但 obj.a 取的是父类 object 的属性而不是子类 { a: 1 } 的属性
+console.log(obj.a); // Property 'a' does not exist on type 'object'.
+        </code></pre>
+      </p>
+    </section>
+    <section>
       <h2>declare</h2>
       <p>
         <h3>declare 是什么</h3>
