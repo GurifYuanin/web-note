@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>tsconfig</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">tsconfig</h1>
+    </hgroup>
+    <section>
+      <h2>compilerOptions</h2>
+      <p>
+        compilerOptions 表示编译选项
+        <h3>lib</h3>
+        lib 告诉编译器需要集成哪些库，比较常见的库：
+        <table>
+          <tr>
+            <th>库名</th>
+            <th>作用</th>
+          </tr>
+          <tr>
+            <td>esnext</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>dom</td>
+            <td>document、window 等</td>
+          </tr>
+        </table>
+        <h3>target</h3>
+        target 表示编译产物的 ES 版本
+        <h3>module</h3>
+        表示使用的语言规范，默认是 cjs
+        <h3>rootDir & outDir</h3>
+        <ul>
+          <li>
+            rootDir：ts 打包时会保持相同的目录结构，rootDir 可以用于指定产物起始的目录
+            <pre><code class="typescript">
+- src/
+-- index.ts
+-- utils/
+--- date.ts
+
+// rootDir: "./src"
+
+- index.js
+- utils/
+-- date.js
+            </code></pre>
+          </li>
+          <li>outDir：表示打包产品放置的根路径</li>
+        </ul>
+        <h3>baseUrl & paths</h3>
+        baseUrl 处理模块依赖时的根路径，该值为工程的根目录
+        <pre><code class="typescript">
+import foo from "foo/index.ts";
+// baseUrl: "./src"
+// foo/index.ts => src/foo/index.ts
+        </code></pre>
+        paths 则是基于 baseUrl 配置路径别名
+        <pre><code class="json">
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+    }
+  }
+}
+
+// index.ts
+import App from "@/App.vue";
+        </code></pre>
+        <h3>moduleResolution</h3>
+        表示查找第三方库路径的方式
+        <ul>
+          <li>node：从内往外，即 ./node_modules -> ../node_modules -> ../../node_modules etc</li>
+          <li>classic：从外（根路径）往内找</li>
+        </ul>
+        <h3>resolveJsonModule</h3>
+        是否允许引入 json 文件
+        <pre><code class="typescript">
+import pkg from './package.json';
+console.log(pkg.name);
+        </code></pre>
+        <h3>allowJs & checkJS</h3>
+        allowJs 表示否允许 ts 中引入 js，当开启后，checkJs 控制是否对 js 文件进行类型检查
+        <h3>declaration & sourceMap & removeComments</h3>
+        <ul>
+          <li>declaration：是否自动生成类型声明文件（.d.ts），声明文件会对所有 export 的变量进行类型声明，比如 declare class Foo { ... }</li>
+          <li>sourceMap：是否生成 sourcemap 文件（.map.js）</li>
+          <li>removeComments：编译后是否删除注释</li>
+        </ul>
+        <h3>isolatedModules</h3>
+        开启时 export interface 或 type 等时会报错，因为这些 ts 的特性，原生 js 不能处理这些功能
+        <pre><code class="typescript">
+interface A {}
+export {
+  A // Re-exporting a type when 'isolatedModules' is enabled requires using 'export type'.ts
+};
+
+namespace Instantiated {
+  export const x = 1; // Namespaces are not allowed in global script files when 'isolatedModules' is enabled.
+}
+
+export interface A {} // ok
+        </code></pre>
+        <h3>esModuleInterop</h3>
+        是否兼容处理 `export =` 这种写法
+        <pre><code>
+// a.ts
+class Foo {}
+export = Foo
+
+// b.ts
+import Foo from "./a";
+        </code></pre>
+        <h3>strict</h3>
+        <ul>
+          <li>strict：是否开启严格模式（总开关）</li>
+          <li>
+            noImplicitAny：是否禁用默认为 any 类型的情况
+            <pre><code class="typescript">
+function foo(num) { // Parameter 'num' implicitly has an 'any' type.
+  console.log(num.toString());
+}
+foo(null);
+            </code></pre>
+          </li>
+          <li>
+            strictNullChecks：开启后：
+            <pre><code class="typescript">
+// 不允许将 undefined 赋值给其他类型
+let a: string = undefined; // Type 'undefined' is not assignable to type 'string'.
+
+// 需要对可能为 undefined 的对象进行空检查
+const users = [
+  { name: "张三", id: 1 },
+  { name: "李四", id: 2 },
+];
+const { name } = users.find(({ id }) => id === 1); // Property 'name' does not exist on type '{ name: string; id: number; } | undefined'.
+            </code></pre>
+          </li>
+          <li>strictPropertyInitialization：声明变量 / 属性时是否要有类型</li>
+          <li>noImplicitReturns：函数是否必须有返回值</li>
+          <li>noUnusedLocals：声明了变量必须被使用到</li>
+          <li>noUnusedParameters：声明了函数参数必须被使用到</li>
+        </ul>
+        <h3>skipLibCheck</h3>
+        是否跳过对声明文件（.d.ts）的类型检查
+        <h3>typeRoots & types</h3>
+        见<a href="./Typescript 高级用法.html#Typescript 高级用法">Typescript 高级用法</a>中的方式二
+        <h3>jsx</h3>
+        是否支持 jsx 语法
+      </p>
+    </section>
+    <section>
+      <h2>include & exclude</h2>
+      <p>
+        include 用于指定哪些文件会被 typescript 处理，exclude 则相反
+      </p>
+    </section>
+    <section>
+      <h2>extends</h2>
+      <p>
+        extends 用于引用其他配置文件
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

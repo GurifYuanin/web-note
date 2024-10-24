@@ -167,22 +167,27 @@ new Child().say(); // => 我是粑粑
 					<pre><code class="javascript">
 class Parent {
 	constructor () {
-		console.log('我是粑粑');
+		console.log('Parent 构造');
 	}
 	say () {
-		console.log('我还是粑粑');
+		console.log('我是 Parent');
 	}
 }
-class Child extends Parent {}
-// 相当于
 class Child extends Parent {
 	constructor () {
 		super();
+		console.log('Child 构造');
+	}
+	say() {
+		super.say();
+		console.log("我是 Child");
 	}
 }
 new Child().say();
-// => 我是粑粑
-// => 我还是粑粑
+// => Parent 构造
+// => Child 构造
+// => 我是 Parent
+// => 我是 Child
 					</code></pre>
 				</p>
 				<h3>static</h3>
@@ -237,12 +242,35 @@ console.log(new MyClass().num); // => 2
 		<section>
 			<h2>对比 function</h2>
 			<p>
-				本质上，class 只是个外壳，本质上还是个 function
+				本质上，class 只是个外壳，本质上还是个 function，上面的方法保存在 prototype 上
 				<pre><code class="javascript">
-class A {}
+class A {
+	constructor() {
+		// ...
+	}
+	foo() {
+		console.log(1);
+	}
+}
 typeof A; // => 'function'
+A.prototype.foo(); // => 1
+
+// 相当于
+function A() {
+	// ...
+}
+A.prototype.foo = function() {
+	console.log(1);
+}
 				</code></pre>
-				静态属性保存在构造函数对象身上。
+				而静态属性保存在构造函数对象身上。
+				<pre><code class="javascript">
+class A {
+	a = 1;
+}
+
+console.log(A.a);
+				</code></pre>
 			</p>
 		</section>
 		<section class="refer">

@@ -48,26 +48,20 @@
         <pre><code class="shell">
 npm install --save-dev @type/jquery
         </code></pre>
-        安装后，在使用包的时候就会自动提示类型
-        <pre><code class="typescript">
-import $ from 'jquery';
-$('#id').html('Hello World');
+        安装后，在使用包的时候就会自动提示类型，一般来及时添加了各种依赖（比如 jquery/lodash），只需要一个 node 就可以全部处理
+        <pre><code class="bash">
+npm i -D @types/node
         </code></pre>
-        你也可以在 tsconfig.json 中指定类型声明文件的所在路径：
         <pre><code class="json">
 {
   "compilerOptions": {
-    "typeRoots": ["./types"] // 只会寻找 ./types 下的类型声明文件（而不会去找 node_modules/@types）
+    "typeRoots": ["node_modules/@types"],
+    "types": ["node"]
   }
 }
-        </code></pre>
-        还可以用 types 参数来指定具体的包：
-        <pre><code class="json">
-{
-  "compilerOptions": {
-    "types": ["jquery"] // 只会加载 jquery 包的类型声明文件
-  }
-}
+
+// 个别情况，比如 vite 环境还需要
+"types": ["node", "vite/client"]
         </code></pre>
         <h3>管理自定义的类型文件</h3>
         对于自定义的类型，通常的做法是创建一个 types 目录，里面用于存放与管理自己写的类型声明文件。
@@ -148,10 +142,18 @@ const person: {
         </code></pre>
         但当变量已经存在，希望手动地配置其类型时，就需要 declare 关键字。
         <pre><code class="typescript">
+// index.ts
+const person = {
+  name: '张三',
+  age: 18,
+  gender: 0
+};
+
+// types/index.d.ts
 declare const person: {
-    name: string,
-    age: number,
-    gender: number
+  name: string,
+  age: number,
+  gender: number
 }
         </code></pre>
         declare const 只是其中一种用法，还可以使用其他用法：
@@ -165,6 +167,15 @@ declare const person: {
           <li>declare module</li>
           <li>declare global</li>
         </ul>
+        比如实现函数重载
+        <pre><code class="typescript">
+interface App {
+  id: number;
+  name: string;
+}
+declare function getApp(id: number): App | undefined;
+declare function getApp(keyword: string): App[];
+        </code></pre>
         <h3>拓展模块</h3>
         当你使用的第三方模块已经有了类型声明文件，但发现类型声明不完整，可以手动进行拓展。
         <pre><code class="typescript">

@@ -672,7 +672,7 @@ Object.defineProperty(obj, 'a', {
 					</code></pre>
 					以上无论是调用 getter 获得值还是对 obj.a 进行赋值，都会进入死递归。调用 getter 时，进入函数，返回 obj.a ，但 obj.a 又调用了 getter ，无限循环导致栈溢出。 setter
 					也是同理。如果要实现部分拦截，或者要实现拦截并修改原来的值并进行返回，可以这样写：
-					<pre><code class="javascriot">
+					<pre><code class="javascript">
 obj._a = null;
 Object.defineProperty(obj, 'a', {
 	get: function () {
@@ -717,6 +717,16 @@ Object.defineProperty(obj, 'a', {
 	value: '我是 a'
 });
 Object.getOwnPropertyDescriptor(obj, 'a'); // => {value: "我是 a", writable: false, enumerable: false, configurable: false}
+					</code></pre>
+					需要注意的是，通过描述符获取的 value 和原对象方法的 this 上下文不一样
+					<pre><code class="javascript">
+const obj = {
+	foo() { console.log(this); }
+}
+Object.getOwnPropertyDescriptor(obj, "foo").value(); // => {writable: true, enumerable: true, configurable: true, value: ƒ}
+const { value } = Object.getOwnPropertyDescriptor(obj, "foo");
+value(); // => 如果在浏览器环境，那么是 Window
+obj.foo(); // => {foo: ƒ}
 					</code></pre>
 				</p>
 				<h3>遍历：for...in / Object.keys / Object.values / Object.entries</h3>

@@ -270,6 +270,18 @@ const p = new Person();
 p.age = 18; // ok
 p._age = 18; // Property '_age' is private and only accessible within class 'Person'.
 				</code></pre>
+				当 private 用于构造函数参数时，会进行同名成员的默认赋值
+				<pre><code class="typescript">
+class Person {
+	constructor(private age: number) {}
+}
+// 编译为 js =>
+class Person {
+	constructor(age) {
+		this.age = age;
+	}
+}
+				</code></pre>
 				<h3>class</h3>
 				<p>
 					ts 的类与 ES6 的类类似，且更趋近于其他高级语言，以不同语言写一个加法类（默认返回 1 + 1）。
@@ -386,7 +398,7 @@ type T = Product["price"]; // => number
 					<h4>interface 和 type 的区别</h4>
 					<ul>
 						<li>
-							type 可以定义任何类型，而 interface 只能定义对象类型
+							type 可以定义任何类型（包括联合类型），而 interface 只能定义对象类型
 							<pre><code class="typescript">
 type N1 = number;
 interface N2 extends Number {}
@@ -394,6 +406,15 @@ interface N2 extends Number {}
 const num1: N1 = 0;
 const num2: N2 = 0; // ok
 const num3: Number = 0; // ok
+
+// 定义联合类型，为了美观和方便后续拓展，可以这样写
+type BasicType =
+	| number
+	| string
+	| boolean
+	| Symbol
+	| null
+	| undefined;
 							</code></pre>
 						</li>
 						<li>
@@ -427,6 +448,26 @@ const a: A = {
 						</li>
 					</ul>
 				</p>
+				<h3>构造函数</h3>
+				通过 new 关键字定义构造函数类型
+				<pre><code class="typscript">
+interface Foo&lt;T = any&gt; {
+  new(id: string): T;
+}
+// 普通函数类型
+type Foo1 = (...args: any) => Foo;
+// 构造函数类型
+type Foo2 = new (...args: any) => Foo;
+
+// 使用场景，泛型工厂函数
+function createFoo(FooClass: Foo, id: string) {
+	// 每次创建对象都打印一下类名
+  console.log(FooClass.name + "created");
+  return new FooClass(id);
+}
+class Bar {}
+createFoo(Bar, "0");
+				</code></pre>
 			</p>
 		</section>
 		<section>

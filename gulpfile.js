@@ -5,7 +5,7 @@ const {
     dest
 } = require('gulp');
 
-const sass = require('gulp-sass'), // sass 预编译
+const sass = require('gulp-sass')(require('sass')), // sass 预编译
     autoprefixer = require('gulp-autoprefixer'), // css 前缀自动补全
     cleanCSS = require('gulp-clean-css'); // css 压缩
 const browserify = require('browserify');
