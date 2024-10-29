@@ -128,18 +128,29 @@ class PubSub {
           <li>全局可以直接访问对象而不需要实例化</li>
         </ol>
         <pre><code class="javascript">
+// 饿汉式单例模式（不管有没有使用到，启动项目时就初始化）
 class SingleTon {
   static instance = new SingleTon();
-  constructor() {
-    // 单例对象的构造函数
-  }
-  static getInstance() {
-    return this.instance;
+  // 单例对象的构造函数，通过 private 关键字保证只能在这里调用
+  private constructor() {
+    // ...
   }
 }
 
-// 使用公用的单例
-SingleTon.instance === SingleTon.getInstance(); // => true
+// 饱汉式单例模式（只有在调用 getInstance 时才初始化）
+class SingleTon {
+  private static instance: SingleTon;
+  // 单例对象的构造函数，通过 private 关键字保证只能在这里调用
+  private constructor() {
+    // ...
+  }
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new SingleTon();
+    }
+    return this.instance;
+  }
+}
         </code></pre>
         应用场景：
         <ul>

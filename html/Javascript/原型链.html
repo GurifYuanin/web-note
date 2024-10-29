@@ -284,7 +284,7 @@ function Cat(name) {
 	<span class="strong">
 	for (var key in Cat.prototype) {
 		cat[key] = Cat.prototype[key];
-	}	
+	}
 	</span>
 
 	// 子类的构造函数
@@ -298,9 +298,17 @@ Cat.prototype.sleep = function() {
 var cat = new Cat('猫');
 cat.sleep(); // 喵咕zzz...
 					</code></pre>
-					ES6 使用 class 和 extends 关键字的原理与第二种做法差不多。是先通过 super 关键字创建一个 this，相当于<span
-						class="definition">父类.prototype.constructor.call(this)</span>，然后再用子类的构造函数修改 this ，最后返回这个 this 。
+					ES6 使用 class 和 extends 关键字的原理是第二种和第三种的结合。既继承了属性，又继承了方法（通过原型链）
 					<pre><code class="javascript">
+class Animal {
+	gender;
+	constructor(g) {
+		this.gender = g || 'male';
+	}
+	say() {
+		console.log('你好');
+	}
+}
 class Cat extends Animal{
 	constructor(name) {
 		super();
@@ -312,6 +320,8 @@ class Cat extends Animal{
 }
 var cat = new Cat('猫');
 cat.sleep(); // 喵咕zzz...
+cat.gender; // => male
+new Cat('').say === new Cat('').say // => true
 					</code></pre>
 				</p>
 			</p>

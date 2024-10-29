@@ -33,11 +33,11 @@
           <li>new Promise 传入执行函数并立即执行</li>
           <li>执行函数控制更新 Promise 的状态，状态只能是 pending -> resolved 或者 pending -> rejected，单向不可逆</li>
           <li>then / catch 添加回调函数进入队列，若当前 Promise 已经是最终态（resolved / rejected）则直接执行</li>
-          <li>当 Promise 状态更新时，顺序执行所有未执行的回调函数队列</li>
+          <li>当 Promise 状态更新时，顺序执行所有未执行的回调函数队列且上一个调用结果作为参数传给下一个函数</li>
           <li>then 支持链式调用，若 then 的回调函数返回的是
             <ul>
-              <li>普通值，则封装为 Promise 返回</li>
-              <li>Promise，则调用 .then 拿到结果值（若结果值还是 Promise，则递归使用 .then），封装为 Promise 返回</li>
+              <li>普通值</li>
+              <li>Promise，则调用 .then 拿到结果值（若结果值还是 Promise，则递归使用 .then）</li>
             </ul>
           </li>
         </ol>
@@ -71,20 +71,32 @@ class MyPromise {
     executor(resolve, reject);
   }
 
+  // 传入回调函数，then 的返回值需要是一个 Promise 来保证链式调用
+  // 上一个 then 的返回值是下一个 then 的入参，且如果入参是 Promise 类型，则进行 Await 再传下去
   then(onFulfilled, onRejected) {
     onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : v => v;
     onRejected = typeof onRejected === 'function' ? onRejected : (reason) => { throw reason };
     return new MyPromise((resolve, rejected) => {
       if (this.status === MyPromise.PENDING) {
         this.resolvedQueues.push(() => {
-          resolve(onFulfilled(this.value));
+          const v = onFulfilled(this.value);
+          if (v instanceof MyPromise) {
+            v.then(resolve);
+          } else {
+            resolve(v);
+          }
         });
         this.rejectedQueues.push(() => {
           reject(onRejected(this.reason));
         });
       }
       if (this.status === MyPromise.RESOLVED) {
-        resolve(onFulfilled(this.value));
+        const v = onFulfilled(this.value);
+        if (v instanceof MyPromise) {
+          v.then(resolve);
+        } else {
+          resolve(v);
+        }
       }
       if (this.status === MyPromise.REJECTED) {
         reject(onRejected(this.reason));
@@ -101,7 +113,7 @@ const promise = new MyPromise((resolve) => {
 });
 promise.then(data => {
   console.log('then1: ' + data);
-  return 'then1';
+  return new MyPromise((resolve) => setTimeout(() => resolve('then1'), 1000))
 }).then(data => {
   console.log('then2: ' + data);
   return 'then2';
