@@ -64,7 +64,7 @@ npm i -D @types/node
 "types": ["node", "vite/client"]
         </code></pre>
         <h3>管理自定义的类型文件</h3>
-        对于自定义的类型，通常的做法是创建一个 types 目录，里面用于存放与管理自己写的类型声明文件。
+        对于自定义的类型，通常的做法是创建一个 types 目录，里面用于存放与管理自己写的类型声明文件，详情见下面的<span class="different">declare</span>和<span class="different">三斜线指令</span>介绍
       </p>
     </section>
     <section>
@@ -79,7 +79,7 @@ const arr: object = []; // ok
         </code></pre>
         2. Ojbect 类型是对 javascript 中 Object 对象的类型定义
         <pre><code class="typescript">
-// // node_modules/typescript/lib/lib.es5.d.ts
+// node_modules/typescript/lib/lib.es5.d.ts
 interface Object {
   constructor: Function;
   toString(): string;
@@ -122,6 +122,48 @@ const obj: {} = { a: 1 };
 // 这是因为 { a: 1 } 是 object 的子类，但 obj.a 取的是父类 object 的属性而不是子类 { a: 1 } 的属性
 console.log(obj.a); // Property 'a' does not exist on type 'object'.
         </code></pre>
+        <h3>{ new(): T } / { (): T }</h3>
+        { new() : T } 表示 T 构造函数，{ (): T } 表示返回 T 的工厂函数
+        <pre><code class="typescript">
+class Foo {
+  constructor() {}
+}
+
+const foo1: { new(): Foo } = Foo;
+const foo2: { (): Foo } = () => Foo;
+
+function create&lt;T>(cls: { new(): T }): T {
+  return new cls();
+}
+create(Foo);
+        </code></pre>
+        <h3>CallableFunction & NewableFunction</h3>
+        <ul>
+          <li>CallableFunction：拥有 call apply bind 方法的可调用函数</li>
+          <li>NewableFunction：可以用 new 关键字实例化的函数</li>
+        </ul>
+        <pre><code class="typescript">
+interface CallableFunction extends Function {
+    apply&lt;T, R>(this: (this: T) => R, thisArg: T): R;
+    apply&lt;T, A extends any[], R>(this: (this: T, ...args: A) => R, thisArg: T, args: A): R;
+    call&lt;T, A extends any[], R>(this: (this: T, ...args: A) => R, thisArg: T, ...args: A): R;
+    bind&lt;T>(this: T, thisArg: ThisParameterType&lt;T>): OmitThisParameter&lt;T>;
+    bind&lt;T, A extends any[], B extends any[], R>(this: (this: T, ...args: [...A, ...B]) => R, thisArg: T, ...args: A): (...args: B) => R;
+}
+interface NewableFunction extends Function {
+    apply&lt;T>(this: new () => T, thisArg: T): void;
+    apply&lt;T, A extends any[]>(this: new (...args: A) => T, thisArg: T, args: A): void;
+    call&lt;T, A extends any[]>(this: new (...args: A) => T, thisArg: T, ...args: A): void;
+    bind&lt;T>(this: T, thisArg: any): T;
+    bind&lt;A extends any[], B extends any[], R>(this: new (...args: [...A, ...B]) => R, thisArg: any, ...args: A): new (...args: B) => R;
+}
+
+const foo: CallableFunction = () => {}
+const bar: NewableFunction = class {}
+// 当用 NewableFunction 表示 class 时的另一种写法
+const bar: new(...args: any[]) => any = class {}
+const bar: { new(...args: any[]): any } = class {}
+        </code></pre>
       </p>
     </section>
     <section>
@@ -140,7 +182,7 @@ const person: {
   gender: 0
 };
         </code></pre>
-        但当变量已经存在，希望手动地配置其类型时，就需要 declare 关键字。
+        但当变量已经存在，希望手动地配置其类型时，就需要 declare 关键字，declare 写在非模块化的类型声明文件中，来进行全局声明。
         <pre><code class="typescript">
 // index.ts
 const person = {
@@ -156,7 +198,7 @@ declare const person: {
   gender: number
 }
         </code></pre>
-        declare const 只是其中一种用法，还可以使用其他用法：
+        declare const 只是其中一种用法，还可以使用其他用法（其中 interface 和 type 可以省略 declare 关键字）：
         <ul>
           <li>declare var / let / const</li>
           <li>declare function</li>
@@ -176,7 +218,19 @@ interface App {
 declare function getApp(id: number): App | undefined;
 declare function getApp(keyword: string): App[];
         </code></pre>
-        <h3>拓展模块</h3>
+        <h3>declare namespace</h3>
+        由于 declare 的声明是全局生效，为了避免命名冲突，可以使用 namespace 创建命名空间
+        <pre><code class="typescript">
+// types/foo/index.d.ts
+declare namespace Foo {
+  export const n: number;
+}
+// types/bar/index.d.ts
+declare namespace Bar {
+  export const n: number;
+}
+        </code></pre>
+        <h3>declare module</h3>
         当你使用的第三方模块已经有了类型声明文件，但发现类型声明不完整，可以手动进行拓展。
         <pre><code class="typescript">
 // types/foo/index.d.ts
@@ -185,8 +239,8 @@ declare module 'foo' {
   // 给 foo 模块添加一个方法 bar
   export function bar(): void;
 }
-                </code></pre>
-        <h3>拓展全局对象</h3>
+        </code></pre>
+        <h3>decalre global</h3>
         由于 typescript 会对接口进行声明合并操作，所以可以自定义地对全局对象进行类型拓展，比如在 window 上挂全局对象：
         <pre><code class="typescript">
 // types/global.d.ts
@@ -338,7 +392,7 @@ foo({ a: 0 }, 'a'); // => 返回值的类型为 number
 T extends U ? X : Y // 如果 T 是 U 的子集，就是类型 X，否则为类型 Y
         </code></pre>
         <h3>infer</h3>
-        infer 必须配合 extends 使用，可以用来定义一个变量。
+        infer 必须配合 extends 使用，可以用来定义一个变量占位符，定义时类型不确定，只有在使用时才能确定类型。
         <pre><code class="typescript">
 // 提取数组内的元素类型
 type PickElementType&lt;T&gt; = T extends Array&lt;infer ElementType&gt; ? ElementType : never;
@@ -402,6 +456,31 @@ type Partial&lt;T&gt; = {
 type Required&lt;T&gt; = {
   [P in keyof T]: T[P];
 };
+// 另一种写法
+type Required&lt;T&gt; = {
+  [P in keyof T]-?: T[P];
+};
+        </code></pre>
+        <h3>Readonly</h3>
+        Readonly&lt;T&gt; 用于将所有属性变为 readonly
+        <pre><code class="typescript">
+type Foo1 = Readonly&lt;Foo&gt;
+/*
+=>  {
+  readonly a: string;
+  readonly b: number;
+}
+*/
+        </code></pre>
+        实现方法：
+        <pre><code class="typescript">
+type Readonly&lt;T&gt; = {
+  readonly [P in keyof T]: T[P]
+}
+// 反向功能实现
+type RemoveReadonly&lt;T&gt; = {
+  -readonly [P in keyof T]: T[P]
+}
         </code></pre>
         <h3>Exclude & Extract</h3>
         Exclude 用于用前一个类型减去两个类型的交集，Extract 则获得两个类型的交集。
@@ -440,7 +519,7 @@ type Pick&lt;T, K extends keyof T&gt; = {
 type Omit&lt;T, K extends keyof T&gt; = Pick&lt;T, Exclude&lt;keyof T, K&gt;&gt;;
         </code></pre>
         <h3>Record</h3>
-        Record&lt;K, T&gt; 用于表示用 K 作为对象的键名，用 T 作为所有键值的类型，生成一个类型声明对象。
+        Record&lt;K, T&gt; 用于表示用 K 作为对象的键名，用 T 作为所有键值的对象类型，生成一个类型声明对象。
         <pre><code class="typescript">
 type Foo4 = Record&lt;'a' | 'b', 123&gt;;
 /*
@@ -469,6 +548,16 @@ type Foo5 = {
 type Foo5 = {
   [K in string]: number
 }
+        </code></pre>
+        需要注意的是这几种写法除了键值对象，还支持数组
+        <pre><code class="typescript">
+const arr: Foo5 = [1, 2, 3]; // => ok
+const date: Foo5 = new Date(); // => ok
+        </code></pre>
+        <h3>Capitalize</h3>
+        Capitalize 可以将字符串类型转为首字母大写
+        <pre><code class="typescript">
+type T = Capitalize&lt;"addRow">; // => "AddRow"
         </code></pre>
       </p>
     </section>
@@ -529,6 +618,27 @@ foo({
           <li>协变：T -> A 是 T -> B 的子类</li>
           <li>逆变：B -> T 是 A -> T 的子类</li>
         </ul>
+      </p>
+    </section>
+    <section>
+      <h2>特殊规定</h2>
+      <p>
+        <h3>函数中的 this</h3>
+        在函数中，第一个函数参数若为 this，则表示为 this 上下文，而不是参数
+        <pre><code class="typescript">
+function foo(this: any, a: string) {
+  console.log(this, a);
+}
+foo({}, "123"); // Expected 1 arguments, but got 2.
+foo.call({}, "123"); // ok
+foo("123"); // ok
+        </code></pre>
+        并且 this 只能在第一个参数位置
+        <pre><code class="typescript">
+function foo(a: number, this: any, b: string) { // A 'this' parameter must be the first parameter.
+  console.log(this);
+}
+        </code></pre>
       </p>
     </section>
     <section class="refer">

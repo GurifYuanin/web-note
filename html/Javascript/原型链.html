@@ -321,7 +321,16 @@ class Cat extends Animal{
 var cat = new Cat('猫');
 cat.sleep(); // 喵咕zzz...
 cat.gender; // => male
+					</code></pre>
+					需要注意的是，类上的方法是挂在类的原型对象（prototype）上的，而属性不是
+					<pre><code class="javascript">
 new Cat('').say === new Cat('').say // => true
+new Cat('').say === Cat.prototype.say // => true
+
+class Foo {
+	obj = {}
+}
+Foo.prototype.obj // => undefined
 					</code></pre>
 				</p>
 			</p>
