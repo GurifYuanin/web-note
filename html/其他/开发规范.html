@@ -154,6 +154,31 @@ npx husky add .husky/commit-msg 'npx commitlint --edit $1'
   }
 }
                   </code></pre>
+                  注意，husky@4 以下不支持 pnpm，会报以下错误
+                  <pre><code class="bash">
+ERR_PNPM_FETCH_404  GET https://registry.npmjs.org/--no-install: Not Found - 404
+--no-install is not in the npm registry, or you have no permission to fetch it.
+                  </code></pre>
+                  这时候就需要升级 husky 版本<sup>[2]</sup>
+                  <pre><code class="bash">
+pnpm install husky@8 --save-dev \
+  && pnpx husky-init \
+  && pnpx -- github:typicode/husky-4-to-8 --remove-v4-config
+                  </code></pre>
+                  然后修改 .husky/pre-commit 和 .husky/commit-msg
+                  <pre><code>
+// .husky/pre-commit
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+node_modules/.bin/lint-staged
+
+// .husky/commit-msg
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+node_modules/.bin/commitlint --edit $1
+                  </code></pre>
                 </li>
               </ol>
             </li>
@@ -167,25 +192,28 @@ npx husky add .husky/commit-msg 'npx commitlint --edit $1'
           参见<a href="./命名规范.html">命名规范</a>。
           <h5>怎么配置</h5>
           <ol>
-            <li>下载 eslint/tslint 并编写配置文件</li>
+            <li>下载 eslint 并编写配置文件</li>
             <li>
               在 package.json 添加 lint 执行脚本，比如
               <pre><code class="json">
 {
   "scripts": {
-    "lint": "tslint -c tslint.json -p tsconfig.json --fix",
+    "lint": "eslint --ext .js,.ts,.vue src",
   }
 }
               </code></pre>
+              tslint 已于 2019 年停止维护<sup>[3]</sup>，请使用 eslint 而不是 tslint。
             </li>
-            <li>下载 husky</li>
+            <li>下载 husky 和 lint-staged，lint-staged 可以只检查增量和发生修改的文件</li>
             <li>
-              启动 husky，比如在 package.json 文件中写入
+              启动 husky，参考上面<a href="#命名规范" target="_self">git</a>部分，比如 husky@4 以下在 package.json 文件中写入
               <pre><code class="json">
 {
-  "hooks": {
-    "pre-commit": "lint-staged",
-  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+    }
+  }
   "lint-staged": {
     "./src/**/*.ts": ["npm run lint", "git add"]
   }
@@ -245,6 +273,8 @@ npx husky add .husky/commit-msg 'npx commitlint --edit $1'
       <h2>参考文献</h2>
       <p>
         <div>[1] 从 vue3 和 vite 源码中，我学到了一行代码统一规范团队包管理器的神器 <a href="https://lxchuan12.gitee.io/only-allow">https://lxchuan12.gitee.io/only-allow</a></div>
+        <div>[2] husky-4-to-8 <a href="https://github.com/typicode/husky-4-to-8">https://github.com/typicode/husky-4-to-8</a></div>
+        <div>[3] TSLint <a href="https://palantir.github.io/tslint/">https://palantir.github.io/tslint/</a></div>
       </p>
     </section>
   </div>

@@ -17,7 +17,8 @@
     "dev": "cross-env NODE_ENV=development gulp",
     "build": "cross-env NODE_ENV=production gulp build",
     "lint": "tslint -c tslint.json -p tsconfig.json --fix",
-    "preinstall": "npx only-allow pnpm -y"
+    "preinstall": "npx only-allow pnpm -y",
+    "prepare": "husky install"
   },
   "bugs": {
     "url": "https://github.com/GurifYuanin/web-note/issues"
@@ -44,7 +45,7 @@
     "gulp-sass": "^5.1.0",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify-es": "^3.0.0",
-    "husky": "^4.3.8",
+    "husky": "^8.0.0",
     "lint-staged": "^13.1.2",
     "sass": "^1.80.4",
     "tsify": "^4.0.2",
@@ -55,8 +56,7 @@
   },
   "lint-staged": {
     "js/**/*.ts": [
-      "npm run lint",
-      "git add"
+      "npm run lint"
     ]
   }
 }

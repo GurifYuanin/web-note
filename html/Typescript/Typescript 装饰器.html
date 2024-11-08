@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Typescript 装饰器</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/styles/agate.css">
+  <link rel="stylesheet" href="../../css/dark.css">
+  <script src="../../js/highlight.pack.js"></script>
+  <script src="../../js/index.min.js"></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <h2 id="catalog">
+      <img id="hideCatalog" src="../../images/catalog.png" alt="加载失败">
+      目录
+    </h2>
+  </div>
+  <div id="showCatalog">
+    <img src="../../images/arrow.png">
+  </div>
+  <div id="container">
+    <hgroup>
+      <h1 id="title">Typescript 装饰器</h1>
+    </hgroup>
+    <section>
+      <h2>定义</h2>
+      <p>
+        装饰器是一个方法 / 函数，用于拓展类、属性、方法、参数、对象，有以下种类的装饰器
+        <ul>
+          <li>类装饰器</li>
+          <li>属性装饰器</li>
+          <li>方法装饰器</li>
+          <li>参数装饰器</li>
+          <li>元数据装饰器</li>
+        </ul>
+        装饰器又分为两种实现：
+        <ul>
+          <li>不带参数的装饰器：装饰器的入参为被装饰目标</li>
+          <li>带参数的装饰器：可自定义装饰器的参数，使用装饰器时需要传入参数，且装饰器返回一个函数</li>
+        </ul>
+        当存在多个装饰器时，执行顺序为<span class="different">从下到上</span>，且前一个装饰器的返回值是下一个装饰器的入参（装饰器没有返回时入参为被装饰目标），并且最后一个装饰器的返回值赋值给呗装饰目标（装饰器没有返回时，被装饰目标不做修改）。
+      </p>
+    </section>
+    <section>
+      <h2>多装饰器</h2>
+      <p>
+        装饰器在未被实例化时就已经调用，同一种类的多个装饰器的调用时机为：
+        <ol>
+          <li>带参数的装饰器从上到下调用返回装饰器函数</li>
+          <li>装饰器函数从下到上调用</li>
+        </ol>
+        <pre><code class="typescript">
+function FooClassDecorator1() {
+  console.log("out info1");
+  return function(fooClass: any) {
+    console.log("in info1");
+    // ...
+  }
+}
+function FooClassDecorator2() {
+  console.log("out info2");
+  return function(fooClass: any) {
+    console.log("in info2");
+    // ...
+  }
+}
+
+@FooClassDecorator1()
+@FooClassDecorator2()
+class Foo {}
+// out info1
+// out info2
+// in info2
+// in info1
+        </code></pre>
+        不同种类的装饰器调用顺序为：
+        <ol>
+          <li>参数装饰器</li>
+          <li>方法装饰器</li>
+          <li>访问符装饰器</li>
+          <li>属性装饰器</li>
+          <li>构造函数的参数装饰器</li>
+          <li>类装饰器</li>
+        </ol>
+      </p>
+    </section>
+    <section>
+      <h2>类装饰器</h2>
+      <p>
+        类装饰器入参为被装饰的类
+        <pre><code class="typescript">
+function FooClassDecorator<T extends new(...args: any[]) => any>(fooClass: T) {
+  console.log("Foo")
+  // 匿名类
+  return class extends fooClass {
+    constructor(...args: any[]) {
+      super(...args);
+      console.log("Bar created");
+    }
+  }
+}
+
+@FooClassDecorator
+class Foo {
+  name: string;
+  constructor(name: string) {
+    this.name = name;
+  }
+}
+
+const foo = new Foo("123"); // => Bar created
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>方法装饰器</h2>
+      <p>
+        在 tsconfig.json 是否开启 experimentalDecorators 会影响方法装饰器的使用语法
+        <pre><code class="typescript">
+// 关闭 experimentalDecorators
+// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#decorators
+/**
+ * @param target 方法
+ * @param context 方法上下文
+ * @returns 新的类方法
+ */
+function MethodDecorator<This, Args extends any[], Return>(
+    target: (this: This, ...args: Args) => Return,
+    context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Return>
+)  {
+  console.log(context.name); // 方法名
+  return function(this: This, ...args: Args) {
+    target.call(this, ...args);
+    // ...
+  }
+}
+
+// 开启 experimentalDecorators
+// https://www.typescriptlang.org/docs/handbook/decorators.html#method-decorators
+/**
+ * @param target 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象
+ * @param propertyKey 方法名
+ * @param descriptor 方法的 descriptor 对象
+ * @returns 方法的 descriptor 对象
+ */
+function MethodDecorator&lt;T>(
+  target: any,
+  propertyKey: string,
+  descriptor: TypedPropertyDescriptor&lt;T>
+) {
+  console.log(propertyKey); // 方法名
+  return descriptor;
+};
+
+class Foo {
+  @MethodDecorator
+  add() {
+  }
+}
+const foo = new Foo();
+foo.add();
+        </code></pre>
+        需要注意的是，方法装饰器必须应用在类方法上，不能单独给函数方法修饰
+        <pre><code class="typescript">
+@MethodDecorator // Decorators are not valid here.
+function add() {
+}
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>属性装饰器</h2>
+      <p>
+        在 tsconfig.json 是否开启 experimentalDecorators 会影响方法装饰器的使用语法
+        <pre><code class="typescript">
+// 关闭 experimentalDecorators
+/**
+ * @param target 属性值
+ * @param context 属性上下文
+ * @returns 获取属性值的函数
+ */
+function PropertyDecorator<This, Value>(target: Value, context: ClassFieldDecoratorContext<This, Value>) {
+  console.log(context.name); // 属性名
+  return function(this: This) {
+    // ...
+    return target;
+  }
+}
+
+// 开启 experimentalDecorators
+/**
+ * @param target 对于静态属性来说是类的构造函数，对于实例属性是类的原型对象
+ * @param context 属性名
+ * @returns void
+ */
+function PropertyDecorator&lt;T>(target: T, propertyKey: string) {
+  console.log(propertyKey); // 属性名
+}
+
+class Foo {
+  @PropertyDecorator
+  name?: string;
+}
+
+const foo = new Foo();
+console.log(foo.name);
+        </code></pre>
+        对于 getter 属性，称为访问器装饰器
+        <pre><code class="typescript">
+/**
+ * @param target 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象
+ * @param context 属性名
+ * @param descriptor 属性的 descriptor 对象
+ * @returns void
+ */
+function PropertyDecorator&lt;T>(target: T, propertyKey: string, descriptor: TypedPropertyDescriptor&lt;string>) {
+  console.log(propertyKey); // 属性名
+}
+
+class Foo {
+  @PropertyDecorator
+  get name() {
+    return "123";
+  }
+}
+
+const foo = new Foo();
+console.log(foo.name);
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>参数装饰器</h2>
+      <p>
+        使用参数装饰器前需要在 tscofig.json 中开启一个选项，选项的作用是开启 TC39 阶段 2 装饰器实验性支持（Enable experimental support for TC39 stage 2 draft decorators.）
+        <pre><code class="json">
+{
+  "compilerOptions": {
+    "experimentalDecorators": true
+  }
+}
+        </code></pre>
+        或者在 tsc 编译时加上 --experimentalDecorators 选项
+        <pre><code class="bash">
+tsc --experimentalDecorators
+        </code></pre>
+        开启后才能使用参数装饰器，不然会报错 `Decorators are not valid here.`
+        <pre><code class="typescript">
+/**
+ * @param target 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象
+ * @param key 参数名
+ * @param index 参数所在位置索引
+ * @returns void
+ */
+function ParameterDecorator&lt;T>(target: T, key: string, index: number) {
+  console.log(key); // 参数名
+}
+class Foo {
+  add(@ParameterDecorator name: string) {
+
+  }
+}
+
+const foo = new Foo();
+foo.add("123");
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>元数据装饰器</h2>
+      <p>
+        要开启元数据装饰器，有两种方式，一种是安装 npm 包
+        <pre><code class="bash">
+npm i reflect-metadata --save
+        </code></pre>
+        另一种是通过 tsconfig 配置
+        <pre><code class="json">
+{
+  "compilerOptions": {
+    "emitDecoratorMetadata": true
+  }
+}
+        </code></pre>
+        之后可以通过 Reflect API 来获取一些元数据。
+        <pre><code class="typescript">
+import "reflect-metadata";
+
+function MetaDataDecorator&lt;T>(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor&lt;T>) {
+  const set = descriptor.set;
+  descriptor.set = function (value: T) {
+    const type = Reflect.getMetadata("design:type", target, propertyKey); // 拿到参数定义时的类型
+    if (!(value instanceof type)) {
+      throw new TypeError("Invalid type.");
+    }
+    set?.(value);
+  }
+}
+interface Info {
+  name: string
+}
+class Foo {
+  _info?: Info;
+  @MetaDataDecorator
+  set info(newInfo: Info) {
+    this._info = newInfo;
+  }
+  get info() {
+    return this._info;
+  }
+}
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>原理</h2>
+      <p>
+        typescript 使用以下工具函数来实现装饰器，主要功能在 __esDecorate 这个函数中
+        <pre><code class="typescript">
+var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
+    function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
+    var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
+    var target = !descriptorIn && ctor ? contextIn["static"] ? ctor : ctor.prototype : null;
+    var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
+    var _, done = false;
+    for (var i = decorators.length - 1; i >= 0; i--) {
+        var context = {};
+        for (var p in contextIn) context[p] = p === "access" ? {} : contextIn[p];
+        for (var p in contextIn.access) context.access[p] = contextIn.access[p];
+        context.addInitializer = function (f) { if (done) throw new TypeError("Cannot add initializers after decoration has completed"); extraInitializers.push(accept(f || null)); };
+        var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context);
+        if (kind === "accessor") {
+            if (result === void 0) continue;
+            if (result === null || typeof result !== "object") throw new TypeError("Object expected");
+            if (_ = accept(result.get)) descriptor.get = _;
+            if (_ = accept(result.set)) descriptor.set = _;
+            if (_ = accept(result.init)) initializers.unshift(_);
+        }
+        else if (_ = accept(result)) {
+            if (kind === "field") initializers.unshift(_);
+            else descriptor[key] = _;
+        }
+    }
+    if (target) Object.defineProperty(target, contextIn.name, descriptor);
+    done = true;
+};
+// 其他工具函数
+// ...
+
+// 被装饰目标调用工具函数
+// 根据装饰器类型入参不同，比如类装饰器：
+__esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+        </code></pre>
+      </p>
+    </section>
+    <section>
+      <h2>其他版本的装饰器</h2>
+      <p>
+        除了 Typescript 外，还有 ES（草案）、Babel 版本的装饰器<a href="https://github.com/tc39/proposal-decorators#how-does-this-proposal-compare-to-other-versions-of-decorators">How does this proposal compare to other versions of decorators?</a>
+      </p>
+    </section>
+    <section class="refer">
+      <h2>参考文献</h2>
+      <p>
+        <div>[1] 装饰器 <a href="https://www.tslang.cn/docs/handbook/decorators.html#parameter-decorators">https://www.tslang.cn/docs/handbook/decorators.html#parameter-decorators</a></div>
+      </p>
+    </section>
+  </div>
+</body>
+
+</html>

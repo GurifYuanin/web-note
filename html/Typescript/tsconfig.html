@@ -94,6 +94,7 @@ import App from "@/App.vue";
         <ul>
           <li>node：从内往外，即 ./node_modules -> ../node_modules -> ../../node_modules etc</li>
           <li>classic：从外（根路径）往内找</li>
+          <li>bundler：和 node 一样，但引入相对路径时不需要文件名后缀</li>
         </ul>
         <h3>resolveJsonModule</h3>
         是否允许引入 json 文件
@@ -146,7 +147,7 @@ foo(null);
             </code></pre>
           </li>
           <li>
-            strictNullChecks：开启后：
+            strictNullChecks 开启后
             <pre><code class="typescript">
 // 不允许将 undefined 赋值给其他类型
 let a: string = undefined; // Type 'undefined' is not assignable to type 'string'.
@@ -157,6 +158,17 @@ const users = [
   { name: "李四", id: 2 },
 ];
 const { name } = users.find(({ id }) => id === 1); // Property 'name' does not exist on type '{ name: string; id: number; } | undefined'.
+            </code></pre>
+            需要注意的是，在 Typescript5.5 之后，TS 优化了 undefined 检查
+            <pre><code class="typescript">
+const arr = [{a: 1}, {a: 2}, undefined];
+
+const newArr1 = arr.filter(el => el !== undefined);
+newArr1.forEach(({ a }) => console.log(a)); // => ok
+
+// 但这种写法还是不行
+const newArr2 = arr.filter(el => Boolean(el));
+newArr2.forEach(({ a }) => console.log(a)); // Property 'a' does not exist on type '{ a: number; } | undefined'.
             </code></pre>
           </li>
           <li>strictPropertyInitialization：声明变量 / 属性时是否要有类型</li>
@@ -170,6 +182,8 @@ const { name } = users.find(({ id }) => id === 1); // Property 'name' does not e
         见<a href="./Typescript 高级用法.html#Typescript 高级用法">Typescript 高级用法</a>中的方式二
         <h3>jsx</h3>
         是否支持 jsx 语法
+        <h3>experimentalDecorators & emitDecoratorMetadata</h3>
+        experimentalDecorators 表示是否启用普通装饰器，emitDecoratorMetadata 表示是否启用元数据装饰器
       </p>
     </section>
     <section>
