@@ -140,23 +140,31 @@
         <h3>层叠层</h3>
         <p>
           层叠层可以使用 @layer 来对多个选择器进行分组，组与组之间存在优先级关系，后面的组会覆盖前面组的样式。
+          <pre><code class="html">
+&lt;h1>Align the contents of a non-scrolling element and a scrolling one adjacent to it: This example shows two divs side by side. The one on the left has no scroll, but the one on the right does. Both have scrollbar-gutter applied, which also reserves space for the div on the left which doesn't have scrollable content. This is a good technique to use to keep the width of content consistent.&lt;/h1>
+          </code></pre>
           <pre><code class="css">
-@layer reset, base, theme;
+/* 如果是这一行则为深色主题 */
+@layer reset, light, dark;
+/* 如果是这一行则为浅色主题 */
+@layer reset, dark, light;
+
 @layer reset {
   body {
     padding: 0;
     margin: 0;
   }
 }
-@layer base {
+@layer light {
   h1 {
-    font-size: 22px;
-    color: #222;
+   	background-color: white;
+    color: black
   }
 }
-@layer theme {
+@layer dark {
   h1 {
-    color: #333;
+    background-color: black;
+    color: white;
   }
 }
           </code></pre>
@@ -375,7 +383,7 @@ aspect-ratio: 2;
               <div>2</div>
               <div>3</div>
             </div>
-          
+
             <style>
               .my-container-gap {
                 display: flex;

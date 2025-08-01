@@ -79,8 +79,9 @@ const divEl = document.createElement('div');
 this.appendChild(divEl);
         </code></pre>
         <h3>shadow</h3>
-        自定义元素可以通过 this.attachShadow 来创建 shadowRoot，shadowRoot 是与外界 html 环境完全隔离的元素节点，拥有与一般 html 元素相同的特性。
+        DOM 元素可以通过 attachShadow 方法来创建 shadowRoot，shadowRoot 是与外界 html 环境完全隔离的元素节点，拥有与一般 html 元素相同的特性。
         <pre><code class="javascript">
+// 通过类的方式
 class MyElement extends HTMLElement {
   construcotr() {
     super();
@@ -88,6 +89,9 @@ class MyElement extends HTMLElement {
   }
 }
 
+// 通过已有 DOM
+const host = document.getElementById('host');
+const shadowRoot = host.attachShadow({ mode: 'open' });
         </code></pre>
         创建的 shadowRoot 有两种模式，由参数 mode 决定：
         <ul>
@@ -98,7 +102,10 @@ class MyElement extends HTMLElement {
           <img src="../../images/web_components_shadow_root_closed.png">
           <figcaption>#shadow-root 是 shadowRoot，word-count 是 shadow host</figcaption>
         </figure>
-        如果不进行 attachShadow，那么自定义标签就是个普通的标签。而进行 attachShadow 后，在该自定义标签内添加内容都会被忽略掉，只有 shadowRoot.appendChild （挂在 shadowRoot 下的子节点）的元素才会被浏览器渲染出来。
+        如果不进行 attachShadow，那么自定义标签就是个普通的标签。而进行 attachShadow 后，在该自定义标签内添加内容都会被忽略掉，只有 shadowRoot 下的子节点（比如 shadowRoot.appendChild）才会被浏览器渲染出来。
+        <pre><code class="javascript">
+shadowRoot.innerHTML = '&lt;h1>Hello World&lt;/h1>';
+        </code></pre>
         <h3>shadowRoot 和 shadow host</h3>
         假如自定义元素是 $0（比如上面的 word-count 元素），那么存在以下关系：
         <pre><code class="javascript">
